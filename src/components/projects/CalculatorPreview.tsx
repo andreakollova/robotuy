@@ -1,6 +1,6 @@
 'use client';
 
-const s = { bg: '#041540', card: '#0c255a', border: '#0c255a', green: '#22c55e', text: '#fff', dim: '#666' };
+const s = { bg: '#111', card: '#1a1a1a', border: '#222', green: '#22c55e', text: '#fff', dim: '#666' };
 
 export default function CalculatorPreview({ variables }: { variables: Record<string, any> }) {
   const fn = variables.first_number;
@@ -20,7 +20,7 @@ export default function CalculatorPreview({ variables }: { variables: Record<str
         <label style={{ fontSize: 11, color: s.dim, fontWeight: 600 }}>Prvé číslo</label>
         <div style={{
           padding: '12px 16px', background: s.card, borderRadius: 10, border: `1px solid ${s.border}`,
-          color: fn !== undefined ? s.text : '#0f2d6b', fontSize: 18, fontWeight: 600, textAlign: 'center',
+          color: fn !== undefined ? s.text : '#333', fontSize: 18, fontWeight: 600, textAlign: 'center',
           fontFamily: 'var(--font-mono)',
         }}>
           {fn !== undefined ? fn : '—'}
@@ -40,7 +40,7 @@ export default function CalculatorPreview({ variables }: { variables: Record<str
         ) : (
           <div style={{
             padding: '12px 16px', background: s.card, borderRadius: 10, border: `1px solid ${s.border}`,
-            color: op !== undefined ? s.text : '#0f2d6b', fontSize: 18, fontWeight: 600, textAlign: 'center',
+            color: op !== undefined ? s.text : '#333', fontSize: 18, fontWeight: 600, textAlign: 'center',
           }}>
             {op !== undefined ? (op === '*' ? '×' : op === '/' ? '÷' : op) : '—'}
           </div>
@@ -49,7 +49,7 @@ export default function CalculatorPreview({ variables }: { variables: Record<str
         <label style={{ fontSize: 11, color: s.dim, fontWeight: 600 }}>Druhé číslo</label>
         <div style={{
           padding: '12px 16px', background: s.card, borderRadius: 10, border: `1px solid ${s.border}`,
-          color: sn !== undefined ? s.text : '#0f2d6b', fontSize: 18, fontWeight: 600, textAlign: 'center',
+          color: sn !== undefined ? s.text : '#333', fontSize: 18, fontWeight: 600, textAlign: 'center',
           fontFamily: 'var(--font-mono)',
         }}>
           {sn !== undefined ? sn : '—'}
@@ -81,7 +81,7 @@ export default function CalculatorPreview({ variables }: { variables: Record<str
 
       {/* Empty state */}
       {fn === undefined && sn === undefined && (
-        <div style={{ textAlign: 'center', padding: 20, color: '#0f2d6b', fontSize: 13 }}>
+        <div style={{ textAlign: 'center', padding: 20, color: '#333', fontSize: 13 }}>
           Kalkulačka sa tvorí...
         </div>
       )}

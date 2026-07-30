@@ -53,7 +53,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="page-shell" style={{ minHeight: '100vh', background: '#010d33', paddingBottom: 80 }}>
+    <div className="page-shell" style={{ minHeight: '100vh', background: '#0F0F0F', paddingBottom: 80 }}>
       <StatusBar />
       <AuthModal open={showAuth} onClose={() => setShowAuth(false)} />
 
@@ -69,9 +69,9 @@ export default function SettingsPage() {
           </h3>
 
           {authUser ? (
-            <div style={{ background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
+            <div style={{ background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
               <div style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: '#041540', border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: '#111', border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <User size={16} color="#4ade80" />
                 </div>
                 <div style={{ flex: 1 }}>
@@ -97,14 +97,14 @@ export default function SettingsPage() {
               onClick={() => setShowAuth(true)}
               style={{
                 width: '100%', padding: '14px 16px', borderRadius: 14,
-                background: '#000a2b', border: '1px solid #1a1a1a',
+                background: '#0a0a0a', border: '1px solid #1a1a1a',
                 display: 'flex', alignItems: 'center', gap: 12,
                 cursor: 'pointer', color: '#ccc', fontSize: 14, fontWeight: 600,
               }}
             >
               <LogIn size={18} color="#4ade80" />
               <span style={{ flex: 1 }}>{locale === 'sk' ? 'Prihlásiť sa' : 'Log in'}</span>
-              <ChevronRight size={16} color="#0f2d6b" />
+              <ChevronRight size={16} color="#333" />
             </button>
           )}
         </div>
@@ -115,7 +115,7 @@ export default function SettingsPage() {
             {locale === 'sk' ? 'Preferencie' : 'Preferences'}
           </h3>
 
-          <div style={{ background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
+          <div style={{ background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
             {/* Language */}
             <button
               onClick={toggle}
@@ -168,7 +168,7 @@ export default function SettingsPage() {
                     value={nameVal}
                     onChange={e => setNameVal(e.target.value)}
                     autoFocus
-                    style={{ flex: 1, padding: '8px 12px', borderRadius: 8, background: '#041540', border: '1px solid #222', color: '#fff', fontSize: 16, fontFamily: 'inherit', outline: 'none' }}
+                    style={{ flex: 1, padding: '8px 12px', borderRadius: 8, background: '#111', border: '1px solid #222', color: '#fff', fontSize: 16, fontFamily: 'inherit', outline: 'none' }}
                   />
                   <button
                     onClick={() => { if (nameVal.trim()) setName(nameVal.trim()); setEditName(false); }}
@@ -218,8 +218,8 @@ export default function SettingsPage() {
                       onClick={() => setFavDrink(d.id)}
                       style={{
                         padding: '8px 14px', borderRadius: 10, fontSize: 12, fontWeight: 600,
-                        background: favDrink === d.id ? 'rgba(74,222,128,0.1)' : '#041540',
-                        border: `1px solid ${favDrink === d.id ? 'rgba(74,222,128,0.4)' : '#0c255a'}`,
+                        background: favDrink === d.id ? 'rgba(74,222,128,0.1)' : '#111',
+                        border: `1px solid ${favDrink === d.id ? 'rgba(74,222,128,0.4)' : '#1a1a1a'}`,
                         color: favDrink === d.id ? '#4ade80' : '#888',
                         cursor: 'pointer',
                       }}
@@ -239,7 +239,7 @@ export default function SettingsPage() {
             <h3 style={{ fontSize: 11, fontWeight: 700, color: '#555', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
               {locale === 'sk' ? 'Notifikácie' : 'Notifications'}
             </h3>
-            <div style={{ background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
+            <div style={{ background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
               <div style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span style={{ fontSize: 14, color: '#ccc', fontWeight: 500 }}>
                   {locale === 'sk' ? 'Push notifikácie' : 'Push notifications'}
@@ -252,7 +252,7 @@ export default function SettingsPage() {
                   }}
                   style={{
                     width: 48, height: 28, borderRadius: 14, cursor: 'pointer', position: 'relative',
-                    background: notifOn ? '#4ade80' : '#0f2d6b',
+                    background: notifOn ? '#4ade80' : '#333',
                     transition: 'background 0.2s',
                   }}
                 >
@@ -273,19 +273,19 @@ export default function SettingsPage() {
           <h3 style={{ fontSize: 11, fontWeight: 700, color: '#555', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
             FAQ
           </h3>
-          <div style={{ background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
+          <div style={{ background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
             {([
               {
                 q: locale === 'sk' ? 'Ako pridať widget na plochu? (iOS)' : 'How to add a widget? (iOS)',
                 a: locale === 'sk'
-                  ? 'Widget je dostupný na iPhone. Dlho podrž na ploche → klikni + → vyhľadaj Robotuy → vyber widget → hotovo.'
-                  : 'Widget is available on iPhone. Long press on home screen → tap + → search Robotuy → select widget → done.',
+                  ? 'Widget je dostupný na iPhone. Dlho podrž na ploche → klikni + → vyhľadaj Coduy → vyber widget → hotovo.'
+                  : 'Widget is available on iPhone. Long press on home screen → tap + → search Coduy → select widget → done.',
               },
               {
                 q: locale === 'sk' ? 'Ako zrušiť predplatné?' : 'How to cancel subscription?',
                 a: locale === 'sk'
-                  ? 'Nastavenia telefónu → tvoje meno → Predplatné → Robotuy → Zrušiť. Predplatné zostáva aktívne do konca obdobia.'
-                  : 'Phone Settings → your name → Subscriptions → Robotuy → Cancel. Your subscription stays active until the end of the period.',
+                  ? 'Nastavenia telefónu → tvoje meno → Predplatné → Coduy → Zrušiť. Predplatné zostáva aktívne do konca obdobia.'
+                  : 'Phone Settings → your name → Subscriptions → Coduy → Cancel. Your subscription stays active until the end of the period.',
               },
               {
                 q: locale === 'sk' ? 'Funguje to aj offline?' : 'Does it work offline?',
@@ -312,7 +312,7 @@ export default function SettingsPage() {
           <h3 style={{ fontSize: 11, fontWeight: 700, color: '#555', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
             {locale === 'sk' ? 'Právne' : 'Legal'}
           </h3>
-          <div style={{ background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
+          <div style={{ background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
             <a href="/privacy" style={{ display: 'block', padding: '14px 16px', color: '#ccc', fontSize: 14, fontWeight: 500, textDecoration: 'none', borderBottom: '1px solid #111' }}>
               {locale === 'sk' ? 'Zásady ochrany súkromia' : 'Privacy Policy'}
             </a>

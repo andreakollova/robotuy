@@ -1,6 +1,6 @@
 'use client';
 
-const s = { bg: '#041540', card: '#0c255a', border: '#0c255a', purple: '#8b5cf6', text: '#fff', dim: '#666' };
+const s = { bg: '#111', card: '#1a1a1a', border: '#222', purple: '#8b5cf6', text: '#fff', dim: '#666' };
 
 export default function PasswordPreview({ variables }: { variables: Record<string, any> }) {
   const length = variables.length;
@@ -22,7 +22,7 @@ export default function PasswordPreview({ variables }: { variables: Record<strin
 
   // Password strength
   const getStrength = (pw: string) => {
-    if (!pw) return { label: '', color: '#0f2d6b', width: 0 };
+    if (!pw) return { label: '', color: '#333', width: 0 };
     if (pw.length < 8) return { label: 'Weak', color: '#ef4444', width: 25 };
     if (pw.length < 12) return { label: 'Medium', color: '#f59e0b', width: 50 };
     if (pw.length < 16) return { label: 'Strong', color: '#22c55e', width: 75 };
@@ -59,7 +59,7 @@ export default function PasswordPreview({ variables }: { variables: Record<strin
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13 }}>
             <div style={{
               width: 18, height: 18, borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: c.active ? s.purple : 'transparent', border: `2px solid ${c.active ? s.purple : '#0f2d6b'}`,
+              background: c.active ? s.purple : 'transparent', border: `2px solid ${c.active ? s.purple : '#333'}`,
               transition: 'all 0.2s',
             }}>
               {c.active && <span style={{ color: '#fff', fontSize: 11, fontWeight: 800 }}>✓</span>}
@@ -89,7 +89,7 @@ export default function PasswordPreview({ variables }: { variables: Record<strin
       {/* Password display */}
       {password && (
         <div style={{
-          padding: '16px', background: '#000a2b', borderRadius: 12, border: '1px solid #222',
+          padding: '16px', background: '#0a0a0a', borderRadius: 12, border: '1px solid #222',
           textAlign: 'center',
         }}>
           <div style={{
@@ -108,7 +108,7 @@ export default function PasswordPreview({ variables }: { variables: Record<strin
 
       {/* Empty state */}
       {!length && !password && (
-        <div style={{ textAlign: 'center', padding: 20, color: '#0f2d6b', fontSize: 13 }}>
+        <div style={{ textAlign: 'center', padding: 20, color: '#333', fontSize: 13 }}>
           Generátor sa pripravuje...
         </div>
       )}

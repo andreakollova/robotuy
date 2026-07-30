@@ -6,7 +6,7 @@ export function getSupabase(): SupabaseClient | null {
   if (_client) return _client;
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://cehrcizbeywupmghpezg.supabase.co';
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlaHJjaXpiZXl3dXBtZ2hwZXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MDcyMTYsImV4cCI6MjEwMDk4MzIxNn0.2Jef-EYM_FwzHYD9kB5D9mFu88CpncwaS4kHpySetGI';
 
   if (!url || !key) return null;
 

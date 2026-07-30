@@ -288,8 +288,8 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 onClick={() => setStep('email')}
                 style={{
                   width: '100%', padding: '14px', borderRadius: 12,
-                  background: '#161616', color: '#ccc', fontWeight: 600, fontSize: 14,
-                  border: '1px solid #222', cursor: 'pointer', display: 'flex', alignItems: 'center',
+                  background: '#071c4d', color: '#ccc', fontWeight: 600, fontSize: 14,
+                  border: '1px solid #0c255a', cursor: 'pointer', display: 'flex', alignItems: 'center',
                   justifyContent: 'center', gap: 8,
                 }}
               >

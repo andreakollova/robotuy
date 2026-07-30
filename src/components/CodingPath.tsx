@@ -131,6 +131,17 @@ const PATHS: CharacterPath[] = [
     modules: Array.from({ length: 30 }, (_, i) => i + 215),
     equipment: { hat: 'hat-samurai', glasses: 'glasses-golden', accessory: 'acc-wings-gold', aura: 'aura-golden' },
   },
+  {
+    id: 'master',
+    titleEn: 'Robot Master',
+    titleSk: 'Robot Master',
+    subtitleEn: 'I want to master everything about robotics.',
+    subtitleSk: 'Chcem ovládnuť všetko o robotike.',
+    descEn: 'All 244 modules. Foundations, software, vision, AI, embedded, mechanical, design, integration.',
+    descSk: 'Všetkých 244 modulov. Základy, softvér, videnie, AI, embedded, mechanika, dizajn, integrácia.',
+    modules: Array.from({ length: 244 }, (_, i) => i + 1),
+    equipment: { hat: 'hat-golden-crown', glasses: 'glasses-golden', accessory: 'acc-wings-gold', aura: 'aura-golden' },
+  },
 ];
 
 // Syllabus groups for visual structure
@@ -313,7 +324,8 @@ export default function CodingPath() {
       case 'mechanical': return '#a3a3a3';
       case 'design': return '#38bdf8';
       case 'integrator': return '#f59e0b';
-      default: return '#f59e0b';
+      case 'master': return '#fbbf24';
+      default: return '#fbbf24';
     }
   };
 

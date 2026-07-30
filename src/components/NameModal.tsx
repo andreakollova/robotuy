@@ -26,6 +26,7 @@ const PATHS = [
   { id: 'mechanical', titleEn: 'Mechanical Engineer', titleSk: 'Strojársky inžinier', subtitleEn: 'I want to design robot bodies.', subtitleSk: 'Chcem navrhovať telá robotov.', equipment: { hat: 'hat-cowboy', glasses: 'glasses-aviator', accessory: 'acc-bowtie', aura: 'aura-earth' } },
   { id: 'design', titleEn: 'Industrial Design', titleSk: 'Priemyselný dizajn', subtitleEn: 'I want to make robots beautiful.', subtitleSk: 'Chcem, aby boli roboty krásne.', equipment: { hat: 'hat-party', glasses: 'glasses-mono', accessory: 'acc-scarf', aura: 'aura-air' } },
   { id: 'integrator', titleEn: 'Robotics Integrator', titleSk: 'Robotický integrátor', subtitleEn: 'I want to deploy robots in factories.', subtitleSk: 'Chcem nasadzovať roboty vo fabrikách.', equipment: { hat: 'hat-samurai', glasses: 'glasses-golden', accessory: 'acc-wings-gold', aura: 'aura-golden' } },
+  { id: 'master', titleEn: 'Robot Master', titleSk: 'Robot Master', subtitleEn: 'I want to master everything.', subtitleSk: 'Chcem ovládnuť všetko.', equipment: { hat: 'hat-golden-crown', glasses: 'glasses-golden', accessory: 'acc-wings-gold', aura: 'aura-golden' } },
 ];
 
 export default function NameModal() {

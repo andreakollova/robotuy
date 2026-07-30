@@ -74,7 +74,7 @@ export default function GlossaryPage() {
   }, [query, filter, customAsGlossary]);
 
   return (
-    <div className="page-shell" style={{ minHeight: '100vh', background: '#0F0F0F', paddingBottom: 80 }}>
+    <div className="page-shell" style={{ minHeight: '100vh', background: '#010d33', paddingBottom: 80 }}>
       <StatusBar />
 
       {/* Header */}
@@ -97,7 +97,7 @@ export default function GlossaryPage() {
             placeholder={s('searchGlossary', locale)}
             style={{
               width: '100%', padding: '11px 40px 11px 40px',
-              background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 12,
+              background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 12,
               color: '#fff', fontSize: 14, fontFamily: 'DM Sans, sans-serif',
               outline: 'none', boxSizing: 'border-box',
             }}
@@ -124,7 +124,7 @@ export default function GlossaryPage() {
                 style={{
                   padding: '8px 16px', borderRadius: 20, fontSize: 12, fontWeight: 700,
                   whiteSpace: 'nowrap', cursor: 'pointer', border: 'none', flexShrink: 0,
-                  background: filter === cat ? (cat === 'môj' ? '#60a5fa' : '#fff') : '#111',
+                  background: filter === cat ? (cat === 'môj' ? '#4ade80' : '#fff') : '#041540',
                   color: filter === cat ? '#000' : '#555',
                   transition: 'all 0.15s',
                 }}
@@ -135,9 +135,9 @@ export default function GlossaryPage() {
           })}
         </div>
         {/* Scroll indicator bar */}
-        <div style={{ height: 3, borderRadius: 2, background: '#111', marginBottom: 18, overflow: 'hidden' }}>
+        <div style={{ height: 3, borderRadius: 2, background: '#041540', marginBottom: 18, overflow: 'hidden' }}>
           <div style={{
-            height: '100%', borderRadius: 2, background: '#333',
+            height: '100%', borderRadius: 2, background: '#0f2d6b',
             width: `${100 / categories.length * 2}%`,
             marginLeft: `${(categories.indexOf(filter) / categories.length) * 100}%`,
             transition: 'margin-left 0.2s ease',
@@ -149,7 +149,7 @@ export default function GlossaryPage() {
           onClick={() => setShowAddForm(!showAddForm)}
           style={{
             width: '100%', padding: '12px 16px', borderRadius: 12, marginBottom: 16,
-            background: showAddForm ? '#111' : '#0a0a0a', border: '1px solid #222',
+            background: showAddForm ? '#041540' : '#000a2b', border: '1px solid #222',
             color: '#aaa', fontSize: 13, fontWeight: 600, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
           }}
@@ -165,30 +165,30 @@ export default function GlossaryPage() {
               initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
               style={{ overflow: 'hidden', marginBottom: 16 }}
             >
-              <div style={{ background: '#0a0a0a', border: '1px solid #222', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ background: '#000a2b', border: '1px solid #222', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <input
                   value={newTerm} onChange={e => setNewTerm(e.target.value)}
                   placeholder={locale === 'sk' ? 'Skratka / pojem (napr. API)' : 'Term (e.g. API)'}
-                  style={{ padding: '10px 14px', background: '#111', border: '1px solid #1a1a1a', borderRadius: 10, color: '#fff', fontSize: 14, fontFamily: 'inherit', outline: 'none' }}
+                  style={{ padding: '10px 14px', background: '#041540', border: '1px solid #1a1a1a', borderRadius: 10, color: '#fff', fontSize: 14, fontFamily: 'inherit', outline: 'none' }}
                 />
                 <textarea
                   value={newExplanation} onChange={e => setNewExplanation(e.target.value)}
                   placeholder={locale === 'sk' ? 'Vysvetlenie...' : 'Explanation...'}
                   rows={3}
-                  style={{ padding: '10px 14px', background: '#111', border: '1px solid #1a1a1a', borderRadius: 10, color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none', resize: 'vertical' }}
+                  style={{ padding: '10px 14px', background: '#041540', border: '1px solid #1a1a1a', borderRadius: 10, color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none', resize: 'vertical' }}
                 />
                 <textarea
                   value={newCode} onChange={e => setNewCode(e.target.value)}
                   placeholder={locale === 'sk' ? 'Kód (voliteľné)' : 'Code (optional)'}
                   rows={2}
-                  style={{ padding: '10px 14px', background: '#111', border: '1px solid #1a1a1a', borderRadius: 10, color: '#aaa', fontSize: 12, fontFamily: 'monospace', outline: 'none', resize: 'vertical' }}
+                  style={{ padding: '10px 14px', background: '#041540', border: '1px solid #1a1a1a', borderRadius: 10, color: '#aaa', fontSize: 12, fontFamily: 'monospace', outline: 'none', resize: 'vertical' }}
                 />
                 <button
                   onClick={addCustomEntry}
                   disabled={!newTerm.trim() || !newExplanation.trim()}
                   style={{
                     padding: '10px', borderRadius: 10, border: 'none', cursor: 'pointer',
-                    background: newTerm.trim() && newExplanation.trim() ? '#60a5fa' : '#222',
+                    background: newTerm.trim() && newExplanation.trim() ? '#4ade80' : '#0c255a',
                     color: newTerm.trim() && newExplanation.trim() ? '#000' : '#555',
                     fontWeight: 700, fontSize: 13,
                   }}
@@ -216,7 +216,7 @@ export default function GlossaryPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: Math.min(i * 0.02, 0.3) }}
-                style={{ background: '#0a0a0a', border: `1px solid ${isOpen ? '#2a2a2a' : '#141414'}`, borderRadius: 14, overflow: 'hidden' }}
+                style={{ background: '#000a2b', border: `1px solid ${isOpen ? '#2a2a2a' : '#141414'}`, borderRadius: 14, overflow: 'hidden' }}
               >
                 <button
                   onClick={() => setExpanded(isOpen ? null : entry.id)}
@@ -230,7 +230,7 @@ export default function GlossaryPage() {
                     <span style={{
                       fontSize: 9, padding: '3px 7px', borderRadius: 6, fontWeight: 800,
                       letterSpacing: '0.08em', textTransform: 'uppercase', flexShrink: 0,
-                      background: 'rgba(74, 222, 128, 0.1)', color: '#60a5fa',
+                      background: 'rgba(74, 222, 128, 0.1)', color: '#4ade80',
                     }}>
                       {locale === 'sk' ? 'môj' : 'mine'}
                     </span>
@@ -238,7 +238,7 @@ export default function GlossaryPage() {
                     <span style={{
                       fontSize: 9, padding: '3px 7px', borderRadius: 6, fontWeight: 800,
                       letterSpacing: '0.08em', textTransform: 'uppercase', flexShrink: 0,
-                      background: entry.category === 'skratka' ? '#1a1a1a' : entry.category === 'symbol' ? '#161616' : entry.category === 'koncept' ? '#181818' : '#141414',
+                      background: entry.category === 'skratka' ? '#0c255a' : entry.category === 'symbol' ? '#161616' : entry.category === 'koncept' ? '#181818' : '#141414',
                       color: entry.category === 'skratka' ? '#888' : entry.category === 'symbol' ? '#777' : entry.category === 'koncept' ? '#666' : '#555',
                     }}>
                       {locale === 'sk'
@@ -258,7 +258,7 @@ export default function GlossaryPage() {
                   </div>
 
                   <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                    <ChevronDown size={16} color="#333" />
+                    <ChevronDown size={16} color="#0f2d6b" />
                   </motion.div>
                 </button>
 

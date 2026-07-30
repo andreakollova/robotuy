@@ -118,7 +118,7 @@ export default function TheoryHub() {
       </div>
 
       {/* Progress bar */}
-      <div style={{ height: 3, borderRadius: 2, background: '#1a1a1a', marginBottom: 20, overflow: 'hidden' }}>
+      <div style={{ height: 3, borderRadius: 2, background: '#0c255a', marginBottom: 20, overflow: 'hidden' }}>
         <div style={{ height: '100%', background: '#fff', borderRadius: 2, width: `${(readCount / allTheoryLessons.length) * 100}%`, transition: 'width 0.4s' }} />
       </div>
 
@@ -145,7 +145,7 @@ export default function TheoryHub() {
 
       {/* Show all divider + button */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '20px 0' }}>
-        <div style={{ flex: 1, height: 1, background: '#222' }} />
+        <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
         <button
           onClick={() => setShowAll(!showAll)}
           style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, background: 'none', border: '1px solid #222', color: '#888', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
@@ -153,7 +153,7 @@ export default function TheoryHub() {
           <Library size={13} />
           {showAll ? (locale === 'sk' ? 'Skryť' : 'Show less') : (locale === 'sk' ? 'Zobraziť všetky' : 'Show all')}
         </button>
-        <div style={{ flex: 1, height: 1, background: '#222' }} />
+        <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
       </div>
 
       {/* Remaining modules */}
@@ -180,8 +180,8 @@ function ReadCard({ lesson, index, router, locale }: { lesson: DbLessonSummary &
       style={{
         width: '100%', display: 'flex', alignItems: 'center', gap: 16,
         padding: '16px 18px', borderRadius: 14,
-        background: index === 0 ? '#111' : '#0a0a0a',
-        border: `1px solid ${index === 0 ? '#222' : '#1a1a1a'}`,
+        background: index === 0 ? '#041540' : '#000a2b',
+        border: `1px solid ${index === 0 ? '#0c255a' : '#0c255a'}`,
         cursor: 'pointer', textAlign: 'left',
         transition: 'border-color 0.15s',
       }}
@@ -224,7 +224,7 @@ function ModuleRow({ mod, completedLessons, router, locale, favDrink }: { mod: M
   const drinkReward = getModuleDrink(mod.module_number, favDrink);
 
   return (
-    <div style={{ background: '#0a0a0a', border: `1px solid ${allDone ? 'rgba(245,158,11,0.2)' : '#1a1a1a'}`, borderRadius: 12, overflow: 'hidden' }}>
+    <div style={{ background: '#000a2b', border: `1px solid ${allDone ? 'rgba(245,158,11,0.2)' : '#0c255a'}`, borderRadius: 12, overflow: 'hidden' }}>
       <button
         onClick={() => setOpen(!open)}
         style={{ width: '100%', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', textAlign: 'left' }}
@@ -232,7 +232,7 @@ function ModuleRow({ mod, completedLessons, router, locale, favDrink }: { mod: M
         <div style={{
           width: 32, height: 32, borderRadius: 8, flexShrink: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: allDone ? 'rgba(245,158,11,0.1)' : '#111',
+          background: allDone ? 'rgba(245,158,11,0.1)' : '#041540',
           border: allDone ? '1px solid rgba(245,158,11,0.3)' : '1px solid #222',
           fontSize: allDone ? 18 : 14,
         }}>
@@ -266,13 +266,13 @@ function ModuleRow({ mod, completedLessons, router, locale, favDrink }: { mod: M
                 style={{
                   width: '100%', display: 'flex', alignItems: 'center', gap: 12,
                   padding: '10px 16px 10px 28px', cursor: 'pointer', textAlign: 'left',
-                  borderTop: '1px solid #0f0f0f',
+                  borderTop: '1px solid #010d33',
                 }}
               >
                 <div style={{
                   width: 24, height: 24, borderRadius: 7, flexShrink: 0,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: done ? '#60a5fa' : 'transparent',
+                  background: done ? '#4ade80' : 'transparent',
                   border: done ? 'none' : '1px solid #2a2a2a',
                 }}>
                   {done && <Check size={12} color="#000" strokeWidth={3} />}

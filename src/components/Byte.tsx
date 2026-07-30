@@ -295,7 +295,7 @@ function AntennaTip({ type, animate }: { type?: string; animate: boolean }) {
   );
   if (type === 'ant-blackhole') return (
     <>
-      <motion.circle cx="60" cy="12" r="6" fill="#111"
+      <motion.circle cx="60" cy="12" r="6" fill="#041540"
         animate={animate ? { scale: [1, 1.1, 1] } : {}}
         transition={{ duration: 2, repeat: Infinity }}
         style={{ filter: 'drop-shadow(0 0 12px rgba(168,85,247,0.9))' }} />
@@ -316,15 +316,15 @@ function AntennaTip({ type, animate }: { type?: string; animate: boolean }) {
 function HatItem({ id }: { id: string }) {
   if (id === 'hat-beanie') return (
     <g>
-      <ellipse cx="60" cy="40" rx="30" ry="16" fill="#111" stroke="white" strokeWidth="1.5"/>
-      <rect x="30" y="50" width="60" height="7" rx="3.5" fill="#1a1a1a" stroke="white" strokeWidth="1"/>
+      <ellipse cx="60" cy="40" rx="30" ry="16" fill="#041540" stroke="white" strokeWidth="1.5"/>
+      <rect x="30" y="50" width="60" height="7" rx="3.5" fill="#0c255a" stroke="white" strokeWidth="1"/>
       <circle cx="60" cy="26" r="8" fill="white" opacity={0.9}/>
     </g>
   );
   if (id === 'hat-graduation') return (
     <g>
-      <rect x="28" y="42" width="64" height="6" rx="2" fill="#111" stroke="white" strokeWidth="1.5"/>
-      <polygon points="60,28 30,48 90,48" fill="#111" stroke="white" strokeWidth="1.5"/>
+      <rect x="28" y="42" width="64" height="6" rx="2" fill="#041540" stroke="white" strokeWidth="1.5"/>
+      <polygon points="60,28 30,48 90,48" fill="#041540" stroke="white" strokeWidth="1.5"/>
       <line x1="82" y1="42" x2="88" y2="56" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5"/>
       <circle cx="88" cy="58" r="3" fill="white" opacity={0.8}/>
     </g>
@@ -332,21 +332,21 @@ function HatItem({ id }: { id: string }) {
   if (id === 'hat-crown' || id === 'hat-golden-crown') return (
     <g style={id === 'hat-golden-crown' ? { filter: 'drop-shadow(0 0 8px rgba(245,158,11,0.6))' } : {}}>
       <polygon points="34,50 42,34 50,44 60,28 70,44 78,34 86,50"
-        fill={id === 'hat-golden-crown' ? '#1a1200' : '#111'} stroke={id === 'hat-golden-crown' ? '#f5a623' : 'white'} strokeWidth="1.5"/>
-      <rect x="34" y="48" width="52" height="8" rx="2" fill={id === 'hat-golden-crown' ? '#1a1200' : '#111'} stroke={id === 'hat-golden-crown' ? '#f5a623' : 'white'} strokeWidth="1"/>
+        fill={id === 'hat-golden-crown' ? '#1a1200' : '#041540'} stroke={id === 'hat-golden-crown' ? '#f5a623' : 'white'} strokeWidth="1.5"/>
+      <rect x="34" y="48" width="52" height="8" rx="2" fill={id === 'hat-golden-crown' ? '#1a1200' : '#041540'} stroke={id === 'hat-golden-crown' ? '#f5a623' : 'white'} strokeWidth="1"/>
       {[42, 60, 78].map(x => <circle key={x} cx={x} cy="38" r="3" fill={id === 'hat-golden-crown' ? '#f5a623' : 'white'} opacity={0.8}/>)}
     </g>
   );
   if (id === 'hat-cowboy') return (
     <g>
-      <ellipse cx="60" cy="52" rx="40" ry="6" fill="#111" stroke="white" strokeWidth="1.5"/>
-      <path d="M36,52 C36,52 32,28 60,28 C88,28 84,52 84,52 Z" fill="#111" stroke="white" strokeWidth="1.5"/>
+      <ellipse cx="60" cy="52" rx="40" ry="6" fill="#041540" stroke="white" strokeWidth="1.5"/>
+      <path d="M36,52 C36,52 32,28 60,28 C88,28 84,52 84,52 Z" fill="#041540" stroke="white" strokeWidth="1.5"/>
       <path d="M36,52 C36,46 84,46 84,52" stroke="rgba(255,255,255,0.4)" strokeWidth="2" fill="none"/>
     </g>
   );
   if (id === 'hat-party') return (
     <g>
-      <polygon points="60,22 38,56 82,56" fill="#111" stroke="white" strokeWidth="1.5"/>
+      <polygon points="60,22 38,56 82,56" fill="#041540" stroke="white" strokeWidth="1.5"/>
       <circle cx="60" cy="22" r="4" fill="white"/>
       {[{ x: 48, y: 44 }, { x: 60, y: 36 }, { x: 72, y: 44 }].map((p, i) => (
         <circle key={i} cx={p.x} cy={p.y} r="2.5" fill="white" opacity={0.6}/>
@@ -355,14 +355,14 @@ function HatItem({ id }: { id: string }) {
   );
   if (id === 'hat-headband') return (
     <g>
-      <rect x="25" y="48" width="70" height="6" rx="3" fill="#111" stroke="white" strokeWidth="1.2"/>
+      <rect x="25" y="48" width="70" height="6" rx="3" fill="#041540" stroke="white" strokeWidth="1.2"/>
     </g>
   );
   if (id === 'hat-pilot') return (
     <g>
-      <ellipse cx="60" cy="42" rx="32" ry="18" fill="#111" stroke="white" strokeWidth="1.5"/>
-      <rect x="28" y="50" width="64" height="6" rx="3" fill="#1a1a1a" stroke="white" strokeWidth="1"/>
-      <circle cx="60" cy="34" r="8" fill="#1a1a1a" stroke="white" strokeWidth="1.2"/>
+      <ellipse cx="60" cy="42" rx="32" ry="18" fill="#041540" stroke="white" strokeWidth="1.5"/>
+      <rect x="28" y="50" width="64" height="6" rx="3" fill="#0c255a" stroke="white" strokeWidth="1"/>
+      <circle cx="60" cy="34" r="8" fill="#0c255a" stroke="white" strokeWidth="1.2"/>
     </g>
   );
   if (id === 'hat-fire-crown') return (
@@ -383,8 +383,8 @@ function HatItem({ id }: { id: string }) {
   );
   if (id === 'hat-samurai') return (
     <g>
-      <path d="M25,52 L60,22 L95,52 Z" fill="#111" stroke="white" strokeWidth="1.5"/>
-      <rect x="30" y="48" width="60" height="8" rx="2" fill="#111" stroke="white" strokeWidth="1"/>
+      <path d="M25,52 L60,22 L95,52 Z" fill="#041540" stroke="white" strokeWidth="1.5"/>
+      <rect x="30" y="48" width="60" height="8" rx="2" fill="#041540" stroke="white" strokeWidth="1"/>
       <circle cx="60" cy="36" r="5" fill="white" opacity={0.3}/>
     </g>
   );
@@ -392,7 +392,7 @@ function HatItem({ id }: { id: string }) {
     <g style={{ filter: 'drop-shadow(0 0 12px rgba(168,85,247,0.5))' }}>
       <ellipse cx="60" cy="40" rx="34" ry="18" fill="#0a0020" stroke="#a855f7" strokeWidth="1.5"/>
       <rect x="26" y="48" width="68" height="8" rx="3" fill="#0a0020" stroke="#a855f7" strokeWidth="1"/>
-      {[40, 55, 70, 80].map((x, i) => <circle key={i} cx={x} cy={36 + (i % 2) * 4} r="1.5" fill={i % 2 === 0 ? '#a855f7' : '#60a5fa'} opacity={0.8}/>)}
+      {[40, 55, 70, 80].map((x, i) => <circle key={i} cx={x} cy={36 + (i % 2) * 4} r="1.5" fill={i % 2 === 0 ? '#a855f7' : '#4ade80'} opacity={0.8}/>)}
     </g>
   );
   if (id === 'hat-void-crown') return (
@@ -418,7 +418,7 @@ function GlassesItem({ id }: { id: string }) {
     </g>
   );
   if (id === 'glasses-cool' || id === 'glasses-aviator') return (
-    <g stroke="white" strokeWidth="1.8" fill="#111" opacity={0.9}>
+    <g stroke="white" strokeWidth="1.8" fill="#041540" opacity={0.9}>
       <rect x="29" y={eyeY - 10} width="28" height="14" rx="4"/>
       <rect x="63" y={eyeY - 10} width="28" height="14" rx="4"/>
       <line x1="57" y1={eyeY - 3} x2="63" y2={eyeY - 3}/>
@@ -471,21 +471,21 @@ function GlassesItem({ id }: { id: string }) {
 function AccessoryItem({ id }: { id: string }) {
   if (id === 'acc-bowtie') return (
     <g transform="translate(60, 110)" opacity={0.9}>
-      <polygon points="-14,-6 0,0 14,-6 14,6 0,0 -14,6" fill="#111" stroke="white" strokeWidth="1.5"/>
+      <polygon points="-14,-6 0,0 14,-6 14,6 0,0 -14,6" fill="#041540" stroke="white" strokeWidth="1.5"/>
       <circle cx="0" cy="0" r="3" fill="white"/>
     </g>
   );
   if (id === 'acc-scarf') return (
     <g opacity={0.9}>
       <path d="M28,105 C28,105 40,98 60,100 C80,102 92,95 92,105 C92,112 80,116 60,114 C40,112 28,112 28,105 Z"
-        fill="#111" stroke="white" strokeWidth="1.5"/>
-      <path d="M60,100 L58,120 L68,118 L66,100" fill="#111" stroke="white" strokeWidth="1"/>
+        fill="#041540" stroke="white" strokeWidth="1.5"/>
+      <path d="M60,100 L58,120 L68,118 L66,100" fill="#041540" stroke="white" strokeWidth="1"/>
     </g>
   );
   if (id === 'acc-medal' || id === 'acc-chain') return (
     <g>
       <line x1="60" y1="110" x2="60" y2="118" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5"/>
-      <circle cx="60" cy="122" r="7" fill="#111" stroke="white" strokeWidth="1.5"/>
+      <circle cx="60" cy="122" r="7" fill="#041540" stroke="white" strokeWidth="1.5"/>
       <text x="60" y="126" textAnchor="middle" fontSize="8" fill="white">★</text>
     </g>
   );
@@ -498,7 +498,7 @@ function AccessoryItem({ id }: { id: string }) {
   if (id === 'acc-crystal') return (
     <g style={{ filter: 'drop-shadow(0 0 6px rgba(74,222,128,0.5))' }}>
       <line x1="60" y1="108" x2="60" y2="114" stroke="rgba(74,222,128,0.6)" strokeWidth="1.5"/>
-      <polygon points="60,114 55,120 60,128 65,120" fill="#0a1a10" stroke="#60a5fa" strokeWidth="1.5"/>
+      <polygon points="60,114 55,120 60,128 65,120" fill="#0a1a10" stroke="#4ade80" strokeWidth="1.5"/>
     </g>
   );
   if (id === 'acc-wings-gold') return (
@@ -510,7 +510,7 @@ function AccessoryItem({ id }: { id: string }) {
   if (id === 'acc-diamond') return (
     <g>
       <line x1="60" y1="110" x2="60" y2="116" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5"/>
-      <polygon points="60,116 54,122 60,130 66,122" fill="#111" stroke="white" strokeWidth="1.5"/>
+      <polygon points="60,116 54,122 60,130 66,122" fill="#041540" stroke="white" strokeWidth="1.5"/>
     </g>
   );
   if (id === 'acc-cosmic-cape') return (

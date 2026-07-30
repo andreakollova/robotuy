@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = 'https://robotuy.com';
+  const base = 'https://robotuy.app';
   const now = new Date().toISOString();
 
   const staticPages = [

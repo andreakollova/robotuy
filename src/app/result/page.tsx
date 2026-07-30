@@ -63,7 +63,7 @@ function ResultContent() {
 
         {/* Quote */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}
-          style={{ padding: '14px 18px', background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 16, width: '100%' }}>
+          style={{ padding: '14px 18px', background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 16, width: '100%' }}>
           <p style={{ fontSize: 13, color: '#888', fontStyle: 'italic', margin: 0, lineHeight: 1.6 }}>
             &ldquo;{message}&rdquo;
           </p>
@@ -77,7 +77,7 @@ function ResultContent() {
             { icon: Zap, label: s('xpEarned', locale), value: `+${xpEarned}` },
             { icon: Flame, label: s('streak', locale), value: `${streak} ${s('days', locale)}` },
           ].map(({ icon: Icon, label, value }) => (
-            <div key={label} style={{ padding: '14px 16px', background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div key={label} style={{ padding: '14px 16px', background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
               <Icon size={18} color="#fff" />
               <div>
                 <div style={{ fontWeight: 800, fontSize: 16 }}>{value}</div>
@@ -98,7 +98,7 @@ function ResultContent() {
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
                   style={{
                     width: '100%', padding: '18px', borderRadius: 16,
-                    background: '#0a0a0a', border: '1.5px solid #2a2a2a',
+                    background: '#000a2b', border: '1.5px solid #2a2a2a',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
                     cursor: 'pointer',
                   }}
@@ -116,7 +116,7 @@ function ResultContent() {
                   transition={{ type: 'spring', stiffness: 200, damping: 20 }}
                   style={{
                     padding: '24px 20px', borderRadius: 16, textAlign: 'center',
-                    background: '#0a0a0a',
+                    background: '#000a2b',
                     border: `2px solid ${rc.border}`,
                     boxShadow: rc.glow !== 'none' ? rc.glow : undefined,
                     position: 'relative', overflow: 'hidden',

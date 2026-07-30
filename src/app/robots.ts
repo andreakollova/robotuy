@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/', '/projects/'],
     },
-    sitemap: ['https://robotuy.com/sitemap.xml', 'https://robotuy.sk/sitemap.xml'],
+    sitemap: ['https://robotuy.app/sitemap.xml', 'https://robotuy.app/sitemap.xml'],
   };
 }

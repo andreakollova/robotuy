@@ -51,7 +51,7 @@ function CheckoutForm({ onSuccess, onCancel }: { onSuccess: () => void; onCancel
         disabled={!stripe || loading}
         style={{
           width: '100%', padding: '16px', borderRadius: 14, marginTop: 16,
-          background: loading ? '#222' : '#60a5fa',
+          background: loading ? '#0c255a' : '#4ade80',
           color: loading ? '#555' : '#000',
           fontWeight: 700, fontSize: 15, border: 'none', cursor: loading ? 'not-allowed' : 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -94,8 +94,8 @@ export default function StripeCheckout({
         appearance: {
           theme: 'night',
           variables: {
-            colorPrimary: '#60a5fa',
-            colorBackground: '#111',
+            colorPrimary: '#4ade80',
+            colorBackground: '#041540',
             colorText: '#eee',
             colorDanger: '#ff8080',
             borderRadius: '12px',

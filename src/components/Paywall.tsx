@@ -84,8 +84,8 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
   const [error, setError] = useState('');
   const sk = locale === 'sk';
 
-  const accentGradient = 'linear-gradient(135deg, #60a5fa, #3b82f6)';
-  const accentColor = '#60a5fa';
+  const accentGradient = 'linear-gradient(135deg, #4ade80, #22c55e)';
+  const accentColor = '#4ade80';
 
   return (
     <motion.div
@@ -102,7 +102,7 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
       }}
     >
     <div className="paywall-card" style={{
-      width: '100%', maxWidth: 440, background: '#0a0a0a', borderRadius: 0,
+      width: '100%', maxWidth: 440, background: '#000a2b', borderRadius: 0,
       overflow: 'auto', maxHeight: '100vh', position: 'relative',
     }}>
       {/* X close */}
@@ -153,13 +153,13 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
 
       {/* Monthly / Yearly toggle - small */}
       <div style={{ padding: '0 60px 14px' }}>
-        <div style={{ display: 'flex', background: '#0a0a0a', borderRadius: 10, padding: 2 }}>
+        <div style={{ display: 'flex', background: '#000a2b', borderRadius: 10, padding: 2 }}>
           {(['monthly', 'yearly'] as const).map(tab => {
             const active = (tab === 'monthly' && (plan === 'trial' || plan === 'monthly')) || (tab === 'yearly' && plan === 'yearly');
             return (
               <button key={tab} onClick={() => setPlan(tab === 'monthly' ? 'trial' : 'yearly')} style={{
                 flex: 1, padding: '7px', borderRadius: 8, border: 'none', cursor: 'pointer',
-                background: active ? '#1a1a1a' : 'transparent',
+                background: active ? '#0c255a' : 'transparent',
                 fontSize: 12, fontWeight: 700, color: active ? '#fff' : '#555',
               }}>
                 {tab === 'monthly' ? (sk ? 'Mesačne' : 'Monthly') : (sk ? 'Ročne' : 'Yearly')}
@@ -174,8 +174,8 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
         {/* Free Trial */}
         <button onClick={() => setPlan(plan === 'yearly' ? 'yearly' : 'trial')} style={{
           flex: 1, padding: '16px 10px', borderRadius: 16, border: 'none', cursor: 'pointer',
-          background: (plan === 'trial' || plan === 'yearly') ? 'rgba(74,222,128,0.05)' : '#0a0a0a',
-          outline: (plan === 'trial' || plan === 'yearly') ? '2px solid #60a5fa' : '1px solid #1a1a1a',
+          background: (plan === 'trial' || plan === 'yearly') ? 'rgba(74,222,128,0.05)' : '#000a2b',
+          outline: (plan === 'trial' || plan === 'yearly') ? '2px solid #4ade80' : '1px solid #1a1a1a',
           textAlign: 'center', position: 'relative',
         }}>
           <div style={{
@@ -204,8 +204,8 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
         {/* Full price */}
         <button onClick={() => setPlan('monthly')} style={{
           flex: 1, padding: '16px 10px', borderRadius: 16, border: 'none', cursor: 'pointer',
-          background: plan === 'monthly' ? 'rgba(74,222,128,0.05)' : '#0a0a0a',
-          outline: plan === 'monthly' ? '2px solid #60a5fa' : '1px solid #1a1a1a',
+          background: plan === 'monthly' ? 'rgba(74,222,128,0.05)' : '#000a2b',
+          outline: plan === 'monthly' ? '2px solid #4ade80' : '1px solid #1a1a1a',
           textAlign: 'center',
         }}>
           <div style={{ fontSize: 22, fontWeight: 600, color: plan === 'monthly' ? '#fff' : '#555', marginTop: 14 }}>
@@ -364,7 +364,7 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
                 placeholder={sk ? 'Zadaj kód' : 'Enter code'}
                 style={{
                   flex: 1, padding: '10px 12px', borderRadius: 10,
-                  background: '#0a0a0a', border: '1px solid #222',
+                  background: '#000a2b', border: '1px solid #222',
                   color: '#fff', fontSize: 13, fontFamily: 'monospace',
                   outline: 'none', textTransform: 'uppercase',
                 }}

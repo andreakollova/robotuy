@@ -479,7 +479,7 @@ export default function ArenaPage() {
               width: 144, height: 32, borderRadius: 8,
               background: '#161616', border: '1px solid #2a2a2a',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 10, fontWeight: 700, color: '#60a5fa', letterSpacing: '0.08em',
+              fontSize: 10, fontWeight: 700, color: '#4ade80', letterSpacing: '0.08em',
             }}
           >
             SPACE = BOOST
@@ -493,7 +493,7 @@ export default function ArenaPage() {
         <Byte mood="happy" size={56} equipment={equipment} animate={false} />
       </motion.div>
       <motion.div animate={{ scale: [0, 1.2, 0] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0.4 }}
-        style={{ width: 12, height: 12, borderRadius: 6, background: '#60a5fa', margin: '0 -2px', zIndex: 2 }} />
+        style={{ width: 12, height: 12, borderRadius: 6, background: '#4ade80', margin: '0 -2px', zIndex: 2 }} />
       <motion.div animate={{ x: [0, -12, 4, 0] }} transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}>
         <Byte mood="happy" size={56} equipment={BOTS[3].equipment} animate={false} />
       </motion.div>
@@ -505,7 +505,7 @@ export default function ArenaPage() {
         transition={{ duration: 1.5, repeat: Infinity }}
         style={{ width: 56, height: 56, borderRadius: 16, background: 'rgba(74,222,128,0.1)', border: '2px solid rgba(74,222,128,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       >
-        <Check size={28} color="#60a5fa" strokeWidth={3} />
+        <Check size={28} color="#4ade80" strokeWidth={3} />
       </motion.div>
     </div>,
     // Step 3: Mode selection (handled inline)
@@ -537,7 +537,7 @@ export default function ArenaPage() {
               style={{ textAlign: 'center', maxWidth: 340, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
             >
               <Byte mood="happy" size={100} equipment={equipment} />
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#60a5fa', marginTop: 4, letterSpacing: '0.04em' }}>{name || 'You'}</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: '#4ade80', marginTop: 4, letterSpacing: '0.04em' }}>{name || 'You'}</div>
               <h2 style={{ fontSize: 32, fontWeight: 800, color: '#fff', margin: '20px 0 4px', letterSpacing: '-0.03em' }}>
                 {introStep === 0 ? 'Arena' : ''}
               </h2>
@@ -574,7 +574,7 @@ export default function ArenaPage() {
                     key={i}
                     animate={{ scale: i === introStep ? 1 : 0.8, opacity: i === introStep ? 1 : 0.4 }}
                     transition={{ duration: 0.25 }}
-                    style={{ width: 10, height: 10, borderRadius: 5, background: i === introStep ? '#60a5fa' : '#333', cursor: 'pointer' }}
+                    style={{ width: 10, height: 10, borderRadius: 5, background: i === introStep ? '#4ade80' : '#0f2d6b', cursor: 'pointer' }}
                     onClick={() => setIntroStep(i)}
                   />
                 ))}
@@ -625,7 +625,7 @@ export default function ArenaPage() {
           {/* Entity labels (separate layer so they don't rotate) */}
           {entities.map(e => {
             const botDef = BOTS.find(b => b.name === e.name);
-            const diffColor = botDef?.difficulty === 'hard' ? '#f59e0b' : botDef?.difficulty === 'medium' ? '#60a5fa' : '#555';
+            const diffColor = botDef?.difficulty === 'hard' ? '#f59e0b' : botDef?.difficulty === 'medium' ? '#4ade80' : '#555';
             return (
               <div
                 key={`label-${e.id}`}
@@ -637,7 +637,7 @@ export default function ArenaPage() {
                   textShadow: '0 1px 4px rgba(0,0,0,0.8)',
                 }}
               >
-                <div style={{ fontSize: 10, fontWeight: 700, color: e.isPlayer ? '#60a5fa' : '#ccc', letterSpacing: '0.03em' }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: e.isPlayer ? '#4ade80' : '#ccc', letterSpacing: '0.03em' }}>
                   {e.name}
                 </div>
                 {!e.isPlayer && botDef && (
@@ -682,7 +682,7 @@ export default function ArenaPage() {
               cx={(e.x / WORLD_W) * MINIMAP_SIZE}
               cy={(e.y / WORLD_H) * MINIMAP_SIZE}
               r={e.isPlayer ? 4 : 2.5}
-              fill={e.isPlayer ? '#60a5fa' : 'rgba(255,255,255,0.4)'}
+              fill={e.isPlayer ? '#4ade80' : 'rgba(255,255,255,0.4)'}
             />
           ))}
         </svg>
@@ -742,10 +742,10 @@ export default function ArenaPage() {
                 display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0',
                 borderTop: i > 0 ? '1px solid #111' : 'none',
               }}>
-                <span style={{ fontSize: 10, fontWeight: 800, color: i === 0 ? '#60a5fa' : '#555', width: 16 }}>#{i + 1}</span>
-                <span style={{ fontSize: 11, fontWeight: 600, color: entry.isPlayer ? '#60a5fa' : '#ccc', flex: 1 }}>{entry.name}</span>
+                <span style={{ fontSize: 10, fontWeight: 800, color: i === 0 ? '#4ade80' : '#555', width: 16 }}>#{i + 1}</span>
+                <span style={{ fontSize: 11, fontWeight: 600, color: entry.isPlayer ? '#4ade80' : '#ccc', flex: 1 }}>{entry.name}</span>
                 {entry.difficulty && (
-                  <span style={{ fontSize: 8, fontWeight: 700, color: entry.difficulty === 'hard' ? '#f59e0b' : entry.difficulty === 'medium' ? '#60a5fa' : '#555' }}>
+                  <span style={{ fontSize: 8, fontWeight: 700, color: entry.difficulty === 'hard' ? '#f59e0b' : entry.difficulty === 'medium' ? '#4ade80' : '#555' }}>
                     {entry.difficulty.toUpperCase()}
                   </span>
                 )}
@@ -766,16 +766,16 @@ export default function ArenaPage() {
         fontSize: 11, fontWeight: 600, color: '#888',
         display: 'flex', alignItems: 'center', gap: 8,
       }}>
-        <div style={{ width: 6, height: 6, borderRadius: 3, background: '#60a5fa' }} />
+        <div style={{ width: 6, height: 6, borderRadius: 3, background: '#4ade80' }} />
         {name || 'You'}
-        <div style={{ width: 1, height: 14, background: '#222' }} />
+        <div style={{ width: 1, height: 14, background: '#0c255a' }} />
         <button
           onClick={() => { setGameMode(gameMode === 'quiz' ? 'free' : 'quiz'); setCollidedWith(new Set()); collidedRef.current = new Set(); }}
           style={{
             background: gameMode === 'quiz' ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.05)',
-            border: `1px solid ${gameMode === 'quiz' ? 'rgba(74,222,128,0.3)' : '#222'}`,
+            border: `1px solid ${gameMode === 'quiz' ? 'rgba(74,222,128,0.3)' : '#0c255a'}`,
             borderRadius: 8, padding: '3px 10px', cursor: 'pointer',
-            fontSize: 10, fontWeight: 700, color: gameMode === 'quiz' ? '#60a5fa' : '#555',
+            fontSize: 10, fontWeight: 700, color: gameMode === 'quiz' ? '#4ade80' : '#555',
           }}
         >
           {gameMode === 'quiz' ? 'Quiz' : 'Free'}
@@ -801,7 +801,7 @@ export default function ArenaPage() {
               animate={{ scale: 1, y: 0 }}
               style={{
                 maxWidth: 420, width: '100%',
-                background: '#111', border: '1px solid #222',
+                background: '#041540', border: '1px solid #222',
                 borderRadius: 20, padding: '24px 20px',
                 position: 'relative', maxHeight: '90vh', overflowY: 'auto',
                 boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
@@ -811,7 +811,7 @@ export default function ArenaPage() {
               <button onClick={closeBattle} style={{
                 position: 'absolute', top: -44, right: 0,
                 width: 32, height: 32, borderRadius: 8,
-                background: '#1a1a1a', border: '1px solid #2a2a2a',
+                background: '#0c255a', border: '1px solid #2a2a2a',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: 'pointer', color: '#888', zIndex: 10,
               }}>
@@ -823,15 +823,15 @@ export default function ArenaPage() {
                   <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginBottom: 24 }}>
                     <div style={{ textAlign: 'center' }}>
                       <Byte mood={battleResult === 'win' ? 'celebrating' : 'worried'} size={110} equipment={equipment} />
-                      <div style={{ fontSize: 12, fontWeight: 700, color: '#60a5fa', marginTop: 6 }}>{name || 'You'}</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: '#4ade80', marginTop: 6 }}>{name || 'You'}</div>
                     </div>
-                    <div style={{ fontSize: 20, fontWeight: 800, color: '#333', alignSelf: 'center' }}>VS</div>
+                    <div style={{ fontSize: 20, fontWeight: 800, color: '#0f2d6b', alignSelf: 'center' }}>VS</div>
                     <div style={{ textAlign: 'center' }}>
                       <Byte mood="happy" size={110} equipment={battle.opponent.equipment} />
                       <div style={{ fontSize: 12, fontWeight: 700, color: '#888', marginTop: 6 }}>{battle.opponent.name}</div>
                     </div>
                   </div>
-                  <h2 style={{ fontSize: 28, fontWeight: 800, color: battleResult === 'win' ? '#60a5fa' : '#ff8080', marginBottom: 8 }}>
+                  <h2 style={{ fontSize: 28, fontWeight: 800, color: battleResult === 'win' ? '#4ade80' : '#ff8080', marginBottom: 8 }}>
                     {battleResult === 'win' ? (locale === 'sk' ? 'Výhra!' : 'You win!') : `${battle.opponent.name} ${locale === 'sk' ? 'vyhral!' : 'wins!'}`}
                   </h2>
                   <p style={{ fontSize: 16, color: '#888', marginBottom: 4, fontWeight: 700 }}>{battleScore.player} - {battleScore.bot}</p>
@@ -839,7 +839,7 @@ export default function ArenaPage() {
                     const bd = BOTS.find(b => b.name === battle.opponent.name);
                     const xpR = bd?.difficulty === 'hard' ? 50 : bd?.difficulty === 'medium' ? 30 : 15;
                     const gemR = bd?.difficulty === 'hard' ? 5 : bd?.difficulty === 'medium' ? 3 : 1;
-                    return <p style={{ fontSize: 14, color: '#60a5fa', fontWeight: 600, marginBottom: 24 }}>+{xpR} XP  +{gemR} Gems</p>;
+                    return <p style={{ fontSize: 14, color: '#4ade80', fontWeight: 600, marginBottom: 24 }}>+{xpR} XP  +{gemR} Gems</p>;
                   })()}
                   <button onClick={closeBattle} style={{ padding: '16px 40px', borderRadius: 14, background: '#EDEDED', color: '#000', fontWeight: 700, fontSize: 16, border: 'none', cursor: 'pointer', width: '100%', maxWidth: 300 }}>
                     {locale === 'sk' ? 'Pokračovať' : 'Continue'}
@@ -852,7 +852,7 @@ export default function ArenaPage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <Byte mood="happy" size={64} equipment={equipment} animate={false} />
                       <div>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: '#60a5fa' }}>{name || 'You'}</div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: '#4ade80' }}>{name || 'You'}</div>
                         <div style={{ fontSize: 22, fontWeight: 800, color: '#fff' }}>{battleScore.player}</div>
                       </div>
                     </div>
@@ -866,12 +866,12 @@ export default function ArenaPage() {
                     </div>
                   </div>
 
-                  <div style={{ background: '#111', border: '1px solid #1a1a1a', borderRadius: 14, padding: '16px 18px', marginBottom: 10 }}>
+                  <div style={{ background: '#041540', border: '1px solid #1a1a1a', borderRadius: 14, padding: '16px 18px', marginBottom: 10 }}>
                     <h3 style={{ fontSize: 16, fontWeight: 700, color: '#eee', lineHeight: 1.4, margin: 0 }}>
                       {(locale === 'sk' && (battle.questions[battleIdx] as any)?.question_text_sk) || battle.questions[battleIdx]?.question_text || ''}
                     </h3>
                     {battle.questions[battleIdx]?.code_snippet && (
-                      <pre style={{ background: '#0a0a0a', borderRadius: 8, padding: '10px 12px', fontSize: 12, color: '#ccc', marginTop: 10, overflow: 'auto', fontFamily: 'JetBrains Mono, monospace', lineHeight: 1.6 }}>
+                      <pre style={{ background: '#000a2b', borderRadius: 8, padding: '10px 12px', fontSize: 12, color: '#ccc', marginTop: 10, overflow: 'auto', fontFamily: 'JetBrains Mono, monospace', lineHeight: 1.6 }}>
                         {battle.questions[battleIdx].code_snippet}
                       </pre>
                     )}
@@ -894,15 +894,15 @@ export default function ArenaPage() {
                             style={{
                               padding: '14px 16px', borderRadius: 12, textAlign: 'left', display: 'flex', alignItems: 'center', gap: 12,
                               fontSize: 15, fontWeight: 500, cursor: battleState !== 'idle' ? 'default' : 'pointer',
-                              background: isCorrect ? 'rgba(74,222,128,0.08)' : isWrong ? 'rgba(255,80,80,0.06)' : '#0a0a0a',
-                              border: `1.5px solid ${isCorrect ? 'rgba(74,222,128,0.4)' : isWrong ? 'rgba(255,80,80,0.3)' : '#1a1a1a'}`,
-                              color: isCorrect ? '#60a5fa' : isWrong ? '#ff8080' : '#ccc',
+                              background: isCorrect ? 'rgba(74,222,128,0.08)' : isWrong ? 'rgba(255,80,80,0.06)' : '#000a2b',
+                              border: `1.5px solid ${isCorrect ? 'rgba(74,222,128,0.4)' : isWrong ? 'rgba(255,80,80,0.3)' : '#0c255a'}`,
+                              color: isCorrect ? '#4ade80' : isWrong ? '#ff8080' : '#ccc',
                             }}
                           >
                             <div style={{
                               width: 28, height: 28, borderRadius: 8, flexShrink: 0,
                               display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              background: isCorrect ? '#60a5fa' : isWrong ? '#ff8080' : '#161616',
+                              background: isCorrect ? '#4ade80' : isWrong ? '#ff8080' : '#161616',
                               color: isCorrect || isWrong ? '#000' : '#888', fontSize: 12, fontWeight: 700,
                             }}>
                               {isCorrect ? <Check size={12} strokeWidth={3} /> : opt.label}

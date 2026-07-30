@@ -7,7 +7,7 @@ type Locale = 'en' | 'sk';
 /** Detect locale: .sk domain = Slovak, device language sk = Slovak, otherwise English */
 function detectLocale(): Locale {
   if (typeof window === 'undefined') return 'en';
-  // Domain-based: robotuy.sk = SK
+  // Domain-based: robotuy.app = SK
   const host = window.location.hostname;
   if (host.endsWith('.sk')) return 'sk';
   // Device language: Slovak device = SK

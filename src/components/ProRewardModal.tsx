@@ -34,7 +34,7 @@ export default function ProRewardModal() {
             animate={{ scale: 1, y: 0 }}
             style={{
               maxWidth: 340, width: '100%',
-              background: '#111', border: '1px solid #222',
+              background: '#041540', border: '1px solid #222',
               borderRadius: 24, padding: '36px 24px',
               textAlign: 'center',
             }}
@@ -52,14 +52,14 @@ export default function ProRewardModal() {
               transition={{ delay: 0.3 }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 16 }}>
-                <Sparkles size={18} color="#60a5fa" />
+                <Sparkles size={18} color="#4ade80" />
                 <h2 style={{ fontSize: 20, fontWeight: 800, color: '#fff' }}>
                   {sk ? 'Nová odmena!' : 'New reward!'}
                 </h2>
-                <Sparkles size={18} color="#60a5fa" />
+                <Sparkles size={18} color="#4ade80" />
               </div>
 
-              <p style={{ fontSize: 18, fontWeight: 700, color: '#60a5fa', marginTop: 8 }}>
+              <p style={{ fontSize: 18, fontWeight: 700, color: '#4ade80', marginTop: 8 }}>
                 Pro Glow
               </p>
               <p style={{ fontSize: 13, color: '#888', marginTop: 4, lineHeight: 1.5 }}>
@@ -73,7 +73,7 @@ export default function ProRewardModal() {
                   onClick={() => { dismissProReward(); router.push('/workshop'); }}
                   style={{
                     flex: 1, padding: '14px', borderRadius: 12,
-                    background: '#1a1a1a', border: '1px solid #333',
+                    background: '#0c255a', border: '1px solid #333',
                     color: '#fff', fontWeight: 700, fontSize: 13,
                     cursor: 'pointer',
                   }}

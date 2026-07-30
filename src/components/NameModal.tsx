@@ -104,7 +104,7 @@ export default function NameModal() {
                   onKeyDown={e => e.key === 'Enter' && handleNameSubmit()}
                   autoFocus
                   style={{
-                    width: '100%', background: '#0F0F0F', border: '1px solid rgba(255,255,255,0.08)',
+                    width: '100%', background: '#010d33', border: '1px solid rgba(255,255,255,0.08)',
                     borderRadius: 12, padding: '14px 16px', fontSize: 15, color: '#EDEDED',
                     outline: 'none', fontFamily: 'DM Sans, sans-serif', marginBottom: 12,
                     transition: 'border-color 0.15s', boxSizing: 'border-box',
@@ -120,7 +120,7 @@ export default function NameModal() {
                   style={{
                     width: '100%', padding: '14px', borderRadius: 12,
                     background: value.trim() ? '#EDEDED' : '#1C1C1C',
-                    color: value.trim() ? '#0F0F0F' : '#3A3A3A',
+                    color: value.trim() ? '#010d33' : '#3A3A3A',
                     fontWeight: 700, fontSize: 15, border: 'none',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                     cursor: value.trim() ? 'pointer' : 'not-allowed',
@@ -161,7 +161,7 @@ export default function NameModal() {
                       whileTap={{ scale: 0.98 }}
                       style={{
                         width: '100%', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14,
-                        background: '#0a0a0a', border: '1px solid #222', borderRadius: 14,
+                        background: '#000a2b', border: '1px solid #222', borderRadius: 14,
                         cursor: 'pointer', textAlign: 'left',
                       }}
                     >
@@ -218,7 +218,7 @@ export default function NameModal() {
                       whileTap={{ scale: 0.95 }}
                       style={{
                         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-                        padding: '14px 8px', background: '#0a0a0a', border: '1px solid #222',
+                        padding: '14px 8px', background: '#000a2b', border: '1px solid #222',
                         borderRadius: 14, cursor: 'pointer',
                       }}
                     >

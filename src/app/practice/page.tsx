@@ -112,7 +112,7 @@ export default function PracticePage() {
         <button onClick={() => router.push('/')} style={{ color: '#777', cursor: 'pointer', padding: 4, background: 'none', border: 'none' }}>
           <X size={20} />
         </button>
-        <div style={{ flex: 1, height: 4, borderRadius: 2, background: '#111', overflow: 'hidden' }}>
+        <div style={{ flex: 1, height: 4, borderRadius: 2, background: '#041540', overflow: 'hidden' }}>
           <motion.div style={{ height: '100%', background: '#ef4444', borderRadius: 2 }} animate={{ width: `${((index + 1) / questions.length) * 100}%` }} />
         </div>
       </div>
@@ -156,11 +156,11 @@ export default function PracticePage() {
                 const isSelected = selected === opt.option_label;
                 const isCorrect = opt.is_correct;
                 const bg = state !== 'idle'
-                  ? isCorrect ? 'rgba(74,222,128,0.1)' : isSelected ? 'rgba(239,68,68,0.1)' : '#0a0a0a'
-                  : '#0a0a0a';
+                  ? isCorrect ? 'rgba(74,222,128,0.1)' : isSelected ? 'rgba(239,68,68,0.1)' : '#000a2b'
+                  : '#000a2b';
                 const border = state !== 'idle'
-                  ? isCorrect ? 'rgba(74,222,128,0.4)' : isSelected ? 'rgba(239,68,68,0.4)' : '#1a1a1a'
-                  : '#1a1a1a';
+                  ? isCorrect ? 'rgba(74,222,128,0.4)' : isSelected ? 'rgba(239,68,68,0.4)' : '#0c255a'
+                  : '#0c255a';
                 return (
                   <button
                     key={opt.option_label}
@@ -198,7 +198,7 @@ export default function PracticePage() {
                   border: `1px solid ${state === 'correct' ? 'rgba(74,222,128,0.2)' : 'rgba(239,68,68,0.2)'}`,
                 }}
               >
-                <p style={{ fontSize: 14, fontWeight: 700, color: state === 'correct' ? '#60a5fa' : '#ef4444', margin: '0 0 6px' }}>
+                <p style={{ fontSize: 14, fontWeight: 700, color: state === 'correct' ? '#4ade80' : '#ef4444', margin: '0 0 6px' }}>
                   {state === 'correct' ? (locale === 'sk' ? 'Správne!' : 'Correct!') : (locale === 'sk' ? 'Nesprávne' : 'Incorrect')}
                 </p>
                 {correctOpt && (
@@ -213,7 +213,7 @@ export default function PracticePage() {
                   <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
                     <button
                       onClick={() => { removeWrongQuestion(q.id); next(); }}
-                      style={{ padding: '8px 14px', borderRadius: 8, background: 'rgba(74,222,128,0.1)', border: '1px solid rgba(74,222,128,0.3)', color: '#60a5fa', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+                      style={{ padding: '8px 14px', borderRadius: 8, background: 'rgba(74,222,128,0.1)', border: '1px solid rgba(74,222,128,0.3)', color: '#4ade80', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
                     >
                       <Trash2 size={12} />
                       {locale === 'sk' ? 'Odstrániť z listu' : 'Remove from list'}

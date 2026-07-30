@@ -15,7 +15,7 @@ export const projectTopics: ProjectTopic[] = [
           {
             id: 'rn-comp-1', type: 'explain', conceptId: 'rn-view',
             prompt: 'View, Text, TouchableOpacity - stavebné bloky RN',
-            codeSnippet: `import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';\n\nfunction Karta({ nadpis, onPress }) {\n  return (\n    <TouchableOpacity onPress={onPress} style={styles.karta}>\n      <View style={styles.obsah}>\n        <Text style={styles.nadpis}>{nadpis}</Text>\n      </View>\n    </TouchableOpacity>\n  );\n}\n\nconst styles = StyleSheet.create({\n  karta: { borderRadius: 16, padding: 16, backgroundColor: '#1a1a1a' },\n  obsah: { flexDirection: 'row', alignItems: 'center' },\n  nadpis: { fontSize: 16, color: '#fff', fontWeight: '700' },\n});`,
+            codeSnippet: `import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';\n\nfunction Karta({ nadpis, onPress }) {\n  return (\n    <TouchableOpacity onPress={onPress} style={styles.karta}>\n      <View style={styles.obsah}>\n        <Text style={styles.nadpis}>{nadpis}</Text>\n      </View>\n    </TouchableOpacity>\n  );\n}\n\nconst styles = StyleSheet.create({\n  karta: { borderRadius: 16, padding: 16, backgroundColor: '#0c255a' },\n  obsah: { flexDirection: 'row', alignItems: 'center' },\n  nadpis: { fontSize: 16, color: '#fff', fontWeight: '700' },\n});`,
             explanation: `**Čo je to?** React Native nemá div ani button - má View (ako div), Text (ako p/span), TouchableOpacity (klikateľný element).
 
 **Prečo existujú?** RN prekladá JS komponenty na natívne iOS/Android UI prvky. View → UIView (iOS) / android.view.View (Android). Preto nevyzerá ako webview - vyzerá ako skutočná natívna app.

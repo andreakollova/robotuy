@@ -142,9 +142,9 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
 
           {/* Divider */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '4px 0 16px' }}>
-            <div style={{ flex: 1, height: 1, background: '#222' }} />
+            <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
             <span style={{ fontSize: 11, color: '#555' }}>{locale === 'sk' ? 'alebo' : 'or'}</span>
-            <div style={{ flex: 1, height: 1, background: '#222' }} />
+            <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
           </div>
 
           <AnimatePresence mode="wait">
@@ -159,7 +159,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
                   autoFocus
                   style={{
                     width: '100%', padding: '11px 14px', borderRadius: 10,
-                    background: '#0a0a0a', border: '1px solid #222', color: '#fff',
+                    background: '#000a2b', border: '1px solid #222', color: '#fff',
                     fontSize: 14, fontFamily: 'inherit', outline: 'none', marginBottom: 12,
                     boxSizing: 'border-box',
                   }}
@@ -169,7 +169,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
                   disabled={loading || !email.trim()}
                   style={{
                     width: '100%', padding: '12px', borderRadius: 12,
-                    background: email.trim() ? '#fff' : '#222',
+                    background: email.trim() ? '#fff' : '#0c255a',
                     color: email.trim() ? '#000' : '#555',
                     fontWeight: 700, fontSize: 14, border: 'none', cursor: 'pointer',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -197,7 +197,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
                   autoFocus
                   style={{
                     width: '100%', padding: '14px', borderRadius: 10,
-                    background: '#0a0a0a', border: '1px solid #222', color: '#fff',
+                    background: '#000a2b', border: '1px solid #222', color: '#fff',
                     fontSize: 24, fontFamily: 'monospace', outline: 'none', marginBottom: 12,
                     textAlign: 'center', letterSpacing: '0.3em', boxSizing: 'border-box',
                   }}
@@ -207,7 +207,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
                   disabled={loading || otp.length < 8}
                   style={{
                     width: '100%', padding: '12px', borderRadius: 12,
-                    background: otp.length >= 8 ? '#fff' : '#222',
+                    background: otp.length >= 8 ? '#fff' : '#0c255a',
                     color: otp.length >= 8 ? '#000' : '#555',
                     fontWeight: 700, fontSize: 14, border: 'none', cursor: 'pointer',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -222,7 +222,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
                   <button
                     onClick={handleResend}
                     disabled={resendTimer > 0}
-                    style={{ background: 'none', border: 'none', color: resendTimer > 0 ? '#333' : '#888', fontSize: 12, cursor: resendTimer > 0 ? 'default' : 'pointer' }}
+                    style={{ background: 'none', border: 'none', color: resendTimer > 0 ? '#0f2d6b' : '#888', fontSize: 12, cursor: resendTimer > 0 ? 'default' : 'pointer' }}
                   >
                     {resendTimer > 0
                       ? (locale === 'sk' ? `Poslať znova (${resendTimer}s)` : `Resend (${resendTimer}s)`)

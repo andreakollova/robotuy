@@ -57,7 +57,7 @@ export default function WidgetTip() {
             {/* Mini widget preview - matches real widget design */}
             <div style={{
               width: 64, height: 64, borderRadius: 16, flexShrink: 0,
-              background: 'linear-gradient(135deg, #0a0a0a, #111)',
+              background: 'linear-gradient(135deg, #000a2b, #111)',
               border: '1px solid #222',
               display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
               padding: '7px 8px',
@@ -72,7 +72,7 @@ export default function WidgetTip() {
               </div>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 800, color: '#fff', lineHeight: 1 }}>API</div>
-                <div style={{ fontSize: 5, color: '#60a5fa', marginTop: 1 }}>Application Programming...</div>
+                <div style={{ fontSize: 5, color: '#4ade80', marginTop: 1 }}>Application Programming...</div>
               </div>
             </div>
 
@@ -85,13 +85,13 @@ export default function WidgetTip() {
                   <>
                     <span style={{ color: '#ccc' }}>1.</span> Dlho drž na ploche iPhonu<br/>
                     <span style={{ color: '#ccc' }}>2.</span> Klikni <span style={{ color: '#fff', fontWeight: 600 }}>Upraviť</span> → <span style={{ color: '#fff', fontWeight: 600 }}>Pridať widget</span><br/>
-                    <span style={{ color: '#ccc' }}>3.</span> Hľadaj <span style={{ color: '#3b82f6', fontWeight: 600 }}>Robotuy</span> → vyber veľkosť → pridaj
+                    <span style={{ color: '#ccc' }}>3.</span> Hľadaj <span style={{ color: '#22c55e', fontWeight: 600 }}>Robotuy</span> → vyber veľkosť → pridaj
                   </>
                 ) : (
                   <>
                     <span style={{ color: '#ccc' }}>1.</span> Long press on iPhone Home Screen<br/>
                     <span style={{ color: '#ccc' }}>2.</span> Tap <span style={{ color: '#fff', fontWeight: 600 }}>Edit</span> → <span style={{ color: '#fff', fontWeight: 600 }}>Add Widget</span><br/>
-                    <span style={{ color: '#ccc' }}>3.</span> Search <span style={{ color: '#3b82f6', fontWeight: 600 }}>Robotuy</span> → pick size → add
+                    <span style={{ color: '#ccc' }}>3.</span> Search <span style={{ color: '#22c55e', fontWeight: 600 }}>Robotuy</span> → pick size → add
                   </>
                 )}
               </div>

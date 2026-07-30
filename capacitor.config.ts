@@ -1,20 +1,18 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'sk.robotuy.app',
+  appId: 'app.robotuy',
   appName: 'Robotuy',
   webDir: 'public',
   server: {
-    url: 'https://www.robotuy.com',
+    url: 'https://www.robotuy.app',
     cleartext: false,
     allowNavigation: [
       '*.supabase.co',
       '*.google.com',
       'accounts.google.com',
-      'robotuy.sk',
-      '*.robotuy.sk',
-      'robotuy.com',
-      '*.robotuy.com',
+      'robotuy.app',
+      '*.robotuy.app',
     ],
   },
   ios: {
@@ -28,7 +26,7 @@ const config: CapacitorConfig = {
     SplashScreen: {
       launchAutoHide: false,
       launchShowDuration: 0,
-      backgroundColor: '#0F0F0F',
+      backgroundColor: '#010d33',
       showSpinner: false,
       splashFullScreen: true,
       splashImmersive: true,

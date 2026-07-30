@@ -18,7 +18,7 @@ export const todoListProject: InteractiveProject = {
     'meniť stav aplikácie',
   ],
   icon: '📝',
-  color: '#3b82f6',
+  color: '#22c55e',
   totalSteps: 10,
   sections: [
     {

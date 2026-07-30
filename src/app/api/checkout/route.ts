@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
   try {
     const { plan, userId, email } = await req.json();
     const priceId = plan === 'yearly' ? PRICES.yearly : PRICES.monthly;
-    const origin = req.headers.get('origin') || 'https://robotuy.com';
+    const origin = req.headers.get('origin') || 'https://robotuy.app';
 
     const sessionParams: any = {
       mode: 'subscription',

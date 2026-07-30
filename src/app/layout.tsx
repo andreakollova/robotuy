@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const headerList = await headers();
   const host = headerList.get('host') || '';
   const isSk = host.endsWith('.sk');
-  const baseUrl = isSk ? 'https://robotuy.sk' : 'https://robotuy.com';
+  const baseUrl = isSk ? 'https://robotuy.app' : 'https://robotuy.app';
 
   return {
     title: {
@@ -31,8 +31,8 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: baseUrl,
       languages: {
-        'en': 'https://robotuy.com',
-        'sk': 'https://robotuy.sk',
+        'en': 'https://robotuy.app',
+        'sk': 'https://robotuy.app',
       },
     },
     openGraph: {
@@ -89,7 +89,7 @@ function JsonLd({ isSk }: { isSk: boolean }) {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
     name: 'Robotuy',
-    url: isSk ? 'https://robotuy.sk' : 'https://robotuy.com',
+    url: isSk ? 'https://robotuy.app' : 'https://robotuy.app',
     description: isSk
       ? 'Interaktívna platforma na učenie programovania'
       : 'Interactive platform for learning programming',
@@ -126,12 +126,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('robotuy-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}` }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="alternate" hrefLang="en" href="https://robotuy.com" />
-        <link rel="alternate" hrefLang="sk" href="https://robotuy.sk" />
-        <link rel="alternate" hrefLang="x-default" href="https://robotuy.com" />
+        <link rel="alternate" hrefLang="en" href="https://robotuy.app" />
+        <link rel="alternate" hrefLang="sk" href="https://robotuy.app" />
+        <link rel="alternate" hrefLang="x-default" href="https://robotuy.app" />
         <JsonLd isSk={isSk} />
       </head>
-      <body style={{ margin: 0, background: '#0A0A0A' }}>
+      <body style={{ margin: 0, background: '#010d33' }}>
         <LocaleInit />
         <AuthGate>
           <BottomNav />

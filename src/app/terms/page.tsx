@@ -7,7 +7,7 @@ export default function TermsPage() {
   const router = useRouter();
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0F0F0F', color: '#ccc', padding: '60px 20px 120px' }}>
+    <div style={{ minHeight: '100vh', background: '#010d33', color: '#ccc', padding: '60px 20px 120px' }}>
       <div style={{ maxWidth: 640, margin: '0 auto' }}>
         <button onClick={() => router.back()} style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
           <ArrowLeft size={14} /> Back
@@ -21,7 +21,7 @@ export default function TermsPage() {
           <p>By using Robotuy ("the App"), you agree to these Terms of Use. If you do not agree, please do not use the App.</p>
 
           <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginTop: 32, marginBottom: 12 }}>2. Description of Service</h2>
-          <p>Robotuy is an interactive programming learning platform that provides lessons, quizzes, coding exercises, and gamified learning experiences. The App is available on web (robotuy.sk, robotuy.com) and iOS.</p>
+          <p>Robotuy is an interactive programming learning platform that provides lessons, quizzes, coding exercises, and gamified learning experiences. The App is available on web (robotuy.app, robotuy.app) and iOS.</p>
 
           <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginTop: 32, marginBottom: 12 }}>3. Account Registration</h2>
           <p>You must create an account to use Robotuy. You are responsible for maintaining the security of your account credentials. You agree to provide accurate information during registration.</p>
@@ -65,7 +65,7 @@ export default function TermsPage() {
           <p>These Terms are governed by the laws of the Slovak Republic. Any disputes shall be resolved in the courts of the Slovak Republic.</p>
 
           <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginTop: 32, marginBottom: 12 }}>13. Contact</h2>
-          <p>For questions about these Terms, contact us at support@robotuy.sk.</p>
+          <p>For questions about these Terms, contact us at support@robotuy.app.</p>
         </div>
       </div>
     </div>

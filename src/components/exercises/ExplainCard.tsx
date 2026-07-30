@@ -23,10 +23,10 @@ export default function ExplainCard({ exercise, onNext }: { exercise: Exercise; 
 
       {exercise.codeSnippet && (
         <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)' }}>
-          <div style={{ background: '#111', padding: '10px 16px', display: 'flex', gap: 6, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ background: '#041540', padding: '10px 16px', display: 'flex', gap: 6, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
             {['#ff5f57','#febc2e','#28c840'].map(c => <div key={c} style={{ width: 11, height: 11, borderRadius: '50%', background: c, opacity: 0.7 }} />)}
           </div>
-          <pre style={{ background: '#0A0A0A', padding: '16px', fontSize: 13, lineHeight: 1.8, color: '#EDEDED', overflow: 'auto', margin: 0 }}>
+          <pre style={{ background: '#010d33', padding: '16px', fontSize: 13, lineHeight: 1.8, color: '#EDEDED', overflow: 'auto', margin: 0 }}>
             <code>{exercise.codeSnippet}</code>
           </pre>
         </div>
@@ -42,7 +42,7 @@ export default function ExplainCard({ exercise, onNext }: { exercise: Exercise; 
 
       <motion.button
         onClick={onNext} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}
-        style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#0F0F0F', fontFamily: 'inherit', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+        style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#010d33', fontFamily: 'inherit', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
       >
         {s('understand', locale)} <ArrowRight size={16} />
       </motion.button>

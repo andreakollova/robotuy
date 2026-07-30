@@ -316,7 +316,7 @@ export default function TheoryLessonPage() {
               style={{ width: '100%', display: 'block', maxHeight: 400, objectFit: 'contain', background: '#000' }}
               poster=""
             />
-            <div style={{ padding: '8px 12px', background: '#0a0a0a', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ padding: '8px 12px', background: '#000a2b', display: 'flex', alignItems: 'center', gap: 6 }}>
               <span style={{ fontSize: 10, color: '#555', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 {locale === 'sk' ? 'Robotuy Reel' : 'Robotuy Reel'}
               </span>
@@ -332,7 +332,7 @@ export default function TheoryLessonPage() {
             items={String(content).split('\n').filter(l => l.trim()).map((line, i) => ({
               name: `#${i + 1}`,
               desc: line.replace(/^(Fun Fact #?\d+|Fact \d+|#\d+)\s*[:—-]\s*/i, ''),
-              color: ['#3b82f6', '#eab308', '#a855f7', '#60a5fa', '#f97316', '#06b6d4', '#ef4444', '#f472b6'][i % 8],
+              color: ['#22c55e', '#eab308', '#a855f7', '#4ade80', '#f97316', '#06b6d4', '#ef4444', '#f472b6'][i % 8],
             }))}
             locale={locale}
             equipment={equipment}
@@ -342,12 +342,12 @@ export default function TheoryLessonPage() {
         ) : sec.phase === 'real_world' ? (
           <div>
             <div style={{ marginTop: 12, marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #1a1a1a' }}>
-              <div style={{ background: '#111', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
-                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
-                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+              <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
+                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
+                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
               </div>
-              <pre style={{ background: '#0a0a0a', margin: 0, padding: '10px 14px', fontSize: 15, color: '#60a5fa', fontFamily: 'JetBrains Mono, monospace' }}>
+              <pre style={{ background: '#000a2b', margin: 0, padding: '10px 14px', fontSize: 15, color: '#4ade80', fontFamily: 'JetBrains Mono, monospace' }}>
                 {locale === 'sk' ? '# Použitie v praxi' : '# Real-world use'}
               </pre>
             </div>
@@ -366,7 +366,7 @@ export default function TheoryLessonPage() {
           onClick={handleNextSection}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.98 }}
-          style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#0F0F0F', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 12, border: 'none', cursor: 'pointer' }}
+          style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#010d33', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 12, border: 'none', cursor: 'pointer' }}
         >
           {sectionIndex + 1 < sections.length
             ? s('continueBtn', locale)
@@ -453,18 +453,18 @@ export default function TheoryLessonPage() {
           const todoIdx = lines.findIndex((l: string) => l.includes('# TODO') || l.includes('___'));
           const beforeLines = todoIdx >= 0 ? lines.slice(0, todoIdx) : lines;
           const afterLines = todoIdx >= 0 ? lines.slice(todoIdx + 1) : [];
-          const borderColor = writeCodeState === 'correct' ? 'rgba(74,222,128,0.5)' : writeCodeState === 'wrong' ? 'rgba(255,80,80,0.3)' : '#1a1a1a';
+          const borderColor = writeCodeState === 'correct' ? 'rgba(74,222,128,0.5)' : writeCodeState === 'wrong' ? 'rgba(255,80,80,0.3)' : '#0c255a';
 
           return (
             <div style={{ borderRadius: 12, overflow: 'hidden', border: `1px solid ${borderColor}` }}>
               {/* Readonly code before TODO */}
               {beforeLines.length > 0 && (
-                <pre style={{ background: '#111', padding: '12px 16px 4px', margin: 0, fontSize: 13, color: '#888', fontFamily: 'JetBrains Mono, Fira Code, monospace', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
+                <pre style={{ background: '#041540', padding: '12px 16px 4px', margin: 0, fontSize: 13, color: '#888', fontFamily: 'JetBrains Mono, Fira Code, monospace', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
                   {beforeLines.join('\n')}
                 </pre>
               )}
               {/* Editable input for the missing line */}
-              <div style={{ background: '#111', padding: '4px 16px' }}>
+              <div style={{ background: '#041540', padding: '4px 16px' }}>
                 <input
                   value={writeCodeValue}
                   onChange={e => { if (writeCodeState === 'editing') setWriteCodeValue(e.target.value); }}
@@ -476,9 +476,9 @@ export default function TheoryLessonPage() {
                   spellCheck={false}
                   style={{
                     width: '100%', padding: '10px 12px', borderRadius: 8,
-                    background: writeCodeState === 'correct' ? 'rgba(74,222,128,0.08)' : '#0a0a0a',
-                    border: `1.5px solid ${writeCodeState === 'correct' ? 'rgba(74,222,128,0.4)' : writeCodeState === 'wrong' ? 'rgba(255,80,80,0.3)' : '#222'}`,
-                    color: writeCodeState === 'correct' ? '#60a5fa' : '#fff',
+                    background: writeCodeState === 'correct' ? 'rgba(74,222,128,0.08)' : '#000a2b',
+                    border: `1.5px solid ${writeCodeState === 'correct' ? 'rgba(74,222,128,0.4)' : writeCodeState === 'wrong' ? 'rgba(255,80,80,0.3)' : '#0c255a'}`,
+                    color: writeCodeState === 'correct' ? '#4ade80' : '#fff',
                     fontSize: 16, fontFamily: 'JetBrains Mono, Fira Code, monospace',
                     outline: 'none', boxSizing: 'border-box',
                   }}
@@ -486,7 +486,7 @@ export default function TheoryLessonPage() {
               </div>
               {/* Readonly code after TODO */}
               {afterLines.length > 0 && (
-                <pre style={{ background: '#111', padding: '4px 16px 12px', margin: 0, fontSize: 13, color: '#888', fontFamily: 'JetBrains Mono, Fira Code, monospace', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
+                <pre style={{ background: '#041540', padding: '4px 16px 12px', margin: 0, fontSize: 13, color: '#888', fontFamily: 'JetBrains Mono, Fira Code, monospace', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
                   {afterLines.join('\n')}
                 </pre>
               )}
@@ -500,7 +500,7 @@ export default function TheoryLessonPage() {
             onClick={handleWriteCodeCheck}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
-            style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#0F0F0F', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
+            style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#010d33', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
           >
             {locale === 'sk' ? 'Skontrolovať' : 'Check'}
             <Check size={16} />
@@ -552,7 +552,7 @@ export default function TheoryLessonPage() {
                   <p style={{ fontWeight: 700, fontSize: 13, color: '#ff8080', margin: '0 0 8px' }}>
                     {locale === 'sk' ? 'Správna odpoveď:' : 'Correct answer:'}
                   </p>
-                  <pre style={{ background: '#0A0A0A', borderRadius: 8, padding: '10px 12px', fontSize: 13, color: '#60a5fa', overflow: 'auto', lineHeight: 1.7, margin: 0, fontFamily: 'JetBrains Mono, Fira Code, monospace' }}>
+                  <pre style={{ background: '#010d33', borderRadius: 8, padding: '10px 12px', fontSize: 13, color: '#4ade80', overflow: 'auto', lineHeight: 1.7, margin: 0, fontFamily: 'JetBrains Mono, Fira Code, monospace' }}>
                     {safe(q.correct_answer)}
                   </pre>
                 </div>
@@ -563,7 +563,7 @@ export default function TheoryLessonPage() {
                 background: 'rgba(74,222,128,0.06)',
                 border: '1px solid rgba(74,222,128,0.25)',
               }}>
-                <p style={{ fontWeight: 700, fontSize: 13, color: '#60a5fa', margin: 0 }}>
+                <p style={{ fontWeight: 700, fontSize: 13, color: '#4ade80', margin: 0 }}>
                   {s('correct', locale)}
                 </p>
               </div>
@@ -572,7 +572,7 @@ export default function TheoryLessonPage() {
               onClick={handleQuizNext}
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
-              style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#0F0F0F', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
+              style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#010d33', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
             >
               {quizIndex + 1 < quiz.length
                 ? s('nextQuestion', locale)
@@ -657,13 +657,13 @@ export default function TheoryLessonPage() {
 
         {/* Code with inline inputs */}
         <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #1a1a1a' }}>
-          <div style={{ background: '#111', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+          <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
           </div>
           <pre style={{
-            background: '#0a0a0a', margin: 0,
+            background: '#000a2b', margin: 0,
             padding: '14px 16px', fontSize: 14, color: '#ccc', lineHeight: 2.2,
             overflow: 'auto', fontFamily: 'JetBrains Mono, Fira Code, monospace',
             whiteSpace: 'pre-wrap',
@@ -686,16 +686,16 @@ export default function TheoryLessonPage() {
                     spellCheck={false}
                     style={{
                       background: fillCodeState === 'correct' ? 'rgba(74,222,128,0.15)' : fillCodeState === 'wrong' ? 'rgba(255,80,80,0.15)' : '#161616',
-                      border: `1.5px solid ${fillCodeState === 'correct' ? '#60a5fa' : fillCodeState === 'wrong' ? '#ff6060' : 'rgba(255,255,255,0.15)'}`,
+                      border: `1.5px solid ${fillCodeState === 'correct' ? '#4ade80' : fillCodeState === 'wrong' ? '#ff6060' : 'rgba(255,255,255,0.15)'}`,
                       borderRadius: 6,
-                      color: fillCodeState === 'correct' ? '#60a5fa' : fillCodeState === 'wrong' ? '#ff8080' : '#fff',
+                      color: fillCodeState === 'correct' ? '#4ade80' : fillCodeState === 'wrong' ? '#ff8080' : '#fff',
                       fontFamily: 'inherit', fontSize: 'inherit',
                       padding: '2px 8px',
                       width: `${Math.max((correctAnswers[i]?.length || 4) + 2, 4)}ch`,
                       outline: 'none',
                       verticalAlign: 'baseline',
                     }}
-                    onFocus={e => { if (fillCodeState === 'editing') e.target.style.borderColor = '#60a5fa'; }}
+                    onFocus={e => { if (fillCodeState === 'editing') e.target.style.borderColor = '#4ade80'; }}
                     onBlur={e => { if (fillCodeState === 'editing') e.target.style.borderColor = 'rgba(255,255,255,0.15)'; }}
                   />
                 )}
@@ -710,7 +710,7 @@ export default function TheoryLessonPage() {
             onClick={handleFillCheck}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
-            style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#0F0F0F', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
+            style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#010d33', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
           >
             {locale === 'sk' ? 'Skontrolovať' : 'Check'}
             <Check size={16} />
@@ -757,7 +757,7 @@ export default function TheoryLessonPage() {
               background: 'rgba(74,222,128,0.06)',
               border: '1px solid rgba(74,222,128,0.25)',
             }}>
-              <p style={{ fontWeight: 700, fontSize: 13, color: '#60a5fa', margin: 0 }}>
+              <p style={{ fontWeight: 700, fontSize: 13, color: '#4ade80', margin: 0 }}>
                 {s('correct', locale)}
               </p>
               {(() => {
@@ -776,7 +776,7 @@ export default function TheoryLessonPage() {
               onClick={handleQuizNext}
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
-              style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#0F0F0F', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
+              style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#010d33', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
             >
               {quizIndex + 1 < quiz.length ? s('nextQuestion', locale) : s('finish', locale)}
               <ArrowRight size={16} />
@@ -852,7 +852,7 @@ export default function TheoryLessonPage() {
         </h2>
 
         {q.code_snippet && (
-          <pre style={{ background: '#0A0A0A', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '14px 16px', fontSize: 13, color: '#EDEDED', overflow: 'auto', lineHeight: 1.7 }}>
+          <pre style={{ background: '#010d33', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '14px 16px', fontSize: 13, color: '#EDEDED', overflow: 'auto', lineHeight: 1.7 }}>
             {safe(q.code_snippet)}
           </pre>
         )}
@@ -875,16 +875,16 @@ export default function TheoryLessonPage() {
                   display: 'flex', alignItems: 'center', gap: 12,
                   background: showCorrect ? 'rgba(74,222,128,0.08)' : showWrong ? 'rgba(255,80,80,0.06)' : '#161616',
                   border: `1px solid ${showCorrect ? 'rgba(74,222,128,0.5)' : showWrong ? 'rgba(255,80,80,0.3)' : 'rgba(255,255,255,0.08)'}`,
-                  color: showCorrect ? '#60a5fa' : showWrong ? '#ff9090' : '#A0A0A0',
+                  color: showCorrect ? '#4ade80' : showWrong ? '#ff9090' : '#A0A0A0',
                   fontSize: 14, fontFamily: 'inherit',
                   cursor: answerState !== 'idle' ? 'default' : 'pointer',
                 }}
               >
                 <div style={{
                   width: 24, height: 24, borderRadius: 7, flexShrink: 0,
-                  border: `1.5px solid ${showCorrect ? '#60a5fa' : showWrong ? '#ff6060' : 'rgba(255,255,255,0.12)'}`,
+                  border: `1.5px solid ${showCorrect ? '#4ade80' : showWrong ? '#ff6060' : 'rgba(255,255,255,0.12)'}`,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: showCorrect ? '#60a5fa' : showWrong ? 'rgba(255,80,80,0.15)' : 'transparent',
+                  background: showCorrect ? '#4ade80' : showWrong ? 'rgba(255,80,80,0.15)' : 'transparent',
                   fontWeight: 700, fontSize: 11,
                   color: showCorrect ? '#052e16' : showWrong ? '#ff6060' : '#555',
                 }}>
@@ -905,7 +905,7 @@ export default function TheoryLessonPage() {
                 background: answerState === 'correct' ? 'rgba(74,222,128,0.06)' : 'rgba(255,80,80,0.05)',
                 border: `1px solid ${answerState === 'correct' ? 'rgba(74,222,128,0.25)' : 'rgba(255,80,80,0.15)'}`,
               }}>
-                <p style={{ fontWeight: 700, fontSize: 13, color: answerState === 'correct' ? '#60a5fa' : '#ff8080', margin: 0 }}>
+                <p style={{ fontWeight: 700, fontSize: 13, color: answerState === 'correct' ? '#4ade80' : '#ff8080', margin: 0 }}>
                   {answerState === 'correct'
                     ? s('correct', locale)
                     : s('notQuite', locale)}
@@ -950,7 +950,7 @@ export default function TheoryLessonPage() {
                 onClick={handleQuizNext}
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#0F0F0F', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
+                style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#010d33', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
               >
                 {quizIndex + 1 < quiz.length
                   ? s('nextQuestion', locale)
@@ -990,14 +990,14 @@ export default function TheoryLessonPage() {
           const slot = item?.type as keyof typeof equipment | undefined;
           // Preview equipment with new item
           const previewEquip = slot ? { ...equipment, [slot]: reward } : equipment;
-          const rarityColors: Record<string, string> = { common: '#888', rare: '#3b82f6', epic: '#a855f7', legendary: '#f59e0b', mythic: '#ff3366' };
+          const rarityColors: Record<string, string> = { common: '#888', rare: '#22c55e', epic: '#a855f7', legendary: '#f59e0b', mythic: '#ff3366' };
           const color = rarityColors[item?.rarity || 'common'] || '#888';
           return (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, type: 'spring' }}
-              style={{ marginTop: 28, padding: 24, borderRadius: 16, background: '#111', border: `1px solid ${color}33`, textAlign: 'center', minWidth: 240 }}
+              style={{ marginTop: 28, padding: 24, borderRadius: 16, background: '#041540', border: `1px solid ${color}33`, textAlign: 'center', minWidth: 240 }}
             >
               <p style={{ fontSize: 11, color: '#888', margin: '0 0 12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                 {s('newWardrobeItem', locale)}
@@ -1020,7 +1020,7 @@ export default function TheoryLessonPage() {
                 <motion.button
                   onClick={() => router.push('/')}
                   whileTap={{ scale: 0.96 }}
-                  style={{ padding: '10px 20px', borderRadius: 10, background: '#222', color: '#888', fontWeight: 600, fontSize: 13, border: 'none', cursor: 'pointer' }}
+                  style={{ padding: '10px 20px', borderRadius: 10, background: '#0c255a', color: '#888', fontWeight: 600, fontSize: 13, border: 'none', cursor: 'pointer' }}
                 >
                   {locale === 'sk' ? 'Neskôr' : 'Later'}
                 </motion.button>
@@ -1045,12 +1045,12 @@ export default function TheoryLessonPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#000', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <div style={{ position: 'sticky', top: 0, zIndex: 50, padding: '12px 20px', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 8px)', background: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderBottom: '1px solid #0f0f0f' }}>
+      <div style={{ position: 'sticky', top: 0, zIndex: 50, padding: '12px 20px', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 8px)', background: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderBottom: '1px solid #010d33' }}>
         <div style={{ maxWidth: 520, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 12 }}>
           <button onClick={() => router.push('/')} style={{ color: '#777', cursor: 'pointer', padding: 4, background: 'none', border: 'none' }}>
             <X size={20} />
           </button>
-          <div style={{ flex: 1, height: 4, borderRadius: 2, background: '#111', overflow: 'hidden' }}>
+          <div style={{ flex: 1, height: 4, borderRadius: 2, background: '#041540', overflow: 'hidden' }}>
             <motion.div style={{ height: '100%', background: '#fff', borderRadius: 2 }} animate={{ width: `${progress}%` }} transition={{ duration: 0.4 }} />
           </div>
           <div />
@@ -1146,7 +1146,7 @@ function ByteTip({ phase, locale, equipment, sectionIndex }: { phase: string; lo
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: `${phase === 'intro' ? 40 : 12}px 0 0` }}>
       <div style={{
-        background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: 12,
+        background: '#0c255a', border: '1px solid #2a2a2a', borderRadius: 12,
         padding: '8px 14px', fontSize: 12, color: '#aaa', fontWeight: 500, maxWidth: 260, textAlign: 'center',
       }}>
         {tip}
@@ -1191,10 +1191,10 @@ function ByteFootball({ items, locale, equipment }: { items: { name: string; des
       <div style={{ position: 'relative', width: 200, height: 100, marginBottom: 16 }}>
         <svg width="200" height="100" viewBox="0 0 160 80">
           {/* Goal frame */}
-          <rect x="10" y="10" width="140" height="65" rx="4" fill="none" stroke="#333" strokeWidth="2.5" />
+          <rect x="10" y="10" width="140" height="65" rx="4" fill="none" stroke="#0f2d6b" strokeWidth="2.5" />
           {/* Net lines */}
-          {[30, 50, 70, 90, 110, 130].map(x => <line key={`v${x}`} x1={x} y1="10" x2={x} y2="75" stroke="#1a1a1a" strokeWidth="1" />)}
-          {[25, 40, 55, 70].map(y => <line key={`h${y}`} x1="10" y1={y} x2="150" y2={y} stroke="#1a1a1a" strokeWidth="1" />)}
+          {[30, 50, 70, 90, 110, 130].map(x => <line key={`v${x}`} x1={x} y1="10" x2={x} y2="75" stroke="#0c255a" strokeWidth="1" />)}
+          {[25, 40, 55, 70].map(y => <line key={`h${y}`} x1="10" y1={y} x2="150" y2={y} stroke="#0c255a" strokeWidth="1" />)}
           {/* Posts */}
           <line x1="10" y1="10" x2="10" y2="78" stroke="#555" strokeWidth="3" strokeLinecap="round" />
           <line x1="150" y1="10" x2="150" y2="78" stroke="#555" strokeWidth="3" strokeLinecap="round" />
@@ -1360,7 +1360,7 @@ function ByteReveal({ items, locale, equipment }: { items: { name: string; desc:
 }
 
 const LANG_BUBBLES_SK = [
-  { name: 'Python', desc: 'Python je jednoduchý, prehľadný a patrí medzi najlepšie jazyky pre začiatočníkov. Používa sa na umelú inteligenciu, automatizáciu, webové aplikácie, analýzu dát, robotiku, kybernetickú bezpečnosť, API a strojové učenie. Práve Python sa budeš učiť v tomto kurze. Používajú ho firmy ako Google, Instagram, Spotify a OpenAI.', color: '#3b82f6' },
+  { name: 'Python', desc: 'Python je jednoduchý, prehľadný a patrí medzi najlepšie jazyky pre začiatočníkov. Používa sa na umelú inteligenciu, automatizáciu, webové aplikácie, analýzu dát, robotiku, kybernetickú bezpečnosť, API a strojové učenie. Práve Python sa budeš učiť v tomto kurze. Používajú ho firmy ako Google, Instagram, Spotify a OpenAI.', color: '#22c55e' },
   { name: 'JavaScript', desc: 'JavaScript poháňa takmer každú modernú webovú stránku. Používa sa na interaktívne webové stránky, webové aplikácie, backend servery a hry v prehliadači. Ak si niekedy klikol/a na tlačidlo na webovej stránke, veľmi pravdepodobne za tým bol JavaScript. Používajú ho firmy ako Meta, Netflix a Airbnb.', color: '#eab308' },
   { name: 'Java', desc: 'Java patrí medzi najrozšírenejšie programovacie jazyky na svete. Beží na Java Virtual Machine, čo znamená, že rovnaký kód funguje na akomkoľvek zariadení. Používa sa v bankových systémoch, podnikových aplikáciách, veľkých firemných systémoch a starších Android aplikáciách.', color: '#ef4444' },
   { name: 'C++', desc: 'C++ je navrhnutý pre maximálny výkon. Používa sa pri tvorbe videohier, herných enginov, robotov a operačných systémov. Poskytuje priamu kontrolu nad pamäťou, čo ho robí rýchlym ale náročnejším na naučenie. Hry ako Fortnite a Unreal Engine sú postavené na C++.', color: '#8b5cf6' },
@@ -1368,11 +1368,11 @@ const LANG_BUBBLES_SK = [
   { name: 'Kotlin', desc: 'Kotlin je preferovaný jazyk spoločnosti Google pre vývoj Android aplikácií. Je stručnejší a bezpečnejší ako Java, s ktorou je plne kompatibilný. Podporuje funkcionálne aj objektové programovanie. Aplikácie ako Pinterest a Uber používajú Kotlin.', color: '#a855f7' },
   { name: 'Rust', desc: 'Rust je moderný jazyk zameraný na rýchlosť a bezpečnosť práce s pamäťou. Zabraňuje chybám ako memory leaks už pri kompilácii. Používa sa pri vývoji operačných systémov, prehliadačov, cloudových služieb a bezpečnostného softvéru. Firefox a Dropbox ho aktívne používajú.', color: '#f97316' },
   { name: 'Go', desc: 'Go je jazyk od Google navrhnutý pre jednoduchosť a škálovateľnosť. Exceluje v budovaní webových serverov, cloudových služieb a nástrojov príkazového riadku. Kompiluje sa do jedného binárneho súboru. Docker a Kubernetes sú napísané v Go.', color: '#06b6d4' },
-  { name: 'SQL', desc: 'SQL nie je klasický programovací jazyk. Slúži na prácu s databázami. Takmer každá aplikácia na svete ukladá svoje údaje práve do databázy. Keď sa prihlásiš na Instagram, tvoje údaje sa načítajú z databázy pomocou SQL. Je to základná zručnosť pre každého vývojára.', color: '#3b82f6' },
+  { name: 'SQL', desc: 'SQL nie je klasický programovací jazyk. Slúži na prácu s databázami. Takmer každá aplikácia na svete ukladá svoje údaje práve do databázy. Keď sa prihlásiš na Instagram, tvoje údaje sa načítajú z databázy pomocou SQL. Je to základná zručnosť pre každého vývojára.', color: '#22c55e' },
 ];
 
 const LANG_BUBBLES_EN = [
-  { name: 'Python', desc: 'Python is simple, readable and one of the best languages for beginners. It is used for artificial intelligence, automation, web applications, data analysis, robotics, cybersecurity, APIs and machine learning. This is the language you will learn in this course. Companies like Google, Instagram, Spotify and OpenAI use it.', color: '#3b82f6' },
+  { name: 'Python', desc: 'Python is simple, readable and one of the best languages for beginners. It is used for artificial intelligence, automation, web applications, data analysis, robotics, cybersecurity, APIs and machine learning. This is the language you will learn in this course. Companies like Google, Instagram, Spotify and OpenAI use it.', color: '#22c55e' },
   { name: 'JavaScript', desc: 'JavaScript powers almost every modern website. It is used for interactive websites, web applications, backend servers and browser games. If you have ever clicked a button on a website, JavaScript was very likely involved. Companies like Meta, Netflix and Airbnb use it.', color: '#eab308' },
   { name: 'Java', desc: 'Java is one of the most widely used programming languages in the world. It runs on the Java Virtual Machine, meaning the same code works on any device. It powers banking systems, enterprise software, large company infrastructure and older Android applications.', color: '#ef4444' },
   { name: 'C++', desc: 'C++ is designed for maximum performance. It is used for video games, game engines, robotics and operating systems. It provides direct memory control, making it fast but harder to learn. Games like Fortnite and the Unreal Engine are built with C++.', color: '#8b5cf6' },
@@ -1380,7 +1380,7 @@ const LANG_BUBBLES_EN = [
   { name: 'Kotlin', desc: 'Kotlin is Google\'s preferred language for Android app development. It is more concise and safer than Java, while being fully compatible with it. It supports both functional and object-oriented programming. Apps like Pinterest and Uber use Kotlin.', color: '#a855f7' },
   { name: 'Rust', desc: 'Rust is a modern language focused on memory safety and high performance. It prevents bugs like memory leaks at compile time. It is used for operating systems, browsers, cloud services and security-critical software. Firefox and Dropbox actively use it.', color: '#f97316' },
   { name: 'Go', desc: 'Go is a language by Google designed for simplicity and scalability. It excels at building web servers, cloud services and command-line tools. It compiles to a single binary file. Docker and Kubernetes are written in Go.', color: '#06b6d4' },
-  { name: 'SQL', desc: 'SQL is not a typical programming language. It is used for working with databases. Almost every application in the world stores its data in a database. When you log into Instagram, your data is loaded from a database using SQL. It is a fundamental skill for every developer.', color: '#3b82f6' },
+  { name: 'SQL', desc: 'SQL is not a typical programming language. It is used for working with databases. Almost every application in the world stores its data in a database. When you log into Instagram, your data is loaded from a database using SQL. It is a fundamental skill for every developer.', color: '#22c55e' },
 ];
 
 /** Paginated learning content - splits by # headings */
@@ -1414,7 +1414,7 @@ function PaginatedContent({ text, locale, equipment, onComplete }: { text: strin
           onClick={onComplete}
           style={{
             width: '100%', padding: '14px', borderRadius: 12, marginTop: 20,
-            background: '#EDEDED', border: 'none', color: '#0F0F0F',
+            background: '#EDEDED', border: 'none', color: '#010d33',
             fontWeight: 700, fontSize: 15, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
           }}
@@ -1462,7 +1462,7 @@ function PaginatedContent({ text, locale, equipment, onComplete }: { text: strin
         {pages.map((_, i) => (
           <div key={i} style={{
             width: i === page ? 16 : 6, height: 5, borderRadius: 3,
-            background: i <= page ? '#60a5fa' : '#333',
+            background: i <= page ? '#4ade80' : '#0f2d6b',
             transition: 'all 0.3s',
           }} />
         ))}
@@ -1485,7 +1485,7 @@ function PaginatedContent({ text, locale, equipment, onComplete }: { text: strin
           width: '100%', padding: isLast ? '14px' : '12px', borderRadius: isLast ? 12 : 10,
           background: isLast ? '#EDEDED' : '#1C1C1C',
           border: isLast ? 'none' : '1px solid rgba(255,255,255,0.08)',
-          color: isLast ? '#0F0F0F' : '#ccc',
+          color: isLast ? '#010d33' : '#ccc',
           fontWeight: isLast ? 700 : 600, fontSize: isLast ? 15 : 14,
           cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
         }}
@@ -1512,7 +1512,7 @@ function TakeawayCarousel({ items }: { items: string[] }) {
   return (
     <div style={{ position: 'relative' }}>
       <div
-        style={{ overflow: 'hidden', borderRadius: 14, border: '1px solid #1a1a1a', background: '#0a0a0a', minHeight: 100 }}
+        style={{ overflow: 'hidden', borderRadius: 14, border: '1px solid #1a1a1a', background: '#000a2b', minHeight: 100 }}
         onTouchStart={e => { touchStart.current = e.touches[0].clientX; }}
         onTouchEnd={e => {
           const diff = touchStart.current - e.changedTouches[0].clientX;
@@ -1530,7 +1530,7 @@ function TakeawayCarousel({ items }: { items: string[] }) {
             transition={{ duration: 0.25 }}
             style={{ padding: '20px 20px', display: 'flex', gap: 14, alignItems: 'center', minHeight: 80 }}
           >
-            <div style={{ width: 28, height: 28, borderRadius: 8, background: '#60a5fa', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: 28, height: 28, borderRadius: 8, background: '#4ade80', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <Check size={14} color="#000" strokeWidth={3} />
             </div>
             <p style={{ fontSize: 15, color: '#ddd', lineHeight: 1.6, margin: 0, fontWeight: 500 }}>
@@ -1547,7 +1547,7 @@ function TakeawayCarousel({ items }: { items: string[] }) {
             onClick={() => setActive(i)}
             style={{
               width: i === active ? 16 : 6, height: 6, borderRadius: 3, border: 'none', cursor: 'pointer', padding: 0,
-              background: i === active ? '#60a5fa' : '#333',
+              background: i === active ? '#4ade80' : '#0f2d6b',
               transition: 'all 0.3s ease',
             }}
           />
@@ -1566,7 +1566,7 @@ function renderInline(text: string, keyBase: string = 'il'): React.ReactNode {
       return <strong key={`${keyBase}-${i}`} style={{ color: '#EDEDED', fontWeight: 600 }}>{part.slice(2, -2)}</strong>;
     }
     if (part.startsWith('`') && part.endsWith('`')) {
-      return <code key={`${keyBase}-${i}`} style={{ background: '#1a1a1a', padding: '2px 6px', borderRadius: 4, fontSize: 13, fontFamily: 'JetBrains Mono, monospace', color: '#60a5fa' }}>{part.slice(1, -1)}</code>;
+      return <code key={`${keyBase}-${i}`} style={{ background: '#0c255a', padding: '2px 6px', borderRadius: 4, fontSize: 13, fontFamily: 'JetBrains Mono, monospace', color: '#4ade80' }}>{part.slice(1, -1)}</code>;
     }
     return part;
   });
@@ -1575,8 +1575,8 @@ function renderInline(text: string, keyBase: string = 'il'): React.ReactNode {
 // Rotate marker style per bullet list instance
 let bulletListCounter = 0;
 const MARKER_STYLES = [
-  { mark: '>', color: '#60a5fa' },
-  { mark: '#', color: '#3b82f6' },
+  { mark: '>', color: '#4ade80' },
+  { mark: '#', color: '#22c55e' },
   { mark: '//', color: '#a855f7' },
   { mark: '>', color: '#f97316' },
   { mark: '#', color: '#06b6d4' },
@@ -1589,7 +1589,7 @@ function BulletList({ lines, keyBase }: { lines: string[]; keyBase: number }) {
   const styleIdx = bulletListCounter++ % MARKER_STYLES.length;
   const { mark, color } = MARKER_STYLES[styleIdx];
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 12, padding: '10px 14px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 12, padding: '10px 14px' }}>
       {lines.map((bl, bi) => (
         <div key={bi} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '4px 0' }}>
           <span style={{ color, fontWeight: 700, fontSize: 12, lineHeight: 2, flexShrink: 0, textShadow: `0 0 8px ${color}88, 0 0 16px ${color}44` }}>{mark}</span>
@@ -1616,13 +1616,13 @@ function formatContent(text: string, phase: string = '') {
       if (code) {
         result.push(
           <div key={`code-${keyCounter++}`} style={{ marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #1a1a1a' }}>
-            <div style={{ background: '#111', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+            <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
             </div>
             <pre style={{
-              background: '#0a0a0a', margin: 0,
+              background: '#000a2b', margin: 0,
               padding: '14px 16px', fontSize: 13, color: '#ccc', lineHeight: 1.7,
               overflow: 'auto', fontFamily: 'JetBrains Mono, Fira Code, monospace',
               whiteSpace: 'pre-wrap',
@@ -1686,13 +1686,13 @@ function formatContent(text: string, phase: string = '') {
     if (codeLines.length > lines.length * 0.5 && lines.some(l => isCodeLine(l))) {
       result.push(
         <div key={`pre-${keyCounter++}`} style={{ marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #1a1a1a' }}>
-          <div style={{ background: '#111', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+          <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
           </div>
           <pre style={{
-            background: '#0a0a0a', margin: 0,
+            background: '#000a2b', margin: 0,
             padding: '14px 16px', fontSize: 13, color: '#ccc', lineHeight: 1.7,
             overflow: 'auto', fontFamily: 'JetBrains Mono, Fira Code, monospace',
             whiteSpace: 'pre-wrap',
@@ -1743,13 +1743,13 @@ function formatFacts(text: string) {
 
     return (
       <div key={i} style={{
-        padding: '14px 16px', background: '#0a0a0a', border: '1px solid #1a1a1a',
+        padding: '14px 16px', background: '#000a2b', border: '1px solid #1a1a1a',
         borderRadius: 12, display: 'flex', gap: 12, alignItems: 'flex-start',
       }}>
         <div style={{
           width: 28, height: 28, borderRadius: 8, background: '#161616',
           border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          flexShrink: 0, fontSize: 11, fontWeight: 800, color: '#60a5fa',
+          flexShrink: 0, fontSize: 11, fontWeight: 800, color: '#4ade80',
         }}>
           {i + 1}
         </div>

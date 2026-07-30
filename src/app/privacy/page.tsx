@@ -7,7 +7,7 @@ export default function PrivacyPage() {
   const router = useRouter();
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0F0F0F', color: '#ccc', padding: '60px 20px 120px' }}>
+    <div style={{ minHeight: '100vh', background: '#010d33', color: '#ccc', padding: '60px 20px 120px' }}>
       <div style={{ maxWidth: 640, margin: '0 auto' }}>
         <button onClick={() => router.back()} style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
           <ArrowLeft size={14} /> Back
@@ -18,7 +18,7 @@ export default function PrivacyPage() {
 
         <div style={{ fontSize: 14, lineHeight: 1.8, color: '#aaa' }}>
           <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginTop: 32, marginBottom: 12 }}>1. Introduction</h2>
-          <p>Robotuy ("we", "our", "us") operates the Robotuy mobile application and website (robotuy.sk, robotuy.com). This Privacy Policy explains how we collect, use, and protect your personal information.</p>
+          <p>Robotuy ("we", "our", "us") operates the Robotuy mobile application and website (robotuy.app, robotuy.app). This Privacy Policy explains how we collect, use, and protect your personal information.</p>
 
           <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginTop: 32, marginBottom: 12 }}>2. Information We Collect</h2>
           <p><strong style={{ color: '#fff' }}>Account Information:</strong> When you create an account, we collect your email address and display name. If you sign in with Google, we receive your name, email, and profile picture from Google.</p>
@@ -40,7 +40,7 @@ export default function PrivacyPage() {
           <p>Your data is stored securely using Supabase (hosted on AWS in the EU region). We implement industry-standard security measures including encryption in transit (TLS) and at rest. Access to user data is restricted to authorized personnel only.</p>
 
           <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginTop: 32, marginBottom: 12 }}>5. Platforms and In-App Purchases</h2>
-          <p>Robotuy is available on the web (robotuy.com, robotuy.sk), Apple App Store (iOS) and Google Play Store (Android). When you subscribe to Robotuy Pro:</p>
+          <p>Robotuy is available on the web (robotuy.app, robotuy.app), Apple App Store (iOS) and Google Play Store (Android). When you subscribe to Robotuy Pro:</p>
           <ul style={{ paddingLeft: 20, marginTop: 8 }}>
             <li><strong style={{ color: '#fff' }}>On iOS:</strong> Payments are processed through Apple In-App Purchases. Apple manages billing and subscriptions according to their terms.</li>
             <li><strong style={{ color: '#fff' }}>On Android:</strong> Payments are processed through Google Play Billing. Google manages billing and subscriptions according to their terms.</li>
@@ -71,7 +71,7 @@ export default function PrivacyPage() {
             <li>Export your data</li>
             <li>Opt out of marketing communications</li>
           </ul>
-          <p>To exercise these rights, contact us at support@robotuy.sk.</p>
+          <p>To exercise these rights, contact us at support@robotuy.app.</p>
 
           <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginTop: 32, marginBottom: 12 }}>9. Children's Privacy</h2>
           <p>Robotuy is designed for users of all ages who want to learn programming. We do not knowingly collect personal information from children under 13 without parental consent. If you believe a child under 13 has provided us with personal information, please contact us.</p>
@@ -84,8 +84,8 @@ export default function PrivacyPage() {
 
           <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginTop: 32, marginBottom: 12 }}>12. Contact Us</h2>
           <p>If you have questions about this Privacy Policy, contact us at:</p>
-          <p>Email: support@robotuy.sk</p>
-          <p>Website: robotuy.sk</p>
+          <p>Email: support@robotuy.app</p>
+          <p>Website: robotuy.app</p>
         </div>
       </div>
     </div>

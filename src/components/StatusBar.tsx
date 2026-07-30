@@ -13,7 +13,7 @@ export default function StatusBar() {
     <div style={{
       position: 'sticky', top: 0, zIndex: 50,
       borderBottom: '1px solid rgba(255,255,255,0.06)',
-      background: '#0F0F0F',
+      background: '#010d33',
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
       paddingTop: 'env(safe-area-inset-top, 0px)',

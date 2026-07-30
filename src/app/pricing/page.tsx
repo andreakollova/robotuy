@@ -88,11 +88,11 @@ export default function PricingPage() {
   // Already subscribed
   if (subStatus === 'active' || subStatus === 'admin') {
     return (
-      <div className="page-shell" style={{ minHeight: '100vh', background: '#0F0F0F', paddingBottom: 120 }}>
+      <div className="page-shell" style={{ minHeight: '100vh', background: '#010d33', paddingBottom: 120 }}>
         <StatusBar />
         <div style={{ maxWidth: 480, margin: '0 auto', padding: '40px 20px', textAlign: 'center' }}>
           <Byte mood="celebrating" size={120} equipment={equipment} />
-          <h1 style={{ fontSize: 28, fontWeight: 800, color: '#60a5fa', marginTop: 20, marginBottom: 8 }}>
+          <h1 style={{ fontSize: 28, fontWeight: 800, color: '#4ade80', marginTop: 20, marginBottom: 8 }}>
             {sk ? 'Si Robotuy Pro!' : "You're Robotuy Pro!"}
           </h1>
           <p style={{ fontSize: 15, color: '#888', marginBottom: 32 }}>
@@ -112,11 +112,11 @@ export default function PricingPage() {
   // Success / canceled states
   if (success) {
     return (
-      <div className="page-shell" style={{ minHeight: '100vh', background: '#0F0F0F', paddingBottom: 120 }}>
+      <div className="page-shell" style={{ minHeight: '100vh', background: '#010d33', paddingBottom: 120 }}>
         <StatusBar />
         <div style={{ maxWidth: 480, margin: '0 auto', padding: '40px 20px', textAlign: 'center' }}>
           <Byte mood="celebrating" size={120} equipment={equipment} />
-          <h1 style={{ fontSize: 28, fontWeight: 800, color: '#60a5fa', marginTop: 20, marginBottom: 8 }}>
+          <h1 style={{ fontSize: 28, fontWeight: 800, color: '#4ade80', marginTop: 20, marginBottom: 8 }}>
             {sk ? 'Dakujeme!' : 'Thank you!'}
           </h1>
           <p style={{ fontSize: 15, color: '#888', marginBottom: 32 }}>
@@ -138,7 +138,7 @@ export default function PricingPage() {
     : ['All lessons and modules', 'Interactive projects', 'Arena - quiz battles', 'Write-code exercises', 'Ad-free experience'];
 
   return (
-    <div className="page-shell" style={{ minHeight: '100vh', background: '#0F0F0F', paddingBottom: 120 }}>
+    <div className="page-shell" style={{ minHeight: '100vh', background: '#010d33', paddingBottom: 120 }}>
       <StatusBar />
 
       <div style={{ maxWidth: 480, margin: '0 auto', padding: '24px 20px' }}>
@@ -166,15 +166,15 @@ export default function PricingPage() {
               onClick={() => setPlan(p)}
               style={{
                 flex: 1, padding: '14px 12px', borderRadius: 14, border: 'none', cursor: 'pointer',
-                background: plan === p ? '#161616' : '#0a0a0a',
-                outline: plan === p ? '2px solid #60a5fa' : '1px solid #1a1a1a',
+                background: plan === p ? '#161616' : '#000a2b',
+                outline: plan === p ? '2px solid #4ade80' : '1px solid #1a1a1a',
                 textAlign: 'center', position: 'relative',
               }}
             >
               {p === 'yearly' && (
                 <div style={{
                   position: 'absolute', top: -10, right: 12,
-                  background: '#60a5fa', color: '#000', fontSize: 9, fontWeight: 800,
+                  background: '#4ade80', color: '#000', fontSize: 9, fontWeight: 800,
                   padding: '3px 8px', borderRadius: 6, letterSpacing: '0.05em',
                 }}>
                   -15%
@@ -189,7 +189,7 @@ export default function PricingPage() {
                   : (sk ? '/ rok' : '/ year')}
               </div>
               {p === 'yearly' && (
-                <div style={{ fontSize: 10, color: '#60a5fa', fontWeight: 600, marginTop: 4 }}>
+                <div style={{ fontSize: 10, color: '#4ade80', fontWeight: 600, marginTop: 4 }}>
                   {sk ? '3.39 EUR / mesiac' : '3.39 EUR / month'}
                 </div>
               )}
@@ -198,10 +198,10 @@ export default function PricingPage() {
         </div>
 
         {/* Features */}
-        <div style={{ marginBottom: 24, padding: '20px', background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 16 }}>
+        <div style={{ marginBottom: 24, padding: '20px', background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 16 }}>
           {features.map((f, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderTop: i > 0 ? '1px solid #111' : 'none' }}>
-              <Check size={16} color="#60a5fa" />
+              <Check size={16} color="#4ade80" />
               <span style={{ fontSize: 14, color: '#ccc', fontWeight: 500 }}>{f}</span>
             </div>
           ))}
@@ -215,7 +215,7 @@ export default function PricingPage() {
           whileTap={{ scale: 0.98 }}
           style={{
             width: '100%', padding: '16px', borderRadius: 14,
-            background: loading ? '#222' : '#EDEDED',
+            background: loading ? '#0c255a' : '#EDEDED',
             color: loading ? '#555' : '#000',
             fontWeight: 700, fontSize: 16, border: 'none',
             cursor: loading ? 'not-allowed' : 'pointer',
@@ -230,7 +230,7 @@ export default function PricingPage() {
         </motion.button>
 
         {/* Promo code */}
-        <div style={{ padding: '16px', background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 14 }}>
+        <div style={{ padding: '16px', background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 14 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
             <Gift size={14} color="#888" />
             <span style={{ fontSize: 12, color: '#888', fontWeight: 600 }}>
@@ -244,7 +244,7 @@ export default function PricingPage() {
               placeholder={sk ? 'Zadaj kod...' : 'Enter code...'}
               style={{
                 flex: 1, padding: '10px 14px', borderRadius: 10,
-                background: '#111', border: '1px solid #222',
+                background: '#041540', border: '1px solid #222',
                 color: '#fff', fontSize: 14, fontFamily: 'monospace',
                 outline: 'none', textTransform: 'uppercase',
               }}
@@ -254,7 +254,7 @@ export default function PricingPage() {
               disabled={promoLoading || !promoCode.trim()}
               style={{
                 padding: '10px 16px', borderRadius: 10,
-                background: promoCode.trim() ? '#fff' : '#222',
+                background: promoCode.trim() ? '#fff' : '#0c255a',
                 color: promoCode.trim() ? '#000' : '#555',
                 fontWeight: 700, fontSize: 13, border: 'none',
                 cursor: promoCode.trim() ? 'pointer' : 'not-allowed',
@@ -266,7 +266,7 @@ export default function PricingPage() {
           {promoResult && (
             <div style={{
               marginTop: 8, fontSize: 12, fontWeight: 600,
-              color: promoResult.success ? '#60a5fa' : '#ff8080',
+              color: promoResult.success ? '#4ade80' : '#ff8080',
             }}>
               {promoResult.success
                 ? (sk ? 'Kod aktivovany! Uzivaj si Robotuy Pro.' : 'Code activated! Enjoy Robotuy Pro.')

@@ -27,7 +27,7 @@ export default function ByteShowcase() {
   const [selected, setSelected] = useState<ByteMood>('happy');
 
   return (
-    <div className="min-h-screen px-4 py-12" style={{ background: '#0A0A0A' }}>
+    <div className="min-h-screen px-4 py-12" style={{ background: '#010d33' }}>
       <div className="max-w-xl mx-auto">
         <h1 className="text-3xl font-black mb-2" style={{ fontWeight: 600, fontFamily: 'inherit', color: '#DEFF4A' }}>
           Byte - všetky stavy

@@ -192,7 +192,7 @@ export default function CodingPath() {
                 whileTap={{ scale: 0.99 }}
                 style={{
                   width: '100%', padding: '20px', display: 'flex', alignItems: 'center', gap: 16,
-                  background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 16,
+                  background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 16,
                   cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.2s',
                 }}
               >
@@ -221,11 +221,11 @@ export default function CodingPath() {
 
         {/* Divider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '20px 0' }}>
-          <div style={{ flex: 1, height: 1, background: '#222' }} />
+          <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
           <span style={{ fontSize: 12, color: '#555', fontWeight: 600 }}>
             {locale === 'sk' ? 'alebo' : 'or'}
           </span>
-          <div style={{ flex: 1, height: 1, background: '#222' }} />
+          <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
         </div>
 
         {/* Browse all */}
@@ -235,7 +235,7 @@ export default function CodingPath() {
           whileTap={{ scale: 0.99 }}
           style={{
             width: '100%', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            background: '#111', border: '1px solid #222', borderRadius: 12,
+            background: '#041540', border: '1px solid #222', borderRadius: 12,
             cursor: 'pointer', fontSize: 14, color: '#888', fontWeight: 600,
           }}
         >
@@ -256,7 +256,7 @@ export default function CodingPath() {
     <div>
       {/* Path hero */}
       {activePath && (
-        <div style={{ background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 16, padding: 24, marginBottom: 20 }}>
+        <div style={{ background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 16, padding: 24, marginBottom: 20 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             <Byte mood="happy" size={72} equipment={activePath.equipment} />
             <div style={{ flex: 1 }}>
@@ -267,7 +267,7 @@ export default function CodingPath() {
                 &bdquo;{locale === 'sk' ? activePath.subtitleSk : activePath.subtitleEn}&ldquo;
               </p>
               <p style={{ fontSize: 11, color: '#555', fontWeight: 600, margin: '0 0 2px' }}>
-                {activeModuleNumbers.length} {locale === 'sk' ? 'modulov' : 'modules'} · {allLessons.length} {locale === 'sk' ? 'lekcií' : 'lessons'} · <span style={{ color: '#60a5fa' }}>{doneCount} {locale === 'sk' ? (doneCount === 1 ? 'hotová' : doneCount >= 2 && doneCount <= 4 ? 'hotové' : 'hotových') : 'done'}</span>
+                {activeModuleNumbers.length} {locale === 'sk' ? 'modulov' : 'modules'} · {allLessons.length} {locale === 'sk' ? 'lekcií' : 'lessons'} · <span style={{ color: '#4ade80' }}>{doneCount} {locale === 'sk' ? (doneCount === 1 ? 'hotová' : doneCount >= 2 && doneCount <= 4 ? 'hotové' : 'hotových') : 'done'}</span>
               </p>
             </div>
           </div>
@@ -371,11 +371,11 @@ export default function CodingPath() {
                   {/* Group label */}
                   {item.isFirstInGroup && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: i === 0 ? '0 0 20px' : '28px 0 20px' }}>
-                      <div style={{ flex: 1, height: 1, background: '#1a1a1a' }} />
+                      <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
                       <span style={{ fontSize: 10, fontWeight: 700, color: '#444', letterSpacing: '0.1em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
                         {item.groupTitle}
                       </span>
-                      <div style={{ flex: 1, height: 1, background: '#1a1a1a' }} />
+                      <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
                     </div>
                   )}
 
@@ -385,7 +385,7 @@ export default function CodingPath() {
                       <svg viewBox="0 0 300 40" preserveAspectRatio="none" style={{ width: '100%', height: connectorH, display: 'block' }}>
                         <path
                           d={`M ${prevXPos} 0 C ${prevXPos} 20, ${xPos} 20, ${xPos} 40`}
-                          stroke={trailDone ? '#333' : '#1a1a1a'}
+                          stroke={trailDone ? '#0f2d6b' : '#0c255a'}
                           strokeWidth="3"
                           strokeDasharray={trailDone ? 'none' : '6 6'}
                           fill="none"
@@ -432,8 +432,8 @@ export default function CodingPath() {
                           <div style={{
                             width: nodeSize, height: nodeSize, borderRadius: '50%',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            background: done ? '#60a5fa' : isNext ? '#fff' : locked ? '#111' : '#1a1a1a',
-                            border: done || isNext ? 'none' : `2px solid ${locked ? '#1a1a1a' : '#333'}`,
+                            background: done ? '#4ade80' : isNext ? '#fff' : locked ? '#041540' : '#0c255a',
+                            border: done || isNext ? 'none' : `2px solid ${locked ? '#0c255a' : '#0f2d6b'}`,
                             boxShadow: isNext ? '0 0 24px rgba(255,255,255,0.2), 0 0 48px rgba(255,255,255,0.05)' : done ? '0 0 12px rgba(74,222,128,0.15)' : 'none',
                             transition: 'all 0.2s',
                           }}>
@@ -441,7 +441,7 @@ export default function CodingPath() {
                               ? <Check size={22} color="#052e16" strokeWidth={3} />
                               : isNext
                                 ? <Play size={20} color="#000" fill="#000" />
-                                : <LessonIcon size={locked ? 14 : 18} color={locked ? '#333' : '#666'} strokeWidth={1.8} />
+                                : <LessonIcon size={locked ? 14 : 18} color={locked ? '#0f2d6b' : '#666'} strokeWidth={1.8} />
                             }
                           </div>
                         );
@@ -451,7 +451,7 @@ export default function CodingPath() {
                         <div style={{
                           fontWeight: isNext ? 700 : 500,
                           fontSize: isNext ? 12 : 11,
-                          color: done ? '#888' : isNext ? '#fff' : locked ? '#333' : '#aaa',
+                          color: done ? '#888' : isNext ? '#fff' : locked ? '#0f2d6b' : '#aaa',
                           lineHeight: 1.3,
                         }}>
                           {lessonTitle}
@@ -461,9 +461,9 @@ export default function CodingPath() {
                           const lessonNum = i + 1;
                           const getsReward = lessonNum === 1 || lessonNum === 3 || lessonNum % 5 === 0;
                           if (!getsReward) return null;
-                          const pathColor = activePath?.id === 'builder' ? '#60a5fa'
+                          const pathColor = activePath?.id === 'builder' ? '#4ade80'
                             : activePath?.id === 'ai-pilot' ? '#a855f7'
-                            : activePath?.id === 'mechanic' ? '#60a5fa'
+                            : activePath?.id === 'mechanic' ? '#4ade80'
                             : activePath?.id === 'master' ? '#f59e0b'
                             : '#f59e0b';
                           const badgeColor = done ? '#888' : pathColor;
@@ -538,7 +538,7 @@ export default function CodingPath() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={e => e.stopPropagation()}
-              style={{ background: '#111', border: '1px solid #222', borderRadius: 16, padding: 24, maxWidth: 320, width: '100%', textAlign: 'center' }}
+              style={{ background: '#041540', border: '1px solid #222', borderRadius: 16, padding: 24, maxWidth: 320, width: '100%', textAlign: 'center' }}
             >
               {unlockModal.step === 1 ? (
                 <>
@@ -554,7 +554,7 @@ export default function CodingPath() {
                   <div style={{ display: 'flex', gap: 8 }}>
                     <button
                       onClick={() => setUnlockModal(null)}
-                      style={{ flex: 1, padding: '10px', borderRadius: 10, background: '#1a1a1a', border: '1px solid #2a2a2a', color: '#888', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}
+                      style={{ flex: 1, padding: '10px', borderRadius: 10, background: '#0c255a', border: '1px solid #2a2a2a', color: '#888', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}
                     >
                       {locale === 'sk' ? 'Zrušiť' : 'Cancel'}
                     </button>
@@ -580,7 +580,7 @@ export default function CodingPath() {
                   <div style={{ display: 'flex', gap: 8 }}>
                     <button
                       onClick={() => setUnlockModal(null)}
-                      style={{ flex: 1, padding: '10px', borderRadius: 10, background: '#1a1a1a', border: '1px solid #2a2a2a', color: '#888', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}
+                      style={{ flex: 1, padding: '10px', borderRadius: 10, background: '#0c255a', border: '1px solid #2a2a2a', color: '#888', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}
                     >
                       {locale === 'sk' ? 'Späť' : 'Back'}
                     </button>

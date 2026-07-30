@@ -36,7 +36,7 @@ export default function McqExercise({ exercise, onCorrect, onWrong }: { exercise
           <h2 style={{ fontFamily: 'inherit', fontSize: 18, fontWeight: 800, color: '#EDEDED', marginBottom: 12 }}>
             {exercise.prompt.split('\n')[0]}
           </h2>
-          <pre style={{ background: '#0A0A0A', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '14px 16px', fontSize: 13, color: '#EDEDED', overflow: 'auto', lineHeight: 1.7 }}>
+          <pre style={{ background: '#010d33', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '14px 16px', fontSize: 13, color: '#EDEDED', overflow: 'auto', lineHeight: 1.7 }}>
             {exercise.prompt.split('\n').slice(1).join('\n').trim()}
           </pre>
         </div>
@@ -66,7 +66,7 @@ export default function McqExercise({ exercise, onCorrect, onWrong }: { exercise
                 display: 'flex', alignItems: 'center', gap: 12,
                 background: showCorrect ? 'rgba(74,222,128,0.08)' : showWrong ? 'rgba(255,80,80,0.06)' : '#161616',
                 border: `1px solid ${showCorrect ? 'rgba(74,222,128,0.5)' : showWrong ? 'rgba(255,80,80,0.3)' : 'rgba(255,255,255,0.08)'}`,
-                color: showCorrect ? '#60a5fa' : showWrong ? '#ff9090' : '#A0A0A0',
+                color: showCorrect ? '#4ade80' : showWrong ? '#ff9090' : '#A0A0A0',
                 fontFamily: isCode(opt) ? 'JetBrains Mono, monospace' : 'DM Sans, sans-serif',
                 fontSize: isCode(opt) ? 13 : 14,
                 cursor: state !== 'idle' ? 'default' : 'pointer',
@@ -75,9 +75,9 @@ export default function McqExercise({ exercise, onCorrect, onWrong }: { exercise
             >
               <div style={{
                 width: 20, height: 20, borderRadius: 6, flexShrink: 0,
-                border: `1.5px solid ${showCorrect ? '#60a5fa' : showWrong ? '#ff6060' : 'rgba(255,255,255,0.12)'}`,
+                border: `1.5px solid ${showCorrect ? '#4ade80' : showWrong ? '#ff6060' : 'rgba(255,255,255,0.12)'}`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: showCorrect ? '#60a5fa' : showWrong ? 'rgba(255,80,80,0.15)' : 'transparent',
+                background: showCorrect ? '#4ade80' : showWrong ? 'rgba(255,80,80,0.15)' : 'transparent',
               }}>
                 {showCorrect && <Check size={12} color="#052e16" />}
                 {showWrong && <X size={12} color="#ff6060" />}
@@ -99,7 +99,7 @@ export default function McqExercise({ exercise, onCorrect, onWrong }: { exercise
               border: `1px solid ${state === 'correct' ? 'rgba(74,222,128,0.25)' : 'rgba(255,80,80,0.15)'}`,
             }}
           >
-            <p style={{ fontFamily: 'inherit', fontWeight: 700, fontSize: 13, color: state === 'correct' ? '#60a5fa' : '#ff8080', marginBottom: exercise.explanation ? 4 : 0 }}>
+            <p style={{ fontFamily: 'inherit', fontWeight: 700, fontSize: 13, color: state === 'correct' ? '#4ade80' : '#ff8080', marginBottom: exercise.explanation ? 4 : 0 }}>
               {state === 'correct' ? s('correct', locale) : s('incorrect', locale)}
             </p>
             {exercise.explanation && <p style={{ fontSize: 13, color: '#999', lineHeight: 1.6, margin: 0 }}>{exercise.explanation}</p>}

@@ -172,7 +172,7 @@ export default function HomePage() {
                     <div className="stat-card-label">{label}</div>
                   </div>
                   <div className="stat-info-trigger" style={{ position: 'relative', cursor: 'pointer' }}>
-                    <Info size={13} color="#333" />
+                    <Info size={13} color="#0f2d6b" />
                     <div className="stat-info-tooltip">{tooltip}</div>
                   </div>
                 </div>
@@ -187,7 +187,7 @@ export default function HomePage() {
                   <div className="stat-card-label">{s('gems', locale)}</div>
                 </div>
                 <div className="stat-info-trigger" style={{ position: 'relative', cursor: 'pointer' }}>
-                  <Info size={13} color="#333" />
+                  <Info size={13} color="#0f2d6b" />
                   <div className="stat-info-tooltip">{s('gemsTooltip', locale)}</div>
                 </div>
               </div>
@@ -195,7 +195,7 @@ export default function HomePage() {
             </div>
 
             {/* Byte character + mini leaderboard on desktop */}
-            <div style={{ marginTop: 20, padding: 24, background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 14, textAlign: 'center' }}>
+            <div style={{ marginTop: 20, padding: 24, background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 14, textAlign: 'center' }}>
               <Byte mood={byteMood} size={100} equipment={equipment} />
               <p style={{ fontSize: 13, color: '#888', marginTop: 8, marginBottom: 16 }}>
                 {byteMood === 'celebrating' ? s('greatJob', locale) : byteMood === 'worried' ? s('keepTrying', locale) : byteMood === 'proud' ? s('onFire', locale) : s('readyToLearn', locale)}
@@ -230,8 +230,8 @@ export default function HomePage() {
                           margin: isYou ? '0 -8px' : 0,
                           borderRadius: isYou ? 8 : 0,
                         }}>
-                          <span style={{ fontSize: 11, fontWeight: 800, color: isYou ? '#60a5fa' : '#444', width: 28 }}>#{actualRank}</span>
-                          <span style={{ fontSize: 12, fontWeight: isYou ? 700 : 500, color: isYou ? '#60a5fa' : '#888', flex: 1 }}>
+                          <span style={{ fontSize: 11, fontWeight: 800, color: isYou ? '#4ade80' : '#444', width: 28 }}>#{actualRank}</span>
+                          <span style={{ fontSize: 12, fontWeight: isYou ? 700 : 500, color: isYou ? '#4ade80' : '#888', flex: 1 }}>
                             {u.display_name}
                           </span>
                           <span style={{ fontSize: 11, fontWeight: 600, color: '#555' }}>{u.xp.toLocaleString()} XP</span>

@@ -101,7 +101,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
         exit={{ scale: 0.95, y: -10 }}
         onClick={e => e.stopPropagation()}
         style={{
-          background: '#111', border: '1px solid #222', borderRadius: 20,
+          background: '#041540', border: '1px solid #222', borderRadius: 20,
           padding: '28px 24px', maxWidth: 540, width: '100%', maxHeight: '85vh',
           overflow: 'auto', position: 'relative',
         }}
@@ -109,7 +109,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
         {/* Close button */}
         <button onClick={onClose} style={{
           position: 'absolute', top: 12, right: 12,
-          background: '#1a1a1a', border: '1px solid #333', borderRadius: 8,
+          background: '#0c255a', border: '1px solid #333', borderRadius: 8,
           width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
           cursor: 'pointer', color: '#888',
         }}>
@@ -119,7 +119,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
         {/* Type badge + XP */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
           <span style={{
-            fontSize: 10, fontWeight: 700, color: '#60a5fa', textTransform: 'uppercase',
+            fontSize: 10, fontWeight: 700, color: '#4ade80', textTransform: 'uppercase',
             letterSpacing: '0.08em', background: 'rgba(74,222,128,0.1)',
             padding: '4px 10px', borderRadius: 6,
           }}>
@@ -132,7 +132,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
             <Zap size={11} /> +{exercise.xp} XP
           </span>
           {alreadyDone && (
-            <span style={{ fontSize: 10, color: '#60a5fa', fontWeight: 600, marginLeft: 'auto' }}>
+            <span style={{ fontSize: 10, color: '#4ade80', fontWeight: 600, marginLeft: 'auto' }}>
               <Check size={12} style={{ display: 'inline', verticalAlign: 'middle' }} /> {locale === 'sk' ? 'Hotové' : 'Done'}
             </span>
           )}
@@ -146,7 +146,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
         {/* Code snippet */}
         {exercise.codeSnippet && (
           <pre style={{
-            background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 12,
+            background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 12,
             padding: '16px 18px', fontSize: 13, color: '#ccc', lineHeight: 1.7,
             overflow: 'auto', marginBottom: 16, fontFamily: 'JetBrains Mono, Fira Code, monospace',
             whiteSpace: 'pre-wrap',
@@ -159,7 +159,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
         {exercise.type === 'explain' && exercise.explanation && (
           <>
             <div style={{
-              background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 12,
+              background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 12,
               padding: '16px 18px', marginBottom: 20,
             }}>
               <div style={{ fontSize: 14, color: '#bbb', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
@@ -173,7 +173,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
             {!alreadyDone && showResult !== 'correct' && (
               <button onClick={handleMarkRead} style={{
                 width: '100%', padding: '14px', borderRadius: 12,
-                background: '#60a5fa', color: '#000', fontWeight: 700, fontSize: 14,
+                background: '#4ade80', color: '#000', fontWeight: 700, fontSize: 14,
                 border: 'none', cursor: 'pointer',
               }}>
                 {locale === 'sk' ? 'Rozumiem - hotové' : 'Got it - mark as done'}
@@ -197,9 +197,9 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
                     style={{
                       padding: '12px 16px', borderRadius: 10, textAlign: 'left',
                       fontSize: 13, fontWeight: 500, cursor: showResult ? 'default' : 'pointer',
-                      background: isCorrect ? 'rgba(74,222,128,0.1)' : isWrong ? 'rgba(239,68,68,0.1)' : isSelected ? '#1a1a1a' : '#0a0a0a',
-                      border: `1.5px solid ${isCorrect ? '#60a5fa' : isWrong ? '#ef4444' : isSelected ? '#555' : '#1a1a1a'}`,
-                      color: isCorrect ? '#60a5fa' : isWrong ? '#ef4444' : '#ccc',
+                      background: isCorrect ? 'rgba(74,222,128,0.1)' : isWrong ? 'rgba(239,68,68,0.1)' : isSelected ? '#0c255a' : '#000a2b',
+                      border: `1.5px solid ${isCorrect ? '#4ade80' : isWrong ? '#ef4444' : isSelected ? '#555' : '#0c255a'}`,
+                      color: isCorrect ? '#4ade80' : isWrong ? '#ef4444' : '#ccc',
                     }}
                   >
                     {opt}
@@ -222,7 +222,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
             {!showResult && (
               <button onClick={handleSubmitMcq} disabled={!selected} style={{
                 width: '100%', padding: '14px', borderRadius: 12,
-                background: selected ? '#60a5fa' : '#1a1a1a',
+                background: selected ? '#4ade80' : '#0c255a',
                 color: selected ? '#000' : '#555', fontWeight: 700, fontSize: 14,
                 border: 'none', cursor: selected ? 'pointer' : 'not-allowed',
               }}>
@@ -232,7 +232,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
             {showResult === 'wrong' && (
               <button onClick={() => { setShowResult(null); setSelected(null); }} style={{
                 width: '100%', padding: '14px', borderRadius: 12,
-                background: '#222', color: '#ccc', fontWeight: 700, fontSize: 14,
+                background: '#0c255a', color: '#ccc', fontWeight: 700, fontSize: 14,
                 border: 'none', cursor: 'pointer',
               }}>
                 {locale === 'sk' ? 'Skúsiť znova' : 'Try again'}
@@ -263,9 +263,9 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
                             padding: '8px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600,
                             cursor: showResult ? 'default' : 'pointer',
                             fontFamily: 'JetBrains Mono, Fira Code, monospace',
-                            background: isCorrectAnswer ? 'rgba(74,222,128,0.15)' : isWrongAnswer ? 'rgba(239,68,68,0.15)' : isSel ? '#222' : '#0a0a0a',
-                            border: `1.5px solid ${isCorrectAnswer ? '#60a5fa' : isWrongAnswer ? '#ef4444' : isSel ? '#666' : '#1a1a1a'}`,
-                            color: isCorrectAnswer ? '#60a5fa' : isWrongAnswer ? '#ef4444' : '#ccc',
+                            background: isCorrectAnswer ? 'rgba(74,222,128,0.15)' : isWrongAnswer ? 'rgba(239,68,68,0.15)' : isSel ? '#0c255a' : '#000a2b',
+                            border: `1.5px solid ${isCorrectAnswer ? '#4ade80' : isWrongAnswer ? '#ef4444' : isSel ? '#666' : '#0c255a'}`,
+                            color: isCorrectAnswer ? '#4ade80' : isWrongAnswer ? '#ef4444' : '#ccc',
                           }}
                         >
                           {opt}
@@ -283,7 +283,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
                 disabled={exercise.blanks.some(b => !fillAnswers[b.id])}
                 style={{
                   width: '100%', padding: '14px', borderRadius: 12,
-                  background: exercise.blanks.every(b => fillAnswers[b.id]) ? '#60a5fa' : '#1a1a1a',
+                  background: exercise.blanks.every(b => fillAnswers[b.id]) ? '#4ade80' : '#0c255a',
                   color: exercise.blanks.every(b => fillAnswers[b.id]) ? '#000' : '#555',
                   fontWeight: 700, fontSize: 14, border: 'none',
                   cursor: exercise.blanks.every(b => fillAnswers[b.id]) ? 'pointer' : 'not-allowed',
@@ -295,7 +295,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
             {showResult === 'wrong' && (
               <button onClick={() => { setShowResult(null); setFillAnswers({}); }} style={{
                 width: '100%', padding: '14px', borderRadius: 12,
-                background: '#222', color: '#ccc', fontWeight: 700, fontSize: 14,
+                background: '#0c255a', color: '#ccc', fontWeight: 700, fontSize: 14,
                 border: 'none', cursor: 'pointer',
               }}>
                 {locale === 'sk' ? 'Skúsiť znova' : 'Try again'}
@@ -311,11 +311,11 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
             animate={{ opacity: 1, y: 0 }}
             style={{ marginTop: 12, textAlign: 'center' }}
           >
-            <div style={{ fontSize: 14, fontWeight: 700, color: '#60a5fa', marginBottom: 8 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#4ade80', marginBottom: 8 }}>
               {locale === 'sk' ? 'Správne!' : 'Correct!'} +{exercise.xp} XP
             </div>
             <button onClick={onClose} style={{
-              padding: '10px 24px', borderRadius: 10, background: '#1a1a1a',
+              padding: '10px 24px', borderRadius: 10, background: '#0c255a',
               border: '1px solid #333', color: '#ccc', fontWeight: 600, fontSize: 13, cursor: 'pointer',
             }}>
               {locale === 'sk' ? 'Zavrieť' : 'Close'}
@@ -352,7 +352,7 @@ export default function TopicsPage() {
   // Topic detail view
   if (activeTopic) {
     return (
-      <div className="page-shell" style={{ minHeight: '100vh', background: '#0F0F0F', paddingBottom: 80 }}>
+      <div className="page-shell" style={{ minHeight: '100vh', background: '#010d33', paddingBottom: 80 }}>
         {exerciseModal}
         <StatusBar />
         <div style={{ maxWidth: 520, margin: '0 auto', padding: '24px 20px' }}>
@@ -372,11 +372,11 @@ export default function TopicsPage() {
             </div>
           </div>
 
-          <div style={{ height: 3, borderRadius: 2, background: '#1a1a1a', marginBottom: 24, overflow: 'hidden' }}>
+          <div style={{ height: 3, borderRadius: 2, background: '#0c255a', marginBottom: 24, overflow: 'hidden' }}>
             {(() => {
               const total = activeTopic.lessons.flatMap(l => l.exercises).length;
               const done = activeTopic.lessons.flatMap(l => l.exercises).filter(e => completedLessons.includes(activeTopic.id + '-' + e.id)).length;
-              return <div style={{ height: '100%', background: '#60a5fa', borderRadius: 2, width: `${total > 0 ? (done / total) * 100 : 0}%` }} />;
+              return <div style={{ height: '100%', background: '#4ade80', borderRadius: 2, width: `${total > 0 ? (done / total) * 100 : 0}%` }} />;
             })()}
           </div>
 
@@ -390,21 +390,21 @@ export default function TopicsPage() {
                 <div
                   key={lesson.id}
                   onClick={() => router.push(`/topics/${activeTopic.id}/${lesson.id}`)}
-                  style={{ background: '#0a0a0a', border: `1px solid ${allDone ? 'rgba(74,222,128,0.2)' : '#1a1a1a'}`, borderRadius: 14, overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.15s' }}
+                  style={{ background: '#000a2b', border: `1px solid ${allDone ? 'rgba(74,222,128,0.2)' : '#0c255a'}`, borderRadius: 14, overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.15s' }}
                 >
                   <div style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{
                       width: 36, height: 36, borderRadius: 10, flexShrink: 0,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: allDone ? '#60a5fa' : '#111', border: allDone ? 'none' : '1px solid #222',
+                      background: allDone ? '#4ade80' : '#041540', border: allDone ? 'none' : '1px solid #222',
                     }}>
                       {allDone ? <Check size={18} color="#052e16" strokeWidth={3} /> : <span style={{ fontSize: 14, fontWeight: 700, color: '#888' }}>{li + 1}</span>}
                     </div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 700, fontSize: 14, color: allDone ? '#60a5fa' : '#ddd' }}>{lesson.title}</div>
+                      <div style={{ fontWeight: 700, fontSize: 14, color: allDone ? '#4ade80' : '#ddd' }}>{lesson.title}</div>
                       <div style={{ fontSize: 11, color: '#777', marginTop: 2 }}>{done}/{exercises.length} {locale === 'sk' ? 'hotových' : 'done'}</div>
                     </div>
-                    <ChevronRight size={16} color="#333" />
+                    <ChevronRight size={16} color="#0f2d6b" />
                   </div>
 
                   {/* Exercise list */}
@@ -423,13 +423,13 @@ export default function TopicsPage() {
                           style={{
                             width: '100%', display: 'flex', alignItems: 'center', gap: 10,
                             padding: '10px 16px', textAlign: 'left',
-                            borderTop: ei === 0 ? 'none' : '1px solid #0f0f0f',
+                            borderTop: ei === 0 ? 'none' : '1px solid #010d33',
                           }}
                         >
                           <div style={{
                             width: 24, height: 24, borderRadius: 7, flexShrink: 0,
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            background: exDone ? '#60a5fa' : 'transparent',
+                            background: exDone ? '#4ade80' : 'transparent',
                             border: exDone ? 'none' : '1px solid #2a2a2a',
                           }}>
                             {exDone ? <Check size={12} color="#052e16" strokeWidth={3} /> : <TypeIcon size={10} color="#555" />}
@@ -457,7 +457,7 @@ export default function TopicsPage() {
 
   // Topics grid
   return (
-    <div className="page-shell" style={{ minHeight: '100vh', background: '#0F0F0F', paddingBottom: 80 }}>
+    <div className="page-shell" style={{ minHeight: '100vh', background: '#010d33', paddingBottom: 80 }}>
       <StatusBar />
 
       <div style={{ maxWidth: 520, margin: '0 auto', padding: '24px 20px' }}>
@@ -473,7 +473,7 @@ export default function TopicsPage() {
         {/* ═══ INTERACTIVE PROJECTS ═══ */}
         <div style={{ marginBottom: 32 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-            <Zap size={16} color="#3b82f6" />
+            <Zap size={16} color="#22c55e" />
             <h2 style={{ fontWeight: 700, fontSize: 16, color: '#fff', margin: 0 }}>
               {locale === 'sk' ? 'Interaktívne projekty' : 'Interactive Projects'}
             </h2>
@@ -502,8 +502,8 @@ export default function TopicsPage() {
                     display: 'flex', alignItems: 'center', gap: 16,
                     padding: '16px 18px', borderRadius: 14, textAlign: 'left',
                     cursor: 'pointer', border: 'none',
-                    background: '#0a0a0a',
-                    outline: `1.5px solid ${isComplete ? '#3b82f630' : '#1a1a1a'}`,
+                    background: '#000a2b',
+                    outline: `1.5px solid ${isComplete ? '#22c55e30' : '#0c255a'}`,
                     transition: 'all 0.15s',
                   }}
                 >
@@ -523,13 +523,13 @@ export default function TopicsPage() {
                     <div style={{ fontSize: 12, color: '#666', marginBottom: 8 }}>{proj.subtitle}</div>
                     {/* Progress bar */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <div style={{ flex: 1, height: 4, background: '#1a1a1a', borderRadius: 2, overflow: 'hidden' }}>
-                        <div style={{ width: `${progress * 100}%`, height: '100%', background: '#3b82f6', borderRadius: 2, transition: 'width 0.3s' }} />
+                      <div style={{ flex: 1, height: 4, background: '#0c255a', borderRadius: 2, overflow: 'hidden' }}>
+                        <div style={{ width: `${progress * 100}%`, height: '100%', background: '#22c55e', borderRadius: 2, transition: 'width 0.3s' }} />
                       </div>
                       <span style={{ fontSize: 11, color: '#555', flexShrink: 0 }}>{completedSteps}/{totalSteps}</span>
                     </div>
                   </div>
-                  <ChevronRight size={16} color="#333" />
+                  <ChevronRight size={16} color="#0f2d6b" />
                 </motion.button>
               );
             })}
@@ -556,7 +556,7 @@ export default function TopicsPage() {
                   display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
                   padding: '16px', borderRadius: 16, textAlign: 'left',
                   cursor: 'pointer', border: 'none',
-                  background: '#0a0a0a',
+                  background: '#000a2b',
                   outline: '1.5px solid #1a1a1a',
                   transition: 'all 0.15s',
                 }}
@@ -566,7 +566,7 @@ export default function TopicsPage() {
                     {iconMap[topic.icon] ?? '◆'}
                   </span>
                   {done > 0 && (
-                    <span style={{ fontSize: 10, color: '#60a5fa', fontWeight: 700 }}>
+                    <span style={{ fontSize: 10, color: '#4ade80', fontWeight: 700 }}>
                       {done}/{total}
                     </span>
                   )}
@@ -583,7 +583,7 @@ export default function TopicsPage() {
                   <span style={{ fontSize: 10, color: '#555' }}>
                     {topic.lessons.length} {s('lessons', locale)} - {total} {s('exercises', locale)}
                   </span>
-                  <ChevronRight size={14} color="#333" />
+                  <ChevronRight size={14} color="#0f2d6b" />
                 </div>
               </motion.button>
             );

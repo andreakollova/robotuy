@@ -37,7 +37,7 @@ export default function FillExercise({ exercise, onCorrect, onWrong }: { exercis
         padding: '1px 10px', borderRadius: 6,
         background: ok ? 'rgba(74,222,128,0.12)' : bad ? 'rgba(255,80,80,0.08)' : val ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.03)',
         border: `1px solid ${ok ? 'rgba(74,222,128,0.4)' : bad ? 'rgba(255,80,80,0.25)' : val ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.08)'}`,
-        color: ok ? '#60a5fa' : bad ? '#ff9090' : val ? '#EDEDED' : '#6E6E6E',
+        color: ok ? '#4ade80' : bad ? '#ff9090' : val ? '#EDEDED' : '#6E6E6E',
         fontFamily: 'JetBrains Mono, monospace', fontSize: 13, minWidth: 70, justifyContent: 'center',
       }}>{val || '?'}</span>
     );
@@ -48,10 +48,10 @@ export default function FillExercise({ exercise, onCorrect, onWrong }: { exercis
       <h2 style={{ fontWeight: 700, fontSize: 18, color: '#EDEDED' }}>{exercise.prompt}</h2>
 
       <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)' }}>
-        <div style={{ background: '#111', padding: '10px 16px', display: 'flex', gap: 6, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ background: '#041540', padding: '10px 16px', display: 'flex', gap: 6, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           {['#ff5f57','#febc2e','#28c840'].map(c => <div key={c} style={{ width: 11, height: 11, borderRadius: '50%', background: c, opacity: 0.7 }} />)}
         </div>
-        <pre style={{ background: '#0A0A0A', padding: '16px', fontSize: 13, lineHeight: 2, color: '#EDEDED', overflow: 'auto', margin: 0, whiteSpace: 'pre-wrap' }}>
+        <pre style={{ background: '#010d33', padding: '16px', fontSize: 13, lineHeight: 2, color: '#EDEDED', overflow: 'auto', margin: 0, whiteSpace: 'pre-wrap' }}>
           {renderCode()}
         </pre>
       </div>
@@ -72,7 +72,7 @@ export default function FillExercise({ exercise, onCorrect, onWrong }: { exercis
                     padding: '8px 16px', borderRadius: 10,
                     background: ok ? 'rgba(74,222,128,0.08)' : bad ? 'rgba(255,80,80,0.06)' : sel ? 'rgba(255,255,255,0.05)' : '#161616',
                     border: `1px solid ${ok ? 'rgba(74,222,128,0.4)' : bad ? 'rgba(255,80,80,0.25)' : sel ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.08)'}`,
-                    color: ok ? '#60a5fa' : bad ? '#ff9090' : sel ? '#EDEDED' : '#A0A0A0',
+                    color: ok ? '#4ade80' : bad ? '#ff9090' : sel ? '#EDEDED' : '#A0A0A0',
                     fontFamily: 'JetBrains Mono, monospace', fontSize: 13,
                     cursor: checked ? 'default' : 'pointer', transition: 'all 0.12s',
                   }}>
@@ -90,7 +90,7 @@ export default function FillExercise({ exercise, onCorrect, onWrong }: { exercis
             style={{ padding: '14px 16px', borderRadius: 12,
               background: allCorrect ? 'rgba(74,222,128,0.06)' : 'rgba(255,80,80,0.05)',
               border: `1px solid ${allCorrect ? 'rgba(74,222,128,0.25)' : 'rgba(255,80,80,0.15)'}` }}>
-            <p style={{ fontWeight: 700, fontSize: 13, color: allCorrect ? '#60a5fa' : '#ff8080', margin: 0 }}>
+            <p style={{ fontWeight: 700, fontSize: 13, color: allCorrect ? '#4ade80' : '#ff8080', margin: 0 }}>
               {allCorrect ? s('correct', locale) : s('incorrect', locale)}
             </p>
             {!allCorrect && (
@@ -105,7 +105,7 @@ export default function FillExercise({ exercise, onCorrect, onWrong }: { exercis
 
       {!checked && (
         <motion.button onClick={check} disabled={!allFilled} whileHover={allFilled ? { scale: 1.01 } : {}} whileTap={allFilled ? { scale: 0.98 } : {}}
-          style={{ padding: '14px', borderRadius: 12, background: allFilled ? '#EDEDED' : '#1C1C1C', color: allFilled ? '#0F0F0F' : '#3A3A3A', fontWeight: 700, fontSize: 15, transition: 'all 0.15s', cursor: allFilled ? 'pointer' : 'not-allowed' }}>
+          style={{ padding: '14px', borderRadius: 12, background: allFilled ? '#EDEDED' : '#1C1C1C', color: allFilled ? '#010d33' : '#3A3A3A', fontWeight: 700, fontSize: 15, transition: 'all 0.15s', cursor: allFilled ? 'pointer' : 'not-allowed' }}>
           {s('check', locale)}
         </motion.button>
       )}

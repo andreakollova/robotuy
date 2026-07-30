@@ -20,7 +20,7 @@ Na pravej strane obrazovky sa bude nachádzať živý náhľad aplikácie. Po ka
     'kontrolovať nesprávne vstupy',
   ],
   icon: '🧮',
-  color: '#3b82f6',
+  color: '#22c55e',
   totalSteps: 8,
   sections: [
     // ========== THEORY ==========

@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
   // Validate origin
   const origin = req.headers.get('origin') || '';
-  if (origin && !origin.includes('robotuy.sk') && !origin.includes('robotuy.com') && !origin.includes('localhost')) {
+  if (origin && !origin.includes('robotuy.app') && !origin.includes('robotuy.app') && !origin.includes('localhost')) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 

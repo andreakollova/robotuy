@@ -18,10 +18,14 @@ const DRINKS = [
 ];
 
 const PATHS = [
-  { id: 'builder', titleEn: 'The Builder', titleSk: 'Builder', subtitleEn: 'I want to build apps.', subtitleSk: 'Chcem vytvárať aplikácie.', equipment: { hat: 'hat-graduation', glasses: 'glasses-cool', accessory: 'acc-crystal', aura: 'aura-green' } },
-  { id: 'ai-pilot', titleEn: 'The AI Pilot', titleSk: 'AI Pilot', subtitleEn: 'I want to understand AI.', subtitleSk: 'Chcem rozumieť AI.', equipment: { hat: 'hat-galaxy', glasses: 'glasses-laser', antenna: 'ant-lightning', aura: 'aura-galaxy' } },
-  { id: 'mechanic', titleEn: 'The Mechanic', titleSk: 'Mechanik', subtitleEn: 'I want to fix and read code.', subtitleSk: 'Chcem opravovať kód.', equipment: { hat: 'hat-samurai', glasses: 'glasses-frost', accessory: 'acc-chain', aura: 'aura-blue' } },
-  { id: 'master', titleEn: 'The Master', titleSk: 'Master', subtitleEn: 'I want to master Python.', subtitleSk: 'Chcem ovládnuť Python.', equipment: { hat: 'hat-golden-crown', glasses: 'glasses-golden', accessory: 'acc-wings-gold', aura: 'aura-golden' } },
+  { id: 'foundations', titleEn: 'Robotics Foundations', titleSk: 'Základy robotiky', subtitleEn: 'I want to understand how robots work.', subtitleSk: 'Chcem pochopiť, ako fungujú roboty.', equipment: { hat: 'hat-graduation', glasses: 'glasses-cool', accessory: 'acc-crystal', aura: 'aura-green' } },
+  { id: 'software', titleEn: 'Software Engineer', titleSk: 'Softvérový inžinier', subtitleEn: 'I want to program robots.', subtitleSk: 'Chcem programovať roboty.', equipment: { hat: 'hat-beanie', glasses: 'glasses-round', accessory: 'acc-medal', aura: 'aura-blue' } },
+  { id: 'vision', titleEn: 'Computer Vision', titleSk: 'Počítačové videnie', subtitleEn: 'I want robots to see the world.', subtitleSk: 'Chcem, aby roboty videli svet.', equipment: { hat: 'hat-pilot', glasses: 'glasses-laser', antenna: 'ant-diamond', aura: 'aura-galaxy' } },
+  { id: 'ai', titleEn: 'AI Robotics', titleSk: 'AI robotika', subtitleEn: 'I want to give robots intelligence.', subtitleSk: 'Chcem dať robotom inteligenciu.', equipment: { hat: 'hat-galaxy', glasses: 'glasses-frost', antenna: 'ant-lightning', aura: 'aura-cosmic' } },
+  { id: 'embedded', titleEn: 'Embedded Systems', titleSk: 'Embedded systémy', subtitleEn: 'I want to build robot electronics.', subtitleSk: 'Chcem vytvárať elektroniku robotov.', equipment: { hat: 'hat-headband', glasses: 'glasses-cool', accessory: 'acc-chain', aura: 'aura-fire' } },
+  { id: 'mechanical', titleEn: 'Mechanical Engineer', titleSk: 'Strojársky inžinier', subtitleEn: 'I want to design robot bodies.', subtitleSk: 'Chcem navrhovať telá robotov.', equipment: { hat: 'hat-cowboy', glasses: 'glasses-aviator', accessory: 'acc-bowtie', aura: 'aura-earth' } },
+  { id: 'design', titleEn: 'Industrial Design', titleSk: 'Priemyselný dizajn', subtitleEn: 'I want to make robots beautiful.', subtitleSk: 'Chcem, aby boli roboty krásne.', equipment: { hat: 'hat-party', glasses: 'glasses-mono', accessory: 'acc-scarf', aura: 'aura-air' } },
+  { id: 'integrator', titleEn: 'Robotics Integrator', titleSk: 'Robotický integrátor', subtitleEn: 'I want to deploy robots in factories.', subtitleSk: 'Chcem nasadzovať roboty vo fabrikách.', equipment: { hat: 'hat-samurai', glasses: 'glasses-golden', accessory: 'acc-wings-gold', aura: 'aura-golden' } },
 ];
 
 export default function NameModal() {

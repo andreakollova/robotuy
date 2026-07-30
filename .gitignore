@@ -1,0 +1,11 @@
+node_modules/
+.next/
+ios/
+android/
+__pycache__/
+*.jks
+*.p8
+.env
+.env.local
+.DS_Store
+tsconfig.tsbuildinfo

@@ -1,0 +1,159 @@
+import type { Metadata } from 'next';
+import { headers } from 'next/headers';
+import './globals.css';
+import type { Viewport } from 'next';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
+export async function generateMetadata(): Promise<Metadata> {
+  const headerList = await headers();
+  const host = headerList.get('host') || '';
+  const isSk = host.endsWith('.sk');
+  const baseUrl = isSk ? 'https://robotuy.sk' : 'https://robotuy.com';
+
+  return {
+    title: {
+      default: isSk ? 'Robotuy - Nauč sa programovať' : 'Robotuy - Learn to Code',
+      template: isSk ? '%s - Robotuy' : '%s - Robotuy',
+    },
+    description: isSk
+      ? 'Interaktívna appka na učenie programovania. 200+ lekcií Pythonu, cvičenia, kvízy a projekty. Web, App Store a Google Play.'
+      : 'Interactive app for learning to code. 200+ Python lessons, exercises, quizzes and projects. Web, App Store and Google Play.',
+    keywords: isSk
+      ? ['programovanie', 'python', 'kurz', 'lekcie', 'robotuy', 'nauč sa programovať', 'zadarmo', 'slovensky', 'online kurz', 'appka']
+      : ['programming', 'python', 'course', 'lessons', 'robotuy', 'learn to code', 'free', 'online course', 'coding', 'app'],
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: baseUrl,
+      languages: {
+        'en': 'https://robotuy.com',
+        'sk': 'https://robotuy.sk',
+      },
+    },
+    openGraph: {
+      title: isSk ? 'Robotuy - Nauč sa programovať' : 'Robotuy - Learn to Code',
+      description: isSk
+        ? '200+ lekcií Pythonu, cvičenia, kvízy a projekty.'
+        : '200+ Python lessons, exercises, quizzes and projects.',
+      siteName: 'Robotuy',
+      type: 'website',
+      url: baseUrl,
+      locale: isSk ? 'sk_SK' : 'en_US',
+      alternateLocale: isSk ? 'en_US' : 'sk_SK',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: isSk ? 'Robotuy - Nauč sa programovať' : 'Robotuy - Learn to Code',
+      description: isSk
+        ? '200+ lekcií Pythonu, cvičenia a projekty.'
+        : '200+ Python lessons, exercises and projects.',
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true },
+    },
+    icons: {
+      icon: [
+        { url: '/favicon.png', type: 'image/png', sizes: '180x180' },
+        { url: '/favicon.png', type: 'image/png', sizes: '32x32' },
+      ],
+      apple: { url: '/favicon.png', sizes: '180x180' },
+      shortcut: '/favicon.png',
+    },
+    other: {
+      'geo.region': isSk ? 'SK' : 'US',
+      'geo.placename': isSk ? 'Slovensko' : 'United States',
+      'content-language': isSk ? 'sk' : 'en',
+    },
+  };
+}
+
+import BottomNav from '@/components/BottomNav';
+import LocaleInit from '@/components/LocaleInit';
+import DeepLinkHandler from '@/components/DeepLinkHandler';
+import PushNotificationHandler from '@/components/PushNotifications';
+import ProRewardModal from '@/components/ProRewardModal';
+import WidgetTip from '@/components/WidgetTip';
+import AuthGate from '@/components/AuthGate';
+import { Analytics } from '@vercel/analytics/next';
+
+// JSON-LD structured data
+function JsonLd({ isSk }: { isSk: boolean }) {
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Robotuy',
+    url: isSk ? 'https://robotuy.sk' : 'https://robotuy.com',
+    description: isSk
+      ? 'Interaktívna platforma na učenie programovania'
+      : 'Interactive platform for learning programming',
+    applicationCategory: 'EducationalApplication',
+    operatingSystem: 'Web',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: isSk ? 'EUR' : 'USD',
+    },
+    inLanguage: isSk ? 'sk' : 'en',
+    audience: {
+      '@type': 'EducationalAudience',
+      educationalRole: 'student',
+    },
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const headerList = await headers();
+  const host = headerList.get('host') || '';
+  const isSk = host.endsWith('.sk');
+  const lang = isSk ? 'sk' : 'en';
+
+  return (
+    <html lang={lang} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('robotuy-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}` }} />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="alternate" hrefLang="en" href="https://robotuy.com" />
+        <link rel="alternate" hrefLang="sk" href="https://robotuy.sk" />
+        <link rel="alternate" hrefLang="x-default" href="https://robotuy.com" />
+        <JsonLd isSk={isSk} />
+      </head>
+      <body style={{ margin: 0, background: '#0A0A0A' }}>
+        <LocaleInit />
+        <AuthGate>
+          <BottomNav />
+          {children}
+        </AuthGate>
+        <Analytics />
+        <DeepLinkHandler />
+        <PushNotificationHandler />
+        <ProRewardModal />
+        <WidgetTip />
+        <script dangerouslySetInnerHTML={{ __html: `
+          if (window.Capacitor) {
+            window.addEventListener('load', function() {
+              setTimeout(function() {
+                if (window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen) {
+                  window.Capacitor.Plugins.SplashScreen.hide();
+                }
+              }, 300);
+            });
+          }
+        `}} />
+      </body>
+    </html>
+  );
+}

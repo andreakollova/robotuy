@@ -48,7 +48,7 @@ function CountdownOverlay() {
 
   return (
     <div style={{
-      position: 'fixed', inset: 0, zIndex: 9999, background: '#000',
+      position: 'fixed', inset: 0, zIndex: 9999, background: '#010d33',
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 32,
     }}>
       <img src="/logorobotuy.png" alt="Robotuy" style={{ height: 40, objectFit: 'contain' }} />
@@ -195,7 +195,7 @@ export default function HomePage() {
             </div>
 
             {/* Byte character + mini leaderboard on desktop */}
-            <div style={{ marginTop: 20, padding: 24, background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 14, textAlign: 'center' }}>
+            <div style={{ marginTop: 20, padding: 24, background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14, textAlign: 'center' }}>
               <Byte mood={byteMood} size={100} equipment={equipment} />
               <p style={{ fontSize: 13, color: '#888', marginTop: 8, marginBottom: 16 }}>
                 {byteMood === 'celebrating' ? s('greatJob', locale) : byteMood === 'worried' ? s('keepTrying', locale) : byteMood === 'proud' ? s('onFire', locale) : s('readyToLearn', locale)}

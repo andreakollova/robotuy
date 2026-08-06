@@ -62,13 +62,13 @@ export default function PracticePage() {
   };
 
   if (loading) return (
-    <div style={{ minHeight: '100vh', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <p style={{ color: '#888' }}>...</p>
     </div>
   );
 
   if (!wrongQuestionIds?.length || questions.length === 0) return (
-    <div style={{ minHeight: '100vh', background: '#000', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+    <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <Byte mood="happy" size={80} equipment={equipment} />
       <h2 style={{ color: '#fff', fontSize: 20, fontWeight: 700, marginTop: 16 }}>
         {locale === 'sk' ? 'Nemáš žiadne chyby!' : 'No mistakes to practice!'}
@@ -83,7 +83,7 @@ export default function PracticePage() {
   );
 
   if (done) return (
-    <div style={{ minHeight: '100vh', background: '#000', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+    <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <Byte mood="celebrating" size={80} equipment={equipment} />
       <h2 style={{ color: '#fff', fontSize: 20, fontWeight: 700, marginTop: 16 }}>
         {locale === 'sk' ? 'Precvičené!' : 'Practice done!'}
@@ -106,7 +106,7 @@ export default function PracticePage() {
   const expl = locale === 'sk' ? q.explanation_sk : q.explanation;
 
   return (
-    <div style={{ minHeight: '100vh', background: '#000', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
       <div style={{ padding: '12px 20px', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 8px)', display: 'flex', alignItems: 'center', gap: 12, borderBottom: '1px solid #111' }}>
         <button onClick={() => router.push('/')} style={{ color: '#777', cursor: 'pointer', padding: 4, background: 'none', border: 'none' }}>
@@ -173,7 +173,7 @@ export default function PracticePage() {
                     }}
                   >
                     <div style={{
-                      width: 28, height: 28, borderRadius: 8, background: '#161616', border: '1px solid #2a2a2a',
+                      width: 28, height: 28, borderRadius: 8, background: '#161616', border: '1px solid #132d6b',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                       fontSize: 12, fontWeight: 700, color: '#888',
                     }}>
@@ -220,7 +220,7 @@ export default function PracticePage() {
                     </button>
                     <button
                       onClick={next}
-                      style={{ padding: '8px 14px', borderRadius: 8, background: '#1C1C1C', border: '1px solid #2a2a2a', color: '#888', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
+                      style={{ padding: '8px 14px', borderRadius: 8, background: '#041540', border: '1px solid #132d6b', color: '#888', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
                     >
                       {locale === 'sk' ? 'Nechať' : 'Keep'}
                     </button>

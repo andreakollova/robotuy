@@ -106,7 +106,7 @@ export default function McqExercise({ exercise, onCorrect, onWrong }: { exercise
             {state === 'wrong' && (
               <motion.button
                 onClick={onCorrect} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}
-                style={{ marginTop: 12, width: '100%', padding: '11px', borderRadius: 10, background: '#1C1C1C', border: '1px solid rgba(255,255,255,0.08)', color: '#A0A0A0', fontFamily: 'inherit', fontWeight: 700, fontSize: 13 }}
+                style={{ marginTop: 12, width: '100%', padding: '11px', borderRadius: 10, background: '#041540', border: '1px solid rgba(255,255,255,0.08)', color: '#A0A0A0', fontFamily: 'inherit', fontWeight: 700, fontSize: 13 }}
               >
                 {s('continueBtn', locale)}
               </motion.button>

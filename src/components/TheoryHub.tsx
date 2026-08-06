@@ -104,7 +104,7 @@ export default function TheoryHub() {
     <div style={{ marginBottom: 40 }}>
       {/* Section header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-        <div style={{ width: 32, height: 32, borderRadius: 8, background: '#161616', border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: '#161616', border: '1px solid #0c255a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <BookOpen size={16} color="#fff" />
         </div>
         <div>
@@ -148,7 +148,7 @@ export default function TheoryHub() {
         <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
         <button
           onClick={() => setShowAll(!showAll)}
-          style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, background: 'none', border: '1px solid #222', color: '#888', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
+          style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, background: 'none', border: '1px solid #0c255a', color: '#888', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
         >
           <Library size={13} />
           {showAll ? (locale === 'sk' ? 'Skryť' : 'Show less') : (locale === 'sk' ? 'Zobraziť všetky' : 'Show all')}
@@ -190,7 +190,7 @@ function ReadCard({ lesson, index, router, locale }: { lesson: DbLessonSummary &
         width: 44, height: 44, borderRadius: 12, flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         background: index === 0 ? '#fff' : '#161616',
-        border: index === 0 ? 'none' : '1px solid #222',
+        border: index === 0 ? 'none' : '1px solid #0c255a',
       }}>
         {index === 0
           ? <ArrowRight size={18} color="#000" />
@@ -233,7 +233,7 @@ function ModuleRow({ mod, completedLessons, router, locale, favDrink }: { mod: M
           width: 32, height: 32, borderRadius: 8, flexShrink: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: allDone ? 'rgba(245,158,11,0.1)' : '#041540',
-          border: allDone ? '1px solid rgba(245,158,11,0.3)' : '1px solid #222',
+          border: allDone ? '1px solid rgba(245,158,11,0.3)' : '1px solid #0c255a',
           fontSize: allDone ? 18 : 14,
         }}>
           {allDone
@@ -273,7 +273,7 @@ function ModuleRow({ mod, completedLessons, router, locale, favDrink }: { mod: M
                   width: 24, height: 24, borderRadius: 7, flexShrink: 0,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: done ? '#4ade80' : 'transparent',
-                  border: done ? 'none' : '1px solid #2a2a2a',
+                  border: done ? 'none' : '1px solid #132d6b',
                 }}>
                   {done && <Check size={12} color="#000" strokeWidth={3} />}
                 </div>

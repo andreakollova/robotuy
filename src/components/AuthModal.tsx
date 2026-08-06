@@ -93,7 +93,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
         exit={{ opacity: 0 }}
         style={{
           position: 'fixed', inset: 0, zIndex: 300,
-          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(20px)',
+          background: 'rgba(1,13,51,0.9)', backdropFilter: 'blur(20px)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24,
         }}
         onClick={onClose}
@@ -105,7 +105,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
           style={{
             background: '#161616', border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: 24, padding: '32px 28px', maxWidth: 380, width: '100%',
-            boxShadow: '0 24px 80px rgba(0,0,0,0.7)',
+            boxShadow: '0 24px 80px rgba(1,13,51,0.8)',
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8 }}>
@@ -159,7 +159,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
                   autoFocus
                   style={{
                     width: '100%', padding: '11px 14px', borderRadius: 10,
-                    background: '#000a2b', border: '1px solid #222', color: '#fff',
+                    background: '#000a2b', border: '1px solid #0c255a', color: '#fff',
                     fontSize: 14, fontFamily: 'inherit', outline: 'none', marginBottom: 12,
                     boxSizing: 'border-box',
                   }}
@@ -197,7 +197,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
                   autoFocus
                   style={{
                     width: '100%', padding: '14px', borderRadius: 10,
-                    background: '#000a2b', border: '1px solid #222', color: '#fff',
+                    background: '#000a2b', border: '1px solid #0c255a', color: '#fff',
                     fontSize: 24, fontFamily: 'monospace', outline: 'none', marginBottom: 12,
                     textAlign: 'center', letterSpacing: '0.3em', boxSizing: 'border-box',
                   }}

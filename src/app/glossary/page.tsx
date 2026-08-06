@@ -97,7 +97,7 @@ export default function GlossaryPage() {
             placeholder={s('searchGlossary', locale)}
             style={{
               width: '100%', padding: '11px 40px 11px 40px',
-              background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 12,
+              background: '#000a2b', border: '1px solid #0c255a', borderRadius: 12,
               color: '#fff', fontSize: 14, fontFamily: 'DM Sans, sans-serif',
               outline: 'none', boxSizing: 'border-box',
             }}
@@ -149,7 +149,7 @@ export default function GlossaryPage() {
           onClick={() => setShowAddForm(!showAddForm)}
           style={{
             width: '100%', padding: '12px 16px', borderRadius: 12, marginBottom: 16,
-            background: showAddForm ? '#041540' : '#000a2b', border: '1px solid #222',
+            background: showAddForm ? '#041540' : '#000a2b', border: '1px solid #0c255a',
             color: '#aaa', fontSize: 13, fontWeight: 600, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
           }}
@@ -165,23 +165,23 @@ export default function GlossaryPage() {
               initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
               style={{ overflow: 'hidden', marginBottom: 16 }}
             >
-              <div style={{ background: '#000a2b', border: '1px solid #222', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <input
                   value={newTerm} onChange={e => setNewTerm(e.target.value)}
                   placeholder={locale === 'sk' ? 'Skratka / pojem (napr. API)' : 'Term (e.g. API)'}
-                  style={{ padding: '10px 14px', background: '#041540', border: '1px solid #1a1a1a', borderRadius: 10, color: '#fff', fontSize: 14, fontFamily: 'inherit', outline: 'none' }}
+                  style={{ padding: '10px 14px', background: '#041540', border: '1px solid #0c255a', borderRadius: 10, color: '#fff', fontSize: 14, fontFamily: 'inherit', outline: 'none' }}
                 />
                 <textarea
                   value={newExplanation} onChange={e => setNewExplanation(e.target.value)}
                   placeholder={locale === 'sk' ? 'Vysvetlenie...' : 'Explanation...'}
                   rows={3}
-                  style={{ padding: '10px 14px', background: '#041540', border: '1px solid #1a1a1a', borderRadius: 10, color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none', resize: 'vertical' }}
+                  style={{ padding: '10px 14px', background: '#041540', border: '1px solid #0c255a', borderRadius: 10, color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none', resize: 'vertical' }}
                 />
                 <textarea
                   value={newCode} onChange={e => setNewCode(e.target.value)}
                   placeholder={locale === 'sk' ? 'Kód (voliteľné)' : 'Code (optional)'}
                   rows={2}
-                  style={{ padding: '10px 14px', background: '#041540', border: '1px solid #1a1a1a', borderRadius: 10, color: '#aaa', fontSize: 12, fontFamily: 'monospace', outline: 'none', resize: 'vertical' }}
+                  style={{ padding: '10px 14px', background: '#041540', border: '1px solid #0c255a', borderRadius: 10, color: '#aaa', fontSize: 12, fontFamily: 'monospace', outline: 'none', resize: 'vertical' }}
                 />
                 <button
                   onClick={addCustomEntry}
@@ -216,7 +216,7 @@ export default function GlossaryPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: Math.min(i * 0.02, 0.3) }}
-                style={{ background: '#000a2b', border: `1px solid ${isOpen ? '#2a2a2a' : '#141414'}`, borderRadius: 14, overflow: 'hidden' }}
+                style={{ background: '#000a2b', border: `1px solid ${isOpen ? '#132d6b' : '#141414'}`, borderRadius: 14, overflow: 'hidden' }}
               >
                 <button
                   onClick={() => setExpanded(isOpen ? null : entry.id)}
@@ -276,7 +276,7 @@ export default function GlossaryPage() {
                           {entry.explanation}
                         </p>
                         {entry.example && (
-                          <div style={{ background: '#060606', border: '1px solid #1a1a1a', borderRadius: 10, padding: '10px 14px' }}>
+                          <div style={{ background: '#060606', border: '1px solid #0c255a', borderRadius: 10, padding: '10px 14px' }}>
                             <pre style={{ fontSize: 11, color: '#888', fontFamily: 'monospace', margin: 0, whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
                               {entry.example}
                             </pre>

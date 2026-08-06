@@ -24,7 +24,7 @@ export default function ProRewardModal() {
           exit={{ opacity: 0 }}
           style={{
             position: 'fixed', inset: 0, zIndex: 400,
-            background: 'rgba(0,0,0,0.9)',
+            background: 'rgba(1,13,51,0.95)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             padding: 24,
           }}
@@ -34,7 +34,7 @@ export default function ProRewardModal() {
             animate={{ scale: 1, y: 0 }}
             style={{
               maxWidth: 340, width: '100%',
-              background: '#041540', border: '1px solid #222',
+              background: '#041540', border: '1px solid #0c255a',
               borderRadius: 24, padding: '36px 24px',
               textAlign: 'center',
             }}
@@ -73,7 +73,7 @@ export default function ProRewardModal() {
                   onClick={() => { dismissProReward(); router.push('/workshop'); }}
                   style={{
                     flex: 1, padding: '14px', borderRadius: 12,
-                    background: '#0c255a', border: '1px solid #333',
+                    background: '#0c255a', border: '1px solid #0c255a',
                     color: '#fff', fontWeight: 700, fontSize: 13,
                     cursor: 'pointer',
                   }}

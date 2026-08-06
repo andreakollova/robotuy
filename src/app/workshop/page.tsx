@@ -94,9 +94,9 @@ export default function WorkshopPage() {
   const isPreviewMode = previewEquipment !== null;
 
   return (
-    <div className="page-shell" style={{ minHeight: '100vh', background: '#000', color: '#fff' }}>
+    <div className="page-shell" style={{ minHeight: '100vh', background: '#010d33', color: '#fff' }}>
       {/* Header */}
-      <div style={{ borderBottom: '1px solid #111', padding: '14px 16px', paddingTop: 'max(14px, 50px)', display: 'flex', alignItems: 'center', gap: 12, position: 'sticky', top: 0, background: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', zIndex: 50 }}>
+      <div style={{ borderBottom: '1px solid #111', padding: '14px 16px', paddingTop: 'max(14px, 50px)', display: 'flex', alignItems: 'center', gap: 12, position: 'sticky', top: 0, background: 'rgba(1,13,51,0.95)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', zIndex: 50 }}>
         <Link href="/" onClick={() => window.scrollTo(0, 0)}>
           <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
             style={{ width: 36, height: 36, borderRadius: 10, background: '#041540', border: '1px solid #1f1f1f', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
@@ -114,7 +114,7 @@ export default function WorkshopPage() {
           style={{
             display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0,
             padding: '8px 12px', borderRadius: 10,
-            background: '#041540', border: '1px solid #2a2a2a',
+            background: '#041540', border: '1px solid #132d6b',
             color: '#aaa', fontSize: 12, fontWeight: 600, cursor: 'pointer',
           }}
         >
@@ -130,7 +130,7 @@ export default function WorkshopPage() {
           animate={{ opacity: 1, y: 0 }}
           style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center',
-            padding: '32px 20px', background: '#000a2b', border: '1px solid #1a1a1a',
+            padding: '32px 20px', background: '#000a2b', border: '1px solid #0c255a',
             borderRadius: 24, marginBottom: 28, position: 'relative',
           }}
         >
@@ -169,7 +169,7 @@ export default function WorkshopPage() {
                   <span key={slot} style={{
                     fontSize: 11, padding: '3px 10px', borderRadius: 20, fontWeight: 600,
                     background: owned ? '#041540' : `${rc.color}15`,
-                    border: `1px solid ${owned ? '#2a2a2a' : rc.color + '44'}`,
+                    border: `1px solid ${owned ? '#132d6b' : rc.color + '44'}`,
                     color: owned ? '#888' : rc.color,
                   }}>
                     {item.name}
@@ -238,7 +238,7 @@ export default function WorkshopPage() {
         </AnimatePresence>
 
         {/* Tabs */}
-        <div style={{ display: 'flex', gap: 4, marginBottom: 20, background: '#000a2b', padding: 4, borderRadius: 14, border: '1px solid #1a1a1a', overflowX: 'auto' }}>
+        <div style={{ display: 'flex', gap: 4, marginBottom: 20, background: '#000a2b', padding: 4, borderRadius: 14, border: '1px solid #0c255a', overflowX: 'auto' }}>
           {tabIds.map(id => (
             <button
               key={id}

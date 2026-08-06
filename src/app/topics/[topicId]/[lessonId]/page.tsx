@@ -214,7 +214,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
       {/* Code snippet */}
       {exercise.codeSnippet && (
         <pre style={{
-          background: '#041540', border: '1px solid #1a1a1a', borderRadius: 12,
+          background: '#041540', border: '1px solid #0c255a', borderRadius: 12,
           padding: '16px 18px', fontSize: 13, color: '#ccc', lineHeight: 1.7,
           overflow: 'auto', marginBottom: 20, fontFamily: 'JetBrains Mono, Fira Code, monospace',
           whiteSpace: 'pre-wrap',
@@ -227,7 +227,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
       {exercise.type === 'explain' && exercise.explanation && (
         <>
           <div style={{
-            background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 14,
+            background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14,
             padding: '20px', marginBottom: 20,
           }}>
             <div style={{ fontSize: 15, color: '#bbb', lineHeight: 1.9 }}>
@@ -321,7 +321,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
             <button onClick={handleRetry} style={{
               width: '100%', padding: '14px', borderRadius: 12,
               background: '#161616', color: '#ccc', fontWeight: 700, fontSize: 14,
-              border: '1px solid #222', cursor: 'pointer',
+              border: '1px solid #0c255a', cursor: 'pointer',
             }}>
               {locale === 'sk' ? 'Skúsiť znova' : 'Try again'}
             </button>
@@ -384,7 +384,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
             <button onClick={handleRetry} style={{
               width: '100%', padding: '14px', borderRadius: 12,
               background: '#161616', color: '#ccc', fontWeight: 700, fontSize: 14,
-              border: '1px solid #222', cursor: 'pointer',
+              border: '1px solid #0c255a', cursor: 'pointer',
             }}>
               {locale === 'sk' ? 'Skúsiť znova' : 'Try again'}
             </button>
@@ -396,7 +396,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
       {exercise.type === 'write' && (
         <>
           <div style={{ borderRadius: 14, overflow: 'hidden', border: `1px solid ${writeRun === 'passed' ? 'rgba(74,222,128,0.2)' : writeRun === 'failed' ? 'rgba(255,80,80,0.2)' : '#0c255a'}`, marginBottom: 16, transition: 'border-color 0.2s' }}>
-            <div style={{ background: '#041540', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 6, borderBottom: '1px solid #1a1a1a' }}>
+            <div style={{ background: '#041540', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 6, borderBottom: '1px solid #0c255a' }}>
               {['#ff5f57','#febc2e','#28c840'].map(c => <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c, opacity: 0.7 }} />)}
               <span style={{ marginLeft: 8, fontSize: 10, color: '#555', fontFamily: 'JetBrains Mono, monospace' }}>python</span>
             </div>

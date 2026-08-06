@@ -58,7 +58,7 @@ export default function WidgetTip() {
             <div style={{
               width: 64, height: 64, borderRadius: 16, flexShrink: 0,
               background: 'linear-gradient(135deg, #000a2b, #111)',
-              border: '1px solid #222',
+              border: '1px solid #0c255a',
               display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
               padding: '7px 8px',
               overflow: 'hidden',

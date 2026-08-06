@@ -95,7 +95,7 @@ export default function FillExercise({ exercise, onCorrect, onWrong }: { exercis
             </p>
             {!allCorrect && (
               <motion.button onClick={() => { setSelections({}); setChecked(false); }} whileHover={{ scale: 1.01 }}
-                style={{ marginTop: 10, width: '100%', padding: '11px', borderRadius: 10, background: '#1C1C1C', border: '1px solid rgba(255,255,255,0.08)', color: '#A0A0A0', fontWeight: 700, fontSize: 13 }}>
+                style={{ marginTop: 10, width: '100%', padding: '11px', borderRadius: 10, background: '#041540', border: '1px solid rgba(255,255,255,0.08)', color: '#A0A0A0', fontWeight: 700, fontSize: 13 }}>
                 {s('tryAgain', locale)}
               </motion.button>
             )}
@@ -105,7 +105,7 @@ export default function FillExercise({ exercise, onCorrect, onWrong }: { exercis
 
       {!checked && (
         <motion.button onClick={check} disabled={!allFilled} whileHover={allFilled ? { scale: 1.01 } : {}} whileTap={allFilled ? { scale: 0.98 } : {}}
-          style={{ padding: '14px', borderRadius: 12, background: allFilled ? '#EDEDED' : '#1C1C1C', color: allFilled ? '#010d33' : '#3A3A3A', fontWeight: 700, fontSize: 15, transition: 'all 0.15s', cursor: allFilled ? 'pointer' : 'not-allowed' }}>
+          style={{ padding: '14px', borderRadius: 12, background: allFilled ? '#EDEDED' : '#041540', color: allFilled ? '#010d33' : '#3A3A3A', fontWeight: 700, fontSize: 15, transition: 'all 0.15s', cursor: allFilled ? 'pointer' : 'not-allowed' }}>
           {s('check', locale)}
         </motion.button>
       )}

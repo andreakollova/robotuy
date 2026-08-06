@@ -53,7 +53,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="page-shell" style={{ minHeight: '100vh', background: '#0F0F0F', paddingBottom: 80 }}>
+    <div className="page-shell" style={{ minHeight: '100vh', background: '#010d33', paddingBottom: 80 }}>
       <StatusBar />
       <AuthModal open={showAuth} onClose={() => setShowAuth(false)} />
 
@@ -69,9 +69,9 @@ export default function SettingsPage() {
           </h3>
 
           {authUser ? (
-            <div style={{ background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
+            <div style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14, overflow: 'hidden' }}>
               <div style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: '#111', border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: '#010d33', border: '1px solid #0c255a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <User size={16} color="#4ade80" />
                 </div>
                 <div style={{ flex: 1 }}>
@@ -97,7 +97,7 @@ export default function SettingsPage() {
               onClick={() => setShowAuth(true)}
               style={{
                 width: '100%', padding: '14px 16px', borderRadius: 14,
-                background: '#0a0a0a', border: '1px solid #1a1a1a',
+                background: '#000a2b', border: '1px solid #0c255a',
                 display: 'flex', alignItems: 'center', gap: 12,
                 cursor: 'pointer', color: '#ccc', fontSize: 14, fontWeight: 600,
               }}
@@ -115,7 +115,7 @@ export default function SettingsPage() {
             {locale === 'sk' ? 'Preferencie' : 'Preferences'}
           </h3>
 
-          <div style={{ background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
+          <div style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14, overflow: 'hidden' }}>
             {/* Language */}
             <button
               onClick={toggle}
@@ -150,7 +150,7 @@ export default function SettingsPage() {
                     document.documentElement.setAttribute('data-theme', t);
                   }} style={{
                     padding: '6px 14px', borderRadius: 6, border: 'none', cursor: 'pointer',
-                    background: theme === t ? 'var(--bg-raised, #1a1a1a)' : 'transparent',
+                    background: theme === t ? 'var(--bg-raised, #0c255a)' : 'transparent',
                     color: theme === t ? 'var(--text, #fff)' : 'var(--text-dim, #555)',
                     fontSize: 12, fontWeight: 600,
                   }}>
@@ -168,7 +168,7 @@ export default function SettingsPage() {
                     value={nameVal}
                     onChange={e => setNameVal(e.target.value)}
                     autoFocus
-                    style={{ flex: 1, padding: '8px 12px', borderRadius: 8, background: '#111', border: '1px solid #222', color: '#fff', fontSize: 16, fontFamily: 'inherit', outline: 'none' }}
+                    style={{ flex: 1, padding: '8px 12px', borderRadius: 8, background: '#010d33', border: '1px solid #0c255a', color: '#fff', fontSize: 16, fontFamily: 'inherit', outline: 'none' }}
                   />
                   <button
                     onClick={() => { if (nameVal.trim()) setName(nameVal.trim()); setEditName(false); }}
@@ -219,7 +219,7 @@ export default function SettingsPage() {
                       style={{
                         padding: '8px 14px', borderRadius: 10, fontSize: 12, fontWeight: 600,
                         background: favDrink === d.id ? 'rgba(74,222,128,0.1)' : '#111',
-                        border: `1px solid ${favDrink === d.id ? 'rgba(74,222,128,0.4)' : '#1a1a1a'}`,
+                        border: `1px solid ${favDrink === d.id ? 'rgba(74,222,128,0.4)' : '#0c255a'}`,
                         color: favDrink === d.id ? '#4ade80' : '#888',
                         cursor: 'pointer',
                       }}
@@ -239,7 +239,7 @@ export default function SettingsPage() {
             <h3 style={{ fontSize: 11, fontWeight: 700, color: '#555', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
               {locale === 'sk' ? 'Notifikácie' : 'Notifications'}
             </h3>
-            <div style={{ background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
+            <div style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14, overflow: 'hidden' }}>
               <div style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span style={{ fontSize: 14, color: '#ccc', fontWeight: 500 }}>
                   {locale === 'sk' ? 'Push notifikácie' : 'Push notifications'}
@@ -252,7 +252,7 @@ export default function SettingsPage() {
                   }}
                   style={{
                     width: 48, height: 28, borderRadius: 14, cursor: 'pointer', position: 'relative',
-                    background: notifOn ? '#4ade80' : '#333',
+                    background: notifOn ? '#4ade80' : '#0c255a',
                     transition: 'background 0.2s',
                   }}
                 >
@@ -273,7 +273,7 @@ export default function SettingsPage() {
           <h3 style={{ fontSize: 11, fontWeight: 700, color: '#555', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
             FAQ
           </h3>
-          <div style={{ background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
+          <div style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14, overflow: 'hidden' }}>
             {([
               {
                 q: locale === 'sk' ? 'Ako pridať widget na plochu? (iOS)' : 'How to add a widget? (iOS)',
@@ -312,7 +312,7 @@ export default function SettingsPage() {
           <h3 style={{ fontSize: 11, fontWeight: 700, color: '#555', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
             {locale === 'sk' ? 'Právne' : 'Legal'}
           </h3>
-          <div style={{ background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
+          <div style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14, overflow: 'hidden' }}>
             <a href="/privacy" style={{ display: 'block', padding: '14px 16px', color: '#ccc', fontSize: 14, fontWeight: 500, textDecoration: 'none', borderBottom: '1px solid #111' }}>
               {locale === 'sk' ? 'Zásady ochrany súkromia' : 'Privacy Policy'}
             </a>
@@ -327,7 +327,7 @@ export default function SettingsPage() {
           onClick={handleDeleteData}
           style={{
             padding: '10px 14px', borderRadius: 10,
-            background: 'none', border: '1px solid #1a1a1a',
+            background: 'none', border: '1px solid #0c255a',
             display: 'flex', alignItems: 'center', gap: 8,
             cursor: 'pointer', color: '#555', fontSize: 11, fontWeight: 500,
             opacity: 0.6,

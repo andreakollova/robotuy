@@ -687,7 +687,7 @@ export default function CodingPath() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setUnlockModal(null)}
-            style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+            style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(1,13,51,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}

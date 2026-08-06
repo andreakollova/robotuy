@@ -77,13 +77,13 @@ export default function AskByte({ lessonTitle, lessonContent, locale, equipment,
             exit={{ opacity: 0, y: 50 }}
             style={{
               position: 'fixed', bottom: 90, left: 12, right: 12, zIndex: 90,
-              background: '#041540', border: '1px solid #222', borderRadius: 16,
+              background: '#041540', border: '1px solid #0c255a', borderRadius: 16,
               maxHeight: 400, display: 'flex', flexDirection: 'column',
               boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
             }}
           >
             {/* Header */}
-            <div style={{ padding: '12px 16px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ padding: '12px 16px', borderBottom: '1px solid #0c255a', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Byte mood="happy" size={28} equipment={equipment} />
                 <span style={{ fontSize: 13, fontWeight: 700, color: '#ccc' }}>
@@ -112,7 +112,7 @@ export default function AskByte({ lessonTitle, lessonContent, locale, equipment,
                   <div style={{
                     padding: '8px 12px', borderRadius: 12, maxWidth: '80%',
                     background: msg.role === 'user' ? '#0c255a' : 'rgba(74,222,128,0.1)',
-                    border: `1px solid ${msg.role === 'user' ? '#2a2a2a' : 'rgba(74,222,128,0.2)'}`,
+                    border: `1px solid ${msg.role === 'user' ? '#132d6b' : 'rgba(74,222,128,0.2)'}`,
                   }}>
                     <p style={{ fontSize: 13, color: msg.role === 'user' ? '#ccc' : '#bbb', margin: 0, lineHeight: 1.5 }}>
                       {msg.text}
@@ -131,7 +131,7 @@ export default function AskByte({ lessonTitle, lessonContent, locale, equipment,
             </div>
 
             {/* Input */}
-            <div style={{ padding: '8px 12px', borderTop: '1px solid #1a1a1a', display: 'flex', gap: 8 }}>
+            <div style={{ padding: '8px 12px', borderTop: '1px solid #0c255a', display: 'flex', gap: 8 }}>
               <input
                 value={input}
                 onChange={e => setInput(e.target.value)}
@@ -140,7 +140,7 @@ export default function AskByte({ lessonTitle, lessonContent, locale, equipment,
                 disabled={questionsLeft <= 0}
                 style={{
                   flex: 1, padding: '8px 12px', borderRadius: 8,
-                  background: '#000a2b', border: '1px solid #1a1a1a',
+                  background: '#000a2b', border: '1px solid #0c255a',
                   color: '#ccc', fontSize: 14, fontFamily: 'inherit', outline: 'none',
                 }}
               />

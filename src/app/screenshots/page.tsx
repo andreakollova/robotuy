@@ -69,7 +69,7 @@ const screens = [
 
 export default function ScreenshotsPage() {
   return (
-    <div style={{ background: '#000', padding: 20, display: 'flex', flexWrap: 'wrap', gap: 24, justifyContent: 'center', position: 'fixed', inset: 0, zIndex: 999, overflow: 'auto' }}>
+    <div style={{ background: '#010d33', padding: 20, display: 'flex', flexWrap: 'wrap', gap: 24, justifyContent: 'center', position: 'fixed', inset: 0, zIndex: 999, overflow: 'auto' }}>
       <p style={{ width: '100%', textAlign: 'center', color: '#555', fontSize: 12 }}>
         App Store Screenshots - Right-click &rarr; Save Image As
       </p>
@@ -147,7 +147,7 @@ export default function ScreenshotsPage() {
                 borderRadius: 36,
                 overflow: 'hidden',
                 border: '1.5px solid rgba(255,255,255,0.08)',
-                boxShadow: `0 12px 40px rgba(0,0,0,0.6), 0 4px 20px ${s.accent}12, inset 0 0.5px 0 rgba(255,255,255,0.1)`,
+                boxShadow: `0 12px 40px rgba(1,13,51,0.75), 0 4px 20px ${s.accent}12, inset 0 0.5px 0 rgba(255,255,255,0.1)`,
               }}>
                 <img
                   src={s.screenshot}

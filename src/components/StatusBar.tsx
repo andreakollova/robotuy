@@ -40,7 +40,7 @@ export default function StatusBar() {
         <Link href="/settings" style={{ display: 'flex' }}>
           <div style={{
             width: 32, height: 32, borderRadius: 8,
-            background: '#1C1C1C',
+            background: '#041540',
             border: '1px solid rgba(255,255,255,0.08)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             cursor: 'pointer',

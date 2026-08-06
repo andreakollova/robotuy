@@ -200,7 +200,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
         style={{
           position: 'absolute', top: 16, right: 16,
           width: 36, height: 36, borderRadius: 10,
-          background: '#1C1C1C', border: '1px solid rgba(255,255,255,0.08)',
+          background: '#041540', border: '1px solid rgba(255,255,255,0.08)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#aaa',
           zIndex: 10,
@@ -309,7 +309,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 autoFocus
                 style={{
                   width: '100%', padding: '14px', borderRadius: 12,
-                  background: '#041540', border: '1px solid #222', color: '#fff',
+                  background: '#041540', border: '1px solid #0c255a', color: '#fff',
                   fontSize: 14, fontFamily: 'inherit', outline: 'none', marginBottom: 8,
                   boxSizing: 'border-box',
                 }}
@@ -336,7 +336,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 }}
                 style={{
                   width: '100%', padding: '14px', borderRadius: 12,
-                  background: '#041540', border: '1px solid #222', color: '#fff',
+                  background: '#041540', border: '1px solid #0c255a', color: '#fff',
                   fontSize: 14, fontFamily: 'inherit', outline: 'none', marginBottom: 12,
                   boxSizing: 'border-box',
                 }}
@@ -391,7 +391,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 autoFocus
                 style={{
                   width: '100%', padding: '14px', borderRadius: 12,
-                  background: '#041540', border: '1px solid #222', color: '#fff',
+                  background: '#041540', border: '1px solid #0c255a', color: '#fff',
                   fontSize: 24, fontFamily: 'monospace', outline: 'none', marginBottom: 12,
                   textAlign: 'center', letterSpacing: '0.3em', boxSizing: 'border-box',
                 }}

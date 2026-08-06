@@ -58,13 +58,13 @@ export default function LessonPath() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: mi * 0.04 }}
-            style={{ background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 20, overflow: 'hidden' }}
+            style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 20, overflow: 'hidden' }}
           >
             <button
               onClick={() => toggleModule(modKey)}
               style={{ width: '100%', padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', background: 'none', border: 'none', textAlign: 'left' }}
             >
-              <div style={{ width: 40, height: 40, borderRadius: 12, background: '#041540', border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: '#041540', border: '1px solid #0c255a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <GraduationCap size={18} color="#666" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -174,14 +174,14 @@ export default function LessonPath() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: mi * 0.08 }}
-            style={{ background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 20, overflow: 'hidden' }}
+            style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 20, overflow: 'hidden' }}
           >
             {/* Module header - tap to collapse */}
             <button
               onClick={() => toggleModule(module.id)}
               style={{ width: '100%', padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', background: 'none', border: 'none', textAlign: 'left' }}
             >
-              <div style={{ width: 40, height: 40, borderRadius: 12, background: '#041540', border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: '#041540', border: '1px solid #0c255a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <Code size={18} color="#666" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -287,7 +287,7 @@ export default function LessonPath() {
                         {unit.isCheckpoint && (
                           <div style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 8 }}>
                             <div style={{ height: 1, flex: 1, background: '#041540' }} />
-                            <span style={{ fontSize: 10, color: '#2a2a2a', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                            <span style={{ fontSize: 10, color: '#132d6b', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                               {s('checkpoint', locale)}
                             </span>
                             <div style={{ height: 1, flex: 1, background: '#041540' }} />

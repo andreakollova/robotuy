@@ -1,8 +1,8 @@
 #!/bin/bash
 # Insert all CodeByte curriculum data into Supabase via REST API
 
-SB_URL="https://zjyolgkakxuaegpvhimy.supabase.co/rest/v1"
-SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpqeW9sZ2tha3h1YWVncHZoaW15Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjgwNDM0MywiZXhwIjoyMDk4MzgwMzQzfQ.BFwV2MgZZs1569X41OOJeaPJwGG_6c17WQA_XW-N6OA"
+SB_URL="https://gmsqrjnytthxefsnqmmb.supabase.co/rest/v1"
+SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdtc3Fyam55dHRoeGVmc25xbW1iIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NTUxMTY4NywiZXhwIjoyMTAxMDg3Njg3fQ.LNZvaPWmHllpi8bGJZ1xSFU50Kt0947gmWmSCDWi5jw"
 
 insert_lesson() {
   local json_file="$1"

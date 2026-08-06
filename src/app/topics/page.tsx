@@ -90,7 +90,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
       onClick={onClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 300,
-        background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)',
+        background: 'rgba(1,13,51,0.9)', backdropFilter: 'blur(12px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: 20, overflow: 'auto',
       }}
@@ -101,7 +101,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
         exit={{ scale: 0.95, y: -10 }}
         onClick={e => e.stopPropagation()}
         style={{
-          background: '#041540', border: '1px solid #222', borderRadius: 20,
+          background: '#041540', border: '1px solid #0c255a', borderRadius: 20,
           padding: '28px 24px', maxWidth: 540, width: '100%', maxHeight: '85vh',
           overflow: 'auto', position: 'relative',
         }}
@@ -109,7 +109,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
         {/* Close button */}
         <button onClick={onClose} style={{
           position: 'absolute', top: 12, right: 12,
-          background: '#0c255a', border: '1px solid #333', borderRadius: 8,
+          background: '#0c255a', border: '1px solid #0c255a', borderRadius: 8,
           width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
           cursor: 'pointer', color: '#888',
         }}>
@@ -146,7 +146,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
         {/* Code snippet */}
         {exercise.codeSnippet && (
           <pre style={{
-            background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 12,
+            background: '#000a2b', border: '1px solid #0c255a', borderRadius: 12,
             padding: '16px 18px', fontSize: 13, color: '#ccc', lineHeight: 1.7,
             overflow: 'auto', marginBottom: 16, fontFamily: 'JetBrains Mono, Fira Code, monospace',
             whiteSpace: 'pre-wrap',
@@ -159,7 +159,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
         {exercise.type === 'explain' && exercise.explanation && (
           <>
             <div style={{
-              background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 12,
+              background: '#000a2b', border: '1px solid #0c255a', borderRadius: 12,
               padding: '16px 18px', marginBottom: 20,
             }}>
               <div style={{ fontSize: 14, color: '#bbb', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
@@ -316,7 +316,7 @@ function ExerciseModal({ exercise, topicId, onClose, locale }: {
             </div>
             <button onClick={onClose} style={{
               padding: '10px 24px', borderRadius: 10, background: '#0c255a',
-              border: '1px solid #333', color: '#ccc', fontWeight: 600, fontSize: 13, cursor: 'pointer',
+              border: '1px solid #0c255a', color: '#ccc', fontWeight: 600, fontSize: 13, cursor: 'pointer',
             }}>
               {locale === 'sk' ? 'Zavrieť' : 'Close'}
             </button>
@@ -396,7 +396,7 @@ export default function TopicsPage() {
                     <div style={{
                       width: 36, height: 36, borderRadius: 10, flexShrink: 0,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: allDone ? '#4ade80' : '#041540', border: allDone ? 'none' : '1px solid #222',
+                      background: allDone ? '#4ade80' : '#041540', border: allDone ? 'none' : '1px solid #0c255a',
                     }}>
                       {allDone ? <Check size={18} color="#052e16" strokeWidth={3} /> : <span style={{ fontSize: 14, fontWeight: 700, color: '#888' }}>{li + 1}</span>}
                     </div>
@@ -430,7 +430,7 @@ export default function TopicsPage() {
                             width: 24, height: 24, borderRadius: 7, flexShrink: 0,
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             background: exDone ? '#4ade80' : 'transparent',
-                            border: exDone ? 'none' : '1px solid #2a2a2a',
+                            border: exDone ? 'none' : '1px solid #132d6b',
                           }}>
                             {exDone ? <Check size={12} color="#052e16" strokeWidth={3} /> : <TypeIcon size={10} color="#555" />}
                           </div>
@@ -557,7 +557,7 @@ export default function TopicsPage() {
                   padding: '16px', borderRadius: 16, textAlign: 'left',
                   cursor: 'pointer', border: 'none',
                   background: '#000a2b',
-                  outline: '1.5px solid #1a1a1a',
+                  outline: '1.5px solid #0c255a',
                   transition: 'all 0.15s',
                 }}
               >

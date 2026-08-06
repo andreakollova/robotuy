@@ -4,8 +4,8 @@ import json, urllib.request, ssl
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
-SB_URL = "https://cehrcizbeywupmghpezg.supabase.co/rest/v1"
-SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlaHJjaXpiZXl3dXBtZ2hwZXpnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NTQwNzIxNiwiZXhwIjoyMTAwOTgzMjE2fQ.axupFCy_xzReo3Zn4syiazz7CkSFjDZJYyEvR0DpwvA"
+SB_URL = "https://gmsqrjnytthxefsnqmmb.supabase.co/rest/v1"
+SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdtc3Fyam55dHRoeGVmc25xbW1iIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NTUxMTY4NywiZXhwIjoyMTAxMDg3Njg3fQ.LNZvaPWmHllpi8bGJZ1xSFU50Kt0947gmWmSCDWi5jw"
 HEADERS = {
     "apikey": SB_KEY,
     "Authorization": f"Bearer {SB_KEY}",

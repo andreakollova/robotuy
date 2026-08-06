@@ -118,7 +118,7 @@ export default function TheoryLessonPage() {
 
   if (phase === 'loading' || !lesson) {
     return (
-      <div style={{ minHeight: '100vh', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1.5 }}>
           <p style={{ color: '#888', fontWeight: 700 }}>{s('loading', locale)}</p>
         </motion.div>
@@ -140,7 +140,7 @@ export default function TheoryLessonPage() {
     const counterSk = coffees === 1 ? d.counterSk[0] : coffees < 5 ? d.counterSk[1] : d.counterSk[2];
 
     return (
-      <div style={{ minHeight: '100vh', background: '#000', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -307,13 +307,13 @@ export default function TheoryLessonPage() {
 
         {/* Reel video - shown before quiz (last theory section) */}
         {sectionIndex === sections.length - 1 && reelUrl && (
-          <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid #1a1a1a', background: '#000' }}>
+          <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid #0c255a', background: '#010d33' }}>
             <video
               src={reelUrl}
               controls
               playsInline
               preload="metadata"
-              style={{ width: '100%', display: 'block', maxHeight: 400, objectFit: 'contain', background: '#000' }}
+              style={{ width: '100%', display: 'block', maxHeight: 400, objectFit: 'contain', background: '#010d33' }}
               poster=""
             />
             <div style={{ padding: '8px 12px', background: '#000a2b', display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -341,8 +341,8 @@ export default function TheoryLessonPage() {
           <PaginatedContent text={String(content)} locale={locale} equipment={equipment} onComplete={handleNextSection} />
         ) : sec.phase === 'real_world' ? (
           <div>
-            <div style={{ marginTop: 12, marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #1a1a1a' }}>
-              <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ marginTop: 12, marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #0c255a' }}>
+              <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #0c255a', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
                 <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
                 <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
@@ -656,8 +656,8 @@ export default function TheoryLessonPage() {
         </h2>
 
         {/* Code with inline inputs */}
-        <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #1a1a1a' }}>
-          <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #0c255a' }}>
+          <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #0c255a', display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
             <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
             <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
@@ -967,7 +967,7 @@ export default function TheoryLessonPage() {
   // Done screen
   if (phase === 'done') {
     return (
-      <div style={{ minHeight: '100vh', background: '#000', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
         <Byte mood="celebrating" size={100} equipment={equipment} />
         <h1 style={{ fontWeight: 800, fontSize: 28, color: '#fff', marginTop: 24, textAlign: 'center' }}>
           {s('lessonComplete', locale)}
@@ -1043,9 +1043,9 @@ export default function TheoryLessonPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#000', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <div style={{ position: 'sticky', top: 0, zIndex: 50, padding: '12px 20px', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 8px)', background: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderBottom: '1px solid #010d33' }}>
+      <div style={{ position: 'sticky', top: 0, zIndex: 50, padding: '12px 20px', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 8px)', background: 'rgba(1,13,51,0.95)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderBottom: '1px solid #010d33' }}>
         <div style={{ maxWidth: 520, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 12 }}>
           <button onClick={() => router.push('/')} style={{ color: '#777', cursor: 'pointer', padding: 4, background: 'none', border: 'none' }}>
             <X size={20} />
@@ -1146,7 +1146,7 @@ function ByteTip({ phase, locale, equipment, sectionIndex }: { phase: string; lo
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: `${phase === 'intro' ? 40 : 12}px 0 0` }}>
       <div style={{
-        background: '#0c255a', border: '1px solid #2a2a2a', borderRadius: 12,
+        background: '#0c255a', border: '1px solid #132d6b', borderRadius: 12,
         padding: '8px 14px', fontSize: 12, color: '#aaa', fontWeight: 500, maxWidth: 260, textAlign: 'center',
       }}>
         {tip}
@@ -1269,7 +1269,7 @@ function ByteFootball({ items, locale, equipment }: { items: { name: string; des
                 onClick={next}
                 style={{
                   marginTop: 12, padding: '8px 16px', borderRadius: 8,
-                  background: '#1C1C1C', border: '1px solid #2a2a2a',
+                  background: '#041540', border: '1px solid #132d6b',
                   color: '#ccc', fontSize: 12, fontWeight: 600, cursor: 'pointer',
                 }}
               >
@@ -1483,7 +1483,7 @@ function PaginatedContent({ text, locale, equipment, onComplete }: { text: strin
         }}
         style={{
           width: '100%', padding: isLast ? '14px' : '12px', borderRadius: isLast ? 12 : 10,
-          background: isLast ? '#EDEDED' : '#1C1C1C',
+          background: isLast ? '#EDEDED' : '#041540',
           border: isLast ? 'none' : '1px solid rgba(255,255,255,0.08)',
           color: isLast ? '#010d33' : '#ccc',
           fontWeight: isLast ? 700 : 600, fontSize: isLast ? 15 : 14,
@@ -1512,7 +1512,7 @@ function TakeawayCarousel({ items }: { items: string[] }) {
   return (
     <div style={{ position: 'relative' }}>
       <div
-        style={{ overflow: 'hidden', borderRadius: 14, border: '1px solid #1a1a1a', background: '#000a2b', minHeight: 100 }}
+        style={{ overflow: 'hidden', borderRadius: 14, border: '1px solid #0c255a', background: '#000a2b', minHeight: 100 }}
         onTouchStart={e => { touchStart.current = e.touches[0].clientX; }}
         onTouchEnd={e => {
           const diff = touchStart.current - e.changedTouches[0].clientX;
@@ -1589,7 +1589,7 @@ function BulletList({ lines, keyBase }: { lines: string[]; keyBase: number }) {
   const styleIdx = bulletListCounter++ % MARKER_STYLES.length;
   const { mark, color } = MARKER_STYLES[styleIdx];
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#000a2b', border: '1px solid #1a1a1a', borderRadius: 12, padding: '10px 14px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#000a2b', border: '1px solid #0c255a', borderRadius: 12, padding: '10px 14px' }}>
       {lines.map((bl, bi) => (
         <div key={bi} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '4px 0' }}>
           <span style={{ color, fontWeight: 700, fontSize: 12, lineHeight: 2, flexShrink: 0, textShadow: `0 0 8px ${color}88, 0 0 16px ${color}44` }}>{mark}</span>
@@ -1615,8 +1615,8 @@ function formatContent(text: string, phase: string = '') {
       const code = parts[p].trim();
       if (code) {
         result.push(
-          <div key={`code-${keyCounter++}`} style={{ marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #1a1a1a' }}>
-            <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div key={`code-${keyCounter++}`} style={{ marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #0c255a' }}>
+            <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #0c255a', display: 'flex', alignItems: 'center', gap: 6 }}>
               <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
               <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
               <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
@@ -1685,8 +1685,8 @@ function formatContent(text: string, phase: string = '') {
     const codeLines = lines.filter(l => isCodeLine(l) || l.trim() === '');
     if (codeLines.length > lines.length * 0.5 && lines.some(l => isCodeLine(l))) {
       result.push(
-        <div key={`pre-${keyCounter++}`} style={{ marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #1a1a1a' }}>
-          <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div key={`pre-${keyCounter++}`} style={{ marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #0c255a' }}>
+          <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #0c255a', display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
             <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
             <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
@@ -1743,12 +1743,12 @@ function formatFacts(text: string) {
 
     return (
       <div key={i} style={{
-        padding: '14px 16px', background: '#000a2b', border: '1px solid #1a1a1a',
+        padding: '14px 16px', background: '#000a2b', border: '1px solid #0c255a',
         borderRadius: 12, display: 'flex', gap: 12, alignItems: 'flex-start',
       }}>
         <div style={{
           width: 28, height: 28, borderRadius: 8, background: '#161616',
-          border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          border: '1px solid #0c255a', display: 'flex', alignItems: 'center', justifyContent: 'center',
           flexShrink: 0, fontSize: 11, fontWeight: 800, color: '#4ade80',
         }}>
           {i + 1}

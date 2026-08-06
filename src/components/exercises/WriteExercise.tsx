@@ -45,7 +45,7 @@ export default function WriteExercise({ exercise, onCorrect, onWrong }: { exerci
     setTimeout(() => { if (ref.current) { ref.current.selectionStart = ref.current.selectionEnd = s + 4; } }, 0);
   };
 
-  const btnBg = run === 'passed' ? 'rgba(255,255,255,0.1)' : run === 'failed' ? '#1C1C1C' : code.trim() ? '#EDEDED' : '#1C1C1C';
+  const btnBg = run === 'passed' ? 'rgba(255,255,255,0.1)' : run === 'failed' ? '#041540' : code.trim() ? '#EDEDED' : '#041540';
   const btnColor = run === 'passed' ? '#EDEDED' : run === 'failed' ? '#6E6E6E' : code.trim() ? '#010d33' : '#3A3A3A';
 
   return (

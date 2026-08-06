@@ -73,7 +73,7 @@ export default function NameModal() {
           exit={{ opacity: 0 }}
           style={{
             position: 'fixed', inset: 0, zIndex: 200,
-            background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(20px)',
+            background: 'rgba(1,13,51,0.9)', backdropFilter: 'blur(20px)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             padding: '0 24px', overflow: 'auto',
           }}
@@ -89,7 +89,7 @@ export default function NameModal() {
                 style={{
                   background: '#161616', border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: 24, padding: '40px 32px', maxWidth: 400, width: '100%',
-                  textAlign: 'center', boxShadow: '0 24px 80px rgba(0,0,0,0.7)',
+                  textAlign: 'center', boxShadow: '0 24px 80px rgba(1,13,51,0.8)',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
@@ -124,7 +124,7 @@ export default function NameModal() {
                   whileTap={value.trim() ? { scale: 0.97 } : {}}
                   style={{
                     width: '100%', padding: '14px', borderRadius: 12,
-                    background: value.trim() ? '#EDEDED' : '#1C1C1C',
+                    background: value.trim() ? '#EDEDED' : '#041540',
                     color: value.trim() ? '#010d33' : '#3A3A3A',
                     fontWeight: 700, fontSize: 15, border: 'none',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -147,7 +147,7 @@ export default function NameModal() {
                 style={{
                   background: '#161616', border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: 24, padding: '32px 28px', maxWidth: 440, width: '100%',
-                  textAlign: 'center', boxShadow: '0 24px 80px rgba(0,0,0,0.7)',
+                  textAlign: 'center', boxShadow: '0 24px 80px rgba(1,13,51,0.8)',
                 }}
               >
                 <h2 style={{ fontWeight: 700, fontSize: 20, color: '#EDEDED', marginBottom: 6 }}>
@@ -166,7 +166,7 @@ export default function NameModal() {
                       whileTap={{ scale: 0.98 }}
                       style={{
                         width: '100%', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14,
-                        background: '#000a2b', border: '1px solid #222', borderRadius: 14,
+                        background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14,
                         cursor: 'pointer', textAlign: 'left',
                       }}
                     >
@@ -204,7 +204,7 @@ export default function NameModal() {
                 style={{
                   background: '#161616', border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: 24, padding: '32px 28px', maxWidth: 400, width: '100%',
-                  textAlign: 'center', boxShadow: '0 24px 80px rgba(0,0,0,0.7)',
+                  textAlign: 'center', boxShadow: '0 24px 80px rgba(1,13,51,0.8)',
                 }}
               >
                 <h2 style={{ fontWeight: 700, fontSize: 20, color: '#EDEDED', marginBottom: 6 }}>
@@ -223,7 +223,7 @@ export default function NameModal() {
                       whileTap={{ scale: 0.95 }}
                       style={{
                         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-                        padding: '14px 8px', background: '#000a2b', border: '1px solid #222',
+                        padding: '14px 8px', background: '#000a2b', border: '1px solid #0c255a',
                         borderRadius: 14, cursor: 'pointer',
                       }}
                     >

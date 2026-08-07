@@ -25,7 +25,7 @@ function saveCustomEntries(entries: CustomEntry[]) {
   localStorage.setItem('robotuy-my-glossary', JSON.stringify(entries));
 }
 
-const categories = ['všetko', 'môj', 'skratka', 'symbol', 'koncept', 'nastroj'] as const;
+const categories = ['všetko', 'môj', 'skratka', 'sucastka', 'koncept', 'nastroj'] as const;
 type Filter = typeof categories[number];
 
 export default function GlossaryPage() {
@@ -116,7 +116,7 @@ export default function GlossaryPage() {
               : cat === 'môj' ? (locale === 'sk' ? 'Môj slovník' : 'My glossary')
               : locale === 'sk'
                 ? (categoryLabels[cat as GlossaryEntry['category']] || cat)
-                : cat === 'skratka' ? 'Abbreviations' : cat === 'symbol' ? 'Symbols' : cat === 'koncept' ? 'Concepts' : cat === 'nastroj' ? 'Tools' : cat;
+                : cat === 'skratka' ? 'Abbreviations' : cat === 'sucastka' ? 'Components' : cat === 'koncept' ? 'Concepts' : cat === 'nastroj' ? 'Tools' : cat;
             return (
               <button
                 key={cat}
@@ -238,12 +238,12 @@ export default function GlossaryPage() {
                     <span style={{
                       fontSize: 9, padding: '3px 7px', borderRadius: 6, fontWeight: 800,
                       letterSpacing: '0.08em', textTransform: 'uppercase', flexShrink: 0,
-                      background: entry.category === 'skratka' ? '#0c255a' : entry.category === 'symbol' ? '#161616' : entry.category === 'koncept' ? '#181818' : '#141414',
-                      color: entry.category === 'skratka' ? '#888' : entry.category === 'symbol' ? '#777' : entry.category === 'koncept' ? '#666' : '#555',
+                      background: entry.category === 'skratka' ? '#0c255a' : entry.category === 'sucastka' ? '#0a1e4a' : entry.category === 'koncept' ? '#0d2855' : '#081845',
+                      color: entry.category === 'skratka' ? '#888' : entry.category === 'sucastka' ? '#7a9ec7' : entry.category === 'koncept' ? '#8899bb' : '#6688aa',
                     }}>
                       {locale === 'sk'
-                        ? (entry.category === 'nastroj' ? 'nástroj' : entry.category)
-                        : entry.category === 'skratka' ? 'abbr' : entry.category === 'symbol' ? 'symbol' : entry.category === 'koncept' ? 'concept' : 'tool'
+                        ? (categoryLabels[entry.category] ? entry.category : entry.category)
+                        : entry.category === 'skratka' ? 'abbr' : entry.category === 'sucastka' ? 'part' : entry.category === 'koncept' ? 'concept' : 'tool'
                       }
                     </span>
                   )}

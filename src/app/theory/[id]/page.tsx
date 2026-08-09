@@ -186,7 +186,8 @@ export default function TheoryLessonPage() {
   }
 
   // Build list of sections that have content
-  const sections = THEORY_SECTIONS.filter(sec => {
+  // Split learning_content by "---" into multiple pages
+  const baseSections = THEORY_SECTIONS.filter(sec => {
     try {
       const val = lesson[sec.key as keyof typeof lesson];
       if (val == null) return false;
@@ -194,6 +195,28 @@ export default function TheoryLessonPage() {
       return String(val).trim().length > 0;
     } catch { return false; }
   });
+
+  const sections: { key: string; phase: string; icon: any; label: string; labelSk: string; content?: string }[] = [];
+  for (const sec of baseSections) {
+    if (sec.key === 'learning_content' && lesson.learning_content?.includes('\n---\n')) {
+      const parts = lesson.learning_content.split('\n---\n').map((p: string) => p.trim()).filter((p: string) => p);
+      parts.forEach((part: string, idx: number) => {
+        // Use first line as label if it's short (heading)
+        const firstLine = part.split('\n')[0]?.trim() || '';
+        const isHeading = firstLine.length < 60 && !firstLine.endsWith('.') && !firstLine.startsWith('-');
+        const label = isHeading ? firstLine : `${sec.labelSk} ${idx + 1}`;
+        sections.push({
+          ...sec,
+          key: `learning_content_${idx}`,
+          label: isHeading ? firstLine : `${sec.label} ${idx + 1}`,
+          labelSk: label,
+          content: part,
+        });
+      });
+    } else {
+      sections.push(sec as any);
+    }
+  }
 
   const totalSteps = sections.length + quiz.length;
   const currentStep = phase === 'quiz' || phase === 'done'
@@ -285,6 +308,9 @@ export default function TheoryLessonPage() {
     let content: string | string[];
     if (sec.key === 'key_takeaways') {
       content = tArray(lesson, sec.key, locale);
+    } else if ((sec as any).content) {
+      // Split learning_content sub-page
+      content = (sec as any).content;
     } else {
       const raw = t(lesson, sec.key as string, locale);
       content = typeof raw === 'string' ? raw : String(raw ?? '');
@@ -1670,7 +1696,8 @@ function formatContent(text: string, phase: string = '') {
     }
 
     // Heading: single short line, no period, not code, no = sign (code assignment)
-    if (lines.length === 1 && trimmed.length < 60 && !trimmed.endsWith('.') && !trimmed.startsWith('-') && !trimmed.includes(' = ') && !trimmed.includes('(') && !isCodeLine(trimmed)) {
+    // Must have at least 2 words, not end with question mark (those are content), not be a short sentence
+    if (lines.length === 1 && trimmed.length < 60 && trimmed.length > 5 && trimmed.split(' ').length >= 2 && !trimmed.endsWith('.') && !trimmed.endsWith('?') && !trimmed.endsWith('!') && !trimmed.startsWith('-') && !trimmed.includes(' = ') && !trimmed.includes('(') && !isCodeLine(trimmed)) {
       // Strip trailing colon for cleaner headings
       const heading = trimmed.endsWith(':') ? trimmed.slice(0, -1) : trimmed;
       // Check if next block is also a heading → make this one bigger (section heading)

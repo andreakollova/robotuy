@@ -1673,8 +1673,12 @@ function formatContent(text: string, phase: string = '') {
     if (lines.length === 1 && trimmed.length < 60 && !trimmed.endsWith('.') && !trimmed.startsWith('-') && !trimmed.includes(' = ') && !trimmed.includes('(') && !isCodeLine(trimmed)) {
       // Strip trailing colon for cleaner headings
       const heading = trimmed.endsWith(':') ? trimmed.slice(0, -1) : trimmed;
+      // Check if next block is also a heading → make this one bigger (section heading)
+      const nextBlock = blocks[i + 1]?.trim() || '';
+      const nextIsHeading = nextBlock && nextBlock.length < 60 && !nextBlock.endsWith('.') && !nextBlock.startsWith('-') && !nextBlock.includes(' = ') && !nextBlock.includes('(') && !isCodeLine(nextBlock) && !nextBlock.includes('\n');
+      const isSection = nextIsHeading;
       result.push(
-        <h3 key={`h-${keyCounter++}`} style={{ fontWeight: 700, fontSize: 16, color: '#EDEDED', margin: 0, marginTop: i > 0 ? 24 : 0, marginBottom: 10 }}>
+        <h3 key={`h-${keyCounter++}`} style={{ fontWeight: 700, fontSize: isSection ? 20 : 16, color: '#EDEDED', margin: 0, marginTop: i > 0 ? (isSection ? 36 : 24) : 0, marginBottom: isSection ? 14 : 10 }}>
           {renderInline(heading, `h-${keyCounter}`)}
         </h3>
       );

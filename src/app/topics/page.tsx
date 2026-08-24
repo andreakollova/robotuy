@@ -21,7 +21,7 @@ const iconMap: Record<string, string> = {
 
 // EN translations for SK topic titles/descriptions
 const topicEN: Record<string, { title: string; desc: string }> = {
-  'modern-robotics': { title: 'Modern Robotics', desc: 'Mechanics, Planning, and Control' },
+  'modern-robotics': { title: 'Modern Robotics', desc: 'Mechanics, Planning, and Control Specialization' },
 };
 
 const typeIcons: Record<string, any> = {

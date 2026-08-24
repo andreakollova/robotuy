@@ -20,53 +20,36 @@ export async function POST(req: NextRequest) {
       customer = await stripe.customers.create({ metadata: { userId } });
     }
 
-    const isTrial = plan === 'trial' || plan === 'yearly';
+    // Cancel any existing active/trialing subscriptions to prevent duplicates
+    const existingSubs = await stripe.subscriptions.list({ customer: customer.id, status: 'trialing', limit: 10 });
+    const existingActive = await stripe.subscriptions.list({ customer: customer.id, status: 'active', limit: 10 });
+    for (const sub of [...existingSubs.data, ...existingActive.data]) {
+      await stripe.subscriptions.cancel(sub.id);
+    }
+
+    const isTrial = plan === 'trial';
+    const origin = req.headers.get('origin') || 'https://robotuy.app';
+
+    const sessionParams: any = {
+      customer: customer.id,
+      mode: 'subscription',
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: `${origin}/?payment=success`,
+      cancel_url: `${origin}/`,
+      metadata: { userId },
+      allow_promotion_codes: true,
+    };
 
     if (isTrial) {
-      // Trial: use SetupIntent to collect payment method, charge later
-      const subscription = await stripe.subscriptions.create({
-        customer: customer.id,
-        items: [{ price: priceId }],
-        trial_period_days: 7,
-        payment_behavior: 'default_incomplete',
-        payment_settings: {
-          save_default_payment_method: 'on_subscription',
-        },
-        expand: ['pending_setup_intent'],
-        metadata: { userId },
-      });
-
-      const setupIntent = (subscription as any).pending_setup_intent;
-
-      return NextResponse.json({
-        subscriptionId: subscription.id,
-        clientSecret: setupIntent?.client_secret || null,
-        customerId: customer.id,
-        type: 'setup',
-      });
-    } else {
-      // No trial: immediate payment
-      const subscription = await stripe.subscriptions.create({
-        customer: customer.id,
-        items: [{ price: priceId }],
-        payment_behavior: 'default_incomplete',
-        payment_settings: {
-          save_default_payment_method: 'on_subscription',
-        },
-        expand: ['latest_invoice.payment_intent'],
-        metadata: { userId },
-      });
-
-      const invoice = subscription.latest_invoice as any;
-      const paymentIntent = invoice?.payment_intent as any;
-
-      return NextResponse.json({
-        subscriptionId: subscription.id,
-        clientSecret: paymentIntent?.client_secret || null,
-        customerId: customer.id,
-        type: 'payment',
-      });
+      sessionParams.subscription_data = { trial_period_days: 7, metadata: { userId } };
     }
+
+    const session = await stripe.checkout.sessions.create(sessionParams);
+
+    return NextResponse.json({
+      checkoutUrl: session.url,
+      type: 'redirect',
+    });
   } catch (err: any) {
     console.error('Stripe subscription error:', err?.message || err);
     return NextResponse.json({ error: err?.message || 'Stripe error' }, { status: 500 });

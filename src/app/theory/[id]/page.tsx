@@ -10,7 +10,7 @@ import { s } from '@/data/strings';
 import Byte from '@/components/Byte';
 import AskByte from '@/components/AskByte';
 import { cosmeticItems } from '@/data/cosmetics';
-import { X, Heart, ArrowRight, BookOpen, Lightbulb, Globe, ListChecks, Sparkles, Check, Eye } from 'lucide-react';
+import { X, Heart, ArrowRight, BookOpen, Lightbulb, Globe, ListChecks, Sparkles, Check, Eye, ChevronRight } from 'lucide-react';
 import dynamic from 'next/dynamic';
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
 
@@ -28,7 +28,7 @@ const THEORY_SECTIONS: { key: keyof DbLesson; phase: Phase; icon: any; label: st
 export default function TheoryLessonPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { hearts, loseHeart, completeLesson, setByteMood, byteMood, equipment, equip, addCoffee, coffees, favDrink, addWrongQuestion } = useUserStore();
+  const { hearts, loseHeart, completeLesson, setByteMood, byteMood, equipment, equip, addCoffee, coffees, favDrink, addWrongQuestion, checkStreak } = useUserStore();
   const { locale } = useLocaleStore();
   const { needsUpgrade } = useSubscription();
 
@@ -37,9 +37,22 @@ export default function TheoryLessonPage() {
   const [phase, setPhase] = useState<Phase>('loading');
   const [sectionIndex, setSectionIndex] = useState(0);
   const [quizIndex, setQuizIndex] = useState(0);
+  // Subsection-based learning: split learning_content by # headers
+  const [subsections, setSubsections] = useState<string[]>([]);
+  const [subsectionIndex, setSubsectionIndex] = useState(0);
+  // Onboarding wizard — shown once before first lesson
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [onboardingStep, setOnboardingStep] = useState(0);
   const [score, setScore] = useState(0);
   // Safe string helper - ensures no objects reach React render
   const safe = (v: unknown): string => (v == null ? '' : typeof v === 'string' ? v : String(v));
+  // Get code snippet for current locale (supports |||EN||| separator)
+  const getSnippet = (snippet: string | null | undefined): string => {
+    if (!snippet) return '';
+    const parts = snippet.split('|||EN|||');
+    if (parts.length > 1 && locale === 'en') return parts[1].trim() || parts[0];
+    return parts[0];
+  };
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [answerState, setAnswerState] = useState<'idle' | 'correct' | 'wrong'>('idle');
   const [reward, setReward] = useState<string | null>(null);
@@ -54,10 +67,10 @@ export default function TheoryLessonPage() {
   // Initialize write_code editor with starter code when question changes
   useEffect(() => {
     if (quiz.length > 0 && quiz[quizIndex]?.question_type === 'write_code') {
-      setWriteCodeValue(quiz[quizIndex].code_snippet || '');
+      setWriteCodeValue(getSnippet(quiz[quizIndex].code_snippet) || '');
     }
     if (quiz.length > 0 && quiz[quizIndex]?.question_type === 'fill_code') {
-      const snippet = quiz[quizIndex].code_snippet || '';
+      const snippet = getSnippet(quiz[quizIndex].code_snippet) || '';
       const blanks = snippet.split('___').length - 1;
       setFillCodeValues(new Array(Math.max(blanks, 1)).fill(''));
       setFillCodeState('editing');
@@ -65,6 +78,7 @@ export default function TheoryLessonPage() {
   }, [quizIndex, quiz]);
 
   useEffect(() => {
+    checkStreak();
     const idStr = Array.isArray(id) ? id[0] : id;
     if (!idStr) return;
     const numId = parseInt(idStr);
@@ -73,26 +87,24 @@ export default function TheoryLessonPage() {
       .then(([l, q]) => {
         if (l) {
           setLesson(l);
-          // Shuffle quiz, put write_code at end, limit to ~8 questions
-          const allQ = q || [];
-          // Split: theoretical (mcq/true_false) first, then fill_code, then write_code
-          const theory = allQ.filter(x => x.question_type === 'multiple_choice' || x.question_type === 'true_false').sort(() => Math.random() - 0.5);
-          const fill = allQ.filter(x => x.question_type === 'fill_code').sort(() => Math.random() - 0.5);
-          const write = allQ.filter(x => x.question_type === 'write_code').sort(() => Math.random() - 0.5);
-          const maxTheory = Math.min(theory.length, 4);
-          const maxFill = Math.min(fill.length, 2);
-          const maxWrite = Math.min(write.length, 2);
-          setQuiz([...theory.slice(0, maxTheory), ...fill.slice(0, maxFill), ...write.slice(0, maxWrite)]);
-          // Show coffee screen only for first read of the day (lessons with learning content)
-          const hasReading = l.learning_content && l.learning_content.length > 1000;
-          const today = new Date().toDateString();
-          const lastCoffee = localStorage.getItem('robotuy-last-coffee');
-          if (!hasReading || lastCoffee === today) {
-            setPhase('intro');
-          } else {
-            setPhase('coffee');
+          // Quiz — keep in order (question_number) for subsection distribution
+          const allQ = (q || []).filter(x => x.question_type === 'multiple_choice' || x.question_type === 'fill_code');
+          allQ.sort((a, b) => (a.question_number || 0) - (b.question_number || 0));
+          setQuiz(allQ);
+
+          // Split learning_content into subsections by # headers
+          const content = locale === 'sk' ? ((l as any).learning_content_sk || l.learning_content || '') : (l.learning_content || '');
+          const subs = content.split(/(?=^## )/m).filter((s: string) => s.trim());
+          if (subs.length > 1) {
+            setSubsections(subs);
           }
+
+          setPhase('intro');
           setByteMood('happy');
+          // Show onboarding wizard on first lesson ever
+          if (!localStorage.getItem('robotuy-lesson-onboarding')) {
+            setShowOnboarding(true);
+          }
         }
       })
       .catch(err => {
@@ -118,7 +130,7 @@ export default function TheoryLessonPage() {
 
   if (phase === 'loading' || !lesson) {
     return (
-      <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ minHeight: '100vh', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1.5 }}>
           <p style={{ color: '#888', fontWeight: 700 }}>{s('loading', locale)}</p>
         </motion.div>
@@ -140,7 +152,7 @@ export default function TheoryLessonPage() {
     const counterSk = coffees === 1 ? d.counterSk[0] : coffees < 5 ? d.counterSk[1] : d.counterSk[2];
 
     return (
-      <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      <div style={{ minHeight: '100vh', background: '#000', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -186,8 +198,7 @@ export default function TheoryLessonPage() {
   }
 
   // Build list of sections that have content
-  // Split learning_content by "---" into multiple pages
-  const baseSections = THEORY_SECTIONS.filter(sec => {
+  const sections = THEORY_SECTIONS.filter(sec => {
     try {
       const val = lesson[sec.key as keyof typeof lesson];
       if (val == null) return false;
@@ -196,55 +207,89 @@ export default function TheoryLessonPage() {
     } catch { return false; }
   });
 
-  const sections: { key: string; phase: string; icon: any; label: string; labelSk: string; content?: string }[] = [];
-  for (const sec of baseSections) {
-    if (sec.key === 'learning_content' && lesson.learning_content?.includes('\n---\n')) {
-      const parts = lesson.learning_content.split('\n---\n').map((p: string) => p.trim()).filter((p: string) => p);
-      parts.forEach((part: string, idx: number) => {
-        // Use first line as label if it's short (heading)
-        const firstLine = part.split('\n')[0]?.trim() || '';
-        const isHeading = firstLine.length < 60 && !firstLine.endsWith('.') && !firstLine.startsWith('-');
-        const label = isHeading ? firstLine : `${sec.labelSk} ${idx + 1}`;
-        sections.push({
-          ...sec,
-          key: `learning_content_${idx}`,
-          label: isHeading ? firstLine : `${sec.label} ${idx + 1}`,
-          labelSk: label,
-          content: part,
-        });
-      });
-    } else {
-      sections.push(sec as any);
-    }
-  }
-
-  const totalSteps = sections.length + quiz.length;
-  const currentStep = phase === 'quiz' || phase === 'done'
-    ? sections.length + quizIndex
-    : sectionIndex;
-  const progress = totalSteps > 0 ? (currentStep / totalSteps) * 100 : 0;
+  const totalSteps = subsections.length > 1
+    ? 1 + subsections.length * 2 // intro + (content + quiz) per subsection
+    : sections.length + quiz.length;
+  const currentStep = subsections.length > 1
+    ? 1 + subsectionIndex * 2 + (phase === 'quiz' ? 1 : 0)
+    : phase === 'quiz' || phase === 'done' ? sections.length + quizIndex : sectionIndex;
+  const progress = totalSteps > 0 ? Math.min((currentStep / totalSteps) * 100, 100) : 0;
 
   const scrollTop = () => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
+    // Also scroll any scrollable parent containers
+    const main = document.querySelector('main');
+    if (main) main.scrollTop = 0;
     // Fallback for Capacitor WebView - multiple attempts for animation transitions
-    setTimeout(() => { window.scrollTo(0, 0); document.body.scrollTop = 0; document.documentElement.scrollTop = 0; }, 50);
-    setTimeout(() => { window.scrollTo(0, 0); document.body.scrollTop = 0; document.documentElement.scrollTop = 0; }, 150);
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      if (main) main.scrollTop = 0;
+    }, 50);
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      if (main) main.scrollTop = 0;
+    }, 150);
   };
 
   const handleNextSection = () => {
     scrollTop();
+
+    // Subsection mode: learning → quiz for this section → next subsection → quiz → ... → done
+    if (subsections.length > 1 && phase === 'learning') {
+      // Parse quiz counts from <!-- quiz:N --> markers in subsections
+      const qCounts = subsections.map(sub => {
+        const m = sub.match(/<!-- quiz:(\d+) -->/);
+        return m ? parseInt(m[1]) : 0;
+      });
+      const hasMarkers = qCounts.some(c => c > 0);
+      // Calculate start/end question index for this subsection
+      let startQ: number, endQ: number;
+      if (hasMarkers) {
+        startQ = qCounts.slice(0, subsectionIndex).reduce((a, b) => a + b, 0);
+        endQ = startQ + qCounts[subsectionIndex];
+      } else {
+        const qPerSub = Math.max(1, Math.ceil(quiz.length / subsections.length));
+        startQ = subsectionIndex * qPerSub;
+        endQ = subsectionIndex === subsections.length - 1 ? quiz.length : Math.min(startQ + qPerSub, quiz.length);
+      }
+      if (startQ < quiz.length && startQ < endQ) {
+        // Show quiz for this subsection
+        setQuizIndex(startQ);
+        setPhase('quiz');
+        setSelectedAnswer(null);
+        setAnswerState('idle');
+        return;
+      }
+      // No quiz questions for this sub → go to next subsection
+      if (subsectionIndex + 1 < subsections.length) {
+        setSubsectionIndex(i => i + 1);
+        setPhase('learning');
+        return;
+      }
+      finishLesson();
+      return;
+    }
+
+    // Normal section flow
     if (sectionIndex + 1 < sections.length) {
       setSectionIndex(i => i + 1);
       setPhase(sections[sectionIndex + 1].phase);
     } else {
-      // Move to quiz
-      if (quiz.length > 0) {
+      if (subsections.length <= 1 && quiz.length > 0) {
         setQuizIndex(0);
         setPhase('quiz');
-      } else {
+      } else if (subsections.length <= 1) {
         finishLesson();
+      } else {
+        // Start subsection mode
+        setSubsectionIndex(0);
+        setPhase('learning');
       }
     }
   };
@@ -255,9 +300,10 @@ export default function TheoryLessonPage() {
     const q = quiz[quizIndex];
     // For true_false: answer is "T"/"F", correct_answer is "True"/"False"
     // For mcq: answer is "A"/"B"/"C"/"D", correct_answer is the same
+    const correctAns = q.correct_answer || q.options?.find((o: any) => o.is_correct)?.option_label || '';
     const isCorrect = q.question_type === 'true_false'
       ? (answer === 'T' && q.correct_answer === 'True') || (answer === 'F' && q.correct_answer === 'False')
-      : answer === q.correct_answer;
+      : answer === correctAns;
     if (isCorrect) {
       setAnswerState('correct');
       setScore(s => s + 1);
@@ -283,6 +329,38 @@ export default function TheoryLessonPage() {
     setShowWriteCodeAnswer(false);
     setFillCodeValues([]);
     setFillCodeState('editing');
+
+    // Subsection mode: check if we've finished this subsection's quiz questions
+    if (subsections.length > 1) {
+      const qCounts = subsections.map(sub => {
+        const m = sub.match(/<!-- quiz:(\d+) -->/);
+        return m ? parseInt(m[1]) : 0;
+      });
+      const hasMarkers = qCounts.some(c => c > 0);
+      let endQ: number;
+      if (hasMarkers) {
+        endQ = qCounts.slice(0, subsectionIndex + 1).reduce((a, b) => a + b, 0);
+      } else {
+        const qPerSub = Math.max(1, Math.ceil(quiz.length / subsections.length));
+        endQ = subsectionIndex === subsections.length - 1 ? quiz.length : Math.min((subsectionIndex + 1) * qPerSub, quiz.length);
+      }
+
+      if (quizIndex + 1 < endQ) {
+        // More questions for this subsection
+        setQuizIndex(i => i + 1);
+      } else if (subsectionIndex + 1 < subsections.length) {
+        // Move to next subsection
+        scrollTop();
+        setSubsectionIndex(i => i + 1);
+        setPhase('learning');
+      } else {
+        // All subsections done
+        finishLesson();
+      }
+      return;
+    }
+
+    // Normal mode
     if (quizIndex + 1 < quiz.length) {
       setQuizIndex(i => i + 1);
     } else {
@@ -308,9 +386,6 @@ export default function TheoryLessonPage() {
     let content: string | string[];
     if (sec.key === 'key_takeaways') {
       content = tArray(lesson, sec.key, locale);
-    } else if ((sec as any).content) {
-      // Split learning_content sub-page
-      content = (sec as any).content;
     } else {
       const raw = t(lesson, sec.key as string, locale);
       content = typeof raw === 'string' ? raw : String(raw ?? '');
@@ -333,16 +408,16 @@ export default function TheoryLessonPage() {
 
         {/* Reel video - shown before quiz (last theory section) */}
         {sectionIndex === sections.length - 1 && reelUrl && (
-          <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid #0c255a', background: '#010d33' }}>
+          <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid #1a1a1a', background: '#000' }}>
             <video
               src={reelUrl}
               controls
               playsInline
               preload="metadata"
-              style={{ width: '100%', display: 'block', maxHeight: 400, objectFit: 'contain', background: '#010d33' }}
+              style={{ width: '100%', display: 'block', maxHeight: 400, objectFit: 'contain', background: '#000' }}
               poster=""
             />
-            <div style={{ padding: '8px 12px', background: '#000a2b', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ padding: '8px 12px', background: '#010d33', display: 'flex', alignItems: 'center', gap: 6 }}>
               <span style={{ fontSize: 10, color: '#555', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 {locale === 'sk' ? 'Robotuy Reel' : 'Robotuy Reel'}
               </span>
@@ -358,31 +433,60 @@ export default function TheoryLessonPage() {
             items={String(content).split('\n').filter(l => l.trim()).map((line, i) => ({
               name: `#${i + 1}`,
               desc: line.replace(/^(Fun Fact #?\d+|Fact \d+|#\d+)\s*[:—-]\s*/i, ''),
-              color: ['#22c55e', '#eab308', '#a855f7', '#4ade80', '#f97316', '#06b6d4', '#ef4444', '#f472b6'][i % 8],
+              color: ['#3b82f6', '#eab308', '#a855f7', '#4ade80', '#f97316', '#06b6d4', '#ef4444', '#f472b6'][i % 8],
             }))}
             locale={locale}
             equipment={equipment}
           />
+        ) : sec.phase === 'learning' && subsections.length > 1 ? (
+          /* Subsection mode: show one subsection at a time */
+          <div key={`sub-${subsectionIndex}`}>
+            <ByteTip phase="learning" locale={locale} equipment={equipment} sectionIndex={subsectionIndex}
+              {...(() => {
+                const sub = subsections[subsectionIndex] || '';
+                const factMatch = sub.match(/\u{1F4A1}\s*(.+)\n([\s\S]*?)(?=\n\n|\u{1F4A1}|$)/u);
+                if (factMatch) return { customTip: factMatch[1].trim(), customDetail: factMatch[2].trim() };
+                return {};
+              })()} />
+            <div style={{ fontSize: 15, color: '#ddd', lineHeight: 1.85 }}>
+              {formatContent(subsections[subsectionIndex] || '', 'learning')}
+            </div>
+            <motion.button
+              onClick={handleNextSection}
+              whileTap={{ scale: 0.98 }}
+              style={{ width: '100%', padding: '16px', borderRadius: 14, background: 'var(--btn-primary, #EDEDED)', color: 'var(--btn-primary-text, #010d33)', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer', marginTop: 34 }}
+            >
+              {locale === 'sk' ? 'Pokračovať' : 'Continue'} <ArrowRight size={16} />
+            </motion.button>
+            {subsectionIndex > 0 && (
+              <button
+                onClick={() => { scrollTop(); setSubsectionIndex(i => i - 1); setPhase('learning'); }}
+                style={{ background: 'none', border: 'none', color: '#555', fontSize: 12, cursor: 'pointer', marginTop: 4, fontWeight: 500, alignSelf: 'center', width: '100%', textAlign: 'center' }}
+              >
+                {locale === 'sk' ? 'Späť' : 'Back'}
+              </button>
+            )}
+          </div>
         ) : sec.phase === 'learning' ? (
           <PaginatedContent text={String(content)} locale={locale} equipment={equipment} onComplete={handleNextSection} />
         ) : sec.phase === 'real_world' ? (
           <div>
-            <div style={{ marginTop: 12, marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #0c255a' }}>
-              <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #0c255a', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
-                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
-                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
+            <div style={{ marginTop: 12, marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #1a1a1a' }}>
+              <div style={{ background: '#111', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
               </div>
-              <pre style={{ background: '#000a2b', margin: 0, padding: '10px 14px', fontSize: 15, color: '#4ade80', fontFamily: 'JetBrains Mono, monospace' }}>
+              <pre style={{ background: '#010d33', margin: 0, padding: '10px 14px', fontSize: 15, color: '#4ade80', fontFamily: 'JetBrains Mono, monospace' }}>
                 {locale === 'sk' ? '# Použitie v praxi' : '# Real-world use'}
               </pre>
             </div>
-            <div style={{ fontSize: 15, color: '#c8c8c8', lineHeight: 1.85 }}>
+            <div style={{ fontSize: 15, color: '#ddd', lineHeight: 1.85 }}>
               {formatContent(String(content), sec.phase)}
             </div>
           </div>
         ) : (
-          <div style={{ fontSize: 15, color: '#c8c8c8', lineHeight: 1.85 }}>
+          <div style={{ fontSize: 15, color: '#ddd', lineHeight: 1.85 }}>
             {formatContent(String(content), sec.phase)}
           </div>
         )}
@@ -392,7 +496,7 @@ export default function TheoryLessonPage() {
           onClick={handleNextSection}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.98 }}
-          style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#010d33', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 12, border: 'none', cursor: 'pointer' }}
+          style={{ width: '100%', padding: '14px', borderRadius: 12, background: 'var(--btn-primary, #EDEDED)', color: 'var(--btn-primary-text, #010d33)', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 12, border: 'none', cursor: 'pointer' }}
         >
           {sectionIndex + 1 < sections.length
             ? s('continueBtn', locale)
@@ -401,7 +505,7 @@ export default function TheoryLessonPage() {
               : s('finish', locale)}
           <ArrowRight size={16} />
         </motion.button>}
-        {sectionIndex > 0 && (
+        {sectionIndex > 0 && subsections.length <= 1 && (
           <button
             onClick={() => {
               scrollTop();
@@ -474,45 +578,24 @@ export default function TheoryLessonPage() {
 
         {/* Code snippet (readonly) + input for missing line */}
         {(() => {
-          const snippet = q.code_snippet || '';
+          const snippet = getSnippet(q.code_snippet) || '';
           const lines = snippet.split('\n');
           const todoIdx = lines.findIndex((l: string) => l.includes('# TODO') || l.includes('___'));
           const beforeLines = todoIdx >= 0 ? lines.slice(0, todoIdx) : lines;
           const afterLines = todoIdx >= 0 ? lines.slice(todoIdx + 1) : [];
-          const borderColor = writeCodeState === 'correct' ? 'rgba(74,222,128,0.5)' : writeCodeState === 'wrong' ? 'rgba(255,80,80,0.3)' : '#0c255a';
+          const borderColor = writeCodeState === 'correct' ? 'rgba(74,222,128,0.5)' : writeCodeState === 'wrong' ? 'rgba(255,80,80,0.3)' : '#1a1a1a';
 
           return (
             <div style={{ borderRadius: 12, overflow: 'hidden', border: `1px solid ${borderColor}` }}>
               {/* Readonly code before TODO */}
               {beforeLines.length > 0 && (
-                <pre style={{ background: '#041540', padding: '12px 16px 4px', margin: 0, fontSize: 13, color: '#888', fontFamily: 'JetBrains Mono, Fira Code, monospace', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
+                <pre style={{ background: '#111', padding: '12px 16px 4px', margin: 0, fontSize: 13, color: '#888', fontFamily: 'JetBrains Mono, Fira Code, monospace', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
                   {beforeLines.join('\n')}
                 </pre>
               )}
-              {/* Editable input for the missing line */}
-              <div style={{ background: '#041540', padding: '4px 16px' }}>
-                <input
-                  value={writeCodeValue}
-                  onChange={e => { if (writeCodeState === 'editing') setWriteCodeValue(e.target.value); }}
-                  placeholder={locale === 'sk' ? 'Napíš chýbajúci kód...' : 'Type the missing code...'}
-                  disabled={writeCodeState === 'correct'}
-                  autoComplete="off"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                  spellCheck={false}
-                  style={{
-                    width: '100%', padding: '10px 12px', borderRadius: 8,
-                    background: writeCodeState === 'correct' ? 'rgba(74,222,128,0.08)' : '#000a2b',
-                    border: `1.5px solid ${writeCodeState === 'correct' ? 'rgba(74,222,128,0.4)' : writeCodeState === 'wrong' ? 'rgba(255,80,80,0.3)' : '#0c255a'}`,
-                    color: writeCodeState === 'correct' ? '#4ade80' : '#fff',
-                    fontSize: 16, fontFamily: 'JetBrains Mono, Fira Code, monospace',
-                    outline: 'none', boxSizing: 'border-box',
-                  }}
-                />
-              </div>
               {/* Readonly code after TODO */}
               {afterLines.length > 0 && (
-                <pre style={{ background: '#041540', padding: '4px 16px 12px', margin: 0, fontSize: 13, color: '#888', fontFamily: 'JetBrains Mono, Fira Code, monospace', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
+                <pre style={{ background: '#111', padding: '4px 16px 12px', margin: 0, fontSize: 13, color: '#888', fontFamily: 'JetBrains Mono, Fira Code, monospace', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
                   {afterLines.join('\n')}
                 </pre>
               )}
@@ -520,13 +603,36 @@ export default function TheoryLessonPage() {
           );
         })()}
 
+        {/* Editable input BELOW code block */}
+        <textarea
+          value={writeCodeValue}
+          onChange={e => { if (writeCodeState === 'editing') setWriteCodeValue(e.target.value); }}
+          placeholder={locale === 'sk' ? 'Napíš odpoveď...' : 'Type your answer...'}
+          disabled={writeCodeState === 'correct'}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
+          autoFocus
+          rows={Math.max(2, (writeCodeValue || '').split('\n').length)}
+          style={{
+            width: '100%', padding: '14px 16px', borderRadius: 12,
+            background: writeCodeState === 'correct' ? 'rgba(74,222,128,0.08)' : '#010d33',
+            border: `1.5px solid ${writeCodeState === 'correct' ? 'rgba(74,222,128,0.4)' : writeCodeState === 'wrong' ? 'rgba(255,80,80,0.3)' : '#222'}`,
+            color: writeCodeState === 'correct' ? '#4ade80' : '#fff',
+            fontSize: 16, fontFamily: 'JetBrains Mono, Fira Code, monospace',
+            outline: 'none', boxSizing: 'border-box',
+            resize: 'none', lineHeight: 1.7,
+          }}
+        />
+
         {/* Action buttons based on state */}
         {writeCodeState === 'editing' && (
           <motion.button
             onClick={handleWriteCodeCheck}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
-            style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#010d33', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
+            style={{ width: '100%', padding: '14px', borderRadius: 12, background: 'var(--btn-primary, #EDEDED)', color: 'var(--btn-primary-text, #010d33)', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
           >
             {locale === 'sk' ? 'Skontrolovať' : 'Check'}
             <Check size={16} />
@@ -549,7 +655,7 @@ export default function TheoryLessonPage() {
                 onClick={handleWriteCodeTryAgain}
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                style={{ flex: 1, padding: '14px', borderRadius: 12, background: '#161616', color: '#EDEDED', fontWeight: 700, fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer' }}
+                style={{ flex: 1, padding: '14px', borderRadius: 12, background: '#041540', color: '#EDEDED', fontWeight: 700, fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer' }}
               >
                 {locale === 'sk' ? 'Skúsiť znova' : 'Try again'}
               </motion.button>
@@ -557,7 +663,7 @@ export default function TheoryLessonPage() {
                 onClick={handleWriteCodeShowAnswer}
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                style={{ flex: 1, padding: '14px', borderRadius: 12, background: '#161616', color: '#888', fontWeight: 600, fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer' }}
+                style={{ flex: 1, padding: '14px', borderRadius: 12, background: '#041540', color: '#888', fontWeight: 600, fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer' }}
               >
                 <Eye size={14} />
                 {locale === 'sk' ? 'Ukázať odpoveď' : 'Show answer'}
@@ -598,7 +704,7 @@ export default function TheoryLessonPage() {
               onClick={handleQuizNext}
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
-              style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#010d33', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
+              style={{ width: '100%', padding: '14px', borderRadius: 12, background: 'var(--btn-primary, #EDEDED)', color: 'var(--btn-primary-text, #010d33)', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
             >
               {quizIndex + 1 < quiz.length
                 ? s('nextQuestion', locale)
@@ -615,7 +721,7 @@ export default function TheoryLessonPage() {
   const renderFillCode = () => {
     const q = quiz[quizIndex];
     if (!q) return null;
-    const snippet = q.code_snippet || '';
+    const snippet = getSnippet(q.code_snippet) || '';
     const correctAnswers = q.correct_answer.split('|||').map(a => a.trim());
     const parts = snippet.split('___');
 
@@ -681,51 +787,56 @@ export default function TheoryLessonPage() {
           {safe(t(q, 'question_text', locale))}
         </h2>
 
-        {/* Code with inline inputs */}
-        <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #0c255a' }}>
-          <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #0c255a', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
+        {/* Terminal-style code with inline input */}
+        <div style={{ borderRadius: 12, overflow: 'hidden', border: `1px solid ${fillCodeState === 'correct' ? 'rgba(74,222,128,0.3)' : fillCodeState === 'wrong' ? 'rgba(255,80,80,0.2)' : '#1a1a1a'}` }}>
+          <div style={{ background: '#111', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
           </div>
           <pre style={{
-            background: '#000a2b', margin: 0,
-            padding: '14px 16px', fontSize: 14, color: '#ccc', lineHeight: 2.2,
+            background: '#010d33', margin: 0,
+            padding: '14px 16px', fontSize: 14, lineHeight: 1.8,
             overflow: 'auto', fontFamily: 'JetBrains Mono, Fira Code, monospace',
             whiteSpace: 'pre-wrap',
           }}>
-            {parts.map((part, i) => (
-              <span key={i}>
-                {part}
-                {i < parts.length - 1 && (
-                  <input
-                    type="text"
-                    value={fillCodeValues[i] || ''}
-                    onChange={e => {
-                      const v = [...fillCodeValues];
-                      v[i] = e.target.value;
-                      setFillCodeValues(v);
-                    }}
-                    disabled={fillCodeState !== 'editing'}
-                    autoCapitalize="off"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    style={{
-                      background: fillCodeState === 'correct' ? 'rgba(74,222,128,0.15)' : fillCodeState === 'wrong' ? 'rgba(255,80,80,0.15)' : '#161616',
-                      border: `1.5px solid ${fillCodeState === 'correct' ? '#4ade80' : fillCodeState === 'wrong' ? '#ff6060' : 'rgba(255,255,255,0.15)'}`,
-                      borderRadius: 6,
-                      color: fillCodeState === 'correct' ? '#4ade80' : fillCodeState === 'wrong' ? '#ff8080' : '#fff',
-                      fontFamily: 'inherit', fontSize: 'inherit',
-                      padding: '2px 8px',
-                      width: `${Math.max((correctAnswers[i]?.length || 4) + 2, 4)}ch`,
-                      outline: 'none',
-                      verticalAlign: 'baseline',
-                    }}
-                    onFocus={e => { if (fillCodeState === 'editing') e.target.style.borderColor = '#4ade80'; }}
-                    onBlur={e => { if (fillCodeState === 'editing') e.target.style.borderColor = 'rgba(255,255,255,0.15)'; }}
-                  />
-                )}
-              </span>
+            {snippet.split('\n').map((line, li) => (
+              <div key={li}>
+                {line.replace(/"___"/g, '"\u200B___\u200B"').replace(/'___'/g, "'\u200B___\u200B'").split(/(___|\b(?:if|else|elif|for|while|def|return|import|from|print|class|in|not|and|or|self)\b|"[^"]*"|'[^']*'|\[|\]|\(|\)|\b\d+\b|#.*$)/gm).map((part, pi) => {
+                  if (!part) return null;
+                  if (part === '___') return (
+                    <input
+                      key={pi}
+                      type="text"
+                      value={fillCodeValues[0] || ''}
+                      onChange={e => setFillCodeValues([e.target.value])}
+                      disabled={fillCodeState !== 'editing'}
+                      autoFocus
+                      autoCapitalize="off"
+                      autoCorrect="off"
+                      spellCheck={false}
+                      onKeyDown={e => { if (e.key === 'Enter' && fillCodeState === 'editing') handleFillCheck(); }}
+                      placeholder="..."
+                      style={{
+                        background: fillCodeState === 'correct' ? 'rgba(43,202,101,0.15)' : fillCodeState === 'wrong' ? 'rgba(255,80,80,0.1)' : 'rgba(43,202,101,0.08)',
+                        border: `1.5px dashed ${fillCodeState === 'correct' ? '#2bca65' : fillCodeState === 'wrong' ? '#ff6060' : '#2bca65'}`,
+                        borderRadius: 6, color: fillCodeState === 'correct' ? '#2bca65' : fillCodeState === 'wrong' ? '#ff8080' : '#fff',
+                        fontFamily: 'inherit', fontSize: 'inherit', padding: '2px 8px',
+                        width: `${Math.max((correctAnswers[0]?.length || 4) + 3, 5)}ch`,
+                        outline: 'none', verticalAlign: 'baseline',
+                      }}
+                    />
+                  );
+                  if (/^(if|else|elif|for|while|def|return|import|from|class|in|not|and|or|self)$/.test(part)) return <span key={pi} style={{ color: '#ff7b72' }}>{part}</span>;
+                  if (/^(print|len|type|int|float|str|input|range|list|dict|set|tuple|sorted|map|filter|open)$/.test(part)) return <span key={pi} style={{ color: '#d2a8ff' }}>{part}</span>;
+                  if (/^(True|False|None)$/.test(part)) return <span key={pi} style={{ color: '#79c0ff' }}>{part}</span>;
+                  if (/^["']/.test(part)) return <span key={pi} style={{ color: '#a5d6ff' }}>{part.replace(/\u200B/g, '')}</span>;
+                  if (/^\d+$/.test(part)) return <span key={pi} style={{ color: '#79c0ff' }}>{part}</span>;
+                  if (/^[[\]()]$/.test(part)) return <span key={pi} style={{ color: '#8b949e' }}>{part}</span>;
+                  if (/^#/.test(part)) return <span key={pi} style={{ color: '#8b949e', fontStyle: 'italic' }}>{part}</span>;
+                  return <span key={pi} style={{ color: '#e6edf3' }}>{part.replace(/\u200B/g, '')}</span>;
+                })}
+              </div>
             ))}
           </pre>
         </div>
@@ -736,7 +847,7 @@ export default function TheoryLessonPage() {
             onClick={handleFillCheck}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
-            style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#010d33', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
+            style={{ width: '100%', padding: '14px', borderRadius: 12, background: 'var(--btn-primary, #EDEDED)', color: 'var(--btn-primary-text, #010d33)', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
           >
             {locale === 'sk' ? 'Skontrolovať' : 'Check'}
             <Check size={16} />
@@ -759,7 +870,7 @@ export default function TheoryLessonPage() {
                 onClick={handleFillTryAgain}
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                style={{ flex: 1, padding: '14px', borderRadius: 12, background: '#161616', color: '#EDEDED', fontWeight: 700, fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer' }}
+                style={{ flex: 1, padding: '14px', borderRadius: 12, background: '#041540', color: '#EDEDED', fontWeight: 700, fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer' }}
               >
                 {locale === 'sk' ? 'Skúsiť znova' : 'Try again'}
               </motion.button>
@@ -767,7 +878,7 @@ export default function TheoryLessonPage() {
                 onClick={handleFillShowAnswer}
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                style={{ flex: 1, padding: '14px', borderRadius: 12, background: '#161616', color: '#888', fontWeight: 600, fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer' }}
+                style={{ flex: 1, padding: '14px', borderRadius: 12, background: '#041540', color: '#888', fontWeight: 600, fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer' }}
               >
                 <Eye size={14} />
                 {locale === 'sk' ? 'Ukázať odpoveď' : 'Show answer'}
@@ -802,7 +913,7 @@ export default function TheoryLessonPage() {
               onClick={handleQuizNext}
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
-              style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#010d33', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
+              style={{ width: '100%', padding: '14px', borderRadius: 12, background: 'var(--btn-primary, #EDEDED)', color: 'var(--btn-primary-text, #010d33)', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
             >
               {quizIndex + 1 < quiz.length ? s('nextQuestion', locale) : s('finish', locale)}
               <ArrowRight size={16} />
@@ -838,7 +949,7 @@ export default function TheoryLessonPage() {
 
     const correctLabel = q.question_type === 'true_false'
       ? (q.correct_answer === 'True' ? 'T' : 'F')
-      : q.correct_answer;
+      : q.correct_answer || q.options?.find((o: any) => o.is_correct)?.option_label || '';
 
     return (
       <motion.div
@@ -877,10 +988,32 @@ export default function TheoryLessonPage() {
           {safe(t(q, 'question_text', locale))}
         </h2>
 
-        {q.code_snippet && (
-          <pre style={{ background: '#010d33', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '14px 16px', fontSize: 13, color: '#EDEDED', overflow: 'auto', lineHeight: 1.7 }}>
-            {safe(q.code_snippet)}
-          </pre>
+        {getSnippet(q.code_snippet) && (
+          <div style={{ background: '#010d33', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, overflow: 'hidden' }}>
+            <div style={{ background: '#111', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+            </div>
+            <pre style={{ margin: 0, padding: '14px 16px', fontSize: 14, lineHeight: 1.8, overflow: 'auto', fontFamily: 'JetBrains Mono, Fira Code, monospace', whiteSpace: 'pre-wrap' }}>
+              {safe(getSnippet(q.code_snippet)).split('\n').map((line, li) => (
+                <div key={li}>
+                  {line.split(/(___|\b(?:if|else|elif|for|while|def|return|import|from|print|class|in|not|and|or|True|False|None|self)\b|"[^"]*"|'[^']*'|\[|\]|\(|\)|\b\d+\b|#.*$)/gm).map((part, pi) => {
+                    if (!part) return null;
+                    if (part === '___') return <span key={pi} style={{ display: 'inline-block', minWidth: 48, height: 24, background: 'rgba(43,202,101,0.12)', border: '1.5px dashed #2bca65', borderRadius: 6, verticalAlign: 'middle', margin: '0 3px' }} />;
+                    if (/^(if|else|elif|for|while|def|return|import|from|class|in|not|and|or|self)$/.test(part)) return <span key={pi} style={{ color: '#ff7b72' }}>{part}</span>;
+                    if (/^(print|len|type|int|float|str|input|range|list|dict|set|tuple|sorted|map|filter|open)$/.test(part)) return <span key={pi} style={{ color: '#d2a8ff' }}>{part}</span>;
+                    if (/^(True|False|None)$/.test(part)) return <span key={pi} style={{ color: '#79c0ff' }}>{part}</span>;
+                    if (/^["']/.test(part)) return <span key={pi} style={{ color: '#a5d6ff' }}>{part}</span>;
+                    if (/^\d+$/.test(part)) return <span key={pi} style={{ color: '#79c0ff' }}>{part}</span>;
+                    if (/^[[\]()]$/.test(part)) return <span key={pi} style={{ color: '#8b949e' }}>{part}</span>;
+                    if (/^#/.test(part)) return <span key={pi} style={{ color: '#8b949e', fontStyle: 'italic' }}>{part}</span>;
+                    return <span key={pi} style={{ color: '#e6edf3' }}>{part}</span>;
+                  })}
+                </div>
+              ))}
+            </pre>
+          </div>
         )}
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -899,9 +1032,9 @@ export default function TheoryLessonPage() {
                 style={{
                   width: '100%', padding: '13px 16px', borderRadius: 12, textAlign: 'left',
                   display: 'flex', alignItems: 'center', gap: 12,
-                  background: showCorrect ? 'rgba(74,222,128,0.08)' : showWrong ? 'rgba(255,80,80,0.06)' : '#161616',
-                  border: `1px solid ${showCorrect ? 'rgba(74,222,128,0.5)' : showWrong ? 'rgba(255,80,80,0.3)' : 'rgba(255,255,255,0.08)'}`,
-                  color: showCorrect ? '#4ade80' : showWrong ? '#ff9090' : '#A0A0A0',
+                  background: showCorrect ? 'rgba(74,222,128,0.08)' : showWrong ? 'rgba(255,80,80,0.06)' : 'var(--card-bg, #041540)',
+                  border: `1px solid ${showCorrect ? 'rgba(74,222,128,0.5)' : showWrong ? 'rgba(255,80,80,0.3)' : 'var(--border, rgba(255,255,255,0.08))'}`,
+                  color: showCorrect ? '#4ade80' : showWrong ? '#ff9090' : 'var(--text-secondary, #A0A0A0)',
                   fontSize: 14, fontFamily: 'inherit',
                   cursor: answerState !== 'idle' ? 'default' : 'pointer',
                 }}
@@ -921,6 +1054,25 @@ export default function TheoryLessonPage() {
             );
           })}
         </div>
+
+        {/* Skip question */}
+        {answerState === 'idle' && (
+          <button
+            onClick={() => {
+              // Show correct answer and auto-advance
+              const q = quiz[quizIndex];
+              const correctLabel = q.correct_answer;
+              setSelectedAnswer('skip');
+              setAnswerState('correct');
+              setTimeout(() => {
+                if (feedbackRef.current) feedbackRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }, 100);
+            }}
+            style={{ background: 'none', border: 'none', color: '#555', fontSize: 12, cursor: 'pointer', marginTop: 8, fontWeight: 500, width: '100%', textAlign: 'center' }}
+          >
+            {locale === 'sk' ? 'Nie si si istý/istá odpoveďou? Preskočiť →' : 'Not ready to answer? Skip →'}
+          </button>
+        )}
 
         {/* Continue after answer */}
         <AnimatePresence>
@@ -949,8 +1101,8 @@ export default function TheoryLessonPage() {
                       explanation = correctLabel === 'T'
                         ? (locale === 'sk' ? 'Toto tvrdenie je pravdivé.' : 'This statement is true.')
                         : (locale === 'sk' ? 'Toto tvrdenie je nepravdivé.' : 'This statement is false.');
-                    } else if (q.question_type === 'fill_code' && q.code_snippet) {
-                      const filled = q.code_snippet.replace('___', correctOpt.text);
+                    } else if (q.question_type === 'fill_code' && getSnippet(q.code_snippet)) {
+                      const filled = getSnippet(q.code_snippet).replace('___', correctOpt.text);
                       explanation = locale === 'sk'
                         ? `Správny kód je: ${filled}`
                         : `The correct code is: ${filled}`;
@@ -976,7 +1128,7 @@ export default function TheoryLessonPage() {
                 onClick={handleQuizNext}
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                style={{ width: '100%', padding: '14px', borderRadius: 12, background: '#EDEDED', color: '#010d33', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
+                style={{ width: '100%', padding: '14px', borderRadius: 12, background: 'var(--btn-primary, #EDEDED)', color: 'var(--btn-primary-text, #010d33)', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 'none', cursor: 'pointer' }}
               >
                 {quizIndex + 1 < quiz.length
                   ? s('nextQuestion', locale)
@@ -993,7 +1145,7 @@ export default function TheoryLessonPage() {
   // Done screen
   if (phase === 'done') {
     return (
-      <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      <div style={{ minHeight: '100vh', background: '#000', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
         <Byte mood="celebrating" size={100} equipment={equipment} />
         <h1 style={{ fontWeight: 800, fontSize: 28, color: '#fff', marginTop: 24, textAlign: 'center' }}>
           {s('lessonComplete', locale)}
@@ -1001,29 +1153,23 @@ export default function TheoryLessonPage() {
         <p style={{ color: '#888', fontSize: 15, marginTop: 8, textAlign: 'center' }}>
           {safe(t(lesson, 'title', locale))}
         </p>
-        <div style={{ display: 'flex', gap: 24, marginTop: 24 }}>
-          <div style={{ textAlign: 'center' }}>
-            <p style={{ fontWeight: 800, fontSize: 24, color: '#fff', margin: 0 }}>{score}/{quiz.length}</p>
-            <p style={{ fontSize: 12, color: '#888', margin: 0 }}>{s('quizScore', locale)}</p>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <p style={{ fontWeight: 800, fontSize: 24, color: '#fff', margin: 0 }}>{score * 10 + sections.length * 5}</p>
-            <p style={{ fontSize: 12, color: '#888', margin: 0 }}>{s('xpEarned', locale)}</p>
-          </div>
+        <div style={{ marginTop: 24, textAlign: 'center' }}>
+          <p style={{ fontWeight: 800, fontSize: 28, color: '#4ade80', margin: 0 }}>+{score * 10 + sections.length * 5} XP</p>
+          <p style={{ fontSize: 12, color: '#888', margin: '4px 0 0' }}>{s('xpEarned', locale)}</p>
         </div>
         {reward && (() => {
           const item = cosmeticItems.find(c => c.id === reward);
           const slot = item?.type as keyof typeof equipment | undefined;
           // Preview equipment with new item
           const previewEquip = slot ? { ...equipment, [slot]: reward } : equipment;
-          const rarityColors: Record<string, string> = { common: '#888', rare: '#22c55e', epic: '#a855f7', legendary: '#f59e0b', mythic: '#ff3366' };
+          const rarityColors: Record<string, string> = { common: '#888', rare: '#3b82f6', epic: '#a855f7', legendary: '#f59e0b', mythic: '#ff3366' };
           const color = rarityColors[item?.rarity || 'common'] || '#888';
           return (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, type: 'spring' }}
-              style={{ marginTop: 28, padding: 24, borderRadius: 16, background: '#041540', border: `1px solid ${color}33`, textAlign: 'center', minWidth: 240 }}
+              style={{ marginTop: 28, padding: 24, borderRadius: 16, background: '#111', border: `1px solid ${color}33`, textAlign: 'center', minWidth: 240 }}
             >
               <p style={{ fontSize: 11, color: '#888', margin: '0 0 12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                 {s('newWardrobeItem', locale)}
@@ -1046,7 +1192,7 @@ export default function TheoryLessonPage() {
                 <motion.button
                   onClick={() => router.push('/')}
                   whileTap={{ scale: 0.96 }}
-                  style={{ padding: '10px 20px', borderRadius: 10, background: '#0c255a', color: '#888', fontWeight: 600, fontSize: 13, border: 'none', cursor: 'pointer' }}
+                  style={{ padding: '10px 20px', borderRadius: 10, background: '#222', color: '#888', fontWeight: 600, fontSize: 13, border: 'none', cursor: 'pointer' }}
                 >
                   {locale === 'sk' ? 'Neskôr' : 'Later'}
                 </motion.button>
@@ -1069,14 +1215,112 @@ export default function TheoryLessonPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', background: '#000', display: 'flex', flexDirection: 'column' }}>
+      {/* Onboarding wizard */}
+      <AnimatePresence>
+        {showOnboarding && (() => {
+          const sk = locale === 'sk';
+          const steps = [
+            { title: sk ? 'Prečítaj si teóriu' : 'Read the theory',
+              desc: sk ? 'Každá lekcia sa skladá z tématických sekcií. Prečítaš text a pokračuješ ďalej.' : 'Each lesson has thematic sections. Read the text and continue.',
+              visual: (
+                <div style={{ background: '#111', borderRadius: 10, padding: '12px 16px', textAlign: 'left', width: '100%', maxWidth: 260 }}>
+                  <div style={{ height: 6, background: '#333', borderRadius: 3, width: '70%', marginBottom: 8 }} />
+                  <div style={{ height: 5, background: '#222', borderRadius: 3, width: '100%', marginBottom: 5 }} />
+                  <div style={{ height: 5, background: '#222', borderRadius: 3, width: '90%', marginBottom: 5 }} />
+                  <div style={{ height: 5, background: '#222', borderRadius: 3, width: '60%' }} />
+                </div>
+              ) },
+            { title: sk ? 'Zaujímavosť' : 'Fun fact',
+              desc: sk ? 'Pri každej sekcii nájdeš zaujímavý fakt. Klikni na "viac" pre detail.' : 'Each section has an interesting fact. Click "more" for details.',
+              visual: (
+                <div style={{ background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: 10, padding: '10px 14px', width: '100%', maxWidth: 260, textAlign: 'center' }}>
+                  <span style={{ fontSize: 12, color: '#aaa' }}>{sk ? 'Prvý program vznikol v roku 1843.' : 'The first program was written in 1843.'}</span>
+                  <span style={{ marginLeft: 6, color: '#4ade80', fontSize: 11, fontWeight: 600 }}>{sk ? 'viac' : 'more'} {'>'}</span>
+                </div>
+              ) },
+            { title: sk ? 'Odpovedaj na otázky' : 'Answer questions',
+              desc: sk ? 'Po každej sekcii vyber správnu odpoveď z možností.' : 'After each section, pick the correct answer.',
+              visual: (
+                <div style={{ width: '100%', maxWidth: 260, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  {['A', 'B', 'C'].map((l, i) => (
+                    <div key={l} style={{ background: i === 1 ? 'rgba(74,222,128,0.1)' : '#111', border: `1px solid ${i === 1 ? '#4ade80' : '#222'}`, borderRadius: 8, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: i === 1 ? '#4ade80' : '#555', background: i === 1 ? 'rgba(74,222,128,0.15)' : '#1a1a1a', borderRadius: 5, padding: '2px 6px' }}>{l}</span>
+                      <div style={{ height: 5, background: i === 1 ? '#4ade80' : '#333', borderRadius: 3, width: ['60%', '80%', '50%'][i] }} />
+                    </div>
+                  ))}
+                </div>
+              ) },
+            { title: sk ? 'Doplň kód' : 'Fill in the code',
+              desc: sk ? 'Niekedy doplníš chýbajúcu časť kódu priamo v termináli.' : 'Sometimes you fill in the missing code directly in the terminal.',
+              visual: (
+                <div style={{ background: '#010d33', borderRadius: 10, padding: '12px 16px', textAlign: 'left', width: '100%', maxWidth: 260, fontFamily: 'monospace', fontSize: 12 }}>
+                  <div><span style={{ color: '#ff7b72' }}>if</span><span style={{ color: '#e6edf3' }}> age </span><span style={{ display: 'inline-block', width: 32, height: 16, background: 'rgba(43,202,101,0.12)', border: '1.5px dashed #2bca65', borderRadius: 4, verticalAlign: 'middle' }} /><span style={{ color: '#e6edf3' }}> 18:</span></div>
+                  <div style={{ paddingLeft: 16 }}><span style={{ color: '#d2a8ff' }}>allow_access</span><span style={{ color: '#8b949e' }}>()</span></div>
+                </div>
+              ) },
+          ];
+          const step = steps[onboardingStep];
+          return (
+            <motion.div
+              key="onboarding"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(0,0,0,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+            >
+              <motion.div
+                key={onboardingStep}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{ maxWidth: 340, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+              >
+                <div style={{ marginBottom: 24 }}>
+                  {step.visual}
+                </div>
+                <h2 style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 8 }}>{step.title}</h2>
+                <p style={{ fontSize: 14, color: '#aaa', lineHeight: 1.6, marginBottom: 28 }}>{step.desc}</p>
+                <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 20 }}>
+                  {steps.map((_, i) => (
+                    <div key={i} style={{ width: 8, height: 8, borderRadius: 4, background: i === onboardingStep ? '#4ade80' : '#333' }} />
+                  ))}
+                </div>
+                <button
+                  onClick={() => {
+                    if (onboardingStep < steps.length - 1) {
+                      setOnboardingStep(s => s + 1);
+                    } else {
+                      localStorage.setItem('robotuy-lesson-onboarding', 'done');
+                      setShowOnboarding(false);
+                    }
+                  }}
+                  style={{ padding: '14px 40px', borderRadius: 12, background: 'var(--btn-primary, #EDEDED)', color: 'var(--btn-primary-text, #000)', fontWeight: 700, fontSize: 15, border: 'none', cursor: 'pointer' }}
+                >
+                  {onboardingStep < steps.length - 1
+                    ? (locale === 'sk' ? 'Ďalej' : 'Next')
+                    : (locale === 'sk' ? 'Začať lekciu' : 'Start lesson')}
+                </button>
+                <div>
+                  <button
+                    onClick={() => { localStorage.setItem('robotuy-lesson-onboarding', 'done'); setShowOnboarding(false); }}
+                    style={{ background: 'none', border: 'none', color: '#555', fontSize: 12, cursor: 'pointer', marginTop: 12 }}
+                  >
+                    {locale === 'sk' ? 'Preskočiť' : 'Skip'}
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
+
       {/* Header */}
-      <div style={{ position: 'sticky', top: 0, zIndex: 50, padding: '12px 20px', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 8px)', background: 'rgba(1,13,51,0.95)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderBottom: '1px solid #010d33' }}>
+      <div style={{ position: 'sticky', top: 0, zIndex: 50, padding: '12px 20px', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 8px)', background: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderBottom: '1px solid #010d33' }}>
         <div style={{ maxWidth: 520, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 12 }}>
           <button onClick={() => router.push('/')} style={{ color: '#777', cursor: 'pointer', padding: 4, background: 'none', border: 'none' }}>
             <X size={20} />
           </button>
-          <div style={{ flex: 1, height: 4, borderRadius: 2, background: '#041540', overflow: 'hidden' }}>
+          <div style={{ flex: 1, height: 4, borderRadius: 2, background: '#111', overflow: 'hidden' }}>
             <motion.div style={{ height: '100%', background: '#fff', borderRadius: 2 }} animate={{ width: `${progress}%` }} transition={{ duration: 0.4 }} />
           </div>
           <div />
@@ -1084,7 +1328,7 @@ export default function TheoryLessonPage() {
       </div>
 
       {/* Lesson title + current section */}
-      <div style={{ maxWidth: 520, margin: '0 auto', width: '100%', padding: '6px 20px 0' }}>
+      <div style={{ maxWidth: 680, margin: '0 auto', width: '100%', padding: '20px 20px 0' }}>
         <p style={{ fontSize: 9, color: '#555', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {safe(t(lesson, 'title', locale))}
           {sections[sectionIndex] && (
@@ -1096,22 +1340,13 @@ export default function TheoryLessonPage() {
       </div>
 
       {/* Content */}
-      <div style={{ flex: 1, maxWidth: 520, margin: '0 auto', width: '100%', padding: '0 20px 120px' }}>
+      <div style={{ flex: 1, maxWidth: 680, margin: '0 auto', width: '100%', padding: '0 20px 120px' }}>
         <AnimatePresence mode="wait">
           {phase === 'quiz' ? renderQuiz() : renderTheorySection()}
         </AnimatePresence>
       </div>
 
-      {/* Ask Robotuy AI */}
-      {!['done', 'loading', 'coffee', 'quiz'].includes(phase) && (
-        <AskByte
-          lessonTitle={safe(t(lesson, 'title', locale))}
-          lessonContent={lesson.learning_content?.slice(0, 2000) || ''}
-          locale={locale}
-          equipment={equipment}
-          userId={useUserStore.getState().userId}
-        />
-      )}
+      {/* Ask Robotuy AI — disabled for now */}
     </div>
   );
 }
@@ -1123,60 +1358,64 @@ function isCodeLine(line: string): boolean {
   if (/^(import |from |def |class |if |elif |else:|for |while |return |print\(|try:|except|finally:|raise |with |async |await |const |let |var |function |export |del |assert |yield |lambda )/.test(t)) return true;
   if (/^[a-zA-Z_]\w*\s*[=(]/.test(t) && (t.includes('(') || t.includes('=')) && !t.endsWith('.') && t.length < 120) return true;
   if (/^[a-zA-Z_]\w*(\s*,\s*[a-zA-Z_]\w*)+\s*=/.test(t)) return true; // a, b = 5, 10
-  if (/^(#|\/\/)/.test(t)) return true;
+  if (/^\/\//.test(t)) return true;
+  if (/^#[^#]/.test(t) && !/^#{1,3}\s+[A-ZÁÉÍÓÚÝŽŠČŤĎĽŇŔ]/.test(t)) return true; // # comment but not ## Heading
   if (/^\w+\.\w+\(/.test(t)) return true;
   if (/^(print|len|type|str|int|float|list|dict|set|tuple|range|input|open|sorted|map|filter)\s*\(/.test(t)) return true;
   return false;
 }
 
 /** Byte tip bubble at top of sections */
-function ByteTip({ phase, locale, equipment, sectionIndex }: { phase: string; locale: string; equipment: any; sectionIndex: number }) {
-  // Use lesson ID from URL + sectionIndex for stable but varied selection
+function ByteTip({ phase, locale, equipment, sectionIndex, customTip, customDetail, hideBubble }: { phase: string; locale: string; equipment: any; sectionIndex: number; customTip?: string; customDetail?: string; hideBubble?: boolean }) {
+  const [expanded, setExpanded] = useState(false);
   const seed = (typeof window !== 'undefined' ? parseInt(window.location.pathname.split('/').pop() || '0') || 0 : 0) + sectionIndex;
   const tipsSk: Record<string, string[]> = {
     intro: ['Za každou appkou je kód.', 'Programovanie je všade okolo nás.', 'Každá veľká vec začala malým krokom.', 'Toto ťa posunie vpred.', 'Dnes sa naučíš niečo nové.', 'Pripravený na novú lekciu?', 'Poďme na to!', 'Toto bude zaujímavé.', 'Začíname!', 'Nová lekcia, nové vedomosti.'],
-    learning: [
-      'Python je pomenovaný po komediálnej skupine Monty Python.',
-      'Keď napíšeš print("Ahoj"), počítač vykoná desiatky operácií na pozadí.',
-      'Prvý bug v histórii bol skutočný hmyz zaseknutý v počítači.',
-      'Existuje viac ako 700 programovacích jazykov.',
-      'Väčšina programátorov používa denne iba 5-10 príkazov.',
-      'Kód sa píše raz, ale číta sa stokrát.',
-      'Aj ten najzložitejší program je len séria jednoduchých krokov.',
-      'Python zvládne za 1 riadok to, čo Java za 5.',
-    ],
-    facts: ['Toto je zaujímavé!', 'Málokto toto vie.', 'Prekvapivé, že?'],
-    real_world: ['Toto sa fakt používa.', 'Tu vidíš prečo sa to oplatí.', 'Celkom cool, nie?'],
-    takeaways: ['Rýchle zhrnutie!', 'Toto si zapamätaj.'],
+    learning: ['Aj ten najzložitejší program je len séria jednoduchých krokov.', 'Kód sa píše raz, ale číta sa stokrát.', 'Programovanie je riešenie problémov, nie písanie kódu.', 'Dobrý programátor trávi viac času premýšľaním než písaním.', 'Každá veľká aplikácia začala jednoduchým nápadom.', 'Abstrakcia je kľúč k zvládaniu komplexity.'],
+    facts: ['Toto je zaujímavé!'], real_world: ['Toto sa fakt používa.'], takeaways: ['Rýchle zhrnutie!'],
   };
   const tipsEn: Record<string, string[]> = {
-    intro: ['This will change how you see technology.', 'Behind every app is code.', 'Programming is all around us.', 'Every big thing started with a small step.'],
-    learning: [
-      'Python is named after the comedy group Monty Python.',
-      'When you write print("Hello"), the computer runs dozens of operations behind the scenes.',
-      'The first bug in history was an actual insect stuck in a computer.',
-      'There are over 700 programming languages in the world.',
-      'Most programmers use only 5-10 commands daily.',
-      'Code is written once but read hundreds of times.',
-      'Even the most complex program is just a series of simple steps.',
-      'Python can do in 1 line what Java takes 5 lines to do.',
-    ],
-    facts: ['This is interesting!', 'Not many people know this.', 'Surprising, right?'],
-    real_world: ['This is actually used.', 'Now you see why it matters.', 'Pretty cool, right?'],
-    takeaways: ['Quick recap!', 'Remember this.'],
+    intro: ['Behind every app is code.', 'Programming is all around us.', 'Every big thing started with a small step.'],
+    learning: ['Even the most complex program is just a series of simple steps.', 'Code is written once but read hundreds of times.', 'Programming is problem solving, not just writing code.'],
+    facts: ['This is interesting!'], real_world: ['This is actually used.'], takeaways: ['Quick recap!'],
   };
   const tips = locale === 'sk' ? tipsSk : tipsEn;
   const pool = tips[phase] || tips.learning;
-  const tip = pool[sectionIndex % pool.length];
+  const tip = customTip || pool[sectionIndex % pool.length];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: `${phase === 'intro' ? 40 : 12}px 0 0` }}>
-      <div style={{
-        background: '#0c255a', border: '1px solid #132d6b', borderRadius: 12,
-        padding: '8px 14px', fontSize: 12, color: '#aaa', fontWeight: 500, maxWidth: 260, textAlign: 'center',
-      }}>
-        {tip}
-      </div>
+      {!hideBubble && (
+        <>
+          {customTip && <div style={{ fontSize: 9, fontWeight: 700, color: '#555', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 2 }}>
+            {locale === 'sk' ? 'Zaujímavosť' : 'Fun fact'}
+          </div>}
+          <div
+            onClick={customDetail ? () => setExpanded(!expanded) : undefined}
+            style={{
+              background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: 12,
+              padding: '8px 14px', fontSize: 12, color: '#aaa', fontWeight: 500, maxWidth: 280, textAlign: 'center',
+              cursor: customDetail ? 'pointer' : 'default',
+            }}
+          >
+            <span>{tip}{customDetail ? '.' : ''}</span>
+            {customDetail && (
+              <span style={{ marginLeft: 6, color: '#4ade80', fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap' }}>
+                {expanded ? 'skryť' : 'viac'} <ChevronRight size={10} style={{ display: 'inline', verticalAlign: 'middle', transform: expanded ? 'rotate(90deg)' : 'none', transition: 'transform 0.15s' }} />
+              </span>
+            )}
+            <AnimatePresence>
+              {expanded && customDetail && (
+                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} style={{ overflow: 'hidden' }}>
+                  <div style={{ marginTop: 8, paddingTop: 8, borderTop: '1px solid #333', fontSize: 11, color: '#888', lineHeight: 1.6, textAlign: 'left' }}>
+                    {customDetail}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </>
+      )}
       <motion.div
         animate={{ y: [0, -5, 0], rotate: [0, 2, -2, 0] }}
         transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
@@ -1217,10 +1456,10 @@ function ByteFootball({ items, locale, equipment }: { items: { name: string; des
       <div style={{ position: 'relative', width: 200, height: 100, marginBottom: 16 }}>
         <svg width="200" height="100" viewBox="0 0 160 80">
           {/* Goal frame */}
-          <rect x="10" y="10" width="140" height="65" rx="4" fill="none" stroke="#0f2d6b" strokeWidth="2.5" />
+          <rect x="10" y="10" width="140" height="65" rx="4" fill="none" stroke="#333" strokeWidth="2.5" />
           {/* Net lines */}
-          {[30, 50, 70, 90, 110, 130].map(x => <line key={`v${x}`} x1={x} y1="10" x2={x} y2="75" stroke="#0c255a" strokeWidth="1" />)}
-          {[25, 40, 55, 70].map(y => <line key={`h${y}`} x1="10" y1={y} x2="150" y2={y} stroke="#0c255a" strokeWidth="1" />)}
+          {[30, 50, 70, 90, 110, 130].map(x => <line key={`v${x}`} x1={x} y1="10" x2={x} y2="75" stroke="#1a1a1a" strokeWidth="1" />)}
+          {[25, 40, 55, 70].map(y => <line key={`h${y}`} x1="10" y1={y} x2="150" y2={y} stroke="#1a1a1a" strokeWidth="1" />)}
           {/* Posts */}
           <line x1="10" y1="10" x2="10" y2="78" stroke="#555" strokeWidth="3" strokeLinecap="round" />
           <line x1="150" y1="10" x2="150" y2="78" stroke="#555" strokeWidth="3" strokeLinecap="round" />
@@ -1295,7 +1534,7 @@ function ByteFootball({ items, locale, equipment }: { items: { name: string; des
                 onClick={next}
                 style={{
                   marginTop: 12, padding: '8px 16px', borderRadius: 8,
-                  background: '#041540', border: '1px solid #132d6b',
+                  background: '#0c255a', border: '1px solid #2a2a2a',
                   color: '#ccc', fontSize: 12, fontWeight: 600, cursor: 'pointer',
                 }}
               >
@@ -1386,7 +1625,7 @@ function ByteReveal({ items, locale, equipment }: { items: { name: string; desc:
 }
 
 const LANG_BUBBLES_SK = [
-  { name: 'Python', desc: 'Python je jednoduchý, prehľadný a patrí medzi najlepšie jazyky pre začiatočníkov. Používa sa na umelú inteligenciu, automatizáciu, webové aplikácie, analýzu dát, robotiku, kybernetickú bezpečnosť, API a strojové učenie. Práve Python sa budeš učiť v tomto kurze. Používajú ho firmy ako Google, Instagram, Spotify a OpenAI.', color: '#22c55e' },
+  { name: 'Python', desc: 'Python je jednoduchý, prehľadný a patrí medzi najlepšie jazyky pre začiatočníkov. Používa sa na umelú inteligenciu, automatizáciu, webové aplikácie, analýzu dát, robotiku, kybernetickú bezpečnosť, API a strojové učenie. Práve Python sa budeš učiť v tomto kurze. Používajú ho firmy ako Google, Instagram, Spotify a OpenAI.', color: '#3b82f6' },
   { name: 'JavaScript', desc: 'JavaScript poháňa takmer každú modernú webovú stránku. Používa sa na interaktívne webové stránky, webové aplikácie, backend servery a hry v prehliadači. Ak si niekedy klikol/a na tlačidlo na webovej stránke, veľmi pravdepodobne za tým bol JavaScript. Používajú ho firmy ako Meta, Netflix a Airbnb.', color: '#eab308' },
   { name: 'Java', desc: 'Java patrí medzi najrozšírenejšie programovacie jazyky na svete. Beží na Java Virtual Machine, čo znamená, že rovnaký kód funguje na akomkoľvek zariadení. Používa sa v bankových systémoch, podnikových aplikáciách, veľkých firemných systémoch a starších Android aplikáciách.', color: '#ef4444' },
   { name: 'C++', desc: 'C++ je navrhnutý pre maximálny výkon. Používa sa pri tvorbe videohier, herných enginov, robotov a operačných systémov. Poskytuje priamu kontrolu nad pamäťou, čo ho robí rýchlym ale náročnejším na naučenie. Hry ako Fortnite a Unreal Engine sú postavené na C++.', color: '#8b5cf6' },
@@ -1398,7 +1637,7 @@ const LANG_BUBBLES_SK = [
 ];
 
 const LANG_BUBBLES_EN = [
-  { name: 'Python', desc: 'Python is simple, readable and one of the best languages for beginners. It is used for artificial intelligence, automation, web applications, data analysis, robotics, cybersecurity, APIs and machine learning. This is the language you will learn in this course. Companies like Google, Instagram, Spotify and OpenAI use it.', color: '#22c55e' },
+  { name: 'Python', desc: 'Python is simple, readable and one of the best languages for beginners. It is used for artificial intelligence, automation, web applications, data analysis, robotics, cybersecurity, APIs and machine learning. This is the language you will learn in this course. Companies like Google, Instagram, Spotify and OpenAI use it.', color: '#3b82f6' },
   { name: 'JavaScript', desc: 'JavaScript powers almost every modern website. It is used for interactive websites, web applications, backend servers and browser games. If you have ever clicked a button on a website, JavaScript was very likely involved. Companies like Meta, Netflix and Airbnb use it.', color: '#eab308' },
   { name: 'Java', desc: 'Java is one of the most widely used programming languages in the world. It runs on the Java Virtual Machine, meaning the same code works on any device. It powers banking systems, enterprise software, large company infrastructure and older Android applications.', color: '#ef4444' },
   { name: 'C++', desc: 'C++ is designed for maximum performance. It is used for video games, game engines, robotics and operating systems. It provides direct memory control, making it fast but harder to learn. Games like Fortnite and the Unreal Engine are built with C++.', color: '#8b5cf6' },
@@ -1432,15 +1671,20 @@ function PaginatedContent({ text, locale, equipment, onComplete }: { text: strin
   if (pages.length <= 1) {
     return (
       <div>
-        <ByteTip phase="learning" locale={locale} equipment={equipment} sectionIndex={0} />
-        <div style={{ fontSize: 15, color: '#c8c8c8', lineHeight: 1.85 }}>
+        <ByteTip phase="learning" locale={locale} equipment={equipment} sectionIndex={0}
+          {...(() => {
+            const factMatch = text.match(/\u{1F4A1}\s*(.+)\n([\s\S]*?)(?=\n\n|\u{1F4A1}|$)/u);
+            if (factMatch) return { customTip: factMatch[1].trim(), customDetail: factMatch[2].trim() };
+            return { hideBubble: true };
+          })()} />
+        <div style={{ fontSize: 15, color: '#ddd', lineHeight: 1.85 }}>
           {formatContent(text, 'learning')}
         </div>
         <button
           onClick={onComplete}
           style={{
-            width: '100%', padding: '14px', borderRadius: 12, marginTop: 20,
-            background: '#EDEDED', border: 'none', color: '#010d33',
+            width: '100%', padding: '14px', borderRadius: 12, marginTop: 34,
+            background: 'var(--btn-primary, #EDEDED)', border: 'none', color: 'var(--btn-primary-text, #010d33)',
             fontWeight: 700, fontSize: 15, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
           }}
@@ -1467,7 +1711,7 @@ function PaginatedContent({ text, locale, equipment, onComplete }: { text: strin
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.2 }}
-          style={{ fontSize: 15, color: '#c8c8c8', lineHeight: 1.85 }}
+          style={{ fontSize: 15, color: '#ddd', lineHeight: 1.85 }}
         >
           {/* Detect programming languages page and show interactive bubbles */}
           {pages[page].includes('**Python**') && pages[page].includes('**Java**') ? (
@@ -1488,7 +1732,7 @@ function PaginatedContent({ text, locale, equipment, onComplete }: { text: strin
         {pages.map((_, i) => (
           <div key={i} style={{
             width: i === page ? 16 : 6, height: 5, borderRadius: 3,
-            background: i <= page ? '#4ade80' : '#0f2d6b',
+            background: i <= page ? '#4ade80' : '#333',
             transition: 'all 0.3s',
           }} />
         ))}
@@ -1509,7 +1753,7 @@ function PaginatedContent({ text, locale, equipment, onComplete }: { text: strin
         }}
         style={{
           width: '100%', padding: isLast ? '14px' : '12px', borderRadius: isLast ? 12 : 10,
-          background: isLast ? '#EDEDED' : '#041540',
+          background: isLast ? '#EDEDED' : '#0c255a',
           border: isLast ? 'none' : '1px solid rgba(255,255,255,0.08)',
           color: isLast ? '#010d33' : '#ccc',
           fontWeight: isLast ? 700 : 600, fontSize: isLast ? 15 : 14,
@@ -1538,7 +1782,7 @@ function TakeawayCarousel({ items }: { items: string[] }) {
   return (
     <div style={{ position: 'relative' }}>
       <div
-        style={{ overflow: 'hidden', borderRadius: 14, border: '1px solid #0c255a', background: '#000a2b', minHeight: 100 }}
+        style={{ overflow: 'hidden', borderRadius: 14, border: '1px solid #1a1a1a', background: '#010d33', minHeight: 100 }}
         onTouchStart={e => { touchStart.current = e.touches[0].clientX; }}
         onTouchEnd={e => {
           const diff = touchStart.current - e.changedTouches[0].clientX;
@@ -1573,7 +1817,7 @@ function TakeawayCarousel({ items }: { items: string[] }) {
             onClick={() => setActive(i)}
             style={{
               width: i === active ? 16 : 6, height: 6, borderRadius: 3, border: 'none', cursor: 'pointer', padding: 0,
-              background: i === active ? '#4ade80' : '#0f2d6b',
+              background: i === active ? '#4ade80' : '#333',
               transition: 'all 0.3s ease',
             }}
           />
@@ -1589,10 +1833,10 @@ function renderInline(text: string, keyBase: string = 'il'): React.ReactNode {
   const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={`${keyBase}-${i}`} style={{ color: '#EDEDED', fontWeight: 600 }}>{part.slice(2, -2)}</strong>;
+      return <strong key={`${keyBase}-${i}`} style={{ color: 'var(--text, #EDEDED)', fontWeight: 700 }}>{part.slice(2, -2)}</strong>;
     }
     if (part.startsWith('`') && part.endsWith('`')) {
-      return <code key={`${keyBase}-${i}`} style={{ background: '#0c255a', padding: '2px 6px', borderRadius: 4, fontSize: 13, fontFamily: 'JetBrains Mono, monospace', color: '#4ade80' }}>{part.slice(1, -1)}</code>;
+      return <code key={`${keyBase}-${i}`} style={{ background: '#1a1a1a', padding: '2px 6px', borderRadius: 4, fontSize: 13, fontFamily: 'JetBrains Mono, monospace', color: '#4ade80' }}>{part.slice(1, -1)}</code>;
     }
     return part;
   });
@@ -1602,7 +1846,7 @@ function renderInline(text: string, keyBase: string = 'il'): React.ReactNode {
 let bulletListCounter = 0;
 const MARKER_STYLES = [
   { mark: '>', color: '#4ade80' },
-  { mark: '#', color: '#22c55e' },
+  { mark: '#', color: '#3b82f6' },
   { mark: '//', color: '#a855f7' },
   { mark: '>', color: '#f97316' },
   { mark: '#', color: '#06b6d4' },
@@ -1615,19 +1859,84 @@ function BulletList({ lines, keyBase }: { lines: string[]; keyBase: number }) {
   const styleIdx = bulletListCounter++ % MARKER_STYLES.length;
   const { mark, color } = MARKER_STYLES[styleIdx];
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#000a2b', border: '1px solid #0c255a', borderRadius: 12, padding: '10px 14px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 12, padding: '10px 14px' }}>
       {lines.map((bl, bi) => (
         <div key={bi} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '4px 0' }}>
           <span style={{ color, fontWeight: 700, fontSize: 12, lineHeight: 2, flexShrink: 0, textShadow: `0 0 8px ${color}88, 0 0 16px ${color}44` }}>{mark}</span>
-          <span style={{ color: '#c8c8c8', lineHeight: 1.7 }}>{renderInline(bl.trimStart().slice(2), `blt-${keyBase}-${bi}`)}</span>
+          <span style={{ color: '#ddd', lineHeight: 1.7 }}>{renderInline(bl.trimStart().slice(2), `blt-${keyBase}-${bi}`)}</span>
         </div>
       ))}
     </div>
   );
 }
 
+function FactCard({ title, detail }: { title: string; detail: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{
+      background: 'var(--bg-surface, #111)',
+      border: '1px solid var(--border, #1a1a1a)',
+      borderRadius: 12,
+      overflow: 'hidden',
+      marginBottom: 4,
+    }}>
+      <button
+        onClick={() => setOpen(!open)}
+        style={{
+          width: '100%', padding: '12px 16px',
+          display: 'flex', alignItems: 'center', gap: 10,
+          background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left',
+        }}
+      >
+        <Lightbulb size={16} color="#4ade80" style={{ flexShrink: 0 }} />
+        <span style={{ flex: 1, fontSize: 14, fontWeight: 600, color: 'var(--text, #eee)', lineHeight: 1.4 }}>{title}</span>
+        <motion.div animate={{ rotate: open ? 90 : 0 }} transition={{ duration: 0.15 }}>
+          <ChevronRight size={16} color="var(--text-hint, #555)" />
+        </motion.div>
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div style={{ padding: '0 16px 14px', fontSize: 13, color: 'var(--text-secondary, #aaa)', lineHeight: 1.7 }}>
+              {detail}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function highlightCode(code: string, keyPrefix: string) {
+  const regex = /(\b(?:if|else|elif|for|while|def|return|import|from|print|class|in|not|and|or|self|True|False|None|len|type|int|float|str|input|range|list|dict|set|tuple|sorted|map|filter|open)\b|"[^"]*"|'[^']*'|\[|\]|\(|\)|\b\d+\b|#.*$)/gm;
+  return code.split('\n').map((line, li) => (
+    <div key={`${keyPrefix}-${li}`}>
+      {line.split(regex).map((part, pi) => {
+        if (!part) return null;
+        if (/^(if|else|elif|for|while|def|return|import|from|class|in|not|and|or|self)$/.test(part)) return <span key={pi} style={{ color: '#ff7b72' }}>{part}</span>;
+        if (/^(print|len|type|int|float|str|input|range|list|dict|set|tuple|sorted|map|filter|open)$/.test(part)) return <span key={pi} style={{ color: '#d2a8ff' }}>{part}</span>;
+        if (/^(True|False|None)$/.test(part)) return <span key={pi} style={{ color: '#79c0ff' }}>{part}</span>;
+        if (/^["']/.test(part)) return <span key={pi} style={{ color: '#a5d6ff' }}>{part}</span>;
+        if (/^\d+$/.test(part)) return <span key={pi} style={{ color: '#79c0ff' }}>{part}</span>;
+        if (/^[[\]()]$/.test(part)) return <span key={pi} style={{ color: '#8b949e' }}>{part}</span>;
+        if (/^#/.test(part)) return <span key={pi} style={{ color: '#8b949e' }}>{part}</span>;
+        return <span key={pi}>{part}</span>;
+      })}
+      {'\n'}
+    </div>
+  ));
+}
+
 function formatContent(text: string, phase: string = '') {
   if (!text) return null;
+  // Strip quiz count markers
+  text = text.replace(/<!-- quiz:\d+ -->/g, '');
 
   // First pass: handle markdown ``` code blocks
   // Split by ``` and alternate between text and code
@@ -1641,19 +1950,19 @@ function formatContent(text: string, phase: string = '') {
       const code = parts[p].trim();
       if (code) {
         result.push(
-          <div key={`code-${keyCounter++}`} style={{ marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #0c255a' }}>
-            <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #0c255a', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
-              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
+          <div key={`code-${keyCounter++}`} style={{ marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #1a1a1a' }}>
+            <div style={{ background: '#111', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
             </div>
             <pre style={{
-              background: '#000a2b', margin: 0,
+              background: '#010d33', margin: 0,
               padding: '14px 16px', fontSize: 13, color: '#ccc', lineHeight: 1.7,
               overflow: 'auto', fontFamily: 'JetBrains Mono, Fira Code, monospace',
               whiteSpace: 'pre-wrap',
             }}>
-              {code}
+              {highlightCode(code, `hl-${keyCounter}`)}
             </pre>
           </div>
         );
@@ -1662,7 +1971,21 @@ function formatContent(text: string, phase: string = '') {
     }
 
     // Text block - process paragraphs
-    const blocks = parts[p].split('\n\n');
+    // Pre-process: merge consecutive bullet lines separated by empty lines into one block
+    const rawBlocks = parts[p].split('\n\n');
+    const blocks: string[] = [];
+    for (let bi = 0; bi < rawBlocks.length; bi++) {
+      const block = rawBlocks[bi];
+      const isBulletBlock = block.trim().split('\n').every(l => l.trimStart().startsWith('- ') || !l.trim());
+      if (isBulletBlock && blocks.length > 0) {
+        const prevIsBullet = blocks[blocks.length - 1].trim().split('\n').every(l => l.trimStart().startsWith('- ') || !l.trim());
+        if (prevIsBullet) {
+          blocks[blocks.length - 1] += '\n' + block;
+          continue;
+        }
+      }
+      blocks.push(block);
+    }
 
   for (let i = 0; i < blocks.length; i++) {
     const trimmed = blocks[i].trim();
@@ -1681,31 +2004,36 @@ function formatContent(text: string, phase: string = '') {
     if (/^#*\s*(Review|Opakovanie|Zhrnutie)\s*$/i.test(trimmed)) continue;
     if (/^(Review|Opakovanie)$/i.test(trimmed)) continue;
 
-    // Markdown heading: # Title
-    if (trimmed.startsWith('# ')) {
+    // Fun facts (💡) — skip in content, shown in ByteTip bubble instead
+    if (trimmed.startsWith('\u{1F4A1}')) {
+      continue;
+    }
+
+    // Markdown headings: # Title, ## Title, ### Title
+    if (/^#{1,3}\s+/.test(trimmed)) {
+      const level = trimmed.match(/^(#+)/)?.[1].length || 1;
       const heading = trimmed.replace(/^#+\s*/, '');
+      const fontSize = level === 1 ? 22 : level === 2 ? 19 : 17;
       result.push(
-        <div key={`h-${keyCounter++}`} style={{ marginTop: i > 0 ? 28 : 0, marginBottom: 12 }}>
-          <h3 style={{ fontWeight: 700, fontSize: 17, color: '#EDEDED', margin: 0, marginBottom: 10 }}>
-            {renderInline(heading, `mh-${keyCounter}`)}
-          </h3>
-          <div style={{ width: 36, height: 4, borderRadius: 2, background: '#444' }} />
+        <div key={`h-${keyCounter++}`} style={{ marginTop: i > 0 ? 28 : 0, marginBottom: 12, display: 'flex', alignItems: 'flex-start', gap: level === 3 ? 10 : 0 }}>
+          {level === 3 && <div style={{ width: 4, alignSelf: 'stretch', borderRadius: 3, background: '#4ade80', flexShrink: 0 }} />}
+          <div>
+            <h3 style={{ fontWeight: 700, fontSize, color: 'var(--text, #EDEDED)', margin: 0, marginBottom: level <= 2 ? 10 : 6 }}>
+              {renderInline(heading, `mh-${keyCounter}`)}
+            </h3>
+            {level <= 2 && <div style={{ width: 36, height: 4, borderRadius: 2, background: '#444' }} />}
+          </div>
         </div>
       );
       continue;
     }
 
     // Heading: single short line, no period, not code, no = sign (code assignment)
-    // Must have at least 2 words, not end with question mark (those are content), not be a short sentence
-    if (lines.length === 1 && trimmed.length < 60 && trimmed.length > 5 && trimmed.split(' ').length >= 2 && !trimmed.endsWith('.') && !trimmed.endsWith('?') && !trimmed.endsWith('!') && !trimmed.startsWith('-') && !trimmed.includes(' = ') && !trimmed.includes('(') && !isCodeLine(trimmed)) {
+    if (lines.length === 1 && trimmed.length < 60 && !trimmed.endsWith('.') && !trimmed.startsWith('-') && !trimmed.includes(' = ') && !trimmed.includes('(') && !isCodeLine(trimmed)) {
       // Strip trailing colon for cleaner headings
       const heading = trimmed.endsWith(':') ? trimmed.slice(0, -1) : trimmed;
-      // Check if next block is also a heading → make this one bigger (section heading)
-      const nextBlock = blocks[i + 1]?.trim() || '';
-      const nextIsHeading = nextBlock && nextBlock.length < 60 && !nextBlock.endsWith('.') && !nextBlock.startsWith('-') && !nextBlock.includes(' = ') && !nextBlock.includes('(') && !isCodeLine(nextBlock) && !nextBlock.includes('\n');
-      const isSection = nextIsHeading;
       result.push(
-        <h3 key={`h-${keyCounter++}`} style={{ fontWeight: 700, fontSize: isSection ? 20 : 16, color: '#EDEDED', margin: 0, marginTop: i > 0 ? (isSection ? 36 : 24) : 0, marginBottom: isSection ? 14 : 10 }}>
+        <h3 key={`h-${keyCounter++}`} style={{ fontWeight: 700, fontSize: 16, color: '#EDEDED', margin: 0, marginTop: i > 0 ? 24 : 0, marginBottom: 10 }}>
           {renderInline(heading, `h-${keyCounter}`)}
         </h3>
       );
@@ -1716,14 +2044,14 @@ function formatContent(text: string, phase: string = '') {
     const codeLines = lines.filter(l => isCodeLine(l) || l.trim() === '');
     if (codeLines.length > lines.length * 0.5 && lines.some(l => isCodeLine(l))) {
       result.push(
-        <div key={`pre-${keyCounter++}`} style={{ marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #0c255a' }}>
-          <div style={{ background: '#041540', padding: '4px 14px', borderBottom: '1px solid #0c255a', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#0f2d6b' }} />
+        <div key={`pre-${keyCounter++}`} style={{ marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid #1a1a1a' }}>
+          <div style={{ background: '#111', padding: '4px 14px', borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#333' }} />
           </div>
           <pre style={{
-            background: '#000a2b', margin: 0,
+            background: '#010d33', margin: 0,
             padding: '14px 16px', fontSize: 13, color: '#ccc', lineHeight: 1.7,
             overflow: 'auto', fontFamily: 'JetBrains Mono, Fira Code, monospace',
             whiteSpace: 'pre-wrap',
@@ -1774,12 +2102,12 @@ function formatFacts(text: string) {
 
     return (
       <div key={i} style={{
-        padding: '14px 16px', background: '#000a2b', border: '1px solid #0c255a',
+        padding: '14px 16px', background: '#010d33', border: '1px solid #1a1a1a',
         borderRadius: 12, display: 'flex', gap: 12, alignItems: 'flex-start',
       }}>
         <div style={{
-          width: 28, height: 28, borderRadius: 8, background: '#161616',
-          border: '1px solid #0c255a', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          width: 28, height: 28, borderRadius: 8, background: '#041540',
+          border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center',
           flexShrink: 0, fontSize: 11, fontWeight: 800, color: '#4ade80',
         }}>
           {i + 1}

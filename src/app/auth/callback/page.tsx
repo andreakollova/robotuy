@@ -1,41 +1,68 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { getSupabase } from '@/lib/supabase';
 
 export default function AuthCallback() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
   useEffect(() => {
-    const sb = getSupabase();
-    if (!sb) { router.push('/'); return; }
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const fromApp = params.get('from') === 'app';
 
-    const fromApp = searchParams.get('from') === 'app';
+    if (fromApp && code) {
+      // Capacitor app: redirect to deep link — iOS/Android will open the app
+      // SFSafariViewController will close, DeepLinkHandler will exchange the code
+      window.location.href = `robotuy://auth/callback?code=${code}`;
 
-    // Get the session from URL hash (Supabase puts tokens in hash fragment)
-    sb.auth.getSession().then(({ data }) => {
-      if (fromApp && data.session) {
-        // Redirect immediately to app via custom URL scheme
-        // This will open the app and Safari browser will dismiss
-        window.location.replace(
-          `robotuy://auth?access_token=${data.session.access_token}&refresh_token=${data.session.refresh_token}`
-        );
-        return;
+      // Fallback after 3s if deep link didn't work (e.g. opened in regular browser)
+      setTimeout(async () => {
+        const sb = getSupabase();
+        if (sb) {
+          try { await sb.auth.exchangeCodeForSession(code); } catch {}
+        }
+        window.location.replace('/');
+      }, 3000);
+      return;
+    }
+
+    // Web flow: exchange code and redirect home
+    const handleWeb = async () => {
+      const sb = getSupabase();
+      if (!sb) { window.location.replace('/'); return; }
+
+      if (code) {
+        try {
+          await sb.auth.exchangeCodeForSession(code);
+        } catch (e) {
+          console.error('[AuthCallback] code exchange failed:', e);
+        }
       }
-      router.push('/');
-    });
+
+      // Also check hash fragment (some providers return tokens there)
+      const hash = window.location.hash;
+      if (hash && hash.includes('access_token')) {
+        // Supabase client auto-detects hash tokens via getSession
+        try {
+          await sb.auth.getSession();
+        } catch (e) {
+          console.error('[AuthCallback] hash session failed:', e);
+        }
+      }
+
+      // Wait a moment for session to settle before redirecting
+      setTimeout(() => window.location.replace('/'), 500);
+    };
+    handleWeb();
   }, []);
 
   return (
     <div style={{
       minHeight: '100vh', background: '#010d33',
       display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center', gap: 12,
+      alignItems: 'center', justifyContent: 'center', gap: 8,
     }}>
-      <p style={{ color: '#888', fontSize: 14 }}>Signing you in...</p>
-      <p style={{ color: '#555', fontSize: 11 }}>Returning to Robotuy app...</p>
+      <p style={{ color: '#888', fontSize: 14 }}>Signing in...</p>
+      <p style={{ color: '#444', fontSize: 11 }}>Returning to Robotuy...</p>
     </div>
   );
 }

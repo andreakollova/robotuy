@@ -53,7 +53,7 @@ function CheckoutForm({ onSuccess, onCancel, isSetup }: { onSuccess: () => void;
         disabled={!stripe || loading}
         style={{
           width: '100%', padding: '16px', borderRadius: 14, marginTop: 16,
-          background: loading ? '#0c255a' : '#4ade80',
+          background: loading ? '#222' : '#4ade80',
           color: loading ? '#555' : '#000',
           fontWeight: 700, fontSize: 15, border: 'none', cursor: loading ? 'not-allowed' : 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,

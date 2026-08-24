@@ -15,7 +15,73 @@ import { supabase } from '@/lib/supabase';
 
 interface LeaderboardEntry { display_name: string; xp: number; }
 
-const BOT_NAMES = ['Byte', 'Pixel', 'Nova', 'Echo', 'Spark', 'Luna', 'Atlas', 'Kai', 'Milo', 'Zara'];
+// Generate deterministic bot leaderboard — grows by ~3 users/day
+function generateBots(): LeaderboardEntry[] {
+  const names = [
+    'Emma','Liam','Sofia','Noah','Mia','Lucas','Ella','Oliver','Aria','Ethan',
+    'Luna','James','Zara','Leo','Nora','Kai','Lily','Finn','Ivy','Oscar',
+    'Ruby','Max','Eva','Adam','Sara','Ben','Maya','Tom','Lea','Sam',
+    'Nina','Dan','Hana','Alex','Zoe','Jake','Iris','Cole','Ema','Hugo',
+    'Anna','Erik','Lucia','Mark','Petra','Jaro','Katka','Filip','Simona','Tomas',
+    'Marek','Jana','Patrik','Monika','Lukas','Tereza','Matej','Natalia','David','Veronika',
+    'Peter','Alena','Roman','Diana','Jakub','Kristina','Martin','Barbora','Juraj','Lenka',
+    'Stefan','Ivana','Andrej','Silvia','Michal','Denisa','Riso','Zuzana','Pavol','Martina',
+    'Miro','Danka','Vlado','Erika','Tibor','Renata','Boris','Lucia2','Igor','Andrea2',
+    'Otto','Vera','Rado','Sonja','Jozef','Maria','Fero','Dasa','Karol','Betka',
+    'Dusan','Gabika','Marcel','Timea','Robert','Tamara','Viktor','Nikola','Adrian','Viki',
+    'Simon','Klara','Denis','Sarka','Kevin','Rebeka','Matias','Viktoria','Dominik','Amelia',
+    'Leon','Clara','Felix','Stella','Noel','Alma','Aaron','Viola','Ryan','Helena',
+    'Tyler','Elisa','Caleb','Freya','Blake','Chloe','Chase','Alina','Kyle','Nadia',
+    'Sean','Tina','Joel','Greta','Paul','Lena','Toby','Dora','Jack','Rosa',
+    'Owen','Maja','Axel','Lia','Troy','Kira','Dean','Ines','Reid','Tara',
+    'Brent','Olga','Carl','Paula','Drew','Rita','Glen','Mara','Hank','Nela',
+    'Ivan','Sona','Lars','Nika','Neil','Lina','Ralf','Bela','Aron','Gabi',
+    'Emil','Dina','Hans','Lara','Rene','Nina2','Luis','Aneta','Rudo','Linda',
+    'Alan','Beata','Chris','Daria','Elias','Flora','Georg','Hanna','Isak','Julia',
+    'Kamil','Laura','Matus','Nicol','Oskar','Patrizia','Quentin','Rachel','Samo','Tessa',
+    'Uros','Valeria','Walter','Xenia','Yuri','Zlata','Albert','Brigita','Conrad','Dalma',
+    'Eduard','Frida','Gustav','Helga','Ilona','Johan','Karla','Leopold','Magda','Norbert',
+    'Ondrej','Paulina','Richard','Sabina','Teodor','Ursula','Viliam','Wendel','Xaver','Yvona',
+    'Zdeno','Alicia','Bruno','Carmen','Damian','Elina','Fabian','Gloria','Henrik','Ingrid',
+    'Jason','Katarina','Lorenzo','Milena','Nathan','Olivia','Patrick','Quinn','Roxana','Sandra',
+    'Tristan','Ulrika','Vanesa','Wesley','Ximena','Yasmin','Zoran','Abel','Bianca','Cyril',
+    'Dario','Elena','Franco','Gina','Hugo2','Ida','Jiri','Karin','Leos','Monica',
+    'Natan','Oleg','Paco','Raisa','Sergio','Tatiana','Urban','Vesna','Xander','Yana',
+    'Zita','Anton','Blanka','Cesar','Danka2','Enrico','Fiona','Gregor','Hilda','Imrich',
+    'Judit','Klaus','Liana','Milos','Noemi','Omar','Petra2','Rafael','Stella2','Tudor',
+    'Ula','Vida','Waldo','Xena','Yolanda','Zeno','Artur','Bozena','Cyrus','Dita',
+    'Eugen','Felicia','Goran','Hedviga','Ivor','Joana','Konrad','Livia','Milan','Nadia2',
+    'Orest','Paloma','Rasto','Sonja2','Tibor2','Uma','Vilma','Werner','Xeno','Yveta',
+  ];
+  // Remove any names with numbers
+  const cleanNames = names.filter(n => !/\d/.test(n));
+
+  const startDate = new Date('2026-07-01');
+  const today = new Date();
+  const daysSinceStart = Math.floor((today.getTime() - startDate.getTime()) / 86400000);
+  const totalBots = 120 + daysSinceStart * 3;
+
+  // Seeded random for consistency within same day
+  const seed = (n: number) => {
+    let x = Math.sin(n * 9301 + 49297) * 49297;
+    return x - Math.floor(x);
+  };
+
+  // Shuffle names deterministically
+  const shuffled = [...cleanNames].sort((a, b) => seed(a.charCodeAt(0) * 100 + b.charCodeAt(0)) - 0.5);
+
+  const bots: LeaderboardEntry[] = [];
+  for (let i = 0; i < totalBots; i++) {
+    const name = shuffled[i % shuffled.length];
+    // XP: steep decay so many users have low XP (realistic distribution)
+    const rank = i + 1;
+    const baseXp = Math.round(6000 * Math.pow(0.985, rank));
+    const dailyVariation = Math.round(seed(i * 1000 + daysSinceStart) * 40 - 15);
+    const xp = Math.max(0, baseXp + dailyVariation);
+    bots.push({ display_name: name, xp });
+  }
+  return bots;
+}
 
 const greetings = (name: string, streak: number, locale: 'en' | 'sk', lessonsCount: number) => {
   const h = new Date().getHours();
@@ -48,7 +114,7 @@ function CountdownOverlay() {
 
   return (
     <div style={{
-      position: 'fixed', inset: 0, zIndex: 9999, background: '#010d33',
+      position: 'fixed', inset: 0, zIndex: 9999, background: '#000',
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 32,
     }}>
       <img src="/logorobotuy.png" alt="Robotuy" style={{ height: 40, objectFit: 'contain' }} />
@@ -77,12 +143,12 @@ function CountdownOverlay() {
 }
 
 export default function HomePage() {
-  const { checkStreak, name, byteMood, equipment, streak, completedLessons, xp, hearts, maxHearts, gems, coffees } = useUserStore();
+  const { name, byteMood, equipment, streak, completedLessons, xp, hearts, maxHearts, gems, coffees } = useUserStore();
   const { locale } = useLocaleStore();
 
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
 
-  useEffect(() => { checkStreak(); }, []);
+  // Streak is checked only on real actions (opening lessons, completing quizzes, etc.)
 
   // Fetch real leaderboard from Supabase
   useEffect(() => {
@@ -90,9 +156,7 @@ export default function HomePage() {
       try {
         const { data } = await supabase.from('user_state').select('display_name, xp').order('xp', { ascending: false }).limit(50);
         const realUsers: LeaderboardEntry[] = (data || []).filter((u: any) => u.display_name && u.xp > 0);
-        // Fill with bots if less than 15 users
-        const botXps = [2800, 2100, 1500, 980, 750, 520, 340, 210, 130, 60];
-        const bots: LeaderboardEntry[] = BOT_NAMES.map((n, i) => ({ display_name: n, xp: botXps[i] || 50 }));
+        const bots = generateBots();
         const combined = [...realUsers, ...bots].sort((a, b) => b.xp - a.xp);
         // Deduplicate by name
         const seen = new Set<string>();
@@ -161,7 +225,7 @@ export default function HomePage() {
               {[
                 { icon: Flame, value: skStreak(streak, locale), label: s('dayStreakLabel', locale), tooltip: s('streakTooltip', locale), iconColor: streak > 0 ? '#fff' : '#555' },
                 { icon: Zap, value: xp.toLocaleString(), label: s('totalXp', locale), tooltip: s('xpTooltip', locale), iconColor: '#fff' },
-                { icon: BookOpen, value: completedLessons.length, label: s('lessonsDone', locale), tooltip: s('lessonsTooltip', locale), iconColor: '#fff' },
+                { icon: BookOpen, value: completedLessons.filter(l => l.startsWith('theory-')).length, label: s('lessonsDone', locale), tooltip: s('lessonsTooltip', locale), iconColor: '#fff' },
               ].map(({ icon: Icon, value, label, tooltip, iconColor }) => (
                 <div className="stat-card" key={label} style={{ position: 'relative' }}>
                   <div className="stat-card-icon">
@@ -172,7 +236,7 @@ export default function HomePage() {
                     <div className="stat-card-label">{label}</div>
                   </div>
                   <div className="stat-info-trigger" style={{ position: 'relative', cursor: 'pointer' }}>
-                    <Info size={13} color="#0f2d6b" />
+                    <Info size={13} color="#333" />
                     <div className="stat-info-tooltip">{tooltip}</div>
                   </div>
                 </div>
@@ -187,7 +251,7 @@ export default function HomePage() {
                   <div className="stat-card-label">{s('gems', locale)}</div>
                 </div>
                 <div className="stat-info-trigger" style={{ position: 'relative', cursor: 'pointer' }}>
-                  <Info size={13} color="#0f2d6b" />
+                  <Info size={13} color="#333" />
                   <div className="stat-info-tooltip">{s('gemsTooltip', locale)}</div>
                 </div>
               </div>
@@ -195,7 +259,7 @@ export default function HomePage() {
             </div>
 
             {/* Byte character + mini leaderboard on desktop */}
-            <div style={{ marginTop: 20, padding: 24, background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14, textAlign: 'center' }}>
+            <div style={{ marginTop: 20, padding: 24, background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 14, textAlign: 'center' }}>
               <Byte mood={byteMood} size={100} equipment={equipment} />
               <p style={{ fontSize: 13, color: '#888', marginTop: 8, marginBottom: 16 }}>
                 {byteMood === 'celebrating' ? s('greatJob', locale) : byteMood === 'worried' ? s('keepTrying', locale) : byteMood === 'proud' ? s('onFire', locale) : s('readyToLearn', locale)}
@@ -206,12 +270,13 @@ export default function HomePage() {
                 // Find current user's rank
                 const myIdx = leaderboard.findIndex(u => u.display_name === name);
                 const myRank = myIdx >= 0 ? myIdx + 1 : leaderboard.length + 1;
-                // Show 2 above + user + 2 below
-                const startIdx = Math.max(0, (myIdx >= 0 ? myIdx : leaderboard.length) - 2);
-                const slice = leaderboard.slice(startIdx, startIdx + 5);
-                // If user not in leaderboard, insert them
+                // Show 3 above + user + 3 below
+                const startIdx = Math.max(0, (myIdx >= 0 ? myIdx : leaderboard.length) - 3);
+                const slice = leaderboard.slice(startIdx, startIdx + 7);
+                // If user not in leaderboard, insert them above others with same XP
                 if (myIdx < 0 && name) {
-                  slice.splice(2, 0, { display_name: name, xp });
+                  const insertIdx = slice.findIndex(u => u.xp <= xp);
+                  slice.splice(insertIdx >= 0 ? insertIdx : slice.length, 0, { display_name: name, xp });
                 }
                 return (
                   <div style={{ textAlign: 'left' }}>

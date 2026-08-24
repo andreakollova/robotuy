@@ -51,7 +51,7 @@ function PreviewPanel({ projectId, variables }: { projectId: string; variables: 
     'todo-list': TodoPreview,
   };
   const Comp = map[projectId];
-  if (!Comp) return <div style={{ padding: 40, textAlign: 'center', color: '#0c255a', fontSize: 13 }}>Preview</div>;
+  if (!Comp) return <div style={{ padding: 40, textAlign: 'center', color: '#333', fontSize: 13 }}>Preview</div>;
   return <Comp variables={variables} />;
 }
 
@@ -157,7 +157,7 @@ function QuizView({ step, onComplete, locale }: { step: ProjectStep; onComplete:
         })}
       </div>
       {!res && <button onClick={() => sel !== null && setRes(step.quizOptions![sel].correct ? 'ok' : 'bad')} disabled={sel === null} style={{
-        padding: '14px 32px', background: sel !== null ? '#22c55e' : '#0c255a', color: sel !== null ? '#000' : '#666',
+        padding: '14px 32px', background: sel !== null ? '#22c55e' : '#333', color: sel !== null ? '#000' : '#666',
         border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: sel !== null ? 'pointer' : 'default', alignSelf: 'flex-start',
       }}>{locale === 'sk' ? 'Skontrolovať' : 'Check'}</button>}
       {res === 'ok' && (
@@ -220,7 +220,7 @@ function FillCodeView({ step, onComplete, locale }: { step: ProjectStep; onCompl
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       {step.prompt && <p style={{ color: '#ccc', fontSize: 15 }}>{step.prompt}</p>}
-      <div style={{ background: '#0c255a', borderRadius: 12, padding: '20px 24px', fontFamily: 'var(--font-mono)', fontSize: 14, lineHeight: 2.2, border: '1px solid rgba(255,255,255,0.08)', overflow: 'auto' }}>
+      <div style={{ background: '#1a1a1a', borderRadius: 12, padding: '20px 24px', fontFamily: 'var(--font-mono)', fontSize: 14, lineHeight: 2.2, border: '1px solid rgba(255,255,255,0.08)', overflow: 'auto' }}>
         {lines.map((line, li) => {
           const parts = line.split('___');
           if (parts.length === 1) return <div key={li} style={{ color: '#a0a0a0' }}>{line || '\u00A0'}</div>;
@@ -230,7 +230,7 @@ function FillCodeView({ step, onComplete, locale }: { step: ProjectStep; onCompl
               <span style={{ color: '#a0a0a0' }}>{parts[0]}</span>
               <input value={answers[b?.id || ''] || ''} onChange={e => setAnswers(p => ({ ...p, [b?.id || '']: e.target.value }))}
                 placeholder="..." disabled={res === 'ok'} autoFocus={bi === 1} style={{
-                  background: res === 'ok' ? '#22c55e20' : '#000a2b', border: '2px solid',
+                  background: res === 'ok' ? '#22c55e20' : '#010d33', border: '2px solid',
                   borderColor: res === 'ok' ? '#22c55e' : res === 'bad' ? '#ef4444' : '#22c55e60',
                   borderRadius: 6, padding: '4px 12px', color: '#fff', fontFamily: 'inherit', fontSize: 14, minWidth: 100, maxWidth: 240, outline: 'none',
                 }} />
@@ -259,10 +259,10 @@ function FillCodeView({ step, onComplete, locale }: { step: ProjectStep; onCompl
       {hintIdx >= 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {effectiveHints.slice(0, hintIdx + 1).map((h, i) => (
-            <div key={i} style={{ padding: '12px 16px', background: '#0c255a', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)', fontSize: 14, color: '#bbb' }}>
+            <div key={i} style={{ padding: '12px 16px', background: '#1a1a1a', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)', fontSize: 14, color: '#bbb' }}>
               <span style={{ color: '#f59e0b', fontWeight: 600, marginRight: 8 }}>{locale === 'sk' ? 'Nápoveda' : 'Hint'} {i + 1}:</span>
               {h.text}
-              {(h as any).code && <pre style={{ marginTop: 8, padding: '8px 12px', background: '#010d33', borderRadius: 6, color: '#22c55e', fontSize: 13 }}>{(h as any).code}</pre>}
+              {(h as any).code && <pre style={{ marginTop: 8, padding: '8px 12px', background: '#111', borderRadius: 6, color: '#22c55e', fontSize: 13 }}>{(h as any).code}</pre>}
             </div>
           ))}
           {hintIdx >= effectiveHints.length - 1 && !showSolution && (
@@ -272,7 +272,7 @@ function FillCodeView({ step, onComplete, locale }: { step: ProjectStep; onCompl
             }}><Eye size={14} /> {locale === 'sk' ? 'Zobraziť odpoveď' : 'Show answer'}</button>
           )}
           {showSolution && (
-            <div style={{ padding: 16, background: '#010d33', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ padding: 16, background: '#111', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' }}>
               <pre style={{ color: '#22c55e', fontSize: 13, whiteSpace: 'pre-wrap' }}>{blanks.map(b => b.answer).join(', ')}</pre>
             </div>
           )}
@@ -357,7 +357,7 @@ function WriteCodeView({ step, onComplete, locale, onVariables }: {
 
       {/* Pyodide loading indicator */}
       {pyLoading && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: '#0c255a', borderRadius: 8, fontSize: 13, color: '#666' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: '#1a1a1a', borderRadius: 8, fontSize: 13, color: '#666' }}>
           <Loader2 size={14} className="spin" /> {locale === 'sk' ? 'Načítavam Python engine...' : 'Loading Python engine...'}
         </div>
       )}
@@ -380,7 +380,7 @@ function WriteCodeView({ step, onComplete, locale, onVariables }: {
       {/* Buttons */}
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
         <button onClick={handleRun} disabled={!pyReady || running} style={{
-          padding: '12px 24px', background: pyReady && !running ? '#22c55e' : '#0c255a',
+          padding: '12px 24px', background: pyReady && !running ? '#22c55e' : '#333',
           color: pyReady && !running ? '#000' : '#666', border: 'none', borderRadius: 10, fontSize: 14,
           fontWeight: 700, cursor: pyReady && !running ? 'pointer' : 'default',
           display: 'flex', alignItems: 'center', gap: 8,
@@ -413,10 +413,10 @@ function WriteCodeView({ step, onComplete, locale, onVariables }: {
       {hintIdx >= 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {hints.slice(0, hintIdx + 1).map((h, i) => (
-            <div key={i} style={{ padding: '12px 16px', background: '#0c255a', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)', fontSize: 14, color: '#bbb' }}>
+            <div key={i} style={{ padding: '12px 16px', background: '#1a1a1a', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)', fontSize: 14, color: '#bbb' }}>
               <span style={{ color: '#f59e0b', fontWeight: 600, marginRight: 8 }}>{locale === 'sk' ? 'Nápoveda' : 'Hint'} {i + 1}:</span>
               {h.text}
-              {(h as any).code && <pre style={{ marginTop: 8, padding: '8px 12px', background: '#010d33', borderRadius: 6, color: '#22c55e', fontSize: 13 }}>{(h as any).code}</pre>}
+              {(h as any).code && <pre style={{ marginTop: 8, padding: '8px 12px', background: '#111', borderRadius: 6, color: '#22c55e', fontSize: 13 }}>{(h as any).code}</pre>}
             </div>
           ))}
           {hintIdx >= hints.length - 1 && !showSolution && step.solution && (
@@ -426,7 +426,7 @@ function WriteCodeView({ step, onComplete, locale, onVariables }: {
             }}><Eye size={14} /> {locale === 'sk' ? 'Zobraziť riešenie' : 'Show solution'}</button>
           )}
           {showSolution && step.solution && (
-            <div style={{ padding: 16, background: '#010d33', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ padding: 16, background: '#111', borderRadius: 10, border: '1px solid rgba(255,255,255,0.06)' }}>
               <pre style={{ color: '#22c55e', fontSize: 13, whiteSpace: 'pre-wrap' }}>{step.solution}</pre>
             </div>
           )}
@@ -585,7 +585,7 @@ export default function ProjectPage() {
           <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{project.title}</div>
           <div style={{ fontSize: 12, color: '#555' }}>{completedCount}/{totalSteps} {locale === 'sk' ? 'krokov' : 'steps'}</div>
         </div>
-        <div style={{ width: 120, height: 6, background: '#0c255a', borderRadius: 3, overflow: 'hidden' }}>
+        <div style={{ width: 120, height: 6, background: '#1a1a1a', borderRadius: 3, overflow: 'hidden' }}>
           <div style={{ width: `${progress * 100}%`, height: '100%', background: '#22c55e', borderRadius: 3, transition: 'width 0.5s' }} />
         </div>
         {/* Download */}
@@ -649,7 +649,7 @@ export default function ProjectPage() {
                     borderRadius: 12, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
                   }}><Download size={16} /> {locale === 'sk' ? 'Stiahnuť kód' : 'Download Code'}</button>
                   <Link href="/topics" style={{
-                    padding: '14px 28px', background: '#0c255a', color: '#ccc', borderRadius: 12,
+                    padding: '14px 28px', background: '#1a1a1a', color: '#ccc', borderRadius: 12,
                     fontWeight: 600, textDecoration: 'none', border: '1px solid rgba(255,255,255,0.1)',
                   }}>{locale === 'sk' ? 'Späť na projekty' : 'Back to Projects'}</Link>
                 </div>
@@ -662,7 +662,7 @@ export default function ProjectPage() {
         <div className="project-preview">
           <div style={{
             width: 320, minHeight: '100%', borderLeft: '1px solid rgba(255,255,255,0.06)',
-            background: '#000a2b', overflowY: 'auto',
+            background: '#010d33', overflowY: 'auto',
           }}>
             <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)', fontSize: 11, fontWeight: 700, color: '#555', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               {locale === 'sk' ? 'Náhľad aplikácie' : 'App Preview'}
@@ -677,7 +677,7 @@ export default function ProjectPage() {
         <div className="unlock-overlay" onClick={() => setUnlockConfirm(null)}>
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
             onClick={e => e.stopPropagation()}
-            style={{ background: '#0c255a', borderRadius: 16, padding: 24, maxWidth: 340, width: '90%', border: '1px solid rgba(255,255,255,0.1)' }}>
+            style={{ background: '#1a1a1a', borderRadius: 16, padding: 24, maxWidth: 340, width: '90%', border: '1px solid rgba(255,255,255,0.1)' }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 8 }}>
               {locale === 'sk' ? 'Odomknúť krok?' : 'Unlock step?'}
             </h3>
@@ -686,7 +686,7 @@ export default function ProjectPage() {
             </p>
             <div style={{ display: 'flex', gap: 10 }}>
               <button onClick={() => setUnlockConfirm(null)} style={{
-                flex: 1, padding: '12px', borderRadius: 10, background: '#0c255a', color: '#aaa',
+                flex: 1, padding: '12px', borderRadius: 10, background: '#222', color: '#aaa',
                 border: 'none', fontWeight: 600, cursor: 'pointer', fontSize: 13,
               }}>{locale === 'sk' ? 'Zostať tu' : 'Stay here'}</button>
               <button onClick={() => {
@@ -720,7 +720,7 @@ export default function ProjectPage() {
           .project-preview { display: block !important; }
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .unlock-overlay { position: fixed; inset: 0; background: rgba(1,13,51,0.8); z-index: 400; display: flex; align-items: center; justify-content: center; }
+        .unlock-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 400; display: flex; align-items: center; justify-content: center; }
         .spin { animation: spin 1s linear infinite; }
         .theory-content p { margin: 0 0 8px; }
         .theory-content h1 { font-size: 22px; font-weight: 700; color: #fff; margin: 20px 0 8px; }
@@ -730,9 +730,9 @@ export default function ProjectPage() {
         .theory-content ul { padding-left: 20px; margin: 4px 0 8px; }
         .theory-content li { margin: 2px 0; color: #bbb; }
         .theory-content strong { color: #fff; }
-        .theory-content .code-block { background: #0c255a; border-radius: 10px; padding: 16px 20px; margin: 8px 0; overflow-x: auto; border: 1px solid rgba(255,255,255,0.06); }
+        .theory-content .code-block { background: #1a1a1a; border-radius: 10px; padding: 16px 20px; margin: 8px 0; overflow-x: auto; border: 1px solid rgba(255,255,255,0.06); }
         .theory-content .code-block code { color: #22c55e; font-family: var(--font-mono); font-size: 13px; white-space: pre; }
-        .theory-content .inline-code { background: #0c255a; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 13px; color: #22c55e; }
+        .theory-content .inline-code { background: #1a1a1a; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 13px; color: #22c55e; }
         .theory-content .md-table { width: 100%; border-collapse: collapse; margin: 8px 0; }
         .theory-content .md-table th { padding: 8px 12px; text-align: left; font-weight: 600; color: #fff; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); font-size: 13px; }
         .theory-content .md-table td { padding: 8px 12px; color: #bbb; border: 1px solid rgba(255,255,255,0.06); font-size: 13px; }

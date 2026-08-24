@@ -80,7 +80,7 @@ function getAPNsToken(): string {
 
 async function sendPush(deviceToken: string, title: string, body: string) {
   const apnsToken = getAPNsToken();
-  const bundleId = process.env.APNS_BUNDLE_ID || 'sk.robotuy.app';
+  const bundleId = process.env.APNS_BUNDLE_ID || 'app.robotuy';
   const host = 'https://api.push.apple.com';
 
   const res = await fetch(`${host}/3/device/${deviceToken}`, {

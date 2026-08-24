@@ -58,13 +58,13 @@ export default function LessonPath() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: mi * 0.04 }}
-            style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 20, overflow: 'hidden' }}
+            style={{ background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 20, overflow: 'hidden' }}
           >
             <button
               onClick={() => toggleModule(modKey)}
               style={{ width: '100%', padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', background: 'none', border: 'none', textAlign: 'left' }}
             >
-              <div style={{ width: 40, height: 40, borderRadius: 12, background: '#041540', border: '1px solid #0c255a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: '#111', border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <GraduationCap size={18} color="#666" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -72,7 +72,7 @@ export default function LessonPath() {
                   {mod.title}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <div style={{ flex: 1, height: 3, borderRadius: 2, background: '#0c255a', overflow: 'hidden' }}>
+                  <div style={{ flex: 1, height: 3, borderRadius: 2, background: '#1a1a1a', overflow: 'hidden' }}>
                     <div style={{ width: `${pct}%`, height: '100%', background: '#fff', borderRadius: 2, transition: 'width 0.4s' }} />
                   </div>
                   <span style={{ fontSize: 11, color: '#888', fontWeight: 600, flexShrink: 0 }}>
@@ -101,7 +101,7 @@ export default function LessonPath() {
                         <motion.button
                           key={lesson.id}
                           onClick={() => router.push(`/theory/${lesson.id}`)}
-                          whileHover={{ background: '#041540' }}
+                          whileHover={{ background: '#111' }}
                           whileTap={{ scale: 0.99 }}
                           style={{
                             width: '100%', display: 'flex', alignItems: 'center', gap: 14,
@@ -112,7 +112,7 @@ export default function LessonPath() {
                           <div style={{
                             width: 44, height: 44, borderRadius: 14, flexShrink: 0,
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            background: done ? '#fff' : '#041540',
+                            background: done ? '#fff' : '#111',
                             border: done ? 'none' : '1px solid #1f1f1f',
                           }}>
                             {done
@@ -135,7 +135,7 @@ export default function LessonPath() {
                             border: done ? '1px solid #1f1f1f' : 'none',
                           }}>
                             {done
-                              ? <Check size={14} color="#0f2d6b" />
+                              ? <Check size={14} color="#333" />
                               : <Play size={13} color="#000" fill="#000" />
                             }
                           </div>
@@ -153,11 +153,11 @@ export default function LessonPath() {
       {/* Divider between theory and practice */}
       {dbModules.length > 0 && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '16px 0 8px' }}>
-          <div style={{ height: 1, flex: 1, background: '#0c255a' }} />
+          <div style={{ height: 1, flex: 1, background: '#1a1a1a' }} />
           <span style={{ fontSize: 10, fontWeight: 600, color: '#888', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
             {s('practice', locale)}
           </span>
-          <div style={{ height: 1, flex: 1, background: '#0c255a' }} />
+          <div style={{ height: 1, flex: 1, background: '#1a1a1a' }} />
         </div>
       )}
 
@@ -174,14 +174,14 @@ export default function LessonPath() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: mi * 0.08 }}
-            style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 20, overflow: 'hidden' }}
+            style={{ background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 20, overflow: 'hidden' }}
           >
             {/* Module header - tap to collapse */}
             <button
               onClick={() => toggleModule(module.id)}
               style={{ width: '100%', padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', background: 'none', border: 'none', textAlign: 'left' }}
             >
-              <div style={{ width: 40, height: 40, borderRadius: 12, background: '#041540', border: '1px solid #0c255a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: '#111', border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <Code size={18} color="#666" />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -190,7 +190,7 @@ export default function LessonPath() {
                 </div>
                 {/* Progress bar */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <div style={{ flex: 1, height: 3, borderRadius: 2, background: '#0c255a', overflow: 'hidden' }}>
+                  <div style={{ flex: 1, height: 3, borderRadius: 2, background: '#1a1a1a', overflow: 'hidden' }}>
                     <div style={{ width: `${pct}%`, height: '100%', background: '#fff', borderRadius: 2, transition: 'width 0.4s' }} />
                   </div>
                   <span style={{ fontSize: 11, color: '#888', fontWeight: 600, flexShrink: 0 }}>
@@ -218,11 +218,11 @@ export default function LessonPath() {
                       <div key={unit.id}>
                         {/* Unit label */}
                         <div style={{ padding: '10px 20px 6px', display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <div style={{ height: 1, flex: 1, background: '#041540' }} />
+                          <div style={{ height: 1, flex: 1, background: '#111' }} />
                           <span style={{ fontSize: 10, color: '#888', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                             {unit.title}
                           </span>
-                          <div style={{ height: 1, flex: 1, background: '#041540' }} />
+                          <div style={{ height: 1, flex: 1, background: '#111' }} />
                         </div>
 
                         {/* Lessons */}
@@ -235,7 +235,7 @@ export default function LessonPath() {
                             <motion.button
                               key={lesson.id}
                               onClick={() => router.push(`/lesson/${lesson.id}`)}
-                              whileHover={{ background: '#041540' }}
+                              whileHover={{ background: '#111' }}
                               whileTap={{ scale: 0.99 }}
                               style={{
                                 width: '100%', display: 'flex', alignItems: 'center', gap: 14,
@@ -248,7 +248,7 @@ export default function LessonPath() {
                               <div style={{
                                 width: 44, height: 44, borderRadius: 14, flexShrink: 0,
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                background: done ? '#fff' : '#041540',
+                                background: done ? '#fff' : '#111',
                                 border: done ? 'none' : '1px solid #1f1f1f',
                               }}>
                                 {done
@@ -275,7 +275,7 @@ export default function LessonPath() {
                                 border: done ? '1px solid #1f1f1f' : 'none',
                               }}>
                                 {done
-                                  ? <Check size={14} color="#0f2d6b" />
+                                  ? <Check size={14} color="#333" />
                                   : <Play size={13} color="#000" fill="#000" />
                                 }
                               </div>
@@ -286,11 +286,11 @@ export default function LessonPath() {
                         {/* Checkpoint badge */}
                         {unit.isCheckpoint && (
                           <div style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <div style={{ height: 1, flex: 1, background: '#041540' }} />
-                            <span style={{ fontSize: 10, color: '#132d6b', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                            <div style={{ height: 1, flex: 1, background: '#111' }} />
+                            <span style={{ fontSize: 10, color: '#2a2a2a', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                               {s('checkpoint', locale)}
                             </span>
-                            <div style={{ height: 1, flex: 1, background: '#041540' }} />
+                            <div style={{ height: 1, flex: 1, background: '#111' }} />
                           </div>
                         )}
                       </div>

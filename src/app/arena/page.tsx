@@ -436,14 +436,14 @@ export default function ArenaPage() {
       ) : (
         <div style={{
           padding: '16px 20px', borderRadius: 14,
-          background: 'rgba(255,255,255,0.03)', border: '1px solid #0c255a',
+          background: 'rgba(255,255,255,0.03)', border: '1px solid #1a1a1a',
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
         }}>
           {/* Arrow row: up */}
           <motion.div
             animate={{ y: [0, -2, 0] }}
             transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ width: 44, height: 36, borderRadius: 8, background: '#161616', border: '1px solid #132d6b', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}
+            style={{ width: 44, height: 36, borderRadius: 8, background: '#041540', border: '1px solid #2a2a2a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}
           >
             <ArrowUp size={16} />
           </motion.div>
@@ -452,21 +452,21 @@ export default function ArenaPage() {
             <motion.div
               animate={{ x: [0, -2, 0] }}
               transition={{ duration: 1.2, repeat: Infinity, delay: 0.3, ease: 'easeInOut' }}
-              style={{ width: 44, height: 36, borderRadius: 8, background: '#161616', border: '1px solid #132d6b', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}
+              style={{ width: 44, height: 36, borderRadius: 8, background: '#041540', border: '1px solid #2a2a2a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}
             >
               <ArrowLeftIcon size={16} />
             </motion.div>
             <motion.div
               animate={{ y: [0, 2, 0] }}
               transition={{ duration: 1.2, repeat: Infinity, delay: 0.15, ease: 'easeInOut' }}
-              style={{ width: 44, height: 36, borderRadius: 8, background: '#161616', border: '1px solid #132d6b', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}
+              style={{ width: 44, height: 36, borderRadius: 8, background: '#041540', border: '1px solid #2a2a2a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}
             >
               <ArrowDown size={16} />
             </motion.div>
             <motion.div
               animate={{ x: [0, 2, 0] }}
               transition={{ duration: 1.2, repeat: Infinity, delay: 0.3, ease: 'easeInOut' }}
-              style={{ width: 44, height: 36, borderRadius: 8, background: '#161616', border: '1px solid #132d6b', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}
+              style={{ width: 44, height: 36, borderRadius: 8, background: '#041540', border: '1px solid #2a2a2a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}
             >
               <ArrowRightIcon size={16} />
             </motion.div>
@@ -477,7 +477,7 @@ export default function ArenaPage() {
             transition={{ duration: 1.5, repeat: Infinity, delay: 0.8, ease: 'easeInOut' }}
             style={{
               width: 144, height: 32, borderRadius: 8,
-              background: '#161616', border: '1px solid #132d6b',
+              background: '#041540', border: '1px solid #2a2a2a',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 10, fontWeight: 700, color: '#4ade80', letterSpacing: '0.08em',
             }}
@@ -523,11 +523,25 @@ export default function ArenaPage() {
             exit={{ opacity: 0 }}
             style={{
               position: 'fixed', inset: 0, zIndex: 200,
-              background: 'rgba(1,13,51,0.95)',
+              background: 'rgba(0,0,0,0.95)',
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               padding: 24,
             }}
           >
+            {/* Back button */}
+            <button
+              onClick={() => window.location.href = '/'}
+              style={{
+                position: 'absolute', top: 16, left: 16,
+                padding: '8px 14px', borderRadius: 10,
+                background: 'rgba(255,255,255,0.08)', border: 'none',
+                color: '#888', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                display: 'flex', alignItems: 'center', gap: 6,
+              }}
+            >
+              ← {locale === 'sk' ? 'Späť' : 'Back'}
+            </button>
+
             <motion.div
               key={introStep}
               initial={{ opacity: 0, y: 12 }}
@@ -574,7 +588,7 @@ export default function ArenaPage() {
                     key={i}
                     animate={{ scale: i === introStep ? 1 : 0.8, opacity: i === introStep ? 1 : 0.4 }}
                     transition={{ duration: 0.25 }}
-                    style={{ width: 10, height: 10, borderRadius: 5, background: i === introStep ? '#4ade80' : '#0f2d6b', cursor: 'pointer' }}
+                    style={{ width: 10, height: 10, borderRadius: 5, background: i === introStep ? '#4ade80' : '#333', cursor: 'pointer' }}
                     onClick={() => setIntroStep(i)}
                   />
                 ))}
@@ -625,7 +639,7 @@ export default function ArenaPage() {
           {/* Entity labels (separate layer so they don't rotate) */}
           {entities.map(e => {
             const botDef = BOTS.find(b => b.name === e.name);
-            const diffColor = botDef?.difficulty === 'hard' ? '#f59e0b' : botDef?.difficulty === 'medium' ? '#4ade80' : '#555';
+            const diffColor = botDef?.difficulty === 'hard' ? '#f59e0b' : botDef?.difficulty === 'medium' ? '#60a5fa' : '#555';
             return (
               <div
                 key={`label-${e.id}`}
@@ -634,7 +648,7 @@ export default function ArenaPage() {
                   left: e.x, top: e.y + 42,
                   transform: 'translateX(-50%)',
                   textAlign: 'center',
-                  textShadow: '0 1px 4px rgba(1,13,51,0.85)',
+                  textShadow: '0 1px 4px rgba(0,0,0,0.8)',
                 }}
               >
                 <div style={{ fontSize: 10, fontWeight: 700, color: e.isPlayer ? '#4ade80' : '#ccc', letterSpacing: '0.03em' }}>
@@ -668,9 +682,9 @@ export default function ArenaPage() {
 
       {/* MINIMAP */}
       <div style={{
-        position: 'absolute', top: 16, right: 16,
+        position: 'absolute', top: 'calc(env(safe-area-inset-top, 0px) + 16px)', right: 16,
         width: MINIMAP_SIZE, height: MINIMAP_SIZE,
-        background: 'rgba(1,13,51,0.8)', border: '1px solid #0c255a',
+        background: 'rgba(0,0,0,0.7)', border: '1px solid #1a1a1a',
         borderRadius: 10, overflow: 'hidden',
         backdropFilter: 'blur(8px)',
       }}>
@@ -692,9 +706,9 @@ export default function ArenaPage() {
       <button
         onClick={() => { window.scrollTo(0, 0); window.history.back(); }}
         style={{
-          position: 'absolute', top: 16, left: 16,
+          position: 'absolute', top: 'calc(env(safe-area-inset-top, 0px) + 16px)', left: 16,
           width: 36, height: 36, borderRadius: 10,
-          background: 'rgba(1,13,51,0.8)', border: '1px solid #0c255a',
+          background: 'rgba(0,0,0,0.7)', border: '1px solid #1a1a1a',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           cursor: 'pointer', color: '#888', backdropFilter: 'blur(8px)',
         }}
@@ -706,9 +720,9 @@ export default function ArenaPage() {
       <button
         onClick={() => setShowLeaderboard(!showLeaderboard)}
         style={{
-          position: 'absolute', top: 16, left: 60,
+          position: 'absolute', top: 'calc(env(safe-area-inset-top, 0px) + 16px)', left: 60,
           height: 36, borderRadius: 10, padding: '0 12px',
-          background: 'rgba(1,13,51,0.8)', border: '1px solid #0c255a',
+          background: 'rgba(0,0,0,0.7)', border: '1px solid #1a1a1a',
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
           cursor: 'pointer', color: '#888', backdropFilter: 'blur(8px)',
           fontSize: 10, fontWeight: 700,
@@ -727,7 +741,7 @@ export default function ArenaPage() {
             style={{
               position: 'absolute', top: 104, left: 16,
               width: 200, borderRadius: 14,
-              background: 'rgba(1,13,51,0.9)', border: '1px solid #0c255a',
+              background: 'rgba(0,0,0,0.85)', border: '1px solid #1a1a1a',
               backdropFilter: 'blur(12px)', padding: '14px 16px',
               zIndex: 50,
             }}
@@ -745,7 +759,7 @@ export default function ArenaPage() {
                 <span style={{ fontSize: 10, fontWeight: 800, color: i === 0 ? '#4ade80' : '#555', width: 16 }}>#{i + 1}</span>
                 <span style={{ fontSize: 11, fontWeight: 600, color: entry.isPlayer ? '#4ade80' : '#ccc', flex: 1 }}>{entry.name}</span>
                 {entry.difficulty && (
-                  <span style={{ fontSize: 8, fontWeight: 700, color: entry.difficulty === 'hard' ? '#f59e0b' : entry.difficulty === 'medium' ? '#4ade80' : '#555' }}>
+                  <span style={{ fontSize: 8, fontWeight: 700, color: entry.difficulty === 'hard' ? '#f59e0b' : entry.difficulty === 'medium' ? '#60a5fa' : '#555' }}>
                     {entry.difficulty.toUpperCase()}
                   </span>
                 )}
@@ -761,19 +775,19 @@ export default function ArenaPage() {
       <div style={{
         position: 'absolute', bottom: 20, right: 20,
         padding: '8px 16px', borderRadius: 12,
-        background: 'rgba(1,13,51,0.8)', border: '1px solid #0c255a',
+        background: 'rgba(0,0,0,0.7)', border: '1px solid #1a1a1a',
         backdropFilter: 'blur(8px)',
         fontSize: 11, fontWeight: 600, color: '#888',
         display: 'flex', alignItems: 'center', gap: 8,
       }}>
         <div style={{ width: 6, height: 6, borderRadius: 3, background: '#4ade80' }} />
         {name || 'You'}
-        <div style={{ width: 1, height: 14, background: '#0c255a' }} />
+        <div style={{ width: 1, height: 14, background: '#222' }} />
         <button
           onClick={() => { setGameMode(gameMode === 'quiz' ? 'free' : 'quiz'); setCollidedWith(new Set()); collidedRef.current = new Set(); }}
           style={{
             background: gameMode === 'quiz' ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.05)',
-            border: `1px solid ${gameMode === 'quiz' ? 'rgba(74,222,128,0.3)' : '#0c255a'}`,
+            border: `1px solid ${gameMode === 'quiz' ? 'rgba(74,222,128,0.3)' : '#222'}`,
             borderRadius: 8, padding: '3px 10px', cursor: 'pointer',
             fontSize: 10, fontWeight: 700, color: gameMode === 'quiz' ? '#4ade80' : '#555',
           }}
@@ -791,7 +805,7 @@ export default function ArenaPage() {
             exit={{ opacity: 0 }}
             style={{
               position: 'fixed', inset: 0, zIndex: 100,
-              background: 'rgba(1,13,51,0.75)',
+              background: 'rgba(0,0,0,0.6)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               padding: 16,
             }}
@@ -801,21 +815,21 @@ export default function ArenaPage() {
               animate={{ scale: 1, y: 0 }}
               style={{
                 maxWidth: 420, width: '100%',
-                background: '#041540', border: '1px solid #0c255a',
-                borderRadius: 20, padding: '24px 20px',
+                background: '#111', border: '1px solid #222',
+                borderRadius: 20, padding: '48px 20px 24px',
                 position: 'relative', maxHeight: '90vh', overflowY: 'auto',
-                boxShadow: '0 20px 60px rgba(1,13,51,0.85)',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
               }}
             >
               {/* X close button */}
               <button onClick={closeBattle} style={{
-                position: 'absolute', top: -44, right: 0,
+                position: 'absolute', top: 12, right: 12,
                 width: 32, height: 32, borderRadius: 8,
-                background: '#0c255a', border: '1px solid #132d6b',
+                background: 'rgba(255,255,255,0.08)', border: 'none',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: 'pointer', color: '#888', zIndex: 10,
               }}>
-                <X size={14} />
+                <X size={16} />
               </button>
 
               {battleResult ? (
@@ -825,7 +839,7 @@ export default function ArenaPage() {
                       <Byte mood={battleResult === 'win' ? 'celebrating' : 'worried'} size={110} equipment={equipment} />
                       <div style={{ fontSize: 12, fontWeight: 700, color: '#4ade80', marginTop: 6 }}>{name || 'You'}</div>
                     </div>
-                    <div style={{ fontSize: 20, fontWeight: 800, color: '#0f2d6b', alignSelf: 'center' }}>VS</div>
+                    <div style={{ fontSize: 20, fontWeight: 800, color: '#333', alignSelf: 'center' }}>VS</div>
                     <div style={{ textAlign: 'center' }}>
                       <Byte mood="happy" size={110} equipment={battle.opponent.equipment} />
                       <div style={{ fontSize: 12, fontWeight: 700, color: '#888', marginTop: 6 }}>{battle.opponent.name}</div>
@@ -866,12 +880,12 @@ export default function ArenaPage() {
                     </div>
                   </div>
 
-                  <div style={{ background: '#041540', border: '1px solid #0c255a', borderRadius: 14, padding: '16px 18px', marginBottom: 10 }}>
+                  <div style={{ background: '#111', border: '1px solid #1a1a1a', borderRadius: 14, padding: '16px 18px', marginBottom: 10 }}>
                     <h3 style={{ fontSize: 16, fontWeight: 700, color: '#eee', lineHeight: 1.4, margin: 0 }}>
                       {(locale === 'sk' && (battle.questions[battleIdx] as any)?.question_text_sk) || battle.questions[battleIdx]?.question_text || ''}
                     </h3>
                     {battle.questions[battleIdx]?.code_snippet && (
-                      <pre style={{ background: '#000a2b', borderRadius: 8, padding: '10px 12px', fontSize: 12, color: '#ccc', marginTop: 10, overflow: 'auto', fontFamily: 'JetBrains Mono, monospace', lineHeight: 1.6 }}>
+                      <pre style={{ background: '#010d33', borderRadius: 8, padding: '10px 12px', fontSize: 12, color: '#ccc', marginTop: 10, overflow: 'auto', fontFamily: 'JetBrains Mono, monospace', lineHeight: 1.6 }}>
                         {battle.questions[battleIdx].code_snippet}
                       </pre>
                     )}
@@ -883,7 +897,7 @@ export default function ArenaPage() {
                       if (!q) return null;
                       const correctLabel = q.question_type === 'true_false' ? (q.correct_answer === 'True' ? 'T' : 'F') : q.correct_answer;
                       const opts = q.question_type === 'true_false'
-                        ? [{ label: 'T', text: 'Pravda' }, { label: 'F', text: 'Nepravda' }]
+                        ? [{ label: 'T', text: 'True' }, { label: 'F', text: 'False' }]
                         : (q.options || []).sort((a, b) => a.option_label.localeCompare(b.option_label)).map(o => ({ label: o.option_label, text: (locale === 'sk' && (o as any).option_text_sk) || o.option_text }));
                       return opts.map(opt => {
                         const sel = battleAnswer === opt.label;
@@ -894,15 +908,15 @@ export default function ArenaPage() {
                             style={{
                               padding: '14px 16px', borderRadius: 12, textAlign: 'left', display: 'flex', alignItems: 'center', gap: 12,
                               fontSize: 15, fontWeight: 500, cursor: battleState !== 'idle' ? 'default' : 'pointer',
-                              background: isCorrect ? 'rgba(74,222,128,0.08)' : isWrong ? 'rgba(255,80,80,0.06)' : '#000a2b',
-                              border: `1.5px solid ${isCorrect ? 'rgba(74,222,128,0.4)' : isWrong ? 'rgba(255,80,80,0.3)' : '#0c255a'}`,
+                              background: isCorrect ? 'rgba(74,222,128,0.08)' : isWrong ? 'rgba(255,80,80,0.06)' : '#010d33',
+                              border: `1.5px solid ${isCorrect ? 'rgba(74,222,128,0.4)' : isWrong ? 'rgba(255,80,80,0.3)' : '#1a1a1a'}`,
                               color: isCorrect ? '#4ade80' : isWrong ? '#ff8080' : '#ccc',
                             }}
                           >
                             <div style={{
                               width: 28, height: 28, borderRadius: 8, flexShrink: 0,
                               display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              background: isCorrect ? '#4ade80' : isWrong ? '#ff8080' : '#161616',
+                              background: isCorrect ? '#4ade80' : isWrong ? '#ff8080' : '#041540',
                               color: isCorrect || isWrong ? '#000' : '#888', fontSize: 12, fontWeight: 700,
                             }}>
                               {isCorrect ? <Check size={12} strokeWidth={3} /> : opt.label}

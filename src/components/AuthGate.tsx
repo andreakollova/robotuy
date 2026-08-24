@@ -52,32 +52,35 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
 
     const handleUser = (user: any, event?: string) => {
       const newId = user.id;
-      if (userId && userId !== newId) {
-        localStorage.removeItem('robotuy-user');
-        localStorage.removeItem('robotuy-path');
-        window.location.reload();
-        return;
-      }
       setUserId(newId);
       setAuthed(true);
-      // Notify Slack on new sign-up
+      // Notify Slack on new sign-up — check Supabase if user_state exists (not localStorage which resets)
       if (event === 'SIGNED_IN') {
-        const notified = localStorage.getItem('robotuy-slack-notified');
-        if (!notified) {
-          localStorage.setItem('robotuy-slack-notified', 'true');
-          fetch('/api/notify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ event: 'new_user', email: user.email }),
-          }).catch(() => {});
+        const notifiedKey = `robotuy-slack-notified-${newId}`;
+        if (!localStorage.getItem(notifiedKey)) {
+          localStorage.setItem(notifiedKey, 'true');
+          // Only notify if user has no data in Supabase (truly new user)
+          sb.from('user_state').select('user_id').eq('user_id', newId).maybeSingle().then(({ data: existing }: any) => {
+            if (!existing) {
+              fetch('/api/notify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ event: 'new_user', email: user.email }),
+              }).catch(() => {});
+            }
+          });
         }
       }
     };
 
     sb.auth.getSession().then(({ data }) => {
+      console.log('[AuthGate] getSession:', data.session?.user?.email);
       if (data.session?.user) {
         handleUser(data.session.user);
-        setTimeout(() => loadFromSupabase(), 500);
+        setTimeout(() => {
+          console.log('[AuthGate] calling loadFromSupabase');
+          loadFromSupabase();
+        }, 800);
       }
       setChecking(false);
     });
@@ -90,7 +93,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
       if (session?.user) {
         handleUser(session.user, event);
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          setTimeout(() => loadFromSupabase(), 500);
+          setTimeout(() => loadFromSupabase(), 800);
         }
       }
     });
@@ -98,34 +101,37 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const handleGoogle = async () => {
+  const handleOAuthProvider = async (provider: 'google' | 'apple') => {
     const sb = getSupabase();
     if (!sb) return;
 
     const isApp = typeof window !== 'undefined' && !!(window as any).Capacitor;
 
     if (isApp) {
-      const { data, error } = await sb.auth.signInWithOAuth({
-        provider: 'google',
+      // Route through web callback which then redirects to deep link
+      // This fixes Apple OAuth first-time consent (uses POST, not GET)
+      const { data } = await sb.auth.signInWithOAuth({
+        provider,
         options: {
-          redirectTo: 'robotuy://auth/callback',
+          redirectTo: 'https://robotuy.app/auth/callback?from=app',
           skipBrowserRedirect: true,
         },
       });
       if (data?.url) {
         try {
           const { Browser } = await import('@capacitor/browser');
-          await Browser.open({ url: data.url, presentationStyle: 'popover' });
-        } catch (e) {
-          console.log('Browser.open error:', e);
+          await Browser.open({ url: data.url });
+        } catch {
+          window.open(data.url, '_blank');
         }
       }
     } else {
-      // On web: redirect to current domain
       const origin = window.location.origin;
       await sb.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: `${origin}/auth/callback` },
+        provider,
+        options: {
+          redirectTo: `${origin}/auth/callback`,
+        },
       });
     }
   };
@@ -200,7 +206,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
         style={{
           position: 'absolute', top: 16, right: 16,
           width: 36, height: 36, borderRadius: 10,
-          background: '#041540', border: '1px solid rgba(255,255,255,0.08)',
+          background: '#0c255a', border: '1px solid rgba(255,255,255,0.08)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#aaa',
           zIndex: 10,
@@ -238,18 +244,16 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <div className="auth-logo-row" style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 20, marginBottom: 4 }}>
             <img src="/logorobotuy.png" alt="Robotuy" style={{ height: 28, objectFit: 'contain' }} />
-            <span style={{ fontSize: 11, fontWeight: 700, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.1em',
-              background: 'rgba(74,222,128,0.1)', padding: '3px 8px', borderRadius: 6 }}>Beta</span>
           </div>
           <p style={{ fontSize: 15, color: '#fff', fontWeight: 700, marginBottom: 4, marginTop: 12 }}>
             {locale === 'sk'
-              ? 'Registruj sa teraz zadarmo.'
-              : 'Register now for free.'}
+              ? 'Prihlás sa alebo sa zaregistruj zadarmo.'
+              : 'Sign in or register for free.'}
           </p>
           <p style={{ fontSize: 13, color: '#888', marginBottom: 28, lineHeight: 1.6 }}>
             {locale === 'sk'
-              ? 'Prihlásenie je potrebné na ukladanie tvojho progressu.'
-              : 'Sign in to save your progress across all devices.'}
+              ? 'Tvoj progres sa uloží naprieč všetkými zariadeniami.'
+              : 'Your progress is saved across all devices.'}
           </p>
         </motion.div>
 
@@ -257,13 +261,29 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
           {step === 'start' && (
             <motion.div key="start" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {/* Google */}
+              {/* Apple */}
               <button
-                onClick={handleGoogle}
+                onClick={() => handleOAuthProvider('apple')}
                 style={{
                   width: '100%', padding: '14px', borderRadius: 12,
                   background: '#fff', color: '#000', fontWeight: 700, fontSize: 14,
                   border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center',
+                  justifyContent: 'center', gap: 10,
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#000">
+                  <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                </svg>
+                {locale === 'sk' ? 'Pokračovať s Apple' : 'Continue with Apple'}
+              </button>
+
+              {/* Google */}
+              <button
+                onClick={() => handleOAuthProvider('google')}
+                style={{
+                  width: '100%', padding: '14px', borderRadius: 12,
+                  background: '#041540', color: '#ccc', fontWeight: 600, fontSize: 14,
+                  border: '1px solid #222', cursor: 'pointer', display: 'flex', alignItems: 'center',
                   justifyContent: 'center', gap: 10,
                 }}
               >
@@ -278,9 +298,9 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
 
               {/* Divider */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '4px 0' }}>
-                <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
+                <div style={{ flex: 1, height: 1, background: '#222' }} />
                 <span style={{ fontSize: 11, color: '#555' }}>{locale === 'sk' ? 'alebo' : 'or'}</span>
-                <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
+                <div style={{ flex: 1, height: 1, background: '#222' }} />
               </div>
 
               {/* Email button */}
@@ -288,14 +308,24 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 onClick={() => setStep('email')}
                 style={{
                   width: '100%', padding: '14px', borderRadius: 12,
-                  background: '#071c4d', color: '#ccc', fontWeight: 600, fontSize: 14,
-                  border: '1px solid #0c255a', cursor: 'pointer', display: 'flex', alignItems: 'center',
+                  background: '#041540', color: '#ccc', fontWeight: 600, fontSize: 14,
+                  border: '1px solid #222', cursor: 'pointer', display: 'flex', alignItems: 'center',
                   justifyContent: 'center', gap: 8,
                 }}
               >
                 <Mail size={16} />
                 {locale === 'sk' ? 'Pokračovať s emailom' : 'Continue with email'}
               </button>
+
+              <p style={{ textAlign: 'center', fontSize: 12, color: '#555', marginTop: 16 }}>
+                {locale === 'sk' ? 'Máš už účet? ' : 'Already have an account? '}
+                <button
+                  onClick={() => setStep('email')}
+                  style={{ background: 'none', border: 'none', color: '#22c55e', fontSize: 12, fontWeight: 600, cursor: 'pointer', textDecoration: 'underline' }}
+                >
+                  {locale === 'sk' ? 'Prihlásiť sa' : 'Sign in'}
+                </button>
+              </p>
             </motion.div>
           )}
 
@@ -309,7 +339,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 autoFocus
                 style={{
                   width: '100%', padding: '14px', borderRadius: 12,
-                  background: '#041540', border: '1px solid #0c255a', color: '#fff',
+                  background: '#111', border: '1px solid #222', color: '#fff',
                   fontSize: 14, fontFamily: 'inherit', outline: 'none', marginBottom: 8,
                   boxSizing: 'border-box',
                 }}
@@ -336,7 +366,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 }}
                 style={{
                   width: '100%', padding: '14px', borderRadius: 12,
-                  background: '#041540', border: '1px solid #0c255a', color: '#fff',
+                  background: '#111', border: '1px solid #222', color: '#fff',
                   fontSize: 14, fontFamily: 'inherit', outline: 'none', marginBottom: 12,
                   boxSizing: 'border-box',
                 }}
@@ -356,7 +386,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 disabled={loading || !email.trim()}
                 style={{
                   width: '100%', padding: '14px', borderRadius: 12,
-                  background: email.trim() ? '#fff' : '#0c255a',
+                  background: email.trim() ? '#fff' : '#222',
                   color: email.trim() ? '#000' : '#555',
                   fontWeight: 700, fontSize: 14, border: 'none', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -391,7 +421,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 autoFocus
                 style={{
                   width: '100%', padding: '14px', borderRadius: 12,
-                  background: '#041540', border: '1px solid #0c255a', color: '#fff',
+                  background: '#111', border: '1px solid #222', color: '#fff',
                   fontSize: 24, fontFamily: 'monospace', outline: 'none', marginBottom: 12,
                   textAlign: 'center', letterSpacing: '0.3em', boxSizing: 'border-box',
                 }}
@@ -401,7 +431,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 disabled={loading || otp.length < 8}
                 style={{
                   width: '100%', padding: '14px', borderRadius: 12,
-                  background: otp.length >= 8 ? '#fff' : '#0c255a',
+                  background: otp.length >= 8 ? '#fff' : '#222',
                   color: otp.length >= 8 ? '#000' : '#555',
                   fontWeight: 700, fontSize: 14, border: 'none', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -416,7 +446,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
                 <button
                   onClick={() => { if (resendTimer <= 0) handleSendOtp(); }}
                   disabled={resendTimer > 0}
-                  style={{ background: 'none', border: 'none', color: resendTimer > 0 ? '#0f2d6b' : '#888', fontSize: 12, cursor: resendTimer > 0 ? 'default' : 'pointer' }}
+                  style={{ background: 'none', border: 'none', color: resendTimer > 0 ? '#333' : '#888', fontSize: 12, cursor: resendTimer > 0 ? 'default' : 'pointer' }}
                 >
                   {resendTimer > 0
                     ? (locale === 'sk' ? `Poslať znova (${resendTimer}s)` : `Resend (${resendTimer}s)`)

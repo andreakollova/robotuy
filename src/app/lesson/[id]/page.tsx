@@ -20,19 +20,19 @@ export default function LessonPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const lesson = getLessonById(id);
-  const { hearts, loseHeart, completeLesson, setByteMood, byteMood, equipment } = useUserStore();
+  const { hearts, loseHeart, completeLesson, setByteMood, byteMood, equipment, checkStreak } = useUserStore();
   const { locale } = useLocaleStore();
   const { needsUpgrade } = useSubscription();
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [xpEarned, setXpEarned] = useState(0);
   const [showHeartLost, setShowHeartLost] = useState(false);
 
-  useEffect(() => { setByteMood('happy'); }, []);
+  useEffect(() => { checkStreak(); setByteMood('happy'); }, []);
 
   if (needsUpgrade) return <Paywall />;
 
   if (!lesson) return (
-    <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ minHeight: '100vh', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <p style={{ color: '#888' }}>{s('lessonNotFound', locale)}</p>
     </div>
   );
@@ -64,21 +64,21 @@ export default function LessonPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', background: '#000', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <div style={{ position: 'sticky', top: 0, zIndex: 50, padding: '12px 20px', background: 'rgba(1,13,51,0.95)', backdropFilter: 'blur(16px)', borderBottom: '1px solid #010d33' }}>
+      <div style={{ position: 'sticky', top: 0, zIndex: 50, padding: '12px 20px', background: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(16px)', borderBottom: '1px solid #010d33' }}>
         <div style={{ maxWidth: 520, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 12 }}>
           <button onClick={() => router.push('/')} style={{ color: '#777', cursor: 'pointer', padding: 4 }}>
             <X size={20} />
           </button>
           {/* Progress */}
-          <div style={{ flex: 1, height: 4, borderRadius: 2, background: '#041540', overflow: 'hidden' }}>
+          <div style={{ flex: 1, height: 4, borderRadius: 2, background: '#111', overflow: 'hidden' }}>
             <motion.div style={{ height: '100%', background: '#fff', borderRadius: 2 }} animate={{ width: `${progress}%` }} transition={{ duration: 0.4 }} />
           </div>
           {/* Hearts */}
           <div style={{ display: 'flex', gap: 3 }}>
             {Array.from({ length: 5 }).map((_, i) => (
-              <Heart key={i} size={14} fill={i < hearts ? '#fff' : 'none'} color={i < hearts ? '#fff' : '#132d6b'} />
+              <Heart key={i} size={14} fill={i < hearts ? '#fff' : 'none'} color={i < hearts ? '#fff' : '#2a2a2a'} />
             ))}
           </div>
         </div>
@@ -88,7 +88,7 @@ export default function LessonPage() {
       <AnimatePresence>
         {showHeartLost && (
           <motion.div initial={{ opacity: 0, y: -16, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20 }}
-            style={{ position: 'fixed', top: 64, left: '50%', transform: 'translateX(-50%)', zIndex: 100, display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', background: '#041540', border: '1px solid #132d6b', borderRadius: 40, color: '#fff' }}>
+            style={{ position: 'fixed', top: 64, left: '50%', transform: 'translateX(-50%)', zIndex: 100, display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', background: '#111', border: '1px solid #2a2a2a', borderRadius: 40, color: '#fff' }}>
             <Heart size={14} fill="#fff" color="#fff" />
             <span style={{ fontWeight: 700, fontSize: 13 }}>{s('minusHeart', locale)}</span>
           </motion.div>

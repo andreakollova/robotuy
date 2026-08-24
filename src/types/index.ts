@@ -93,7 +93,7 @@ export interface UserState {
 export interface GlossaryEntry {
   id: string;
   term: string;
-  category: 'skratka' | 'sucastka' | 'koncept' | 'nastroj';
+  category: 'skratka' | 'symbol' | 'koncept' | 'nastroj' | 'sucastka';
   short: string;
   explanation: string;
   example?: string;

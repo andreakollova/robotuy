@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 const StripeCheckout = dynamic(() => import('./StripeCheckout'), { ssr: false });
 
-const FREE_LESSON_LIMIT = 3;
+const FREE_LESSON_LIMIT = 5;
 
 export function useSubscription() {
   const { userId, completedLessons } = useUserStore();
@@ -51,7 +51,7 @@ export function useSubscription() {
   }, [userId]);
 
   const isPro = status === 'active' || status === 'admin';
-  const needsUpgrade = !isPro && status !== 'loading' && completedLessons.length >= FREE_LESSON_LIMIT;
+  const needsUpgrade = !isPro && status !== 'loading' && completedLessons.length > FREE_LESSON_LIMIT;
 
   const [showProReward, setShowProReward] = useState(false);
 
@@ -95,7 +95,7 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
       exit={{ opacity: 0 }}
       style={{
         position: 'fixed', inset: 0, zIndex: 300,
-        background: 'rgba(1,13,51,0.9)',
+        background: 'rgba(0,0,0,0.85)',
         display: 'flex', flexDirection: 'column', alignItems: 'center',
         justifyContent: 'center',
         overflow: 'auto',
@@ -103,7 +103,7 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
       }}
     >
     <div className="paywall-card" style={{
-      width: '100%', maxWidth: 440, background: '#000a2b', borderRadius: 0,
+      width: '100%', maxWidth: 440, background: '#010d33', borderRadius: 0,
       overflow: 'auto', maxHeight: '100vh', position: 'relative',
     }}>
       {/* X close */}
@@ -127,7 +127,7 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
       }}>
         <Byte mood="celebrating" size={60} equipment={equipment} />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 8 }}>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>Coduy</h1>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>Robotuy</h1>
           <span style={{
             fontSize: 11, fontWeight: 800, color: '#000',
             background: accentGradient,
@@ -154,13 +154,13 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
 
       {/* Monthly / Yearly toggle - small */}
       <div style={{ padding: '0 60px 14px' }}>
-        <div style={{ display: 'flex', background: '#000a2b', borderRadius: 10, padding: 2 }}>
+        <div style={{ display: 'flex', background: '#010d33', borderRadius: 10, padding: 2 }}>
           {(['monthly', 'yearly'] as const).map(tab => {
             const active = (tab === 'monthly' && (plan === 'trial' || plan === 'monthly')) || (tab === 'yearly' && plan === 'yearly');
             return (
               <button key={tab} onClick={() => setPlan(tab === 'monthly' ? 'trial' : 'yearly')} style={{
                 flex: 1, padding: '7px', borderRadius: 8, border: 'none', cursor: 'pointer',
-                background: active ? '#0c255a' : 'transparent',
+                background: active ? '#1a1a1a' : 'transparent',
                 fontSize: 12, fontWeight: 700, color: active ? '#fff' : '#555',
               }}>
                 {tab === 'monthly' ? (sk ? 'Mesačne' : 'Monthly') : (sk ? 'Ročne' : 'Yearly')}
@@ -175,8 +175,8 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
         {/* Free Trial */}
         <button onClick={() => setPlan(plan === 'yearly' ? 'yearly' : 'trial')} style={{
           flex: 1, padding: '16px 10px', borderRadius: 16, border: 'none', cursor: 'pointer',
-          background: (plan === 'trial' || plan === 'yearly') ? 'rgba(74,222,128,0.05)' : '#000a2b',
-          outline: (plan === 'trial' || plan === 'yearly') ? '2px solid #4ade80' : '1px solid #0c255a',
+          background: (plan === 'trial' || plan === 'yearly') ? 'rgba(74,222,128,0.05)' : '#010d33',
+          outline: (plan === 'trial' || plan === 'yearly') ? '2px solid #4ade80' : '1px solid #1a1a1a',
           textAlign: 'center', position: 'relative',
         }}>
           <div style={{
@@ -205,8 +205,8 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
         {/* Full price */}
         <button onClick={() => setPlan('monthly')} style={{
           flex: 1, padding: '16px 10px', borderRadius: 16, border: 'none', cursor: 'pointer',
-          background: plan === 'monthly' ? 'rgba(74,222,128,0.05)' : '#000a2b',
-          outline: plan === 'monthly' ? '2px solid #4ade80' : '1px solid #0c255a',
+          background: plan === 'monthly' ? 'rgba(74,222,128,0.05)' : '#010d33',
+          outline: plan === 'monthly' ? '2px solid #4ade80' : '1px solid #1a1a1a',
           textAlign: 'center',
         }}>
           <div style={{ fontSize: 22, fontWeight: 600, color: plan === 'monthly' ? '#fff' : '#555', marginTop: 14 }}>
@@ -233,16 +233,16 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
             if (isApp) {
               // Native app - Apple IAP or Google Play Billing
               try {
-                const wk = (window as any).webkit?.messageHandlers?.coduyPurchase; // iOS
-                const gp = (window as any).coduyPurchase; // Android
+                const wk = (window as any).webkit?.messageHandlers?.robotuyPurchase; // iOS
+                const gp = (window as any).robotuyPurchase; // Android
                 const nativeBridge = wk || gp;
                 if (nativeBridge) {
-                  const productId = plan === 'yearly' ? 'coduy_pro_yearly' : 'coduy_pro_monthly';
+                  const productId = plan === 'yearly' ? 'robotuy_pro_yearly' : 'robotuy_pro_monthly';
 
                   // Set up callback before posting message
                   const result = await new Promise<any>((resolve) => {
-                    (window as any).__coduyPurchaseCallback = (res: any) => {
-                      delete (window as any).__coduyPurchaseCallback;
+                    (window as any).__robotuyPurchaseCallback = (res: any) => {
+                      delete (window as any).__robotuyPurchaseCallback;
                       resolve(res);
                     };
                     if (wk) {
@@ -252,8 +252,8 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
                     }
                     // Timeout after 2 minutes
                     setTimeout(() => {
-                      if ((window as any).__coduyPurchaseCallback) {
-                        delete (window as any).__coduyPurchaseCallback;
+                      if ((window as any).__robotuyPurchaseCallback) {
+                        delete (window as any).__robotuyPurchaseCallback;
                         resolve({ success: false, error: 'timeout' });
                       }
                     }, 120000);
@@ -291,7 +291,7 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
                 console.log('Purchase error:', e);
               }
             } else {
-              // Web - Stripe Embedded Elements
+              // Web - Stripe Checkout redirect
               try {
                 const sb = getSupabase();
                 const session = await sb?.auth.getSession();
@@ -303,10 +303,9 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
                   body: JSON.stringify({ plan, userId, email }),
                 });
                 const data = await res.json();
-                if (data.clientSecret) {
-                  setClientSecret(data.clientSecret);
-                  setIsSetupIntent(data.type === 'setup');
-                  setShowCheckout(true);
+                if (data.checkoutUrl) {
+                  window.location.href = data.checkoutUrl;
+                  return;
                 } else if (data.error) {
                   setError(data.error);
                 } else {
@@ -367,7 +366,7 @@ export default function Paywall({ onClose }: { onClose?: () => void }) {
                 placeholder={sk ? 'Zadaj kód' : 'Enter code'}
                 style={{
                   flex: 1, padding: '10px 12px', borderRadius: 10,
-                  background: '#000a2b', border: '1px solid #0c255a',
+                  background: '#010d33', border: '1px solid #222',
                   color: '#fff', fontSize: 13, fontFamily: 'monospace',
                   outline: 'none', textTransform: 'uppercase',
                 }}

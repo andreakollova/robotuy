@@ -65,7 +65,7 @@ export default function TopicLessonPage() {
                 onClick={() => setActiveExIdx(i)}
                 style={{
                   flex: 1, height: 3, borderRadius: 2, cursor: 'pointer',
-                  background: done ? '#4ade80' : i === activeExIdx ? '#fff' : '#0c255a',
+                  background: done ? '#4ade80' : i === activeExIdx ? '#fff' : '#222',
                 }}
               />
             );
@@ -214,7 +214,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
       {/* Code snippet */}
       {exercise.codeSnippet && (
         <pre style={{
-          background: '#041540', border: '1px solid #0c255a', borderRadius: 12,
+          background: '#111', border: '1px solid #1a1a1a', borderRadius: 12,
           padding: '16px 18px', fontSize: 13, color: '#ccc', lineHeight: 1.7,
           overflow: 'auto', marginBottom: 20, fontFamily: 'JetBrains Mono, Fira Code, monospace',
           whiteSpace: 'pre-wrap',
@@ -227,7 +227,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
       {exercise.type === 'explain' && exercise.explanation && (
         <>
           <div style={{
-            background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14,
+            background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 14,
             padding: '20px', marginBottom: 20,
           }}>
             <div style={{ fontSize: 15, color: '#bbb', lineHeight: 1.9 }}>
@@ -275,15 +275,15 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
                     padding: '14px 16px', borderRadius: 12, textAlign: 'left',
                     fontSize: 14, fontWeight: 500, cursor: showResult ? 'default' : 'pointer',
                     display: 'flex', alignItems: 'center', gap: 12,
-                    background: isCorrect ? 'rgba(74,222,128,0.08)' : isWrong ? 'rgba(255,80,80,0.06)' : isSelected ? '#0c255a' : '#000a2b',
-                    border: `1.5px solid ${isCorrect ? 'rgba(74,222,128,0.5)' : isWrong ? 'rgba(255,80,80,0.3)' : isSelected ? '#444' : '#0c255a'}`,
+                    background: isCorrect ? 'rgba(74,222,128,0.08)' : isWrong ? 'rgba(255,80,80,0.06)' : isSelected ? '#1a1a1a' : '#010d33',
+                    border: `1.5px solid ${isCorrect ? 'rgba(74,222,128,0.5)' : isWrong ? 'rgba(255,80,80,0.3)' : isSelected ? '#444' : '#1a1a1a'}`,
                     color: isCorrect ? '#4ade80' : isWrong ? '#ff8080' : '#ccc',
                   }}
                 >
                   <div style={{
                     width: 26, height: 26, borderRadius: 8, flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: isCorrect ? '#4ade80' : isWrong ? '#ff8080' : isSelected ? '#0f2d6b' : '#161616',
+                    background: isCorrect ? '#4ade80' : isWrong ? '#ff8080' : isSelected ? '#333' : '#041540',
                     color: isCorrect || isWrong ? '#000' : '#888',
                     fontSize: 11, fontWeight: 700,
                   }}>
@@ -310,7 +310,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
           {!showResult && (
             <button onClick={handleSubmitMcq} disabled={!selected} style={{
               width: '100%', padding: '14px', borderRadius: 12,
-              background: selected ? '#EDEDED' : '#0c255a',
+              background: selected ? '#EDEDED' : '#1a1a1a',
               color: selected ? '#000' : '#555', fontWeight: 700, fontSize: 15,
               border: 'none', cursor: selected ? 'pointer' : 'not-allowed',
             }}>
@@ -320,8 +320,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
           {showResult === 'wrong' && (
             <button onClick={handleRetry} style={{
               width: '100%', padding: '14px', borderRadius: 12,
-              background: '#161616', color: '#ccc', fontWeight: 700, fontSize: 14,
-              border: '1px solid #0c255a', cursor: 'pointer',
+              background: '#041540', color: '#ccc', fontWeight: 700, fontSize: 14,
+              border: '1px solid #222', cursor: 'pointer',
             }}>
               {locale === 'sk' ? 'Skúsiť znova' : 'Try again'}
             </button>
@@ -351,8 +351,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
                           padding: '10px 16px', borderRadius: 10, fontSize: 14, fontWeight: 600,
                           cursor: showResult ? 'default' : 'pointer',
                           fontFamily: 'JetBrains Mono, Fira Code, monospace',
-                          background: isCorrectAnswer ? 'rgba(74,222,128,0.1)' : isWrongAnswer ? 'rgba(255,80,80,0.1)' : isSel ? '#0c255a' : '#000a2b',
-                          border: `1.5px solid ${isCorrectAnswer ? '#4ade80' : isWrongAnswer ? '#ff8080' : isSel ? '#555' : '#0c255a'}`,
+                          background: isCorrectAnswer ? 'rgba(74,222,128,0.1)' : isWrongAnswer ? 'rgba(255,80,80,0.1)' : isSel ? '#222' : '#010d33',
+                          border: `1.5px solid ${isCorrectAnswer ? '#4ade80' : isWrongAnswer ? '#ff8080' : isSel ? '#555' : '#1a1a1a'}`,
                           color: isCorrectAnswer ? '#4ade80' : isWrongAnswer ? '#ff8080' : '#ccc',
                         }}
                       >
@@ -371,7 +371,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
               disabled={exercise.blanks.some(b => !fillAnswers[b.id])}
               style={{
                 width: '100%', padding: '14px', borderRadius: 12,
-                background: exercise.blanks.every(b => fillAnswers[b.id]) ? '#EDEDED' : '#0c255a',
+                background: exercise.blanks.every(b => fillAnswers[b.id]) ? '#EDEDED' : '#1a1a1a',
                 color: exercise.blanks.every(b => fillAnswers[b.id]) ? '#000' : '#555',
                 fontWeight: 700, fontSize: 15, border: 'none',
                 cursor: exercise.blanks.every(b => fillAnswers[b.id]) ? 'pointer' : 'not-allowed',
@@ -383,8 +383,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
           {showResult === 'wrong' && (
             <button onClick={handleRetry} style={{
               width: '100%', padding: '14px', borderRadius: 12,
-              background: '#161616', color: '#ccc', fontWeight: 700, fontSize: 14,
-              border: '1px solid #0c255a', cursor: 'pointer',
+              background: '#041540', color: '#ccc', fontWeight: 700, fontSize: 14,
+              border: '1px solid #222', cursor: 'pointer',
             }}>
               {locale === 'sk' ? 'Skúsiť znova' : 'Try again'}
             </button>
@@ -395,8 +395,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
       {/* WRITE type */}
       {exercise.type === 'write' && (
         <>
-          <div style={{ borderRadius: 14, overflow: 'hidden', border: `1px solid ${writeRun === 'passed' ? 'rgba(74,222,128,0.2)' : writeRun === 'failed' ? 'rgba(255,80,80,0.2)' : '#0c255a'}`, marginBottom: 16, transition: 'border-color 0.2s' }}>
-            <div style={{ background: '#041540', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 6, borderBottom: '1px solid #0c255a' }}>
+          <div style={{ borderRadius: 14, overflow: 'hidden', border: `1px solid ${writeRun === 'passed' ? 'rgba(74,222,128,0.2)' : writeRun === 'failed' ? 'rgba(255,80,80,0.2)' : '#1a1a1a'}`, marginBottom: 16, transition: 'border-color 0.2s' }}>
+            <div style={{ background: '#111', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 6, borderBottom: '1px solid #1a1a1a' }}>
               {['#ff5f57','#febc2e','#28c840'].map(c => <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c, opacity: 0.7 }} />)}
               <span style={{ marginLeft: 8, fontSize: 10, color: '#555', fontFamily: 'JetBrains Mono, monospace' }}>python</span>
             </div>
@@ -412,7 +412,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
               spellCheck={false} autoCapitalize="none" autoCorrect="off"
               rows={Math.max(5, writeCode.split('\n').length + 1)}
               style={{
-                width: '100%', padding: '14px 16px', background: '#000a2b', border: 'none', outline: 'none',
+                width: '100%', padding: '14px 16px', background: '#010d33', border: 'none', outline: 'none',
                 color: '#ccc', fontSize: 13, fontFamily: 'JetBrains Mono, Fira Code, monospace',
                 lineHeight: 1.7, resize: 'vertical', minHeight: 120,
               }}
@@ -435,7 +435,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
             <button onClick={handleWriteRun} disabled={writeRun === 'running' || !writeCode.trim()}
               style={{
                 width: '100%', padding: '14px', borderRadius: 12,
-                background: writeCode.trim() ? '#EDEDED' : '#0c255a',
+                background: writeCode.trim() ? '#EDEDED' : '#1a1a1a',
                 color: writeCode.trim() ? '#000' : '#555',
                 fontWeight: 700, fontSize: 15, border: 'none',
                 cursor: writeCode.trim() ? 'pointer' : 'not-allowed',

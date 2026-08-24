@@ -45,7 +45,7 @@ export default function WriteExercise({ exercise, onCorrect, onWrong }: { exerci
     setTimeout(() => { if (ref.current) { ref.current.selectionStart = ref.current.selectionEnd = s + 4; } }, 0);
   };
 
-  const btnBg = run === 'passed' ? 'rgba(255,255,255,0.1)' : run === 'failed' ? '#041540' : code.trim() ? '#EDEDED' : '#041540';
+  const btnBg = run === 'passed' ? 'rgba(255,255,255,0.1)' : run === 'failed' ? '#0c255a' : code.trim() ? '#EDEDED' : '#0c255a';
   const btnColor = run === 'passed' ? '#EDEDED' : run === 'failed' ? '#6E6E6E' : code.trim() ? '#010d33' : '#3A3A3A';
 
   return (
@@ -61,7 +61,7 @@ export default function WriteExercise({ exercise, onCorrect, onWrong }: { exerci
 
       {/* Editor */}
       <div style={{ borderRadius: 14, overflow: 'hidden', border: `1px solid ${run === 'passed' ? 'rgba(255,255,255,0.2)' : run === 'failed' ? 'rgba(255,80,80,0.2)' : 'rgba(255,255,255,0.06)'}`, transition: 'border-color 0.2s' }}>
-        <div style={{ background: '#041540', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 6, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ background: '#111', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 6, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           {['#ff5f57','#febc2e','#28c840'].map(c => <div key={c} style={{ width: 11, height: 11, borderRadius: '50%', background: c, opacity: 0.7 }} />)}
           <span style={{ marginLeft: 8, fontSize: 11, color: '#3A3A3A', fontFamily: 'JetBrains Mono, monospace' }}>python</span>
         </div>

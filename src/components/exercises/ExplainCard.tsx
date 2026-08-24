@@ -23,7 +23,7 @@ export default function ExplainCard({ exercise, onNext }: { exercise: Exercise; 
 
       {exercise.codeSnippet && (
         <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)' }}>
-          <div style={{ background: '#041540', padding: '10px 16px', display: 'flex', gap: 6, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ background: '#111', padding: '10px 16px', display: 'flex', gap: 6, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
             {['#ff5f57','#febc2e','#28c840'].map(c => <div key={c} style={{ width: 11, height: 11, borderRadius: '50%', background: c, opacity: 0.7 }} />)}
           </div>
           <pre style={{ background: '#010d33', padding: '16px', fontSize: 13, lineHeight: 1.8, color: '#EDEDED', overflow: 'auto', margin: 0 }}>
@@ -33,7 +33,7 @@ export default function ExplainCard({ exercise, onNext }: { exercise: Exercise; 
       )}
 
       {exercise.explanation && (
-        <div style={{ padding: '14px 16px', background: '#161616', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12 }}>
+        <div style={{ padding: '14px 16px', background: '#041540', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12 }}>
           <p style={{ fontSize: 14, color: '#A0A0A0', lineHeight: 1.7, margin: 0 }}>{exercise.explanation}</p>
         </div>
       )}

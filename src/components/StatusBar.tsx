@@ -21,7 +21,7 @@ export default function StatusBar() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', height: 44 }}>
 
         {/* Left: Streak + XP */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             <Flame size={14} color={streak > 0 ? '#EDEDED' : '#3A3A3A'} fill={streak > 0 ? '#EDEDED' : 'none'} />
             <span style={{ fontWeight: 600, fontSize: 13, color: streak > 0 ? '#EDEDED' : '#3A3A3A' }}>
@@ -36,11 +36,16 @@ export default function StatusBar() {
           </div>
         </div>
 
+        {/* Center: Logo (mobile only) — tap to go home */}
+        <Link href="/" className="mobile-logo-center" style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
+          <img src="/logorobotuy.png" alt="Robotuy" style={{ height: 18, objectFit: 'contain' }} />
+        </Link>
+
         {/* Right: Settings */}
         <Link href="/settings" style={{ display: 'flex' }}>
           <div style={{
             width: 32, height: 32, borderRadius: 8,
-            background: '#041540',
+            background: '#0c255a',
             border: '1px solid rgba(255,255,255,0.08)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             cursor: 'pointer',

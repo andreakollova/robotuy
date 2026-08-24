@@ -8,6 +8,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  viewportFit: 'cover',
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -77,7 +78,7 @@ export async function generateMetadata(): Promise<Metadata> {
 import BottomNav from '@/components/BottomNav';
 import LocaleInit from '@/components/LocaleInit';
 import DeepLinkHandler from '@/components/DeepLinkHandler';
-import PushNotificationHandler from '@/components/PushNotifications';
+import LightModeOverride from '@/components/LightModeOverride';
 import ProRewardModal from '@/components/ProRewardModal';
 import WidgetTip from '@/components/WidgetTip';
 import AuthGate from '@/components/AuthGate';
@@ -139,7 +140,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </AuthGate>
         <Analytics />
         <DeepLinkHandler />
-        <PushNotificationHandler />
+        <LightModeOverride />
         <ProRewardModal />
         <WidgetTip />
         <script dangerouslySetInnerHTML={{ __html: `

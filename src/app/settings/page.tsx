@@ -7,7 +7,10 @@ import { useLocaleStore } from '@/store/localeStore';
 import { getSupabase } from '@/lib/supabase';
 import StatusBar from '@/components/StatusBar';
 import AuthModal from '@/components/AuthModal';
-import { LogIn, LogOut, Globe, User, Trash2, ChevronRight, Sun, Moon } from 'lucide-react';
+import { LogIn, LogOut, Globe, User, Trash2, ChevronRight, Sun, Moon, Smartphone, CreditCard, Crown } from 'lucide-react';
+import { useSubscription } from '@/components/Paywall';
+import dynamic from 'next/dynamic';
+const Paywall = dynamic(() => import('@/components/Paywall'), { ssr: false });
 
 export default function SettingsPage() {
   const { locale, toggle } = useLocaleStore();
@@ -19,6 +22,9 @@ export default function SettingsPage() {
   const [notifOn, setNotifOn] = useState(true);
   const [isApp, setIsApp] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [billingLoading, setBillingLoading] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
+  const { isPro } = useSubscription();
 
   useEffect(() => {
     setNotifOn(localStorage.getItem('robotuy-notifications') !== 'off');
@@ -42,6 +48,8 @@ export default function SettingsPage() {
     localStorage.removeItem('robotuy-user');
     localStorage.removeItem('robotuy-path');
     localStorage.removeItem('robotuy-locale');
+    localStorage.removeItem('robotuy-last-auth-code');
+    localStorage.removeItem('robotuy-sb-auth');
     window.location.href = '/';
   };
 
@@ -53,14 +61,23 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="page-shell" style={{ minHeight: '100vh', background: '#010d33', paddingBottom: 80 }}>
+    <div className="page-shell" style={{ minHeight: '100vh', background: 'var(--bg, #010d33)', paddingBottom: 80 }}>
       <StatusBar />
       <AuthModal open={showAuth} onClose={() => setShowAuth(false)} />
 
       <div style={{ maxWidth: 520, margin: '0 auto', padding: '24px 20px' }}>
-        <h1 style={{ fontWeight: 800, fontSize: 22, color: '#fff', marginBottom: 24 }}>
-          {locale === 'sk' ? 'Nastavenia' : 'Settings'}
-        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
+          <h1 style={{ fontWeight: 800, fontSize: 22, color: '#fff' }}>
+            {locale === 'sk' ? 'Nastavenia' : 'Settings'}
+          </h1>
+          {isPro && (
+            <span style={{
+              fontSize: 10, fontWeight: 800, color: '#000',
+              background: 'linear-gradient(135deg, #4ade80, #22c55e)',
+              padding: '3px 10px', borderRadius: 7, letterSpacing: '0.06em',
+            }}>PRO</span>
+          )}
+        </div>
 
         {/* Account */}
         <div style={{ marginBottom: 28 }}>
@@ -69,9 +86,9 @@ export default function SettingsPage() {
           </h3>
 
           {authUser ? (
-            <div style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14, overflow: 'hidden' }}>
+            <div style={{ background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
               <div style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: '#010d33', border: '1px solid #0c255a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: '#111', border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <User size={16} color="#4ade80" />
                 </div>
                 <div style={{ flex: 1 }}>
@@ -97,7 +114,7 @@ export default function SettingsPage() {
               onClick={() => setShowAuth(true)}
               style={{
                 width: '100%', padding: '14px 16px', borderRadius: 14,
-                background: '#000a2b', border: '1px solid #0c255a',
+                background: '#010d33', border: '1px solid #1a1a1a',
                 display: 'flex', alignItems: 'center', gap: 12,
                 cursor: 'pointer', color: '#ccc', fontSize: 14, fontWeight: 600,
               }}
@@ -109,13 +126,97 @@ export default function SettingsPage() {
           )}
         </div>
 
+        {/* Get Pro */}
+        {authUser && !isPro && (
+          <div style={{ marginBottom: 28 }}>
+            <button
+              onClick={() => setShowPaywall(true)}
+              style={{
+                width: '100%', padding: '16px 16px', borderRadius: 14,
+                background: 'linear-gradient(135deg, rgba(74,222,128,0.1), rgba(34,197,94,0.05))',
+                border: '1px solid rgba(74,222,128,0.3)',
+                display: 'flex', alignItems: 'center', gap: 12,
+                cursor: 'pointer', textAlign: 'left',
+              }}
+            >
+              <Crown size={18} color="#4ade80" />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 14, color: '#fff', fontWeight: 700 }}>
+                  {locale === 'sk' ? 'Získať Robotuy Pro' : 'Get Robotuy Pro'}
+                </div>
+                <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
+                  {locale === 'sk' ? 'Odomkni všetky lekcie a funkcie' : 'Unlock all lessons and features'}
+                </div>
+              </div>
+              <ChevronRight size={16} color="#4ade80" />
+            </button>
+          </div>
+        )}
+
+        {showPaywall && <Paywall onClose={() => setShowPaywall(false)} />}
+
+        {/* Subscription - web only */}
+        {authUser && !isApp && (
+          <div style={{ marginBottom: 28 }}>
+            <h3 style={{ fontSize: 11, fontWeight: 700, color: '#555', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
+              {locale === 'sk' ? 'Predplatné' : 'Subscription'}
+            </h3>
+            <div style={{ background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
+              <button
+                onClick={async () => {
+                  setBillingLoading(true);
+                  try {
+                    const sb = getSupabase();
+                    const user = sb ? (await sb.auth.getUser()).data.user : null;
+                    if (!user) return;
+                    const res = await fetch('/api/billing-portal', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ userId: user.id }),
+                    });
+                    const data = await res.json();
+                    if (data.url) {
+                      window.location.href = data.url;
+                    } else {
+                      alert(locale === 'sk' ? 'Žiadne aktívne predplatné.' : 'No active subscription found.');
+                    }
+                  } catch {
+                    alert(locale === 'sk' ? 'Nastala chyba.' : 'Something went wrong.');
+                  } finally {
+                    setBillingLoading(false);
+                  }
+                }}
+                disabled={billingLoading}
+                style={{
+                  width: '100%', padding: '14px 16px',
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left',
+                }}
+              >
+                <CreditCard size={16} color="#888" />
+                <span style={{ flex: 1, fontSize: 14, color: '#ccc', fontWeight: 500 }}>
+                  {billingLoading
+                    ? (locale === 'sk' ? 'Nacitavam...' : 'Loading...')
+                    : (locale === 'sk' ? 'Spravovať predplatné' : 'Manage subscription')}
+                </span>
+                <ChevronRight size={14} color="#555" />
+              </button>
+            </div>
+            <p style={{ fontSize: 11, color: '#555', marginTop: 6, paddingLeft: 4 }}>
+              {locale === 'sk'
+                ? 'Zobraz faktúry, zmeň kartu alebo zruš predplatné.'
+                : 'View invoices, update card or cancel subscription.'}
+            </p>
+          </div>
+        )}
+
         {/* Preferences */}
         <div style={{ marginBottom: 28 }}>
           <h3 style={{ fontSize: 11, fontWeight: 700, color: '#555', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
             {locale === 'sk' ? 'Preferencie' : 'Preferences'}
           </h3>
 
-          <div style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14, overflow: 'hidden' }}>
+          <div style={{ background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
             {/* Language */}
             <button
               onClick={toggle}
@@ -150,7 +251,7 @@ export default function SettingsPage() {
                     document.documentElement.setAttribute('data-theme', t);
                   }} style={{
                     padding: '6px 14px', borderRadius: 6, border: 'none', cursor: 'pointer',
-                    background: theme === t ? 'var(--bg-raised, #0c255a)' : 'transparent',
+                    background: theme === t ? 'var(--bg-raised, #1a1a1a)' : 'transparent',
                     color: theme === t ? 'var(--text, #fff)' : 'var(--text-dim, #555)',
                     fontSize: 12, fontWeight: 600,
                   }}>
@@ -168,7 +269,7 @@ export default function SettingsPage() {
                     value={nameVal}
                     onChange={e => setNameVal(e.target.value)}
                     autoFocus
-                    style={{ flex: 1, padding: '8px 12px', borderRadius: 8, background: '#010d33', border: '1px solid #0c255a', color: '#fff', fontSize: 16, fontFamily: 'inherit', outline: 'none' }}
+                    style={{ flex: 1, padding: '8px 12px', borderRadius: 8, background: '#111', border: '1px solid #222', color: '#fff', fontSize: 16, fontFamily: 'inherit', outline: 'none' }}
                   />
                   <button
                     onClick={() => { if (nameVal.trim()) setName(nameVal.trim()); setEditName(false); }}
@@ -218,9 +319,9 @@ export default function SettingsPage() {
                       onClick={() => setFavDrink(d.id)}
                       style={{
                         padding: '8px 14px', borderRadius: 10, fontSize: 12, fontWeight: 600,
-                        background: favDrink === d.id ? 'rgba(74,222,128,0.1)' : '#111',
-                        border: `1px solid ${favDrink === d.id ? 'rgba(74,222,128,0.4)' : '#0c255a'}`,
-                        color: favDrink === d.id ? '#4ade80' : '#888',
+                        background: favDrink === d.id ? 'rgba(74,222,128,0.1)' : 'var(--bg-raised, #111)',
+                        border: `1px solid ${favDrink === d.id ? 'rgba(74,222,128,0.4)' : 'var(--border, #1a1a1a)'}`,
+                        color: favDrink === d.id ? '#4ade80' : 'var(--text-hint, #888)',
                         cursor: 'pointer',
                       }}
                     >
@@ -239,20 +340,51 @@ export default function SettingsPage() {
             <h3 style={{ fontSize: 11, fontWeight: 700, color: '#555', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
               {locale === 'sk' ? 'Notifikácie' : 'Notifications'}
             </h3>
-            <div style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14, overflow: 'hidden' }}>
+            <div style={{ background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
               <div style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span style={{ fontSize: 14, color: '#ccc', fontWeight: 500 }}>
                   {locale === 'sk' ? 'Push notifikácie' : 'Push notifications'}
                 </span>
                 <div
-                  onClick={() => {
+                  onClick={async () => {
                     const next = !notifOn;
+                    if (next && (window as any).Capacitor) {
+                      try {
+                        const { PushNotifications } = await import('@capacitor/push-notifications');
+                        const perm = await PushNotifications.checkPermissions();
+                        if (perm.receive === 'prompt') {
+                          const r = await PushNotifications.requestPermissions();
+                          if (r.receive !== 'granted') return;
+                        } else if (perm.receive === 'denied') {
+                          window.open('app-settings:', '_system');
+                          return;
+                        }
+                        // Add listener before register to catch token
+                        await PushNotifications.addListener('registration', async (token) => {
+                          console.log('Push token from settings:', token.value);
+                          localStorage.setItem('robotuy-push-token', token.value);
+                          try {
+                            const sb = getSupabase();
+                            const user = sb ? (await sb.auth.getUser()).data.user : null;
+                            if (user) {
+                              await fetch('/api/push/register', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ userId: user.id, token: token.value, locale }),
+                              });
+                              console.log('Push token saved via settings toggle');
+                            }
+                          } catch {}
+                        });
+                        await PushNotifications.register();
+                      } catch {}
+                    }
                     setNotifOn(next);
                     localStorage.setItem('robotuy-notifications', next ? 'on' : 'off');
                   }}
                   style={{
                     width: 48, height: 28, borderRadius: 14, cursor: 'pointer', position: 'relative',
-                    background: notifOn ? '#4ade80' : '#0c255a',
+                    background: notifOn ? '#4ade80' : '#333',
                     transition: 'background 0.2s',
                   }}
                 >
@@ -273,19 +405,23 @@ export default function SettingsPage() {
           <h3 style={{ fontSize: 11, fontWeight: 700, color: '#555', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
             FAQ
           </h3>
-          <div style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14, overflow: 'hidden' }}>
+          <div style={{ background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
             {([
-              {
+              ...(isApp ? [{
                 q: locale === 'sk' ? 'Ako pridať widget na plochu? (iOS)' : 'How to add a widget? (iOS)',
                 a: locale === 'sk'
-                  ? 'Widget je dostupný na iPhone. Dlho podrž na ploche → klikni + → vyhľadaj Coduy → vyber widget → hotovo.'
-                  : 'Widget is available on iPhone. Long press on home screen → tap + → search Coduy → select widget → done.',
-              },
+                  ? 'WIDGET_WIZARD'
+                  : 'WIDGET_WIZARD',
+              }] : []),
               {
                 q: locale === 'sk' ? 'Ako zrušiť predplatné?' : 'How to cancel subscription?',
                 a: locale === 'sk'
-                  ? 'Nastavenia telefónu → tvoje meno → Predplatné → Coduy → Zrušiť. Predplatné zostáva aktívne do konca obdobia.'
-                  : 'Phone Settings → your name → Subscriptions → Coduy → Cancel. Your subscription stays active until the end of the period.',
+                  ? isApp
+                    ? 'Nastavenia telefónu → tvoje meno → Predplatné → Robotuy → Zrušiť. Predplatné zostáva aktívne do konca obdobia.'
+                    : 'Klikni na "Spravovať predplatné" vyššie. Tam môžeš zrušiť predplatné, zmeniť kartu alebo si pozrieť faktúry.'
+                  : isApp
+                    ? 'Phone Settings → your name → Subscriptions → Robotuy → Cancel. Your subscription stays active until the end of the period.'
+                    : 'Click "Manage subscription" above. There you can cancel, update your card or view invoices.',
               },
               {
                 q: locale === 'sk' ? 'Funguje to aj offline?' : 'Does it work offline?',
@@ -299,9 +435,21 @@ export default function SettingsPage() {
                   {faq.q}
                   <ChevronRight size={14} color="#555" />
                 </summary>
-                <p style={{ padding: '0 16px 14px', color: '#888', fontSize: 13, lineHeight: 1.5, margin: 0 }}>
-                  {faq.a}
-                </p>
+                <div style={{ padding: '0 16px 14px', color: '#888', fontSize: 13, lineHeight: 1.5, margin: 0 }}>
+                  {faq.a === 'WIDGET_WIZARD' ? (
+                    <button
+                      onClick={() => { import('@/components/WidgetTip').then(m => m.triggerWidgetWizard()); }}
+                      style={{
+                        background: '#22c55e', color: '#000', fontWeight: 700, fontSize: 13,
+                        border: 'none', borderRadius: 10, padding: '10px 18px', cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: 6,
+                      }}
+                    >
+                      <Smartphone size={14} />
+                      {locale === 'sk' ? 'Ukázať návod' : 'Show tutorial'}
+                    </button>
+                  ) : faq.a}
+                </div>
               </details>
             ))}
           </div>
@@ -312,7 +460,7 @@ export default function SettingsPage() {
           <h3 style={{ fontSize: 11, fontWeight: 700, color: '#555', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
             {locale === 'sk' ? 'Právne' : 'Legal'}
           </h3>
-          <div style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14, overflow: 'hidden' }}>
+          <div style={{ background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 14, overflow: 'hidden' }}>
             <a href="/privacy" style={{ display: 'block', padding: '14px 16px', color: '#ccc', fontSize: 14, fontWeight: 500, textDecoration: 'none', borderBottom: '1px solid #111' }}>
               {locale === 'sk' ? 'Zásady ochrany súkromia' : 'Privacy Policy'}
             </a>
@@ -322,12 +470,26 @@ export default function SettingsPage() {
           </div>
         </div>
 
+        {/* Logout */}
+        <button
+          onClick={handleLogout}
+          style={{
+            padding: '10px 14px', borderRadius: 10,
+            background: 'none', border: '1px solid #1a1a1a',
+            display: 'flex', alignItems: 'center', gap: 8,
+            cursor: 'pointer', color: '#888', fontSize: 11, fontWeight: 500,
+          }}
+        >
+          <LogOut size={12} />
+          {locale === 'sk' ? 'Odhlásiť sa' : 'Log out'}
+        </button>
+
         {/* Delete data */}
         <button
           onClick={handleDeleteData}
           style={{
             padding: '10px 14px', borderRadius: 10,
-            background: 'none', border: '1px solid #0c255a',
+            background: 'none', border: 'none',
             display: 'flex', alignItems: 'center', gap: 8,
             cursor: 'pointer', color: '#555', fontSize: 11, fontWeight: 500,
             opacity: 0.6,

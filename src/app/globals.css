@@ -3,8 +3,8 @@
 
 @theme {
   --color-base:    #010d33;
-  --color-surface: #041540;
-  --color-lift:    #071c4d;
+  --color-surface: #000a2b;
+  --color-lift:    #041540;
   --color-raised:  #0c255a;
 
   --color-text-primary:   #EDEDED;
@@ -40,6 +40,9 @@
   --border-light: rgba(255,255,255,0.08);
   --green: #22c55e;
   --green-bg: rgba(34,197,94,0.08);
+  --btn-primary: #EDEDED;
+  --btn-primary-text: #010d33;
+  --card-bg: #041540;
 }
 
 [data-theme="light"] {
@@ -49,13 +52,16 @@
   --bg-raised: #E8E8EC;
   --bg-input: #FFFFFF;
   --text: #1A1A1A;
-  --text-secondary: #555;
-  --text-hint: #888;
-  --text-dim: #bbb;
-  --border: #E0E0E0;
-  --border-light: rgba(0,0,0,0.08);
+  --text-secondary: #444;
+  --text-hint: #666;
+  --text-dim: #999;
+  --border: #D8D8DC;
+  --border-light: rgba(0,0,0,0.06);
   --green: #16a34a;
   --green-bg: rgba(22,163,74,0.08);
+  --btn-primary: #1A1A1A;
+  --btn-primary-text: #FFFFFF;
+  --card-bg: #FFFFFF;
 }
 
 html {
@@ -141,8 +147,8 @@ a { color: inherit; text-decoration: none; }
     left: 0;
     width: 240px;
     height: 100vh;
-    background: #000a2b;
-    border-right: 1px solid #0c255a;
+    background: #010d33;
+    border-right: 1px solid #1a1a1a;
     z-index: 200;
     padding: 24px 16px;
     gap: 8px;
@@ -153,7 +159,7 @@ a { color: inherit; text-decoration: none; }
     gap: 10px;
     padding: 4px 12px 20px;
     margin-bottom: 8px;
-    border-bottom: 1px solid #0c255a;
+    border-bottom: 1px solid #1a1a1a;
   }
   .desktop-nav-logo-text {
     font-weight: 700;
@@ -180,11 +186,11 @@ a { color: inherit; text-decoration: none; }
   }
   .desktop-nav-item:hover {
     color: #bbb;
-    background: #041540;
+    background: #111;
   }
   .desktop-nav-item.active {
     color: #fff;
-    background: #161616;
+    background: #041540;
   }
   .mobile-nav { display: none !important; }
 
@@ -209,12 +215,12 @@ a { color: inherit; text-decoration: none; }
   border-radius: 22px;
   display: flex;
   align-items: stretch;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
   box-shadow: 0 4px 24px rgba(0,0,0,0.4);
 }
 
 @media (min-width: 900px) {
   .mobile-nav { display: none !important; }
+  .mobile-logo-center { display: none !important; }
 }
 
 /* ========== Dashboard grid ========== */
@@ -231,7 +237,7 @@ a { color: inherit; text-decoration: none; }
   }
   .dashboard-content {
     display: grid;
-    grid-template-columns: 1fr 320px;
+    grid-template-columns: 1fr 300px;
     gap: 0;
     max-width: 1100px;
     margin: 0 auto;
@@ -240,17 +246,20 @@ a { color: inherit; text-decoration: none; }
   }
   .dashboard-main {
     padding: 40px 40px 60px;
-    border-right: 1px solid #0c255a;
+    border-right: 1px solid #1a1a1a;
     min-height: 0;
     overflow-y: auto;
   }
   .dashboard-sidebar {
-    padding: 40px 28px;
+    padding: 35px 24px 40px 8px;
     position: sticky;
     top: 72px;
     height: calc(100vh - 72px);
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
+  .dashboard-sidebar::-webkit-scrollbar { display: none; }
 }
 
 @media (max-width: 899px) {
@@ -275,8 +284,8 @@ a { color: inherit; text-decoration: none; }
 
 /* ========== Stat card ========== */
 .stat-card {
-  background: #000a2b;
-  border: 1px solid #0c255a;
+  background: #010d33;
+  border: 1px solid #1a1a1a;
   border-radius: 14px;
   padding: 16px 18px;
   display: flex;
@@ -287,7 +296,7 @@ a { color: inherit; text-decoration: none; }
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: #041540;
+  background: #111;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -312,7 +321,7 @@ a { color: inherit; text-decoration: none; }
   width: 180px;
   padding: 8px 10px;
   border-radius: 8px;
-  background: #0c255a;
+  background: #1a1a1a;
   border: 1px solid #222;
   font-size: 11px;
   color: #888;
@@ -375,32 +384,533 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ========== Light Mode Overrides ========== */
+/* Base */
 [data-theme="light"] body { background-color: var(--bg) !important; color: var(--text) !important; }
 [data-theme="light"] .page-shell { background: var(--bg) !important; }
-[data-theme="light"] .desktop-nav-logo img { filter: invert(1) !important; }
+
+/* Logo — invert to black with slight outline */
+[data-theme="light"] .desktop-nav-logo img { filter: invert(1) !important; -webkit-filter: invert(1) !important; }
+[data-theme="light"] .mobile-logo-center img,
+[data-theme="light"] .desktop-nav-logo img {
+  filter: invert(1) drop-shadow(0 0 0.5px rgba(0,0,0,0.4)) drop-shadow(0 0 0.5px rgba(0,0,0,0.4)) !important;
+}
+
+/* Desktop nav */
 [data-theme="light"] .desktop-nav { background: var(--bg-card) !important; border-color: var(--border) !important; }
 [data-theme="light"] .desktop-nav-logo { border-color: var(--border) !important; }
-[data-theme="light"] .desktop-nav-item { color: #666 !important; }
+[data-theme="light"] .desktop-nav-item { color: #555 !important; }
 [data-theme="light"] .desktop-nav-item:hover { color: var(--text) !important; background: var(--bg-surface) !important; }
 [data-theme="light"] .desktop-nav-item.active { color: var(--text) !important; background: var(--bg-raised) !important; }
-[data-theme="light"] .mobile-nav { background: rgba(255,255,255,0.92) !important; backdrop-filter: blur(20px) !important; border-top: 1px solid var(--border) !important; }
-[data-theme="light"] [style*="background: #010d33"], [data-theme="light"] [style*="background:#010d33"],
-[data-theme="light"] [style*="background: #000a2b"], [data-theme="light"] [style*="background:#000a2b"],
-[data-theme="light"] [style*="background: #041540"], [data-theme="light"] [style*="background:#041540"],
-[data-theme="light"] [style*="background: #010d33"], [data-theme="light"] [style*="background:#010d33"],
-[data-theme="light"] [style*="background: #000a2b"], [data-theme="light"] [style*="background:#000a2b"],
-[data-theme="light"] [style*="background: #111"], [data-theme="light"] [style*="background:#111"] { background: var(--bg-card) !important; }
-[data-theme="light"] [style*="background: #0c255a"], [data-theme="light"] [style*="background:#0c255a"],
-[data-theme="light"] [style*="background: #0c255a"], [data-theme="light"] [style*="background:#0c255a"] { background: var(--bg-surface) !important; }
-[data-theme="light"] [style*="color: #fff"], [data-theme="light"] [style*="color:#fff"],
-[data-theme="light"] [style*="color: #EDEDED"], [data-theme="light"] [style*="color: rgb(255, 255, 255)"] { color: var(--text) !important; }
-[data-theme="light"] [style*="color: #eee"], [data-theme="light"] [style*="color:#eee"] { color: #333 !important; }
-[data-theme="light"] [style*="color: #ccc"], [data-theme="light"] [style*="color:#ccc"] { color: #444 !important; }
-[data-theme="light"] [style*="color: #ddd"], [data-theme="light"] [style*="color:#ddd"] { color: #333 !important; }
-[data-theme="light"] [style*="border: 1px solid #0c255a"], [data-theme="light"] [style*="border: 1px solid #0c255a"],
-[data-theme="light"] [style*="outline: 1.5px solid #0c255a"], [data-theme="light"] [style*="outline: 1.5px solid #0c255a"] { border-color: var(--border) !important; outline-color: var(--border) !important; }
-[data-theme="light"] .code-block, [data-theme="light"] .code-input { background: #1e1e2e !important; }
+
+/* Mobile nav */
+[data-theme="light"] .mobile-nav { background: rgba(255,255,255,0.94) !important; backdrop-filter: blur(20px) !important; border: 1px solid var(--border) !important; }
+[data-theme="light"] .mobile-nav a { color: #888 !important; }
+[data-theme="light"] .mobile-nav a.active,
+[data-theme="light"] .mobile-nav a[style*="color: #fff"] { color: var(--text) !important; }
+
+/* StatusBar */
+[data-theme="light"] [style*="background"][style*="#010d33"],
+[data-theme="light"] [style*="background-color"][style*="#010d33"] { background-color: var(--bg-card) !important; border-bottom: 1px solid var(--border) !important; }
+
+/* All dark backgrounds → light */
+[data-theme="light"] [style*="background: #010d33"],
+[data-theme="light"] [style*="background:#010d33"],
+[data-theme="light"] [style*="background: #010d33"],
+[data-theme="light"] [style*="background:#010d33"],
+[data-theme="light"] [style*="background: #050505"],
+[data-theme="light"] [style*="background:#050505"],
+[data-theme="light"] [style*="background: #030303"],
+[data-theme="light"] [style*="background:#030303"],
+[data-theme="light"] [style*="background: #111"],
+[data-theme="light"] [style*="background:#111"],
+[data-theme="light"] [style*="background: #000"],
+[data-theme="light"] [style*="background:#000"],
+[data-theme="light"] [style*="background: rgb(10, 10, 10)"],
+[data-theme="light"] [style*="background: rgb(0, 0, 0)"] { background: var(--bg-card) !important; }
+
+[data-theme="light"] [style*="background: #1a1a1a"],
+[data-theme="light"] [style*="background:#1a1a1a"],
+[data-theme="light"] [style*="background: #0c255a"],
+[data-theme="light"] [style*="background:#0c255a"] { background: var(--bg-surface) !important; }
+
+[data-theme="light"] [style*="background: #041540"],
+[data-theme="light"] [style*="background:#041540"] { background: var(--bg-card) !important; border: 1px solid var(--border) !important; }
+
+[data-theme="light"] [style*="background: #222"],
+[data-theme="light"] [style*="background:#222"],
+[data-theme="light"] [style*="background: #333"],
+[data-theme="light"] [style*="background:#333"] { background: var(--bg-raised) !important; }
+
+/* Semi-transparent dark overlays */
+[data-theme="light"] [style*="background: rgba(0,0,0,0.85)"],
+[data-theme="light"] [style*="background: rgba(0, 0, 0, 0.85)"] { background: rgba(255,255,255,0.95) !important; }
+[data-theme="light"] [style*="background: rgba(0,0,0,0.7)"],
+[data-theme="light"] [style*="background: rgba(0, 0, 0, 0.7)"] { background: rgba(255,255,255,0.9) !important; }
+[data-theme="light"] [style*="background: rgba(0,0,0,0.95)"],
+[data-theme="light"] [style*="background: rgba(0, 0, 0, 0.95)"] { background: rgba(255,255,255,0.97) !important; }
+[data-theme="light"] [style*="background: rgba(10, 10, 10"] { background: rgba(245,245,247,0.95) !important; }
+[data-theme="light"] [style*="background: rgba(2, 6, 18"] { background: rgba(245,245,247,0.95) !important; }
+
+/* White/light text → dark in light mode */
+[data-theme="light"] [style*="color: #fff"],
+[data-theme="light"] [style*="color:#fff"],
+[data-theme="light"] [style*="color: #EDEDED"],
+[data-theme="light"] [style*="color:#EDEDED"],
+[data-theme="light"] [style*="color: rgb(255, 255, 255)"],
+[data-theme="light"] [style*="color: rgb(237, 237, 237)"] { color: var(--text) !important; }
+
+[data-theme="light"] [style*="color: #eee"],
+[data-theme="light"] [style*="color:#eee"] { color: #222 !important; }
+
+[data-theme="light"] [style*="color: #ddd"],
+[data-theme="light"] [style*="color:#ddd"],
+[data-theme="light"] [style*="color: #ccc"],
+[data-theme="light"] [style*="color:#ccc"] { color: #333 !important; }
+
+[data-theme="light"] [style*="color: #bbb"],
+[data-theme="light"] [style*="color:#bbb"],
+[data-theme="light"] [style*="color: #aaa"],
+[data-theme="light"] [style*="color:#aaa"] { color: #555 !important; }
+
+[data-theme="light"] [style*="color: #999"],
+[data-theme="light"] [style*="color:#999"],
+[data-theme="light"] [style*="color: #888"],
+[data-theme="light"] [style*="color:#888"] { color: #666 !important; }
+
+[data-theme="light"] [style*="color: #777"],
+[data-theme="light"] [style*="color:#777"],
+[data-theme="light"] [style*="color: #666"],
+[data-theme="light"] [style*="color:#666"] { color: #555 !important; }
+
+[data-theme="light"] [style*="color: #555"],
+[data-theme="light"] [style*="color:#555"] { color: #777 !important; }
+
+[data-theme="light"] [style*="color: #444"],
+[data-theme="light"] [style*="color:#444"],
+[data-theme="light"] [style*="color: #3A3A3A"],
+[data-theme="light"] [style*="color:#3A3A3A"] { color: #999 !important; }
+
+/* Borders — all dark borders to light */
+[data-theme="light"] [style*="border: 1px solid #1a1a1a"],
+[data-theme="light"] [style*="border:1px solid #1a1a1a"],
+[data-theme="light"] [style*="border-color: #1a1a1a"],
+[data-theme="light"] [style*="border: 1px solid #111"],
+[data-theme="light"] [style*="border:1px solid #111"],
+[data-theme="light"] [style*="border: 1px solid #222"],
+[data-theme="light"] [style*="border:1px solid #222"],
+[data-theme="light"] [style*="border: 1px solid #333"],
+[data-theme="light"] [style*="border:1px solid #333"],
+[data-theme="light"] [style*="border: 1px solid #010d33"],
+[data-theme="light"] [style*="border:1px solid #010d33"] { border-color: var(--border) !important; }
+
+[data-theme="light"] [style*="border-top: 1px solid #111"],
+[data-theme="light"] [style*="border-bottom: 1px solid #111"],
+[data-theme="light"] [style*="border-top: 1px solid #010d33"],
+[data-theme="light"] [style*="border-bottom: 1px solid #010d33"],
+[data-theme="light"] [style*="border-bottom: 1px solid #222"] { border-color: var(--border) !important; }
+
+[data-theme="light"] [style*="outline: 1.5px solid #1a1a1a"],
+[data-theme="light"] [style*="outline:1.5px solid #1a1a1a"] { outline-color: var(--border) !important; }
+
+[data-theme="light"] [style*="border: 1px solid rgba(255,255,255,0.08)"],
+[data-theme="light"] [style*="border: 1px solid rgba(255, 255, 255, 0.08)"] { border-color: var(--border) !important; }
+
+/* Inputs */
+[data-theme="light"] input[style*="background: #010d33"],
+[data-theme="light"] input[style*="background:#010d33"],
+[data-theme="light"] input[style*="background: #111"],
+[data-theme="light"] input[style*="background:#111"] { background: var(--bg-surface) !important; color: var(--text) !important; border-color: var(--border) !important; }
+
+/* Buttons */
+[data-theme="light"] button[style*="background: #EDEDED"],
+[data-theme="light"] button[style*="background:#EDEDED"] { background: var(--text) !important; color: var(--bg-card) !important; }
+
+/* Byte mascot — body color */
+[data-theme="light"] [style*="fill: #1a1a1a"],
+[data-theme="light"] [style*="fill:#1a1a1a"] { fill: #E8E8EC !important; }
+
+/* Arena — keep dark game canvas but lighten UI elements */
+[data-theme="light"] [style*="background: #030303"][style*="position: fixed"] { background: #E8E8EC !important; }
+
+/* Arena battle modal */
+[data-theme="light"] [style*="background: #111"][style*="border-radius: 20"] {
+  background: var(--bg-card) !important;
+  border-color: var(--border) !important;
+}
+
+/* Arena quiz option buttons */
+[data-theme="light"] button[style*="border: 1.5px solid #222"],
+[data-theme="light"] button[style*="border: 1.5px solid #333"],
+[data-theme="light"] button[style*="border:1.5px solid #222"],
+[data-theme="light"] button[style*="border: 1.5px solid rgb(34,"],
+[data-theme="light"] button[style*="border: 1.5px solid rgb(51,"] {
+  border-color: var(--border) !important;
+}
+
+/* Arena intro overlay */
+[data-theme="light"] [style*="background: rgba(0,0,0,0.95)"][style*="position: fixed"],
+[data-theme="light"] [style*="background: rgba(0, 0, 0, 0.95)"][style*="position: fixed"] {
+  background: rgba(245,245,247,0.98) !important;
+}
+
+/* Arena bot labels */
+[data-theme="light"] [style*="background: rgba(0,0,0,0.6)"][style*="position: fixed"] {
+  background: rgba(0,0,0,0.2) !important;
+}
+
+/* Code blocks stay dark */
+[data-theme="light"] .code-block,
+[data-theme="light"] .code-input { background: #1e1e2e !important; color: #d4d4d4 !important; }
 [data-theme="light"] .inline-code { background: #e8e8ec !important; color: #16a34a !important; }
-[data-theme="light"] .panel-shadow { box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important; }
+
+/* Shadows */
+[data-theme="light"] .panel-shadow { box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important; }
 [data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12) !important; }
+[data-theme="light"] [style*="box-shadow: 0 24px 80px rgba(0,0,0,0.7)"] { box-shadow: 0 24px 80px rgba(0,0,0,0.1) !important; }
+
+/* Dashboard */
 [data-theme="light"] .dashboard-main { background: var(--bg) !important; }
+
+/* SVG strokes — path connectors */
+[data-theme="light"] [style*="stroke: #333"],
+[data-theme="light"] [style*="stroke:#333"] { stroke: #ccc !important; }
+[data-theme="light"] path[stroke="#333"] { stroke: #ccc !important; }
+[data-theme="light"] path[stroke="#1a1a1a"] { stroke: #ddd !important; }
+
+/* CodingPath section divider line */
+[data-theme="light"] [style*="border-color: #333"] { border-color: #ddd !important; }
+[data-theme="light"] [style*="border-top: 1px solid #333"],
+[data-theme="light"] [style*="border-bottom: 1px solid #333"] { border-color: #ddd !important; }
+
+/* ===== AGGRESSIVE LIGHT MODE — catch everything ===== */
+
+/* ALL elements with dark backgrounds */
+[data-theme="light"] div[style*="background"],
+[data-theme="light"] button[style*="background"],
+[data-theme="light"] a[style*="background"] {
+  --_bg: initial;
+}
+
+/* StatusBar logo — invert for light mode */
+[data-theme="light"] .mobile-logo-center img { filter: invert(1) !important; }
+
+/* Force ALL circle/rect SVG fills that are dark to light */
+[data-theme="light"] circle[fill="#1a1a1a"],
+[data-theme="light"] circle[style*="fill: #1a1a1a"],
+[data-theme="light"] rect[fill="#1a1a1a"],
+[data-theme="light"] [style*="fill:#1a1a1a"],
+[data-theme="light"] [style*="fill: #1a1a1a"] { fill: #E0E0E4 !important; }
+
+/* ===== BYTE CHARACTER — LIGHT MODE ===== */
+/* White body with dark outline */
+[data-theme="light"] .byte-character ellipse[cx="60"] { fill: #f5f5f7 !important; stroke: #333 !important; }
+/* Dark eyes */
+[data-theme="light"] .byte-character ellipse[fill="white"]:not(.byte-eye-dot) { fill: #333 !important; filter: none !important; }
+/* White highlight dots in eyes */
+[data-theme="light"] .byte-eye-dot { opacity: 0.9 !important; fill: white !important; }
+/* Dark smile */
+[data-theme="light"] .byte-character path[fill="none"][stroke] { stroke: rgba(0,0,0,0.35) !important; }
+/* Dark antenna */
+[data-theme="light"] .byte-character line { stroke: #999 !important; }
+/* Dark sparkles */
+[data-theme="light"] .byte-character text { fill: rgba(0,0,0,0.5) !important; }
+/* Dark star/antenna tips and accessories */
+[data-theme="light"] .byte-character polygon,
+[data-theme="light"] .byte-character path[fill="white"],
+[data-theme="light"] .byte-character path[fill="#fff"],
+[data-theme="light"] .byte-character circle[fill="white"]:not(.byte-eye-dot) { fill: #333 !important; }
+/* Hat outlines dark */
+[data-theme="light"] .byte-character rect[stroke="white"],
+[data-theme="light"] .byte-character path[stroke="white"],
+[data-theme="light"] .byte-character line[stroke="white"] { stroke: #333 !important; }
+
+/* ALL white SVG icons inside dark containers → dark in light mode */
+[data-theme="light"] [style*="background"] svg[color="#fff"],
+[data-theme="light"] [style*="background"] svg[color="white"] { color: #555 !important; }
+[data-theme="light"] [style*="background"] svg[color="#777"] { color: #888 !important; }
+
+/* Progress bar */
+[data-theme="light"] [style*="background: #fff"][style*="border-radius: 2"] { background: #333 !important; }
+
+/* Dark pill/badge backgrounds */
+[data-theme="light"] [style*="background: #010d33"],
+[data-theme="light"] [style*="background:#010d33"],
+[data-theme="light"] [style*="background: #010d33"],
+[data-theme="light"] [style*="background:#010d33"],
+[data-theme="light"] [style*="background: #111"],
+[data-theme="light"] [style*="background:#111"],
+[data-theme="light"] [style*="background: #041540"],
+[data-theme="light"] [style*="background:#041540"],
+[data-theme="light"] [style*="background: #1a1a1a"],
+[data-theme="light"] [style*="background:#1a1a1a"],
+[data-theme="light"] [style*="background: #0c255a"],
+[data-theme="light"] [style*="background:#0c255a"],
+[data-theme="light"] [style*="background: #222"],
+[data-theme="light"] [style*="background:#222"],
+[data-theme="light"] [style*="background: #333"],
+[data-theme="light"] [style*="background:#333"] {
+  background: var(--bg-surface) !important;
+  border-color: var(--border) !important;
+}
+
+/* Settings: dark option buttons (drinks etc) */
+[data-theme="light"] button[style*="background: #111"],
+[data-theme="light"] button[style*="background:#111"],
+[data-theme="light"] button[style*="background: #010d33"],
+[data-theme="light"] button[style*="background:#010d33"],
+[data-theme="light"] button[style*="background: #041540"],
+[data-theme="light"] button[style*="background:#041540"],
+[data-theme="light"] button[style*="background: #1a1a1a"],
+[data-theme="light"] button[style*="background:#1a1a1a"],
+[data-theme="light"] button[style*="background: #0c255a"],
+[data-theme="light"] button[style*="background:#0c255a"] {
+  background: var(--bg-raised) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+/* Theory page — sticky header */
+[data-theme="light"] [style*="background: rgba(0,0,0,0.95)"],
+[data-theme="light"] [style*="background: rgba(0, 0, 0, 0.95)"],
+[data-theme="light"] [style*="background: rgba(0,0,0,0.9)"],
+[data-theme="light"] [style*="background: rgba(0, 0, 0, 0.9)"] {
+  background: rgba(245,245,247,0.95) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+/* Progress bars */
+[data-theme="light"] [style*="background: #0c255a"],
+[data-theme="light"] [style*="background:#0c255a"] { background: #E0E0E4 !important; }
+
+/* ALL white/light colored text → make DARK for readability */
+[data-theme="light"] h1[style*="color: #EDEDED"],
+[data-theme="light"] h2[style*="color: #EDEDED"],
+[data-theme="light"] h1[style*="color: #fff"],
+[data-theme="light"] h2[style*="color: #fff"],
+[data-theme="light"] h3[style*="color: #fff"],
+[data-theme="light"] h2[style*="color: rgb(255"],
+[data-theme="light"] p[style*="color: #EDEDED"],
+[data-theme="light"] span[style*="color: #EDEDED"],
+[data-theme="light"] div[style*="color: #EDEDED"] { color: #1A1A1A !important; }
+
+/* Lighter grays that are too light in light mode */
+[data-theme="light"] [style*="color: #94a3b8"] { color: #555 !important; }
+[data-theme="light"] [style*="color: #64748b"] { color: #444 !important; }
+
+/* Section labels like TEÓRIA · +5 XP */
+[data-theme="light"] [style*="color: #6E6E6E"],
+[data-theme="light"] [style*="color:#6E6E6E"] { color: #888 !important; }
+
+/* Module icon dark backgrounds in lesson list */
+[data-theme="light"] [style*="background: linear-gradient(135deg, #010d33"],
+[data-theme="light"] [style*="background: linear-gradient(135deg, #111"],
+[data-theme="light"] [style*="background: linear-gradient(135deg, #1a1a1a"] {
+  background: linear-gradient(135deg, #E0E0E4, #D0D0D4) !important;
+}
+
+/* Border: all rgba white borders → dark borders */
+[data-theme="light"] [style*="border: 1px solid rgba(255,255,255"],
+[data-theme="light"] [style*="border: 1px solid rgba(255, 255, 255"],
+[data-theme="light"] [style*="border-color: rgba(255,255,255"],
+[data-theme="light"] [style*="border-bottom: 1px solid rgba(255,255,255"] {
+  border-color: var(--border) !important;
+}
+
+/* Separators / dividers */
+[data-theme="light"] [style*="background: rgba(255,255,255,0.06)"],
+[data-theme="light"] [style*="border-bottom: 1px solid rgba(255,255,255,0.06)"],
+[data-theme="light"] [style*="border-color: rgba(255,255,255,0.06)"] {
+  border-color: var(--border) !important;
+  background: var(--border) !important;
+}
+
+/* Robotuy green stays green */
+[data-theme="light"] [style*="color: #4ade80"],
+[data-theme="light"] [style*="color:#4ade80"] { color: #16a34a !important; }
+[data-theme="light"] [style*="color: #22c55e"],
+[data-theme="light"] [style*="color:#22c55e"] { color: #16a34a !important; }
+
+/* Lucide icons — white → dark in light mode */
+[data-theme="light"] svg[color="#fff"],
+[data-theme="light"] svg[color="white"],
+[data-theme="light"] svg[color="#EDEDED"] { color: #333 !important; }
+[data-theme="light"] svg[color="#6E6E6E"] { color: #999 !important; }
+[data-theme="light"] svg[color="#888"] { color: #777 !important; }
+[data-theme="light"] svg[color="#555"] { color: #999 !important; }
+[data-theme="light"] svg[color="#333"] { color: #bbb !important; }
+[data-theme="light"] svg[color="#4ade80"] { color: #16a34a !important; }
+
+/* Stat cards */
+[data-theme="light"] .stat-card {
+  background: var(--bg-card) !important;
+  border-color: var(--border) !important;
+}
+[data-theme="light"] .stat-card-icon {
+  background: var(--bg-raised) !important;
+}
+[data-theme="light"] .stat-card-icon { background: #E0E0E4 !important; }
+[data-theme="light"] .stat-card-icon svg { color: #555 !important; }
+[data-theme="light"] .stat-card-value { color: var(--text) !important; }
+[data-theme="light"] .stat-card-label { color: #666 !important; }
+[data-theme="light"] .stat-info-trigger svg { color: #bbb !important; }
+
+/* CodingPath — lesson node circles */
+[data-theme="light"] [style*="background: #041540"][style*="border-radius"] {
+  background: var(--bg-raised) !important;
+}
+[data-theme="light"] [style*="background: #041540"][style*="border-radius"] svg { color: #333 !important; }
+
+/* Theory page — content text readability */
+[data-theme="light"] [style*="color: #c0c0c0"],
+[data-theme="light"] [style*="color:#c0c0c0"],
+[data-theme="light"] [style*="color: #b0b0b0"],
+[data-theme="light"] [style*="color:#b0b0b0"] { color: #444 !important; }
+
+/* Theory — Pokračovať button and similar action buttons */
+[data-theme="light"] button[style*="background: #EDEDED"],
+[data-theme="light"] button[style*="background:#EDEDED"] {
+  background: #1A1A1A !important;
+  color: #fff !important;
+}
+
+/* Dashed path lines */
+[data-theme="light"] [style*="border-color: #333"],
+[data-theme="light"] [style*="border-color:#333"] { border-color: #ccc !important; }
+
+/* Dashboard greeting subtitle */
+[data-theme="light"] [style*="color: #6B7280"],
+[data-theme="light"] [style*="color:#6B7280"] { color: #666 !important; }
+
+/* Outline selected items (plan cards etc) */
+[data-theme="light"] [style*="outline: 1px solid #1a1a1a"],
+[data-theme="light"] [style*="outline:1px solid #1a1a1a"] { outline-color: var(--border) !important; }
+[data-theme="light"] [style*="outline: 2px solid #4ade80"] { outline-color: #16a34a !important; }
+
+/* Chat bubble */
+[data-theme="light"] [style*="background: #010d33"][style*="position: fixed"] {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+}
+
+/* Dropdown/modal overlays */
+[data-theme="light"] [style*="background: rgba(0,0,0,0.5)"],
+[data-theme="light"] [style*="background: rgba(0, 0, 0, 0.5)"] {
+  background: rgba(0,0,0,0.3) !important;
+}
+
+/* ===== NUCLEAR LIGHT MODE — catch rgb() format ===== */
+/* React renders hex as rgb() — catch dark backgrounds */
+[data-theme="light"] [style*="background: rgb(0,"],
+[data-theme="light"] [style*="background: rgb(5,"],
+[data-theme="light"] [style*="background: rgb(10,"],
+[data-theme="light"] [style*="background: rgb(15,"],
+[data-theme="light"] [style*="background: rgb(17,"],
+[data-theme="light"] [style*="background: rgb(22,"],
+[data-theme="light"] [style*="background: rgb(26,"],
+[data-theme="light"] [style*="background: rgb(28,"],
+[data-theme="light"] [style*="background: rgb(34,"],
+[data-theme="light"] [style*="background: rgb(51,"],
+[data-theme="light"] [style*="background-color: rgb(0,"],
+[data-theme="light"] [style*="background-color: rgb(10,"],
+[data-theme="light"] [style*="background-color: rgb(15,"],
+[data-theme="light"] [style*="background-color: rgb(17,"],
+[data-theme="light"] [style*="background-color: rgb(22,"],
+[data-theme="light"] [style*="background-color: rgb(26,"] {
+  background: var(--bg-surface) !important;
+  background-color: var(--bg-surface) !important;
+}
+
+/* Catch light text in rgb format */
+[data-theme="light"] [style*="color: rgb(255,"],
+[data-theme="light"] [style*="color: rgb(237,"],
+[data-theme="light"] [style*="color: rgb(238,"],
+[data-theme="light"] [style*="color: rgb(221,"] { color: var(--text) !important; }
+
+[data-theme="light"] [style*="color: rgb(204,"],
+[data-theme="light"] [style*="color: rgb(187,"] { color: #333 !important; }
+
+[data-theme="light"] [style*="color: rgb(170,"],
+[data-theme="light"] [style*="color: rgb(153,"] { color: #444 !important; }
+
+[data-theme="light"] [style*="color: rgb(136,"],
+[data-theme="light"] [style*="color: rgb(119,"] { color: #555 !important; }
+
+/* Borders in rgb format */
+[data-theme="light"] [style*="border-color: rgb(17,"],
+[data-theme="light"] [style*="border-color: rgb(26,"],
+[data-theme="light"] [style*="border-color: rgb(34,"],
+[data-theme="light"] [style*="border-color: rgb(15,"],
+[data-theme="light"] [style*="border: 1px solid rgb(17,"],
+[data-theme="light"] [style*="border: 1px solid rgb(26,"],
+[data-theme="light"] [style*="border: 1px solid rgb(34,"],
+[data-theme="light"] [style*="border: 1.5px solid rgb(34,"] {
+  border-color: var(--border) !important;
+}
+
+/* SVG icon colors in rgb */
+[data-theme="light"] svg[style*="color: rgb(255,"] { color: #333 !important; }
+[data-theme="light"] svg[style*="color: rgb(136,"] { color: #666 !important; }
+
+/* ===== Settings & general — drink/option buttons ===== */
+[data-theme="light"] button[style*="background: #111"],
+[data-theme="light"] button[style*="background:#111"],
+[data-theme="light"] button[style*="background: rgb(17, 17, 17)"] {
+  background: #E8E8EC !important;
+  color: #333 !important;
+  border-color: #D8D8DC !important;
+}
+[data-theme="light"] button[style*="background: #111"] span,
+[data-theme="light"] button[style*="background:#111"] span,
+[data-theme="light"] button[style*="background: #010d33"] span { color: #333 !important; }
+
+/* StatusBar — catch all formats */
+[data-theme="light"] [style*="background: rgb(15, 15, 15)"],
+[data-theme="light"] [style*="background-color: rgb(15, 15, 15)"],
+[data-theme="light"] [style*="background: rgb(10, 10, 10)"],
+[data-theme="light"] [style*="background-color: rgb(10, 10, 10)"] {
+  background: var(--bg-card) !important;
+  background-color: var(--bg-card) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* Force ALL gray text darker in light mode */
+[data-theme="light"] span[style*="color: #888"],
+[data-theme="light"] span[style*="color:#888"],
+[data-theme="light"] p[style*="color: #888"],
+[data-theme="light"] p[style*="color:#888"],
+[data-theme="light"] div[style*="color: #888"],
+[data-theme="light"] div[style*="color:#888"] { color: #555 !important; }
+
+[data-theme="light"] span[style*="color: #555"],
+[data-theme="light"] span[style*="color:#555"],
+[data-theme="light"] p[style*="color: #555"],
+[data-theme="light"] p[style*="color:#555"],
+[data-theme="light"] div[style*="color: #555"],
+[data-theme="light"] div[style*="color:#555"] { color: #888 !important; }
+
+[data-theme="light"] span[style*="color: #ccc"],
+[data-theme="light"] span[style*="color:#ccc"],
+[data-theme="light"] p[style*="color: #ccc"],
+[data-theme="light"] p[style*="color:#ccc"],
+[data-theme="light"] div[style*="color: #ccc"],
+[data-theme="light"] div[style*="color:#ccc"] { color: #333 !important; }
+
+[data-theme="light"] span[style*="color: #aaa"],
+[data-theme="light"] span[style*="color:#aaa"],
+[data-theme="light"] p[style*="color: #aaa"],
+[data-theme="light"] p[style*="color:#aaa"] { color: #444 !important; }
+
+/* StatusBar top — streak/XP text visible */
+[data-theme="light"] [style*="color: #9CA3AF"],
+[data-theme="light"] [style*="color:#9CA3AF"] { color: #666 !important; }
+
+/* FAQ details/summary text */
+[data-theme="light"] summary[style*="color: #ccc"],
+[data-theme="light"] summary[style*="color:#ccc"] { color: #333 !important; }
+[data-theme="light"] details div[style*="color: #888"] { color: #555 !important; }
+
+/* Settings section headers (ÚČET, PREFERENCIE etc.) */
+[data-theme="light"] h3[style*="color: #555"] { color: #999 !important; }
+
+/* Settings gear icon top right */
+[data-theme="light"] [style*="background: #0c255a"] svg { color: #333 !important; }

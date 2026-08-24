@@ -113,7 +113,7 @@ export const useUserStore = create<UserState & UserActions>()(
           const daysMissed = Math.floor((Date.now() - lastDate.getTime()) / 86400000) - 1;
           const heartsLost = Math.min(daysMissed, s.hearts);
           const hearts = Math.max(0, s.hearts - heartsLost);
-          return { streak: 0, hearts, byteBattery: 20, byteMood: hearts === 0 ? 'low_battery' : hearts <= 2 ? 'worried' : 'happy', lastActiveDate: todayStr };
+          return { streak: 1, hearts, byteBattery: 20, byteMood: hearts === 0 ? 'low_battery' : hearts <= 2 ? 'worried' : 'happy', lastActiveDate: todayStr };
         });
       },
 
@@ -160,7 +160,10 @@ export const useUserStore = create<UserState & UserActions>()(
       syncToSupabase: async () => {
         const s = get();
         if (!s.userId) return;
+        // Don't sync empty state — prevents wiping server data on fresh login
+        if (s.xp === 0 && s.completedLessons.length === 0 && (!s.name || s.name === 'User')) return;
         try {
+          const pushToken = typeof window !== 'undefined' ? localStorage.getItem('robotuy-push-token') : null;
           await supabase.from('user_state').upsert({
             user_id: s.userId,
             display_name: s.name || 'User',
@@ -170,15 +173,18 @@ export const useUserStore = create<UserState & UserActions>()(
             badges: s.badges, weekly_xp: s.weeklyXp, week_start_date: s.weekStartDate,
             owned_items: s.ownedItems, equipment: s.equipment,
             selected_topics: s.selectedTopics, coffees: s.coffees, fav_drink: s.favDrink,
+            ...(pushToken ? { push_token: pushToken } : {}),
           });
         } catch {}
       },
 
       loadFromSupabase: async () => {
         const s = get();
-        if (!s.userId) return;
+        console.log('[loadFromSupabase] userId:', s.userId, 'name:', s.name);
+        if (!s.userId) { console.log('[loadFromSupabase] NO userId, skipping'); return; }
         try {
-          const { data } = await supabase.from('user_state').select('*').eq('user_id', s.userId).single();
+          const { data, error } = await supabase.from('user_state').select('*').eq('user_id', s.userId).single();
+          console.log('[loadFromSupabase] data:', data?.display_name, 'error:', error?.message);
           if (!data) return;
 
           // Only load from server if server has more progress (more completed lessons)
@@ -219,6 +225,7 @@ export const useUserStore = create<UserState & UserActions>()(
         }
       },
       partialize: (s) => ({
+        userId: s.userId,
         xp: s.xp, gems: s.gems, hearts: s.hearts, streak: s.streak,
         lastActiveDate: s.lastActiveDate, byteMood: s.byteMood,
         byteBattery: s.byteBattery, completedLessons: s.completedLessons,

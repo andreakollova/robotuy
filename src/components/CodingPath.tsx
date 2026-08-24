@@ -15,11 +15,10 @@ import {
   FileCode, FolderOpen, Bug, Gauge, Lock, Package, Wrench,
   Puzzle, PenTool, Search, Filter, Clock, Bell, Settings,
   RefreshCw, Box, Lightbulb, Star, Heart, Eye, Sparkles,
-  ArrowDownCircle, ArrowUpCircle, Gift, Bot, Cog, Brain,
-  Camera, Factory, Palette, CircuitBoard,
+  ArrowDownCircle, ArrowUpCircle, Gift,
 } from 'lucide-react';
 
-// Rotating icon set for lesson nodes
+// Rotating icon set for lesson nodes (uniform lucide style)
 const LESSON_ICONS = [
   Variable, Keyboard, Braces, Hash, List, Layers, Database,
   Repeat, Cpu, Zap, Shield, Globe, Server, FileCode, FolderOpen,
@@ -38,225 +37,71 @@ interface CharacterPath {
   subtitleSk: string;
   descEn: string;
   descSk: string;
-  modules: number[];
+  modules: number[]; // module_numbers to include
   equipment: Record<string, string>;
 }
 
 const PATHS: CharacterPath[] = [
   {
-    id: 'foundations',
-    titleEn: 'Robotics Foundations',
-    titleSk: 'Základy robotiky',
-    subtitleEn: 'I want to understand how robots work.',
-    subtitleSk: 'Chcem pochopiť, ako fungujú roboty.',
-    descEn: 'Mandatory foundation for everyone. Sensors, actuators, electronics, communication.',
-    descSk: 'Povinný základ pre všetkých. Senzory, aktuátory, elektronika, komunikácia.',
-    modules: Array.from({ length: 30 }, (_, i) => i + 1),
+    id: 'builder',
+    titleEn: 'The Builder',
+    titleSk: 'Builder',
+    subtitleEn: 'I want to build apps.',
+    subtitleSk: 'Chcem vytvárať aplikácie.',
+    descEn: 'Full Python curriculum for creating your own projects.',
+    descSk: 'Kompletný Python kurz na tvorbu vlastných projektov.',
+    modules: [1, 31, 32, 33, 12, 15, 21, 22, 24, 25, 26, 27, 28, 29, 30, 34, 40, 41, 48, 46],
     equipment: { hat: 'hat-graduation', glasses: 'glasses-cool', accessory: 'acc-crystal', aura: 'aura-green' },
   },
   {
-    id: 'software',
-    titleEn: 'Robotics Software Engineer',
-    titleSk: 'Softvérový inžinier',
-    subtitleEn: 'I want to program robots.',
-    subtitleSk: 'Chcem programovať roboty.',
-    descEn: 'Python, C++, ROS2, navigation, SLAM, simulation.',
-    descSk: 'Python, C++, ROS2, navigácia, SLAM, simulácia.',
-    modules: Array.from({ length: 32 }, (_, i) => i + 31),
-    equipment: { hat: 'hat-beanie', glasses: 'glasses-round', accessory: 'acc-medal', aura: 'aura-blue' },
+    id: 'ai-pilot',
+    titleEn: 'The AI Pilot',
+    titleSk: 'AI Pilot',
+    subtitleEn: 'I want to understand AI, automation and vibecoding.',
+    subtitleSk: 'Chcem rozumieť AI, automatizácii a vibecodingu.',
+    descEn: 'Learn enough Python to work with AI tools effectively.',
+    descSk: 'Nauč sa dosť Pythonu na efektívnu prácu s AI nástrojmi.',
+    modules: [1, 31, 32, 12, 22, 26, 25, 33, 43],
+    equipment: { hat: 'hat-galaxy', glasses: 'glasses-laser', antenna: 'ant-lightning', aura: 'aura-galaxy' },
   },
   {
-    id: 'vision',
-    titleEn: 'Computer Vision Engineer',
-    titleSk: 'Počítačové videnie',
-    subtitleEn: 'I want robots to see the world.',
-    subtitleSk: 'Chcem, aby roboty videli svet.',
-    descEn: 'OpenCV, YOLO, depth cameras, visual SLAM, AI vision.',
-    descSk: 'OpenCV, YOLO, hĺbkové kamery, vizuálny SLAM, AI videnie.',
-    modules: Array.from({ length: 30 }, (_, i) => i + 63),
-    equipment: { hat: 'hat-pilot', glasses: 'glasses-laser', antenna: 'ant-diamond', aura: 'aura-galaxy' },
-  },
-  {
-    id: 'ai',
-    titleEn: 'AI Robotics Engineer',
-    titleSk: 'AI robotický inžinier',
-    subtitleEn: 'I want to give robots intelligence.',
-    subtitleSk: 'Chcem dať robotom inteligenciu.',
-    descEn: 'Machine learning, deep learning, reinforcement learning, LLM, planning.',
-    descSk: 'Strojové učenie, hlboké učenie, posilňovacie učenie, LLM, plánovanie.',
-    modules: Array.from({ length: 30 }, (_, i) => i + 93),
-    equipment: { hat: 'hat-galaxy', glasses: 'glasses-frost', antenna: 'ant-lightning', aura: 'aura-cosmic' },
-  },
-  {
-    id: 'embedded',
-    titleEn: 'Embedded Systems Engineer',
-    titleSk: 'Embedded inžinier',
-    subtitleEn: 'I want to build robot electronics.',
-    subtitleSk: 'Chcem vytvárať elektroniku robotov.',
-    descEn: 'Arduino, ESP32, STM32, FreeRTOS, motor drivers, PCB.',
-    descSk: 'Arduino, ESP32, STM32, FreeRTOS, ovládače motorov, PCB.',
-    modules: Array.from({ length: 30 }, (_, i) => i + 123),
-    equipment: { hat: 'hat-headband', glasses: 'glasses-cool', accessory: 'acc-chain', aura: 'aura-fire' },
-  },
-  {
-    id: 'mechanical',
-    titleEn: 'Mechanical Robotics Engineer',
-    titleSk: 'Strojársky inžinier',
-    subtitleEn: 'I want to design robot bodies.',
-    subtitleSk: 'Chcem navrhovať telá robotov.',
-    descEn: 'CAD, 3D printing, CNC, gears, joints, chassis design.',
-    descSk: 'CAD, 3D tlač, CNC, prevody, kĺby, návrh podvozku.',
-    modules: Array.from({ length: 30 }, (_, i) => i + 153),
-    equipment: { hat: 'hat-cowboy', glasses: 'glasses-aviator', accessory: 'acc-bowtie', aura: 'aura-earth' },
-  },
-  {
-    id: 'design',
-    titleEn: 'Industrial Design for Robotics',
-    titleSk: 'Priemyselný dizajn',
-    subtitleEn: 'I want to make robots beautiful and human-friendly.',
-    subtitleSk: 'Chcem, aby boli roboty krásne a priateľské.',
-    descEn: 'Sketching, CMF, HRI, Blender, prototyping, branding.',
-    descSk: 'Skicovanie, CMF, HRI, Blender, prototypovanie, branding.',
-    modules: Array.from({ length: 32 }, (_, i) => i + 183),
-    equipment: { hat: 'hat-party', glasses: 'glasses-mono', accessory: 'acc-scarf', aura: 'aura-air' },
-  },
-  {
-    id: 'integrator',
-    titleEn: 'Robotics Integrator',
-    titleSk: 'Robotický integrátor',
-    subtitleEn: 'I want to deploy robots in factories.',
-    subtitleSk: 'Chcem nasadzovať roboty vo fabrikách.',
-    descEn: 'PLC, ABB, KUKA, FANUC, SCADA, factory automation.',
-    descSk: 'PLC, ABB, KUKA, FANUC, SCADA, automatizácia výroby.',
-    modules: Array.from({ length: 30 }, (_, i) => i + 215),
-    equipment: { hat: 'hat-samurai', glasses: 'glasses-golden', accessory: 'acc-wings-gold', aura: 'aura-golden' },
+    id: 'mechanic',
+    titleEn: 'The Code Mechanic',
+    titleSk: 'Mechanik',
+    subtitleEn: 'I want to fix and understand existing code.',
+    subtitleSk: 'Chcem opravovať a rozumieť existujúcemu kódu.',
+    descEn: 'Perfect for people using Cursor, Claude Code or ChatGPT.',
+    descSk: 'Ideálne pre ľudí používajúcich Cursor, Claude Code alebo ChatGPT.',
+    modules: [1, 31, 33, 43, 27, 28, 29, 40, 36],
+    equipment: { hat: 'hat-samurai', glasses: 'glasses-frost', accessory: 'acc-chain', aura: 'aura-blue' },
   },
   {
     id: 'master',
-    titleEn: 'Robot Master',
-    titleSk: 'Robot Master',
-    subtitleEn: 'I want to master everything about robotics.',
-    subtitleSk: 'Chcem ovládnuť všetko o robotike.',
-    descEn: 'All 244 modules. Foundations, software, vision, AI, embedded, mechanical, design, integration.',
-    descSk: 'Všetkých 244 modulov. Základy, softvér, videnie, AI, embedded, mechanika, dizajn, integrácia.',
-    modules: Array.from({ length: 244 }, (_, i) => i + 1),
+    titleEn: 'The Master',
+    titleSk: 'Master',
+    subtitleEn: 'I want to master Python from basics to professional level.',
+    subtitleSk: 'Chcem ovládnuť Python od základov až po profesionálnu úroveň.',
+    descEn: 'All modules, 200+ lessons. Become a real Python developer.',
+    descSk: 'Všetky moduly, 200+ lekcií. Staň sa skutočným Python vývojárom.',
+    modules: [1, 31, 32, 33, 12, 15, 21, 22, 24, 25, 26, 27, 28, 29, 30, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48],
     equipment: { hat: 'hat-golden-crown', glasses: 'glasses-golden', accessory: 'acc-wings-gold', aura: 'aura-golden' },
   },
 ];
 
 // Syllabus groups for visual structure
 const SYLLABUS = [
-  // Path 1: Robotics Foundations (1-30)
-  { titleEn: 'Getting Started', titleSk: 'Začíname s robotikou',
-    modules: [1, 2, 3, 4, 5, 6] },
-  { titleEn: 'Sensors & Actuators', titleSk: 'Senzory a aktuátory',
-    modules: [7, 8, 9, 10] },
-  { titleEn: 'Power & Electronics', titleSk: 'Napájanie a elektronika',
-    modules: [11, 12, 13, 14, 15] },
-  { titleEn: 'Communication', titleSk: 'Komunikácia',
-    modules: [16, 17, 18, 19, 20, 21, 22] },
-  { titleEn: 'Sensing the World', titleSk: 'Vnímanie sveta',
-    modules: [23, 24, 25, 26, 27] },
-  { titleEn: 'Architecture & Future', titleSk: 'Architektúra a budúcnosť',
-    modules: [28, 29, 30] },
-
-  // Path 2: Software Engineer (31-62)
-  { titleEn: 'Programming Basics', titleSk: 'Základy programovania',
-    modules: [31, 32, 33, 34, 35] },
-  { titleEn: 'Software Engineering', titleSk: 'Softvérové inžinierstvo',
-    modules: [36, 37, 38, 39, 40] },
-  { titleEn: 'ROS2 & Platforms', titleSk: 'ROS2 a platformy',
-    modules: [41, 42, 43, 44, 45, 46, 47] },
-  { titleEn: 'ROS2 Advanced', titleSk: 'ROS2 pokročilé',
-    modules: [48, 49, 50, 51, 52] },
-  { titleEn: 'Navigation & Planning', titleSk: 'Navigácia a plánovanie',
-    modules: [53, 54, 55, 56, 57] },
-  { titleEn: 'DevOps & Final', titleSk: 'DevOps a finále',
-    modules: [58, 59, 60, 61, 62] },
-
-  // Path 3: Computer Vision (63-92)
-  { titleEn: 'Image Basics', titleSk: 'Základy obrazu',
-    modules: [63, 64, 65, 66, 67, 68] },
-  { titleEn: 'Image Processing', titleSk: 'Spracovanie obrazu',
-    modules: [69, 70, 71, 72] },
-  { titleEn: 'Object Detection', titleSk: 'Detekcia objektov',
-    modules: [73, 74, 75, 76, 77] },
-  { titleEn: '3D Vision', titleSk: '3D videnie',
-    modules: [78, 79, 80, 81] },
-  { titleEn: 'Tracking & SLAM', titleSk: 'Tracking a SLAM',
-    modules: [82, 83, 84, 85, 86, 87] },
-  { titleEn: 'AI & Robot Vision', titleSk: 'AI a robot videnie',
-    modules: [88, 89, 90, 91, 92] },
-
-  // Path 4: AI Robotics (93-122)
-  { titleEn: 'AI Fundamentals', titleSk: 'Základy AI',
-    modules: [93, 94, 95, 96, 97] },
-  { titleEn: 'Deep Learning', titleSk: 'Hlboké učenie',
-    modules: [98, 99, 100, 101] },
-  { titleEn: 'Robot Intelligence', titleSk: 'Inteligencia robota',
-    modules: [102, 103, 104, 105, 106, 107] },
-  { titleEn: 'Voice & Language', titleSk: 'Hlas a jazyk',
-    modules: [108, 109, 110] },
-  { titleEn: 'AI Navigation & Manipulation', titleSk: 'AI navigácia a manipulácia',
-    modules: [111, 112, 113, 114, 115] },
-  { titleEn: 'Advanced AI & Final', titleSk: 'Pokročilé AI a finále',
-    modules: [116, 117, 118, 119, 120, 121, 122] },
-
-  // Path 5: Embedded Systems (123-152)
-  { titleEn: 'Electronics Basics', titleSk: 'Základy elektroniky',
-    modules: [123, 124, 125, 126, 127, 128] },
-  { titleEn: 'Tools & Boards', titleSk: 'Nástroje a dosky',
-    modules: [129, 130, 131, 132, 133, 134] },
-  { titleEn: 'Programming Embedded', titleSk: 'Programovanie embedded',
-    modules: [135, 136, 137, 138, 139, 140, 141] },
-  { titleEn: 'Communication & RTOS', titleSk: 'Komunikácia a RTOS',
-    modules: [142, 143, 144, 145] },
-  { titleEn: 'Drivers & Power', titleSk: 'Ovládače a napájanie',
-    modules: [146, 147, 148, 149] },
-  { titleEn: 'Embedded Project', titleSk: 'Embedded projekt',
-    modules: [150, 151, 152] },
-
-  // Path 6: Mechanical (153-182)
-  { titleEn: 'Mechanics Fundamentals', titleSk: 'Základy mechaniky',
-    modules: [153, 154, 155, 156, 157, 158] },
-  { titleEn: 'Transmission', titleSk: 'Prevody',
-    modules: [159, 160] },
-  { titleEn: 'Materials', titleSk: 'Materiály',
-    modules: [161, 162, 163, 164] },
-  { titleEn: 'CAD & Manufacturing', titleSk: 'CAD a výroba',
-    modules: [165, 166, 167, 168, 169, 170] },
-  { titleEn: 'Robot Mechanics', titleSk: 'Mechanika robotov',
-    modules: [171, 172, 173, 174, 175, 176] },
-  { titleEn: 'Design & Project', titleSk: 'Návrh a projekt',
-    modules: [177, 178, 179, 180, 181, 182] },
-
-  // Path 7: Industrial Design (183-214)
-  { titleEn: 'Design Foundations', titleSk: 'Základy dizajnu',
-    modules: [183, 184, 185, 186, 187, 188] },
-  { titleEn: 'Design for Manufacturing', titleSk: 'Dizajn pre výrobu',
-    modules: [189, 190, 191, 192] },
-  { titleEn: 'Robot Emotions & Interaction', titleSk: 'Emócie a interakcia',
-    modules: [193, 194, 195, 196, 197, 198, 199] },
-  { titleEn: 'UX & UI', titleSk: 'UX a UI',
-    modules: [200, 201, 202] },
-  { titleEn: '3D Tools', titleSk: '3D nástroje',
-    modules: [203, 204, 205, 206, 207] },
-  { titleEn: 'Prototyping & Final', titleSk: 'Prototypovanie a finále',
-    modules: [208, 209, 210, 211, 212, 213, 214] },
-
-  // Path 8: Integrator (215-244)
-  { titleEn: 'PLC & Controllers', titleSk: 'PLC a riadenie',
-    modules: [215, 216, 217] },
-  { titleEn: 'Industrial Robots', titleSk: 'Priemyselné roboty',
-    modules: [218, 219, 220, 221, 222] },
-  { titleEn: 'Safety & Vision', titleSk: 'Bezpečnosť a videnie',
-    modules: [223, 224] },
-  { titleEn: 'Applications', titleSk: 'Aplikácie',
-    modules: [225, 226, 227, 228] },
-  { titleEn: 'Industry 4.0', titleSk: 'Priemysel 4.0',
-    modules: [229, 230, 231, 232, 233, 234] },
-  { titleEn: 'Deployment & Maintenance', titleSk: 'Nasadenie a údržba',
-    modules: [235, 236, 237, 238, 239, 240, 241, 242, 243, 244] },
+  { titleEn: 'Introduction', titleSk: 'Úvod',
+    modules: [1] },
+  { titleEn: 'Python Fundamentals', titleSk: 'Základy Pythonu',
+    modules: [31, 32, 33] },
+  { titleEn: 'Data Structures', titleSk: 'Dátové štruktúry',
+    modules: [12, 15, 21, 22, 24] },
+  { titleEn: 'Python Programming', titleSk: 'Python programovanie',
+    modules: [25, 26, 27, 28, 29, 30] },
+  { titleEn: 'Advanced Python', titleSk: 'Pokročilý Python',
+    modules: [34, 35, 36, 37, 38, 39, 40, 41] },
+  { titleEn: 'Professional Python', titleSk: 'Profesionálny Python',
+    modules: [42, 43, 44, 45, 46, 47, 48] },
 ];
 
 const ALL_CODING_MODULES = SYLLABUS.flatMap(g => g.modules);
@@ -272,6 +117,7 @@ export default function CodingPath() {
     return null;
   });
   const nextLessonRef = useRef<HTMLDivElement>(null);
+  const pathHeaderRef = useRef<HTMLDivElement>(null);
   const [hasScrolled, setHasScrolled] = useState(false);
   const [unlockModal, setUnlockModal] = useState<{ lessonId: number; title: string; step: 1 | 2 } | null>(null);
 
@@ -279,6 +125,7 @@ export default function CodingPath() {
     fetchModulesWithLessons().then(mods => {
       const codingMods = mods.filter(m => ALL_CODING_MODULES.includes(m.module_number));
       setDbModules(codingMods);
+      // If path is selected, open all modules by default
       const saved = localStorage.getItem('robotuy-path');
       if (saved && saved !== 'all') {
         const open: Record<number, boolean> = {};
@@ -291,14 +138,20 @@ export default function CodingPath() {
   const selectPath = (pathId: string) => {
     setSelectedPath(pathId);
     localStorage.setItem('robotuy-path', pathId);
+    // Open all modules when selecting a path
     const open: Record<number, boolean> = {};
     dbModules.forEach(m => { open[m.id] = true; });
     setOpenModules(open);
+    // Scroll to path header after render
+    setTimeout(() => {
+      pathHeaderRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   };
 
   const toggleModule = (id: number) =>
     setOpenModules(prev => ({ ...prev, [id]: !prev[id] }));
 
+  // Show path selection even before modules load
   const isAllMode = selectedPath === 'all';
   const activePath = isAllMode ? null : PATHS.find(p => p.id === selectedPath);
   const activeModuleNumbers = activePath ? activePath.modules : ALL_CODING_MODULES;
@@ -313,36 +166,20 @@ export default function CodingPath() {
     .flatMap(m => m.lessons);
   const doneCount = allLessons.filter(l => completedLessons.includes(`theory-${l.id}`)).length;
 
-  // Path color mapping
-  const getPathColor = (pathId?: string) => {
-    switch (pathId) {
-      case 'foundations': return '#4ade80';
-      case 'software': return '#60a5fa';
-      case 'vision': return '#a855f7';
-      case 'ai': return '#f472b6';
-      case 'embedded': return '#f97316';
-      case 'mechanical': return '#a3a3a3';
-      case 'design': return '#38bdf8';
-      case 'integrator': return '#f59e0b';
-      case 'master': return '#fbbf24';
-      default: return '#fbbf24';
-    }
-  };
-
   // === PATH SELECTION SCREEN ===
   if (!selectedPath) {
     return (
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-          <div style={{ width: 32, height: 32, borderRadius: 8, background: '#041540', border: '1px solid #0c255a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Bot size={16} color="#fff" />
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: '#041540', border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Terminal size={16} color="#fff" />
           </div>
           <div>
             <h2 style={{ fontWeight: 700, fontSize: 18, color: '#fff', letterSpacing: '-0.02em' }}>
               {locale === 'sk' ? 'Vyber si svoju cestu' : 'Choose your path'}
             </h2>
             <p style={{ fontSize: 12, color: '#888', marginTop: 1 }}>
-              {locale === 'sk' ? 'Čo ťa zaujíma na robotike?' : 'What interests you about robotics?'}
+              {locale === 'sk' ? 'Čo chceš vedieť?' : 'What do you want to learn?'}
             </p>
           </div>
         </div>
@@ -360,7 +197,7 @@ export default function CodingPath() {
                 whileTap={{ scale: 0.99 }}
                 style={{
                   width: '100%', padding: '20px', display: 'flex', alignItems: 'center', gap: 16,
-                  background: '#000a2b', border: '1px solid #0c255a', borderRadius: 16,
+                  background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 16,
                   cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.2s',
                 }}
               >
@@ -372,7 +209,7 @@ export default function CodingPath() {
                     {locale === 'sk' ? path.titleSk : path.titleEn}
                   </div>
                   <p style={{ fontSize: 13, color: '#aaa', margin: '0 0 6px', fontStyle: 'italic' }}>
-                    &bdquo;{locale === 'sk' ? path.subtitleSk : path.subtitleEn}&ldquo;
+                    „{locale === 'sk' ? path.subtitleSk : path.subtitleEn}"
                   </p>
                   <p style={{ fontSize: 12, color: '#666', margin: 0 }}>
                     {locale === 'sk' ? path.descSk : path.descEn}
@@ -389,11 +226,11 @@ export default function CodingPath() {
 
         {/* Divider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '20px 0' }}>
-          <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
+          <div style={{ flex: 1, height: 1, background: '#222' }} />
           <span style={{ fontSize: 12, color: '#555', fontWeight: 600 }}>
             {locale === 'sk' ? 'alebo' : 'or'}
           </span>
-          <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
+          <div style={{ flex: 1, height: 1, background: '#222' }} />
         </div>
 
         {/* Browse all */}
@@ -403,7 +240,7 @@ export default function CodingPath() {
           whileTap={{ scale: 0.99 }}
           style={{
             width: '100%', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            background: '#041540', border: '1px solid #0c255a', borderRadius: 12,
+            background: '#111', border: '1px solid #222', borderRadius: 12,
             cursor: 'pointer', fontSize: 14, color: '#888', fontWeight: 600,
           }}
         >
@@ -424,7 +261,7 @@ export default function CodingPath() {
     <div>
       {/* Path hero */}
       {activePath && (
-        <div style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 16, padding: 24, marginBottom: 20 }}>
+        <div ref={pathHeaderRef} style={{ background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 16, padding: 24, marginBottom: 20, scrollMarginTop: 80 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             <Byte mood="happy" size={72} equipment={activePath.equipment} />
             <div style={{ flex: 1 }}>
@@ -435,7 +272,7 @@ export default function CodingPath() {
                 &bdquo;{locale === 'sk' ? activePath.subtitleSk : activePath.subtitleEn}&ldquo;
               </p>
               <p style={{ fontSize: 11, color: '#555', fontWeight: 600, margin: '0 0 2px' }}>
-                {activeModuleNumbers.length} {locale === 'sk' ? 'modulov' : 'modules'} · {allLessons.length} {locale === 'sk' ? 'lekcií' : 'lessons'} · <span style={{ color: getPathColor(activePath.id) }}>{doneCount} {locale === 'sk' ? (doneCount === 1 ? 'hotová' : doneCount >= 2 && doneCount <= 4 ? 'hotové' : 'hotových') : 'done'}</span>
+                {activeModuleNumbers.length} {locale === 'sk' ? 'modulov' : 'modules'} · {allLessons.length} {locale === 'sk' ? 'lekcií' : 'lessons'} · <span style={{ color: '#4ade80' }}>{doneCount} {locale === 'sk' ? (doneCount === 1 ? 'hotová' : doneCount >= 2 && doneCount <= 4 ? 'hotové' : 'hotových') : 'done'}</span>
               </p>
             </div>
           </div>
@@ -444,7 +281,7 @@ export default function CodingPath() {
               onClick={() => { setSelectedPath(null); localStorage.removeItem('robotuy-path'); }}
               style={{
                 flex: 1, padding: '10px', borderRadius: 10,
-                background: '#041540', border: '1px solid #0c255a', color: '#888',
+                background: '#041540', border: '1px solid #222', color: '#888',
                 fontSize: 12, fontWeight: 600, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
               }}
@@ -456,7 +293,7 @@ export default function CodingPath() {
                 onClick={() => router.push('/practice')}
                 style={{
                   padding: '10px 16px', borderRadius: 10,
-                  background: '#041540', border: '1px solid #0c255a', color: '#888',
+                  background: '#041540', border: '1px solid #222', color: '#888',
                   fontSize: 12, fontWeight: 600, cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                 }}
@@ -472,8 +309,8 @@ export default function CodingPath() {
       {!activePath && (
         <div style={{ marginBottom: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: '#041540', border: '1px solid #0c255a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Bot size={16} color="#fff" />
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: '#041540', border: '1px solid #222', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Terminal size={16} color="#fff" />
             </div>
             <div style={{ flex: 1 }}>
               <h2 style={{ fontWeight: 700, fontSize: 18, color: '#fff', letterSpacing: '-0.02em' }}>
@@ -488,7 +325,7 @@ export default function CodingPath() {
             onClick={() => { setSelectedPath(null); localStorage.removeItem('robotuy-path'); }}
             style={{
               width: '100%', padding: '10px', borderRadius: 10,
-              background: '#041540', border: '1px solid #0c255a', color: '#888',
+              background: '#041540', border: '1px solid #222', color: '#888',
               fontSize: 12, fontWeight: 600, cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
             }}
@@ -514,9 +351,9 @@ export default function CodingPath() {
           });
         });
 
+        // Unlock logic: first 3 + all completed + next after last completed
         const nextIdx = pathLessons.findIndex(p => !completedLessons.includes(`theory-${p.lesson.id}`));
         const UNLOCK_AHEAD = 3;
-        const pathColor = getPathColor(activePath?.id);
 
         return (
           <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 8 }}>
@@ -527,7 +364,8 @@ export default function CodingPath() {
               const locked = !unlocked;
               const lessonTitle = locale === 'sk' && item.lesson.title_sk ? item.lesson.title_sk : item.lesson.title;
 
-              const xPos = i % 2 === 0 ? 60 : 240;
+              // Zigzag: even=left, odd=right
+              const xPos = i % 2 === 0 ? 60 : 240;  // left or right in 300-wide viewBox
               const prevXPos = i > 0 ? ((i - 1) % 2 === 0 ? 60 : 240) : 150;
               const nodeSize = isNext ? 58 : 48;
               const trailDone = done || isNext;
@@ -535,22 +373,24 @@ export default function CodingPath() {
 
               return (
                 <div key={item.lesson.id} style={{ width: '100%' }}>
+                  {/* Group label */}
                   {item.isFirstInGroup && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: i === 0 ? '0 0 20px' : '28px 0 20px' }}>
-                      <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
+                      <div style={{ flex: 1, height: 1, background: '#1a1a1a' }} />
                       <span style={{ fontSize: 10, fontWeight: 700, color: '#444', letterSpacing: '0.1em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
                         {item.groupTitle}
                       </span>
-                      <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
+                      <div style={{ flex: 1, height: 1, background: '#1a1a1a' }} />
                     </div>
                   )}
 
+                  {/* Curved connector trail */}
                   {i > 0 && !item.isFirstInGroup && (
                     <div style={{ height: connectorH, position: 'relative' }}>
                       <svg viewBox="0 0 300 40" preserveAspectRatio="none" style={{ width: '100%', height: connectorH, display: 'block' }}>
                         <path
                           d={`M ${prevXPos} 0 C ${prevXPos} 20, ${xPos} 20, ${xPos} 40`}
-                          stroke={trailDone ? '#0f2d6b' : '#0c255a'}
+                          stroke={trailDone ? '#333' : '#1a1a1a'}
                           strokeWidth="3"
                           strokeDasharray={trailDone ? 'none' : '6 6'}
                           fill="none"
@@ -560,6 +400,7 @@ export default function CodingPath() {
                     </div>
                   )}
 
+                  {/* Lesson node */}
                   <div
                     ref={isNext ? nextLessonRef : undefined}
                     style={{
@@ -589,39 +430,47 @@ export default function CodingPath() {
                         background: 'none', border: 'none', padding: '4px 8px',
                       }}
                     >
+                      {/* Circle node */}
                       {(() => {
                         const LessonIcon = LESSON_ICONS[i % LESSON_ICONS.length];
                         return (
                           <div style={{
                             width: nodeSize, height: nodeSize, borderRadius: '50%',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            background: done ? pathColor : isNext ? '#fff' : locked ? '#041540' : '#0c255a',
-                            border: done || isNext ? 'none' : `2px solid ${locked ? '#0c255a' : '#0f2d6b'}`,
-                            boxShadow: isNext ? '0 0 24px rgba(255,255,255,0.2), 0 0 48px rgba(255,255,255,0.05)' : done ? `0 0 12px ${pathColor}25` : 'none',
+                            background: done ? '#4ade80' : isNext ? '#fff' : locked ? '#111' : '#1a1a1a',
+                            border: done || isNext ? 'none' : `2px solid ${locked ? '#1a1a1a' : '#333'}`,
+                            boxShadow: isNext ? '0 0 24px rgba(255,255,255,0.2), 0 0 48px rgba(255,255,255,0.05)' : done ? '0 0 12px rgba(74,222,128,0.15)' : 'none',
                             transition: 'all 0.2s',
                           }}>
                             {done
-                              ? <Check size={22} color="#010d33" strokeWidth={3} />
+                              ? <Check size={22} color="#052e16" strokeWidth={3} />
                               : isNext
                                 ? <Play size={20} color="#000" fill="#000" />
-                                : <LessonIcon size={locked ? 14 : 18} color={locked ? '#0f2d6b' : '#666'} strokeWidth={1.8} />
+                                : <LessonIcon size={locked ? 14 : 18} color={locked ? '#333' : '#666'} strokeWidth={1.8} />
                             }
                           </div>
                         );
                       })()}
+                      {/* Label */}
                       <div style={{ textAlign: 'center', maxWidth: 140 }}>
                         <div style={{
                           fontWeight: isNext ? 700 : 500,
                           fontSize: isNext ? 12 : 11,
-                          color: done ? '#888' : isNext ? '#fff' : locked ? '#0f2d6b' : '#aaa',
+                          color: done ? '#888' : isNext ? '#fff' : locked ? '#333' : '#aaa',
                           lineHeight: 1.3,
                         }}>
                           {lessonTitle}
                         </div>
+                        {/* Reward badge - every 5th lesson or 1st/3rd */}
                         {(() => {
                           const lessonNum = i + 1;
                           const getsReward = lessonNum === 1 || lessonNum === 3 || lessonNum % 5 === 0;
                           if (!getsReward) return null;
+                          const pathColor = activePath?.id === 'builder' ? '#4ade80'
+                            : activePath?.id === 'ai-pilot' ? '#a855f7'
+                            : activePath?.id === 'mechanic' ? '#60a5fa'
+                            : activePath?.id === 'master' ? '#f59e0b'
+                            : '#f59e0b';
                           const badgeColor = done ? '#888' : pathColor;
                           return (
                             <div style={{
@@ -687,14 +536,14 @@ export default function CodingPath() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setUnlockModal(null)}
-            style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(1,13,51,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+            style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={e => e.stopPropagation()}
-              style={{ background: '#041540', border: '1px solid #0c255a', borderRadius: 16, padding: 24, maxWidth: 320, width: '100%', textAlign: 'center' }}
+              style={{ background: '#111', border: '1px solid #222', borderRadius: 16, padding: 24, maxWidth: 320, width: '100%', textAlign: 'center' }}
             >
               {unlockModal.step === 1 ? (
                 <>
@@ -710,7 +559,7 @@ export default function CodingPath() {
                   <div style={{ display: 'flex', gap: 8 }}>
                     <button
                       onClick={() => setUnlockModal(null)}
-                      style={{ flex: 1, padding: '10px', borderRadius: 10, background: '#0c255a', border: '1px solid #0f2d6b', color: '#888', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}
+                      style={{ flex: 1, padding: '10px', borderRadius: 10, background: '#1a1a1a', border: '1px solid #2a2a2a', color: '#888', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}
                     >
                       {locale === 'sk' ? 'Zrušiť' : 'Cancel'}
                     </button>
@@ -730,13 +579,13 @@ export default function CodingPath() {
                   </h3>
                   <p style={{ color: '#888', fontSize: 13, lineHeight: 1.5, margin: '0 0 20px' }}>
                     {locale === 'sk'
-                      ? 'Táto lekcia môže obsahovať pojmy, ktoré si ešte neprebral/a v predchádzajúcich lekciách.'
+                      ? 'Táto lekcia môže obsahovať pojmy, ktoré si ešte nepreberal/a v predchádzajúcich lekciách.'
                       : 'This lesson may contain concepts you have not covered in previous lessons.'}
                   </p>
                   <div style={{ display: 'flex', gap: 8 }}>
                     <button
                       onClick={() => setUnlockModal(null)}
-                      style={{ flex: 1, padding: '10px', borderRadius: 10, background: '#0c255a', border: '1px solid #0f2d6b', color: '#888', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}
+                      style={{ flex: 1, padding: '10px', borderRadius: 10, background: '#1a1a1a', border: '1px solid #2a2a2a', color: '#888', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}
                     >
                       {locale === 'sk' ? 'Späť' : 'Back'}
                     </button>

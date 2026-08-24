@@ -94,12 +94,12 @@ export default function WorkshopPage() {
   const isPreviewMode = previewEquipment !== null;
 
   return (
-    <div className="page-shell" style={{ minHeight: '100vh', background: '#010d33', color: '#fff' }}>
+    <div className="page-shell" style={{ minHeight: '100vh', background: 'var(--bg, #000)', color: 'var(--text, #fff)' }}>
       {/* Header */}
-      <div style={{ borderBottom: '1px solid #111', padding: '14px 16px', paddingTop: 'max(14px, 50px)', display: 'flex', alignItems: 'center', gap: 12, position: 'sticky', top: 0, background: 'rgba(1,13,51,0.95)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', zIndex: 50 }}>
+      <div style={{ borderBottom: '1px solid #111', padding: '14px 16px', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 14px)', display: 'flex', alignItems: 'center', gap: 12, position: 'sticky', top: 0, background: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', zIndex: 50 }}>
         <Link href="/" onClick={() => window.scrollTo(0, 0)}>
           <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
-            style={{ width: 36, height: 36, borderRadius: 10, background: '#041540', border: '1px solid #1f1f1f', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+            style={{ width: 36, height: 36, borderRadius: 10, background: '#111', border: '1px solid #1f1f1f', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
             <ArrowLeft size={18} color="#888" />
           </motion.div>
         </Link>
@@ -114,7 +114,7 @@ export default function WorkshopPage() {
           style={{
             display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0,
             padding: '8px 12px', borderRadius: 10,
-            background: '#041540', border: '1px solid #132d6b',
+            background: '#111', border: '1px solid #2a2a2a',
             color: '#aaa', fontSize: 12, fontWeight: 600, cursor: 'pointer',
           }}
         >
@@ -130,7 +130,7 @@ export default function WorkshopPage() {
           animate={{ opacity: 1, y: 0 }}
           style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center',
-            padding: '32px 20px', background: '#000a2b', border: '1px solid #0c255a',
+            padding: '32px 20px', background: '#010d33', border: '1px solid #1a1a1a',
             borderRadius: 24, marginBottom: 28, position: 'relative',
           }}
         >
@@ -168,8 +168,8 @@ export default function WorkshopPage() {
                 return (
                   <span key={slot} style={{
                     fontSize: 11, padding: '3px 10px', borderRadius: 20, fontWeight: 600,
-                    background: owned ? '#041540' : `${rc.color}15`,
-                    border: `1px solid ${owned ? '#132d6b' : rc.color + '44'}`,
+                    background: owned ? '#111' : `${rc.color}15`,
+                    border: `1px solid ${owned ? '#2a2a2a' : rc.color + '44'}`,
                     color: owned ? '#888' : rc.color,
                   }}>
                     {item.name}
@@ -213,7 +213,7 @@ export default function WorkshopPage() {
             >
               <div style={{
                 padding: '16px 18px', borderRadius: 14,
-                background: '#000a2b',
+                background: '#010d33',
                 border: `1.5px solid ${rarityConfig[selectedItem.rarity].border}33`,
                 boxShadow: rarityConfig[selectedItem.rarity].glow !== 'none' ? rarityConfig[selectedItem.rarity].glow.replace(/0\.\d/g, '0.15') : 'none',
                 display: 'flex', alignItems: 'center', gap: 14,
@@ -238,7 +238,7 @@ export default function WorkshopPage() {
         </AnimatePresence>
 
         {/* Tabs */}
-        <div style={{ display: 'flex', gap: 4, marginBottom: 20, background: '#000a2b', padding: 4, borderRadius: 14, border: '1px solid #0c255a', overflowX: 'auto' }}>
+        <div style={{ display: 'flex', gap: 4, marginBottom: 20, background: '#010d33', padding: 4, borderRadius: 14, border: '1px solid #1a1a1a', overflowX: 'auto' }}>
           {tabIds.map(id => (
             <button
               key={id}
@@ -278,15 +278,15 @@ export default function WorkshopPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: i * 0.02 }}
                   onClick={() => handleItemClick(item)}
-                  whileHover={{ scale: 1.03, borderColor: owned ? rc.border : '#0f2d6b' }}
+                  whileHover={{ scale: 1.03, borderColor: owned ? rc.border : '#333' }}
                   whileTap={{ scale: 0.97 }}
                   style={{
                     display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
                     padding: '14px 6px 12px', borderRadius: 16, textAlign: 'center',
                     cursor: 'pointer',
-                    background: equipped ? '#fff' : previewing ? '#010d33' : '#070707',
-                    border: `1.5px solid ${equipped ? '#fff' : previewing ? rc.border + '66' : owned ? rc.border + '44' : '#181818'}`,
-                    boxShadow: equipped ? '0 0 24px rgba(255,255,255,0.15)'
+                    background: equipped ? 'var(--bg-raised, #1a1a1a)' : previewing ? 'var(--bg-surface, #010d33)' : 'var(--bg-card, #070707)',
+                    border: `1.5px solid ${equipped ? '#4ade80' : previewing ? rc.border + '66' : owned ? rc.border + '44' : 'var(--border, #181818)'}`,
+                    boxShadow: equipped ? '0 0 24px rgba(74,222,128,0.15)'
                       : previewing ? rc.glow.replace(/0\.\d/g, '0.2')
                       : owned && (item.rarity === 'mythic' || item.rarity === 'legendary' || item.rarity === 'epic') ? rc.glow : 'none',
                     transition: 'border-color 0.15s',
@@ -316,7 +316,7 @@ export default function WorkshopPage() {
                   <div>
                     <div style={{
                       fontWeight: 600, fontSize: 11,
-                      color: equipped ? '#000' : owned ? '#fff' : '#666',
+                      color: equipped ? '#fff' : owned ? '#fff' : '#666',
                       lineHeight: 1.2,
                     }}>
                       {item.name}
@@ -324,7 +324,7 @@ export default function WorkshopPage() {
                     <div style={{
                       fontSize: 10, marginTop: 2,
                       fontWeight: item.rarity === 'mythic' || item.rarity === 'legendary' ? 700 : 500,
-                      color: equipped ? '#555' : rc.color + (owned ? '' : '88'),
+                      color: equipped ? '#4ade80' : rc.color + (owned ? '' : '88'),
                     }}>
                       {rc.label}
                     </div>
@@ -332,7 +332,7 @@ export default function WorkshopPage() {
 
                   {/* Status badge */}
                   {equipped ? (
-                    <div style={{ fontSize: 9, fontWeight: 800, color: 'rgba(0,0,0,0.5)', background: '#ddd', padding: '2px 8px', borderRadius: 20 }}>
+                    <div style={{ fontSize: 9, fontWeight: 800, color: '#000', background: '#4ade80', padding: '2px 8px', borderRadius: 20 }}>
                       {s('equippedBadge', locale)}
                     </div>
                   ) : !owned ? (

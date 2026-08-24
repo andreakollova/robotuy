@@ -85,8 +85,8 @@ export default function TheoryHub() {
 
   useEffect(() => {
     fetchModulesWithLessons().then(mods => {
-      // Theory Hub shows only theory modules (1-18), not Python coding modules
-      setDbModules(mods.filter(m => m.module_number <= 18));
+      // Theory Hub shows only theory modules (2-18), skip Úvod (1) — it's in the path
+      setDbModules(mods.filter(m => m.module_number >= 2 && m.module_number <= 18));
     });
   }, []);
 
@@ -104,8 +104,8 @@ export default function TheoryHub() {
     <div style={{ marginBottom: 40 }}>
       {/* Section header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-        <div style={{ width: 32, height: 32, borderRadius: 8, background: '#161616', border: '1px solid #0c255a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <BookOpen size={16} color="#fff" />
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--bg-raised, #041540)', border: '1px solid var(--border, #222)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <BookOpen size={16} color="var(--text, #fff)" />
         </div>
         <div>
           <h2 style={{ fontWeight: 700, fontSize: 18, color: '#fff', letterSpacing: '-0.02em' }}>
@@ -118,52 +118,84 @@ export default function TheoryHub() {
       </div>
 
       {/* Progress bar */}
-      <div style={{ height: 3, borderRadius: 2, background: '#0c255a', marginBottom: 20, overflow: 'hidden' }}>
-        <div style={{ height: '100%', background: '#fff', borderRadius: 2, width: `${(readCount / allTheoryLessons.length) * 100}%`, transition: 'width 0.4s' }} />
+      <div style={{ height: 3, borderRadius: 2, background: 'var(--bg-raised, #1a1a1a)', marginBottom: 20, overflow: 'hidden' }}>
+        <div style={{ height: '100%', background: 'var(--text, #fff)', borderRadius: 2, width: `${(readCount / allTheoryLessons.length) * 100}%`, transition: 'width 0.4s' }} />
       </div>
 
       {/* Modules: in-progress first, then shuffled others */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {(() => {
-          // Find in-progress module (has some but not all lessons done)
-          const inProgress = dbModules.filter(m => {
-            const done = m.lessons.filter(l => completedLessons.includes(`theory-${l.id}`)).length;
-            return done > 0 && done < m.lessons.length;
+          // Sort: in-progress first, then not-started (by module_number), completed at bottom
+          const sorted = [...dbModules].sort((a, b) => {
+            const aDone = a.lessons.filter(l => completedLessons.includes(`theory-${l.id}`)).length;
+            const bDone = b.lessons.filter(l => completedLessons.includes(`theory-${l.id}`)).length;
+            const aAll = aDone === a.lessons.length;
+            const bAll = bDone === b.lessons.length;
+            const aStarted = aDone > 0 && !aAll;
+            const bStarted = bDone > 0 && !bAll;
+            // In-progress first
+            if (aStarted && !bStarted) return -1;
+            if (!aStarted && bStarted) return 1;
+            // Completed last
+            if (aAll && !bAll) return 1;
+            if (!aAll && bAll) return -1;
+            // Same status: by module_number
+            return a.module_number - b.module_number;
           });
-          const notStarted = dbModules.filter(m => {
+          // Show first 4 not-completed + all completed
+          const notDone = sorted.filter(m => {
             const done = m.lessons.filter(l => completedLessons.includes(`theory-${l.id}`)).length;
-            return done === 0;
+            return done < m.lessons.length;
           });
-          // Shuffle not-started
-          const shuffled = [...notStarted].sort(() => Math.random() - 0.5);
-          const ordered = [...inProgress, ...shuffled];
-          return ordered.slice(0, 4).map(mod => (
-            <ModuleRow key={mod.id} mod={mod} completedLessons={completedLessons} router={router} locale={locale} favDrink={favDrink} />
+          const allDone = sorted.filter(m => {
+            const done = m.lessons.filter(l => completedLessons.includes(`theory-${l.id}`)).length;
+            return done === m.lessons.length;
+          });
+          // Flatten: show each lesson as a top-level expandable block
+          const allLessons = sorted.flatMap(mod => mod.lessons.map(l => ({ ...l, moduleTitle: mod.title, moduleTitle_sk: mod.title_sk })));
+          return allLessons.map(lesson => (
+            <LessonBlock key={lesson.id} lesson={lesson} completedLessons={completedLessons} router={router} locale={locale} />
           ));
         })()}
       </div>
 
       {/* Show all divider + button */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '20px 0' }}>
-        <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
+        <div style={{ flex: 1, height: 1, background: '#222' }} />
         <button
           onClick={() => setShowAll(!showAll)}
-          style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, background: 'none', border: '1px solid #0c255a', color: '#888', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
+          style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, background: 'none', border: '1px solid #222', color: '#888', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
         >
           <Library size={13} />
           {showAll ? (locale === 'sk' ? 'Skryť' : 'Show less') : (locale === 'sk' ? 'Zobraziť všetky' : 'Show all')}
         </button>
-        <div style={{ flex: 1, height: 1, background: '#0c255a' }} />
+        <div style={{ flex: 1, height: 1, background: '#222' }} />
       </div>
 
-      {/* Remaining modules */}
-      {showAll && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {dbModules.slice(4).map((mod) => (
-            <ModuleRow key={mod.id} mod={mod} completedLessons={completedLessons} router={router} locale={locale} favDrink={favDrink} />
-          ))}
-        </div>
-      )}
+      {/* Remaining modules — sorted same way, excluding already shown */}
+      {showAll && (() => {
+        const shownIds = new Set(
+          [...dbModules].filter(m => {
+            const done = m.lessons.filter(l => completedLessons.includes(`theory-${l.id}`)).length;
+            return done < m.lessons.length;
+          }).slice(0, 4).map(m => m.id)
+        );
+        // Add completed module IDs to shown set
+        dbModules.forEach(m => {
+          const done = m.lessons.filter(l => completedLessons.includes(`theory-${l.id}`)).length;
+          if (done === m.lessons.length) shownIds.add(m.id);
+        });
+        const remaining = dbModules
+          .filter(m => !shownIds.has(m.id))
+          .sort((a, b) => a.module_number - b.module_number);
+        return remaining.length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {remaining.map((mod) => (
+              <ModuleRow key={mod.id} mod={mod} completedLessons={completedLessons} router={router} locale={locale} favDrink={favDrink} />
+            ))}
+          </div>
+        ) : null;
+      })()}
     </div>
   );
 }
@@ -180,8 +212,8 @@ function ReadCard({ lesson, index, router, locale }: { lesson: DbLessonSummary &
       style={{
         width: '100%', display: 'flex', alignItems: 'center', gap: 16,
         padding: '16px 18px', borderRadius: 14,
-        background: index === 0 ? '#041540' : '#000a2b',
-        border: `1px solid ${index === 0 ? '#0c255a' : '#0c255a'}`,
+        background: index === 0 ? '#111' : '#010d33',
+        border: `1px solid ${index === 0 ? '#222' : '#1a1a1a'}`,
         cursor: 'pointer', textAlign: 'left',
         transition: 'border-color 0.15s',
       }}
@@ -189,8 +221,8 @@ function ReadCard({ lesson, index, router, locale }: { lesson: DbLessonSummary &
       <div style={{
         width: 44, height: 44, borderRadius: 12, flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: index === 0 ? '#fff' : '#161616',
-        border: index === 0 ? 'none' : '1px solid #0c255a',
+        background: index === 0 ? '#fff' : '#041540',
+        border: index === 0 ? 'none' : '1px solid #222',
       }}>
         {index === 0
           ? <ArrowRight size={18} color="#000" />
@@ -210,6 +242,89 @@ function ReadCard({ lesson, index, router, locale }: { lesson: DbLessonSummary &
   );
 }
 
+// Lesson as top-level expandable block — same visual style as old ModuleRow
+function LessonBlock({ lesson, completedLessons, router, locale }: { lesson: any; completedLessons: string[]; router: any; locale: 'en' | 'sk' }) {
+  const [open, setOpen] = useState(false);
+  const sections = lesson.miniTitles || [];
+  const done = completedLessons.includes(`theory-${lesson.id}`);
+  const Icon = MODULE_ICONS[lesson.lesson_number] || BookOpen;
+
+  return (
+    <div style={{ background: 'var(--bg-card, #010d33)', border: `1px solid ${done ? 'rgba(74,222,128,0.25)' : 'var(--border, #1a1a1a)'}`, borderRadius: 12, overflow: 'hidden' }}>
+      <button
+        onClick={() => setOpen(!open)}
+        style={{ width: '100%', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', textAlign: 'left' }}
+      >
+        <div style={{
+          width: 32, height: 32, borderRadius: 8, flexShrink: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: done ? 'rgba(74,222,128,0.1)' : 'var(--bg-surface, #111)',
+          border: done ? '1px solid rgba(74,222,128,0.3)' : '1px solid var(--border, #222)',
+        }}>
+          {done
+            ? <Check size={14} color="#4ade80" strokeWidth={3} />
+            : <Icon size={14} color="#777" />
+          }
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontWeight: 600, fontSize: 14, color: done ? '#4ade80' : 'var(--text, #ddd)' }}>{t(lesson, 'title', locale)}</div>
+          <div style={{ fontSize: 11, color: done ? '#16a34a' : '#777', marginTop: 2 }}>
+            {sections.length > 0 ? `0/${sections.length} ${locale === 'sk' ? 'lekcií' : 'lessons'}` : ''}
+          </div>
+        </div>
+        <motion.div animate={{ rotate: open ? 90 : 0 }} transition={{ duration: 0.15 }}>
+          <ChevronRight size={16} color="#555" />
+        </motion.div>
+      </button>
+
+      {open && (
+        <div style={{ borderTop: '1px solid var(--border-light, #111)' }}>
+          {sections.length > 0 ? sections.map((title: string, si: number) => (
+            <button
+              key={si}
+              onClick={() => router.push(`/theory/${lesson.id}?section=${si}`)}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center', gap: 14,
+                padding: '14px 16px 14px 20px', cursor: 'pointer', textAlign: 'left',
+                borderTop: si > 0 ? '1px solid var(--border-light, #010d33)' : 'none',
+              }}
+            >
+              <div style={{
+                width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'transparent',
+                border: '1.5px solid var(--border, #2a2a2a)',
+              }} />
+              <span style={{ fontSize: 14, color: 'var(--text, #ddd)', fontWeight: 500 }}>
+                {title}
+              </span>
+            </button>
+          )) : (
+            <button
+              onClick={() => router.push(`/theory/${lesson.id}`)}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+                padding: '10px 16px 10px 28px', cursor: 'pointer', textAlign: 'left',
+              }}
+            >
+              <div style={{
+                width: 24, height: 24, borderRadius: 7, flexShrink: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                border: '1px solid var(--border, #2a2a2a)',
+              }}>
+                <ArrowRight size={12} color="#555" />
+              </div>
+              <span style={{ fontSize: 13, color: 'var(--text-secondary, #ccc)', fontWeight: 500 }}>
+                {locale === 'sk' ? 'Otvoriť lekciu' : 'Open lesson'}
+              </span>
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 const MODULE_ICONS: Record<number, any> = {
   1: Terminal, 2: Monitor, 3: HardDrive, 4: Cpu, 5: Binary,
   6: Globe, 7: Variable, 8: Braces, 9: FunctionSquare, 10: GitBranch,
@@ -224,7 +339,7 @@ function ModuleRow({ mod, completedLessons, router, locale, favDrink }: { mod: M
   const drinkReward = getModuleDrink(mod.module_number, favDrink);
 
   return (
-    <div style={{ background: '#000a2b', border: `1px solid ${allDone ? 'rgba(245,158,11,0.2)' : '#0c255a'}`, borderRadius: 12, overflow: 'hidden' }}>
+    <div style={{ background: 'var(--bg-card, #010d33)', border: `1px solid ${allDone ? 'rgba(74,222,128,0.25)' : 'var(--border, #1a1a1a)'}`, borderRadius: 12, overflow: 'hidden' }}>
       <button
         onClick={() => setOpen(!open)}
         style={{ width: '100%', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', textAlign: 'left' }}
@@ -232,20 +347,20 @@ function ModuleRow({ mod, completedLessons, router, locale, favDrink }: { mod: M
         <div style={{
           width: 32, height: 32, borderRadius: 8, flexShrink: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: allDone ? 'rgba(245,158,11,0.1)' : '#041540',
-          border: allDone ? '1px solid rgba(245,158,11,0.3)' : '1px solid #0c255a',
+          background: allDone ? 'rgba(74,222,128,0.1)' : 'var(--bg-surface, #111)',
+          border: allDone ? '1px solid rgba(74,222,128,0.3)' : '1px solid var(--border, #222)',
           fontSize: allDone ? 18 : 14,
         }}>
           {allDone
-            ? <span>{drinkReward.icon}</span>
+            ? <Check size={14} color="#4ade80" strokeWidth={3} />
             : (() => { const Icon = MODULE_ICONS[mod.module_number] || BookOpen; return <Icon size={14} color="#777" />; })()
           }
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontWeight: 600, fontSize: 14, color: allDone ? '#f59e0b' : '#ddd' }}>{t(mod, 'title', locale)}</div>
-          <div style={{ fontSize: 11, color: allDone ? '#b45309' : '#777', marginTop: 2 }}>
+          <div style={{ fontWeight: 600, fontSize: 14, color: allDone ? '#4ade80' : '#ddd' }}>{t(mod, 'title', locale)}</div>
+          <div style={{ fontSize: 11, color: allDone ? '#16a34a' : '#777', marginTop: 2 }}>
             {allDone
-              ? `${locale === 'sk' ? drinkReward.nameSk : drinkReward.name} ${drinkReward.icon}`
+              ? (locale === 'sk' ? 'Dokončené' : 'Completed')
               : `${doneCount}/${mod.lessons.length} ${s('lessons', locale)}`
             }
           </div>
@@ -256,31 +371,68 @@ function ModuleRow({ mod, completedLessons, router, locale, favDrink }: { mod: M
       </button>
 
       {open && (
-        <div style={{ borderTop: '1px solid #111' }}>
+        <div style={{ borderTop: '1px solid var(--border-light, #111)' }}>
           {mod.lessons.map((lesson) => {
             const done = completedLessons.includes(`theory-${lesson.id}`);
+            const sections = lesson.miniTitles || [];
+            if (sections.length === 0) {
+              // No sections — show lesson as single item
+              return (
+                <button
+                  key={lesson.id}
+                  onClick={() => router.push(`/theory/${lesson.id}`)}
+                  style={{
+                    width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+                    padding: '10px 16px 10px 28px', cursor: 'pointer', textAlign: 'left',
+                    borderTop: '1px solid var(--border-light, #010d33)',
+                  }}
+                >
+                  <div style={{
+                    width: 20, height: 20, borderRadius: 6, flexShrink: 0,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: done ? '#4ade80' : 'transparent',
+                    border: done ? 'none' : '1px solid var(--border, #2a2a2a)',
+                  }}>
+                    {done && <Check size={10} color="#000" strokeWidth={3} />}
+                  </div>
+                  <span style={{ fontSize: 13, color: done ? 'var(--text-dim, #aaa)' : 'var(--text-secondary, #ccc)', fontWeight: 500 }}>
+                    {t(lesson, 'title', locale)}
+                  </span>
+                </button>
+              );
+            }
+            // Has sections — show lesson title as category header, sections as items
             return (
-              <button
-                key={lesson.id}
-                onClick={() => router.push(`/theory/${lesson.id}`)}
-                style={{
-                  width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-                  padding: '10px 16px 10px 28px', cursor: 'pointer', textAlign: 'left',
-                  borderTop: '1px solid #010d33',
-                }}
-              >
-                <div style={{
-                  width: 24, height: 24, borderRadius: 7, flexShrink: 0,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: done ? '#4ade80' : 'transparent',
-                  border: done ? 'none' : '1px solid #132d6b',
-                }}>
-                  {done && <Check size={12} color="#000" strokeWidth={3} />}
+              <div key={lesson.id}>
+                <div style={{ padding: '12px 16px 6px 16px', borderTop: '1px solid var(--border-light, #010d33)' }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-hint, #666)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                    {t(lesson, 'title', locale)}
+                  </div>
                 </div>
-                <span style={{ fontSize: 13, color: done ? '#aaa' : '#ccc', fontWeight: 500 }}>
-                  {t(lesson, 'title', locale)}
-                </span>
-              </button>
+                {sections.map((title, si) => (
+                  <button
+                    key={`${lesson.id}-${si}`}
+                    onClick={() => router.push(`/theory/${lesson.id}?section=${si}`)}
+                    style={{
+                      width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+                      padding: '8px 16px 8px 28px', cursor: 'pointer', textAlign: 'left',
+                    }}
+                  >
+                    <div style={{
+                      width: 20, height: 20, borderRadius: 6, flexShrink: 0,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'transparent',
+                      border: '1px solid var(--border, #2a2a2a)',
+                      fontSize: 9, color: '#555', fontWeight: 600,
+                    }}>
+                      {si + 1}
+                    </div>
+                    <span style={{ fontSize: 13, color: 'var(--text-secondary, #ccc)', fontWeight: 500 }}>
+                      {title}
+                    </span>
+                  </button>
+                ))}
+              </div>
             );
           })}
         </div>

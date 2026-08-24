@@ -166,8 +166,8 @@ export default function PricingPage() {
               onClick={() => setPlan(p)}
               style={{
                 flex: 1, padding: '14px 12px', borderRadius: 14, border: 'none', cursor: 'pointer',
-                background: plan === p ? '#161616' : '#000a2b',
-                outline: plan === p ? '2px solid #4ade80' : '1px solid #0c255a',
+                background: plan === p ? '#041540' : '#010d33',
+                outline: plan === p ? '2px solid #4ade80' : '1px solid #1a1a1a',
                 textAlign: 'center', position: 'relative',
               }}
             >
@@ -198,7 +198,7 @@ export default function PricingPage() {
         </div>
 
         {/* Features */}
-        <div style={{ marginBottom: 24, padding: '20px', background: '#000a2b', border: '1px solid #0c255a', borderRadius: 16 }}>
+        <div style={{ marginBottom: 24, padding: '20px', background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 16 }}>
           {features.map((f, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderTop: i > 0 ? '1px solid #111' : 'none' }}>
               <Check size={16} color="#4ade80" />
@@ -215,7 +215,7 @@ export default function PricingPage() {
           whileTap={{ scale: 0.98 }}
           style={{
             width: '100%', padding: '16px', borderRadius: 14,
-            background: loading ? '#0c255a' : '#EDEDED',
+            background: loading ? '#222' : '#EDEDED',
             color: loading ? '#555' : '#000',
             fontWeight: 700, fontSize: 16, border: 'none',
             cursor: loading ? 'not-allowed' : 'pointer',
@@ -230,7 +230,7 @@ export default function PricingPage() {
         </motion.button>
 
         {/* Promo code */}
-        <div style={{ padding: '16px', background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14 }}>
+        <div style={{ padding: '16px', background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 14 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
             <Gift size={14} color="#888" />
             <span style={{ fontSize: 12, color: '#888', fontWeight: 600 }}>
@@ -244,7 +244,7 @@ export default function PricingPage() {
               placeholder={sk ? 'Zadaj kod...' : 'Enter code...'}
               style={{
                 flex: 1, padding: '10px 14px', borderRadius: 10,
-                background: '#041540', border: '1px solid #0c255a',
+                background: '#111', border: '1px solid #222',
                 color: '#fff', fontSize: 14, fontFamily: 'monospace',
                 outline: 'none', textTransform: 'uppercase',
               }}
@@ -254,7 +254,7 @@ export default function PricingPage() {
               disabled={promoLoading || !promoCode.trim()}
               style={{
                 padding: '10px 16px', borderRadius: 10,
-                background: promoCode.trim() ? '#fff' : '#0c255a',
+                background: promoCode.trim() ? '#fff' : '#222',
                 color: promoCode.trim() ? '#000' : '#555',
                 fontWeight: 700, fontSize: 13, border: 'none',
                 cursor: promoCode.trim() ? 'pointer' : 'not-allowed',

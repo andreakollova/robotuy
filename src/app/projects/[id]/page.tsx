@@ -44,12 +44,12 @@ function TerminalPreview({ elements, highlight }: { elements: string[]; highligh
   return (
     <div style={{ padding: 20 }}>
       <div style={{
-        background: '#0c0c0c', borderRadius: 12, border: '1px solid #0c255a', overflow: 'hidden',
+        background: '#0c0c0c', borderRadius: 12, border: '1px solid #222', overflow: 'hidden',
         boxShadow: highlight ? '0 0 30px rgba(74, 222, 128, 0.15)' : 'none',
         transition: 'box-shadow 0.6s',
       }}>
         {/* Terminal title bar */}
-        <div style={{ height: 32, background: '#0c255a', display: 'flex', alignItems: 'center', padding: '0 12px', gap: 6 }}>
+        <div style={{ height: 32, background: '#1a1a1a', display: 'flex', alignItems: 'center', padding: '0 12px', gap: 6 }}>
           <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
           <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
           <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
@@ -58,7 +58,7 @@ function TerminalPreview({ elements, highlight }: { elements: string[]; highligh
         {/* Terminal content */}
         <div style={{ padding: '16px 16px', fontFamily: 'JetBrains Mono, Fira Code, monospace', fontSize: 12, lineHeight: 1.8 }}>
           {elements.length === 0 && (
-            <div style={{ color: '#0f2d6b' }}>$ _</div>
+            <div style={{ color: '#333' }}>$ _</div>
           )}
           {elements.map((el, i) => {
             const isNew = el === highlight;
@@ -150,12 +150,12 @@ function PhonePreview({ elements, highlight }: { elements: string[]; highlight: 
     <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
       <div style={{
         width: 290, minHeight: 580, borderRadius: 40, overflow: 'hidden',
-        border: '3px solid #0c255a', background: '#010d33', position: 'relative',
+        border: '3px solid #333', background: '#000', position: 'relative',
         boxShadow: highlight ? '0 0 40px rgba(74, 222, 128, 0.2)' : 'none',
         transition: 'box-shadow 0.6s',
       }}>
         {/* Notch */}
-        <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 100, height: 26, background: '#010d33', borderRadius: '0 0 14px 14px', zIndex: 10 }} />
+        <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 100, height: 26, background: '#000', borderRadius: '0 0 14px 14px', zIndex: 10 }} />
         {/* Screen content */}
         <div style={{ padding: '60px 20px 30px', display: 'flex', flexDirection: 'column', gap: 10 }}>
           {elements.map((el, i) => {
@@ -185,27 +185,27 @@ function renderPreviewElement(el: string, isNew: boolean) {
     case 'title':
       return <div style={{ fontSize: 24, fontWeight: 700, color: '#fff', marginBottom: 16, ...glow, borderRadius: 4, padding: 2 }}>Welcome Back</div>;
     case 'input-empty':
-      return <div style={{ background: '#0c255a', borderRadius: 10, padding: 13, color: '#444', fontSize: 13, border: '1px solid #0c255a', ...glow }}>...</div>;
+      return <div style={{ background: '#1a1a1a', borderRadius: 10, padding: 13, color: '#444', fontSize: 13, border: '1px solid #333', ...glow }}>...</div>;
     case 'input-email':
-      return <div style={{ background: '#0c255a', borderRadius: 10, padding: 13, color: '#666', fontSize: 13, border: '1px solid #0c255a', ...glow }}>Email</div>;
+      return <div style={{ background: '#1a1a1a', borderRadius: 10, padding: 13, color: '#666', fontSize: 13, border: '1px solid #333', ...glow }}>Email</div>;
     case 'input-password':
-      return <div style={{ background: '#0c255a', borderRadius: 10, padding: 13, color: '#666', fontSize: 13, border: '1px solid #0c255a', ...glow }}>Password</div>;
+      return <div style={{ background: '#1a1a1a', borderRadius: 10, padding: 13, color: '#666', fontSize: 13, border: '1px solid #333', ...glow }}>Password</div>;
     case 'button-login':
       return <div style={{ background: '#fff', borderRadius: 10, padding: 13, textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#000', marginTop: 4, ...glow }}>Login</div>;
     case 'forgot-password':
       return <div style={{ textAlign: 'center', fontSize: 12, color: '#888', marginTop: 6, ...glow, borderRadius: 4, padding: 2 }}>Forgot Password?</div>;
     case 'button-google':
-      return <div style={{ background: '#0c255a', borderRadius: 10, padding: 13, textAlign: 'center', fontSize: 13, fontWeight: 600, color: '#ccc', border: '1px solid #0c255a', marginTop: 4, ...glow }}>Continue with Google</div>;
+      return <div style={{ background: '#1a1a1a', borderRadius: 10, padding: 13, textAlign: 'center', fontSize: 13, fontWeight: 600, color: '#ccc', border: '1px solid #333', marginTop: 4, ...glow }}>Continue with Google</div>;
 
     // Sign Up Screen
     case 'signup-title':
       return <div style={{ fontSize: 24, fontWeight: 700, color: '#fff', marginBottom: 16, ...glow, borderRadius: 4, padding: 2 }}>Create Account</div>;
     case 'signup-input-name':
-      return <div style={{ background: '#0c255a', borderRadius: 10, padding: 13, color: '#666', fontSize: 13, border: '1px solid #0c255a', ...glow }}>Full Name</div>;
+      return <div style={{ background: '#1a1a1a', borderRadius: 10, padding: 13, color: '#666', fontSize: 13, border: '1px solid #333', ...glow }}>Full Name</div>;
     case 'signup-input-email':
-      return <div style={{ background: '#0c255a', borderRadius: 10, padding: 13, color: '#666', fontSize: 13, border: '1px solid #0c255a', ...glow }}>Email</div>;
+      return <div style={{ background: '#1a1a1a', borderRadius: 10, padding: 13, color: '#666', fontSize: 13, border: '1px solid #333', ...glow }}>Email</div>;
     case 'signup-input-password':
-      return <div style={{ background: '#0c255a', borderRadius: 10, padding: 13, color: '#666', fontSize: 13, border: '1px solid #0c255a', ...glow }}>Password</div>;
+      return <div style={{ background: '#1a1a1a', borderRadius: 10, padding: 13, color: '#666', fontSize: 13, border: '1px solid #333', ...glow }}>Password</div>;
     case 'signup-button':
       return <div style={{ background: '#fff', borderRadius: 10, padding: 13, textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#000', marginTop: 4, ...glow }}>Sign Up</div>;
     case 'signup-login-link':
@@ -213,7 +213,7 @@ function renderPreviewElement(el: string, isNew: boolean) {
 
     // Profile Screen
     case 'profile-avatar':
-      return <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#0c255a', margin: '0 auto 8px', border: '3px solid #0c255a', display: 'flex', alignItems: 'center', justifyContent: 'center', ...glow }}>
+      return <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#222', margin: '0 auto 8px', border: '3px solid #333', display: 'flex', alignItems: 'center', justifyContent: 'center', ...glow }}>
         <span style={{ fontSize: 28 }}>👤</span>
       </div>;
     case 'profile-name':
@@ -221,7 +221,7 @@ function renderPreviewElement(el: string, isNew: boolean) {
     case 'profile-bio':
       return <div style={{ fontSize: 12, color: '#888', textAlign: 'center', marginBottom: 8, ...glow, borderRadius: 4, padding: 2 }}>Mobile developer & coffee lover</div>;
     case 'profile-stats':
-      return <div style={{ display: 'flex', justifyContent: 'space-around', padding: '12px 0', borderTop: '1px solid #0c255a', borderBottom: '1px solid #0c255a', ...glow, borderRadius: 4 }}>
+      return <div style={{ display: 'flex', justifyContent: 'space-around', padding: '12px 0', borderTop: '1px solid #222', borderBottom: '1px solid #222', ...glow, borderRadius: 4 }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>120</div>
           <div style={{ fontSize: 10, color: '#666' }}>Posts</div>
@@ -236,13 +236,13 @@ function renderPreviewElement(el: string, isNew: boolean) {
         </div>
       </div>;
     case 'profile-edit-btn':
-      return <div style={{ background: '#0c255a', borderRadius: 10, padding: 10, textAlign: 'center', fontSize: 13, fontWeight: 600, color: '#ccc', border: '1px solid #0c255a', marginTop: 4, ...glow }}>Edit Profile</div>;
+      return <div style={{ background: '#1a1a1a', borderRadius: 10, padding: 10, textAlign: 'center', fontSize: 13, fontWeight: 600, color: '#ccc', border: '1px solid #333', marginTop: 4, ...glow }}>Edit Profile</div>;
     case 'profile-posts-grid':
       return <div style={{ ...glow, borderRadius: 4, padding: 2 }}>
         <div style={{ fontSize: 13, fontWeight: 600, color: '#888', marginBottom: 8, marginTop: 8 }}>Posts</div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 3 }}>
           {[1,2,3,4,5,6].map(n => (
-            <div key={n} style={{ aspectRatio: '1', background: '#0c255a', borderRadius: 4 }} />
+            <div key={n} style={{ aspectRatio: '1', background: '#1a1a1a', borderRadius: 4 }} />
           ))}
         </div>
       </div>;
@@ -251,21 +251,21 @@ function renderPreviewElement(el: string, isNew: boolean) {
     case 'settings-header':
       return <div style={{ fontSize: 24, fontWeight: 700, color: '#fff', marginBottom: 12, ...glow, borderRadius: 4, padding: 2 }}>Settings</div>;
     case 'settings-notifications':
-      return <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #0c255a', ...glow, borderRadius: 4 }}>
+      return <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #1a1a1a', ...glow, borderRadius: 4 }}>
         <span style={{ fontSize: 14, color: '#ccc' }}>Notifications</span>
         <div style={{ width: 40, height: 22, borderRadius: 11, background: '#4ade80', padding: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <div style={{ width: 18, height: 18, borderRadius: '50%', background: '#fff' }} />
         </div>
       </div>;
     case 'settings-darkmode':
-      return <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #0c255a', ...glow, borderRadius: 4 }}>
+      return <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #1a1a1a', ...glow, borderRadius: 4 }}>
         <span style={{ fontSize: 14, color: '#ccc' }}>Dark Mode</span>
         <div style={{ width: 40, height: 22, borderRadius: 11, background: '#4ade80', padding: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <div style={{ width: 18, height: 18, borderRadius: '50%', background: '#fff' }} />
         </div>
       </div>;
     case 'settings-language':
-      return <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #0c255a', ...glow, borderRadius: 4 }}>
+      return <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #1a1a1a', ...glow, borderRadius: 4 }}>
         <span style={{ fontSize: 14, color: '#ccc' }}>Language</span>
         <span style={{ fontSize: 13, color: '#888' }}>English &rsaquo;</span>
       </div>;
@@ -367,7 +367,7 @@ export default function ProjectWorkspace() {
   };
 
   if (!lesson || !topic) {
-    return <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>Lesson not found</div>;
+    return <div style={{ minHeight: '100vh', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>Lesson not found</div>;
   }
 
   const progress = lesson.steps.length > 0 ? (completedSteps.size / lesson.steps.length) * 100 : 0;
@@ -399,8 +399,8 @@ export default function ProjectWorkspace() {
             {locale === 'sk' ? lesson.titleSk : lesson.title}
           </h1>
           <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
-            <span style={{ fontSize: 12, color: '#888', background: '#041540', padding: '4px 10px', borderRadius: 6 }}>{lesson.duration}</span>
-            <span style={{ fontSize: 12, color: '#888', background: '#041540', padding: '4px 10px', borderRadius: 6 }}>{locale === 'sk' ? lesson.levelSk : lesson.level}</span>
+            <span style={{ fontSize: 12, color: '#888', background: '#111', padding: '4px 10px', borderRadius: 6 }}>{lesson.duration}</span>
+            <span style={{ fontSize: 12, color: '#888', background: '#111', padding: '4px 10px', borderRadius: 6 }}>{locale === 'sk' ? lesson.levelSk : lesson.level}</span>
           </div>
 
           <div style={{ marginBottom: 24 }}>
@@ -408,7 +408,7 @@ export default function ProjectWorkspace() {
             <p style={{ fontSize: 14, color: '#aaa', lineHeight: 1.7 }}>{locale === 'sk' ? lesson.goalSk : lesson.goal}</p>
           </div>
 
-          <div style={{ background: '#041540', borderRadius: 12, padding: 16, marginBottom: 32, border: '1px solid #0c255a' }}>
+          <div style={{ background: '#111', borderRadius: 12, padding: 16, marginBottom: 32, border: '1px solid #1a1a1a' }}>
             <p style={{ fontSize: 13, color: '#888', lineHeight: 1.8, margin: 0 }}>{locale === 'sk' ? lesson.preIntroSk : lesson.preIntro}</p>
           </div>
 
@@ -445,12 +445,12 @@ export default function ProjectWorkspace() {
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: '#010d33' }}>
       {/* Top bar */}
-      <div style={{ height: 44, borderBottom: '1px solid #0c255a', display: 'flex', alignItems: 'center', padding: '0 16px', gap: 12 }}>
+      <div style={{ height: 44, borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', padding: '0 16px', gap: 12 }}>
         <Link href="/topics" style={{ display: 'flex', alignItems: 'center', color: '#555' }}><ArrowLeft size={16} /></Link>
         <span style={{ fontSize: 12, color: '#888', fontWeight: 600 }}>{topic.icon} {locale === 'sk' ? lesson.titleSk : lesson.title}</span>
         <div style={{ flex: 1 }} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, width: 180 }}>
-          <div style={{ flex: 1, height: 3, borderRadius: 2, background: '#0c255a', overflow: 'hidden' }}>
+          <div style={{ flex: 1, height: 3, borderRadius: 2, background: '#1a1a1a', overflow: 'hidden' }}>
             <motion.div animate={{ width: `${progress}%` }} style={{ height: '100%', background: '#4ade80', borderRadius: 2 }} />
           </div>
           <span style={{ fontSize: 10, color: '#555', fontWeight: 600 }}>{completedSteps.size}/{lesson.steps.length}</span>
@@ -459,13 +459,13 @@ export default function ProjectWorkspace() {
 
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         {/* LEFT: Guide */}
-        <div style={{ width: '26%', borderRight: '1px solid #0c255a', overflow: 'auto', padding: '20px 20px' }}>
+        <div style={{ width: '26%', borderRight: '1px solid #1a1a1a', overflow: 'auto', padding: '20px 20px' }}>
           {/* Step dots */}
           <div style={{ display: 'flex', gap: 3, marginBottom: 20 }}>
             {lesson.steps.map((_, i) => (
               <div key={i} onClick={() => completedSteps.has(i) || i <= stepIndex ? setStepIndex(i) : null} style={{
                 flex: 1, height: 3, borderRadius: 2, cursor: completedSteps.has(i) ? 'pointer' : 'default',
-                background: completedSteps.has(i) ? '#4ade80' : i === stepIndex ? '#fff' : '#0c255a',
+                background: completedSteps.has(i) ? '#4ade80' : i === stepIndex ? '#fff' : '#222',
               }} />
             ))}
           </div>
@@ -474,7 +474,7 @@ export default function ProjectWorkspace() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
             <div style={{
               width: 24, height: 24, borderRadius: 7, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: completedSteps.has(stepIndex) ? '#4ade80' : '#0c255a',
+              background: completedSteps.has(stepIndex) ? '#4ade80' : '#222',
               fontSize: 11, fontWeight: 700, color: completedSteps.has(stepIndex) ? '#000' : '#888',
             }}>
               {completedSteps.has(stepIndex) ? <Check size={12} /> : stepIndex + 1}
@@ -573,12 +573,12 @@ export default function ProjectWorkspace() {
         </div>
 
         {/* CENTER: Editor */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', borderRight: '1px solid #0c255a' }}>
-          <div style={{ height: 36, borderBottom: '1px solid #0c255a', display: 'flex', alignItems: 'center', padding: '0 12px', gap: 8 }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', borderRight: '1px solid #1a1a1a' }}>
+          <div style={{ height: 36, borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', padding: '0 12px', gap: 8 }}>
             <Code2 size={12} color="#888" />
             <span style={{ fontSize: 11, color: '#555', fontWeight: 600 }}>{editorFileName}</span>
             <div style={{ flex: 1 }} />
-            <button onClick={handleReset} style={{ display: 'flex', alignItems: 'center', gap: 3, padding: '3px 8px', borderRadius: 5, background: '#0c255a', border: '1px solid #0c255a', cursor: 'pointer', color: '#666', fontSize: 10, fontWeight: 600 }}>
+            <button onClick={handleReset} style={{ display: 'flex', alignItems: 'center', gap: 3, padding: '3px 8px', borderRadius: 5, background: '#1a1a1a', border: '1px solid #222', cursor: 'pointer', color: '#666', fontSize: 10, fontWeight: 600 }}>
               <RotateCcw size={10} /> Reset
             </button>
             <button onClick={handleRun} style={{ display: 'flex', alignItems: 'center', gap: 3, padding: '3px 12px', borderRadius: 5, background: '#4ade80', border: 'none', cursor: 'pointer', color: '#000', fontSize: 10, fontWeight: 700 }}>
@@ -604,7 +604,7 @@ export default function ProjectWorkspace() {
 
         {/* RIGHT: Preview */}
         <div style={{ width: '30%', overflow: 'auto', background: '#050505' }}>
-          <div style={{ height: 36, borderBottom: '1px solid #0c255a', display: 'flex', alignItems: 'center', padding: '0 12px', gap: 6 }}>
+          <div style={{ height: 36, borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center', padding: '0 12px', gap: 6 }}>
             {isPhonePreview ? <Eye size={12} color="#888" /> : <Terminal size={12} color="#888" />}
             <span style={{ fontSize: 11, color: '#555', fontWeight: 600 }}>
               {isPhonePreview ? 'Live Preview' : 'Output'}

@@ -10,41 +10,55 @@ async function processAuthCallback(url: string) {
   if (!url.startsWith('robotuy://auth/callback')) return;
   if (isProcessingAuthCallback) return;
 
+  // Check if we already processed this code
+  const codeMatch = url.match(/[?&]code=([^&#]+)/);
+  const code = codeMatch?.[1];
+  const processedKey = 'robotuy-last-auth-code';
+  if (code && localStorage.getItem(processedKey) === code) return;
+
   isProcessingAuthCallback = true;
+  if (code) localStorage.setItem(processedKey, code);
 
   try {
-    const hash = url.split('#')[1] ?? '';
-    const params = new URLSearchParams(hash);
-
-    const accessToken = params.get('access_token');
-    const refreshToken = params.get('refresh_token');
-
-    if (!accessToken || !refreshToken) {
-      throw new Error('OAuth callback missing tokens');
-    }
-
     const sb = getSupabase();
     if (!sb) throw new Error('Supabase not initialized');
 
-    const { error } = await sb.auth.setSession({
-      access_token: accessToken,
-      refresh_token: refreshToken,
-    });
+    if (code) {
+      // PKCE: exchange code for session
+      const { error } = await sb.auth.exchangeCodeForSession(code);
+      if (error) throw error;
+      console.log('[DeepLink] exchangeCodeForSession: OK');
+    } else {
+      // Implicit flow fallback: tokens in hash fragment
+      const hash = url.split('#')[1] ?? '';
+      const hashParams = new URLSearchParams(hash);
+      const accessToken = hashParams.get('access_token');
+      const refreshToken = hashParams.get('refresh_token');
 
-    if (error) throw error;
+      if (!accessToken || !refreshToken) {
+        throw new Error('OAuth callback missing code and tokens');
+      }
 
-    console.log('setSession: OK');
+      const { error } = await sb.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      });
+      if (error) throw error;
+      console.log('[DeepLink] setSession: OK');
+    }
 
-    // Close the Safari/SFSafariViewController browser window
+    // Close SFSafariViewController — onAuthStateChange in AuthGate
+    // will automatically detect the new session, no page reload needed
     try {
       const { Browser } = await import('@capacitor/browser');
       await Browser.close();
     } catch {}
 
-    // Navigate in the main WebView - NOT location.reload()
-    window.location.replace('/');
+    // NO window.location.replace('/') — this was causing infinite reload loop!
+    // AuthGate's onAuthStateChange will pick up the session and render the app
+
   } catch (error) {
-    console.log('OAuth callback error:', error);
+    console.log('[DeepLink] OAuth callback error:', error);
     try {
       const { Browser } = await import('@capacitor/browser');
       await Browser.close();
@@ -76,42 +90,97 @@ export default function DeepLinkHandler() {
           void processAuthCallback(launchUrl.url);
         }
 
-        // Request push notification permission
+        // Push notifications setup
         try {
           const { PushNotifications } = await import('@capacitor/push-notifications');
-          const permStatus = await PushNotifications.checkPermissions();
-          if (permStatus.receive === 'prompt') {
-            const result = await PushNotifications.requestPermissions();
-            if (result.receive === 'granted') {
-              try { await PushNotifications.register(); } catch {}
-            }
-          } else if (permStatus.receive === 'granted') {
-            try { await PushNotifications.register(); } catch {}
-          }
 
-          // Listen for token and save to Supabase
-          try {
-            await PushNotifications.addListener('registration', async (token) => {
-              console.log('Push token:', token.value);
-              const sb = getSupabase();
-              if (!sb) return;
-              const { data: { user } } = await sb.auth.getUser();
+          // Register token listener FIRST (before register() fires)
+          await PushNotifications.addListener('registration', async (token) => {
+            console.log('Push token:', token.value);
+            localStorage.setItem('robotuy-push-token', token.value);
+            // Save via API route (uses service role, bypasses RLS)
+            try {
+              const sb2 = getSupabase();
+              const user = sb2 ? (await sb2.auth.getUser()).data.user : null;
               if (user) {
-                // Save token to user_state (where push/send reads from)
-                await sb.from('user_state').upsert({
-                  user_id: user.id,
-                  push_token: token.value,
-                }, { onConflict: 'user_id' });
+                await fetch('/api/push/register', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ userId: user.id, token: token.value, locale: (() => { try { return JSON.parse(localStorage.getItem('robotuy-locale') || '{}').state?.locale || 'en'; } catch { return 'en'; } })() }),
+                });
+                console.log('Push token saved via API');
+              }
+            } catch {}
+          });
+
+          await PushNotifications.addListener('registrationError', (err) => {
+            console.log('Push registration error (normal on emulator):', err);
+          });
+
+          // Now register — permission check + register
+          const sb3 = getSupabase();
+          const hasSession = sb3 ? (await sb3.auth.getSession()).data.session : null;
+
+          if (hasSession) {
+            // Already logged in — ask permission if needed, then register
+            const perm = await PushNotifications.checkPermissions();
+            if (perm.receive === 'granted') {
+              await PushNotifications.register();
+            } else if (perm.receive === 'prompt') {
+              setTimeout(async () => {
+                try {
+                  const r = await PushNotifications.requestPermissions();
+                  if (r.receive === 'granted') await PushNotifications.register();
+                } catch {}
+              }, 3000);
+            }
+          } else if (sb3) {
+            // Wait for login, then ask permission
+            sb3.auth.onAuthStateChange(async (event) => {
+              if (event === 'SIGNED_IN') {
+                setTimeout(async () => {
+                  try {
+                    const p = await PushNotifications.checkPermissions();
+                    if (p.receive === 'prompt') {
+                      const r = await PushNotifications.requestPermissions();
+                      if (r.receive === 'granted') await PushNotifications.register();
+                    } else if (p.receive === 'granted') {
+                      await PushNotifications.register();
+                    }
+                  } catch {}
+                }, 3000);
               }
             });
-
-            await PushNotifications.addListener('registrationError', (err) => {
-              console.log('Push registration error (normal on emulator):', err);
-            });
-          } catch {}
+          }
         } catch (e) {
           console.log('Push notification setup:', e);
         }
+
+        // Fallback: AppDelegate injects token into localStorage as 'robotuy-push-token'
+        // Poll for it in case Capacitor JS listener didn't fire
+        const pollToken = setInterval(async () => {
+          const nativeToken = localStorage.getItem('robotuy-push-token');
+          if (!nativeToken) return;
+          clearInterval(pollToken);
+          console.log('Push token from native fallback:', nativeToken);
+          try {
+            const sbFallback = getSupabase();
+            const user = sbFallback ? (await sbFallback.auth.getUser()).data.user : null;
+            if (user) {
+              const res = await fetch('/api/push/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: user.id, token: nativeToken, locale: (() => { try { return JSON.parse(localStorage.getItem('robotuy-locale') || '{}').state?.locale || 'en'; } catch { return 'en'; } })() }),
+              });
+              console.log('Push token fallback save:', res.ok ? 'OK' : res.status);
+            }
+          } catch (e) {
+            console.log('Push token fallback error:', e);
+          }
+        }, 3000);
+        // Stop polling after 30s
+        setTimeout(() => clearInterval(pollToken), 30000);
+
       } catch (e) {
         console.log('DeepLinkHandler init error:', e);
       }

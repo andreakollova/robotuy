@@ -25,7 +25,7 @@ function saveCustomEntries(entries: CustomEntry[]) {
   localStorage.setItem('robotuy-my-glossary', JSON.stringify(entries));
 }
 
-const categories = ['všetko', 'môj', 'skratka', 'sucastka', 'koncept', 'nastroj'] as const;
+const categories = ['všetko', 'môj', 'skratka', 'symbol', 'koncept', 'nastroj'] as const;
 type Filter = typeof categories[number];
 
 export default function GlossaryPage() {
@@ -97,7 +97,7 @@ export default function GlossaryPage() {
             placeholder={s('searchGlossary', locale)}
             style={{
               width: '100%', padding: '11px 40px 11px 40px',
-              background: '#000a2b', border: '1px solid #0c255a', borderRadius: 12,
+              background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 12,
               color: '#fff', fontSize: 14, fontFamily: 'DM Sans, sans-serif',
               outline: 'none', boxSizing: 'border-box',
             }}
@@ -116,7 +116,7 @@ export default function GlossaryPage() {
               : cat === 'môj' ? (locale === 'sk' ? 'Môj slovník' : 'My glossary')
               : locale === 'sk'
                 ? (categoryLabels[cat as GlossaryEntry['category']] || cat)
-                : cat === 'skratka' ? 'Abbreviations' : cat === 'sucastka' ? 'Components' : cat === 'koncept' ? 'Concepts' : cat === 'nastroj' ? 'Tools' : cat;
+                : cat === 'skratka' ? 'Abbreviations' : cat === 'symbol' ? 'Symbols' : cat === 'koncept' ? 'Concepts' : cat === 'nastroj' ? 'Tools' : cat;
             return (
               <button
                 key={cat}
@@ -124,7 +124,7 @@ export default function GlossaryPage() {
                 style={{
                   padding: '8px 16px', borderRadius: 20, fontSize: 12, fontWeight: 700,
                   whiteSpace: 'nowrap', cursor: 'pointer', border: 'none', flexShrink: 0,
-                  background: filter === cat ? (cat === 'môj' ? '#4ade80' : '#fff') : '#041540',
+                  background: filter === cat ? (cat === 'môj' ? '#4ade80' : '#fff') : '#111',
                   color: filter === cat ? '#000' : '#555',
                   transition: 'all 0.15s',
                 }}
@@ -135,9 +135,9 @@ export default function GlossaryPage() {
           })}
         </div>
         {/* Scroll indicator bar */}
-        <div style={{ height: 3, borderRadius: 2, background: '#041540', marginBottom: 18, overflow: 'hidden' }}>
+        <div style={{ height: 3, borderRadius: 2, background: '#111', marginBottom: 18, overflow: 'hidden' }}>
           <div style={{
-            height: '100%', borderRadius: 2, background: '#0f2d6b',
+            height: '100%', borderRadius: 2, background: '#333',
             width: `${100 / categories.length * 2}%`,
             marginLeft: `${(categories.indexOf(filter) / categories.length) * 100}%`,
             transition: 'margin-left 0.2s ease',
@@ -149,7 +149,7 @@ export default function GlossaryPage() {
           onClick={() => setShowAddForm(!showAddForm)}
           style={{
             width: '100%', padding: '12px 16px', borderRadius: 12, marginBottom: 16,
-            background: showAddForm ? '#041540' : '#000a2b', border: '1px solid #0c255a',
+            background: showAddForm ? '#111' : '#010d33', border: '1px solid #222',
             color: '#aaa', fontSize: 13, fontWeight: 600, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
           }}
@@ -165,30 +165,30 @@ export default function GlossaryPage() {
               initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
               style={{ overflow: 'hidden', marginBottom: 16 }}
             >
-              <div style={{ background: '#000a2b', border: '1px solid #0c255a', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ background: '#010d33', border: '1px solid #222', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <input
                   value={newTerm} onChange={e => setNewTerm(e.target.value)}
                   placeholder={locale === 'sk' ? 'Skratka / pojem (napr. API)' : 'Term (e.g. API)'}
-                  style={{ padding: '10px 14px', background: '#041540', border: '1px solid #0c255a', borderRadius: 10, color: '#fff', fontSize: 14, fontFamily: 'inherit', outline: 'none' }}
+                  style={{ padding: '10px 14px', background: '#111', border: '1px solid #1a1a1a', borderRadius: 10, color: '#fff', fontSize: 14, fontFamily: 'inherit', outline: 'none' }}
                 />
                 <textarea
                   value={newExplanation} onChange={e => setNewExplanation(e.target.value)}
                   placeholder={locale === 'sk' ? 'Vysvetlenie...' : 'Explanation...'}
                   rows={3}
-                  style={{ padding: '10px 14px', background: '#041540', border: '1px solid #0c255a', borderRadius: 10, color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none', resize: 'vertical' }}
+                  style={{ padding: '10px 14px', background: '#111', border: '1px solid #1a1a1a', borderRadius: 10, color: '#fff', fontSize: 13, fontFamily: 'inherit', outline: 'none', resize: 'vertical' }}
                 />
                 <textarea
                   value={newCode} onChange={e => setNewCode(e.target.value)}
                   placeholder={locale === 'sk' ? 'Kód (voliteľné)' : 'Code (optional)'}
                   rows={2}
-                  style={{ padding: '10px 14px', background: '#041540', border: '1px solid #0c255a', borderRadius: 10, color: '#aaa', fontSize: 12, fontFamily: 'monospace', outline: 'none', resize: 'vertical' }}
+                  style={{ padding: '10px 14px', background: '#111', border: '1px solid #1a1a1a', borderRadius: 10, color: '#aaa', fontSize: 12, fontFamily: 'monospace', outline: 'none', resize: 'vertical' }}
                 />
                 <button
                   onClick={addCustomEntry}
                   disabled={!newTerm.trim() || !newExplanation.trim()}
                   style={{
                     padding: '10px', borderRadius: 10, border: 'none', cursor: 'pointer',
-                    background: newTerm.trim() && newExplanation.trim() ? '#4ade80' : '#0c255a',
+                    background: newTerm.trim() && newExplanation.trim() ? '#4ade80' : '#222',
                     color: newTerm.trim() && newExplanation.trim() ? '#000' : '#555',
                     fontWeight: 700, fontSize: 13,
                   }}
@@ -216,7 +216,7 @@ export default function GlossaryPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: Math.min(i * 0.02, 0.3) }}
-                style={{ background: '#000a2b', border: `1px solid ${isOpen ? '#132d6b' : '#141414'}`, borderRadius: 14, overflow: 'hidden' }}
+                style={{ background: '#010d33', border: `1px solid ${isOpen ? '#2a2a2a' : '#141414'}`, borderRadius: 14, overflow: 'hidden' }}
               >
                 <button
                   onClick={() => setExpanded(isOpen ? null : entry.id)}
@@ -238,12 +238,12 @@ export default function GlossaryPage() {
                     <span style={{
                       fontSize: 9, padding: '3px 7px', borderRadius: 6, fontWeight: 800,
                       letterSpacing: '0.08em', textTransform: 'uppercase', flexShrink: 0,
-                      background: entry.category === 'skratka' ? '#0c255a' : entry.category === 'sucastka' ? '#0a1e4a' : entry.category === 'koncept' ? '#0d2855' : '#081845',
-                      color: entry.category === 'skratka' ? '#888' : entry.category === 'sucastka' ? '#7a9ec7' : entry.category === 'koncept' ? '#8899bb' : '#6688aa',
+                      background: entry.category === 'skratka' ? '#1a1a1a' : entry.category === 'symbol' ? '#041540' : entry.category === 'koncept' ? '#181818' : '#141414',
+                      color: entry.category === 'skratka' ? '#888' : entry.category === 'symbol' ? '#777' : entry.category === 'koncept' ? '#666' : '#555',
                     }}>
                       {locale === 'sk'
-                        ? (categoryLabels[entry.category] ? entry.category : entry.category)
-                        : entry.category === 'skratka' ? 'abbr' : entry.category === 'sucastka' ? 'part' : entry.category === 'koncept' ? 'concept' : 'tool'
+                        ? (entry.category === 'nastroj' ? 'nástroj' : entry.category)
+                        : entry.category === 'skratka' ? 'abbr' : entry.category === 'symbol' ? 'symbol' : entry.category === 'koncept' ? 'concept' : 'tool'
                       }
                     </span>
                   )}
@@ -258,7 +258,7 @@ export default function GlossaryPage() {
                   </div>
 
                   <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                    <ChevronDown size={16} color="#0f2d6b" />
+                    <ChevronDown size={16} color="#333" />
                   </motion.div>
                 </button>
 
@@ -276,7 +276,7 @@ export default function GlossaryPage() {
                           {entry.explanation}
                         </p>
                         {entry.example && (
-                          <div style={{ background: '#060606', border: '1px solid #0c255a', borderRadius: 10, padding: '10px 14px' }}>
+                          <div style={{ background: '#060606', border: '1px solid #1a1a1a', borderRadius: 10, padding: '10px 14px' }}>
                             <pre style={{ fontSize: 11, color: '#888', fontFamily: 'monospace', margin: 0, whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
                               {entry.example}
                             </pre>

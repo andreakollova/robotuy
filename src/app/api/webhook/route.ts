@@ -43,19 +43,40 @@ export async function POST(req: NextRequest) {
       }).eq('user_id', userId);
     }
 
-    // Slack notification
-    await notifySlack(`New subscription! ${email || userId} - ${session.amount_total ? (session.amount_total / 100).toFixed(2) + ' EUR' : ''}`);
+    // Slack notification with plan details
+    const sub = await stripe.subscriptions.retrieve(subscriptionId as string) as any;
+    const plan = sub.items?.data?.[0]?.price?.recurring?.interval === 'year' ? 'Yearly' : 'Monthly';
+    const isTrial = sub.status === 'trialing';
+    const amount = session.amount_total ? (session.amount_total / 100).toFixed(2) + ' EUR' : '0 EUR';
+    await notifySlack(`🎉 New subscription!\n• Email: ${email || 'N/A'}\n• Plan: ${plan}${isTrial ? ' (Free Trial)' : ''}\n• Amount: ${amount}`);
+  }
+
+  // Handle subscription becoming active after trial or renewal
+  if (event.type === 'customer.subscription.updated') {
+    const sub = event.data.object;
+    const userId = sub.metadata?.userId;
+    if (userId && (sub.status === 'active' || sub.status === 'trialing')) {
+      const plan = sub.items?.data?.[0]?.price?.recurring?.interval === 'year' ? 'yearly' : 'monthly';
+      const expiresAt = new Date((sub.current_period_end || Date.now() / 1000 + 30 * 86400) * 1000).toISOString();
+      await sb.from('user_state').update({
+        subscription_status: 'active',
+        subscription_plan: plan,
+        subscription_expires_at: expiresAt,
+      }).eq('user_id', userId);
+    }
   }
 
   if (event.type === 'customer.subscription.deleted') {
     const sub = event.data.object;
     const customerId = sub.customer;
-    // Find user by stripe_customer_id
     const { data } = await sb.from('user_state').select('user_id').eq('stripe_customer_id', customerId).single();
     if (data) {
       await sb.from('user_state').update({
         subscription_status: 'canceled',
       }).eq('user_id', data.user_id);
+
+      const plan = sub.items?.data?.[0]?.price?.recurring?.interval === 'year' ? 'Yearly' : 'Monthly';
+      await notifySlack(`❌ Subscription canceled!\n• User: ${data.user_id}\n• Plan: ${plan}`);
     }
   }
 

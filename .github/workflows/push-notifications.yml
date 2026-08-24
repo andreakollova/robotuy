@@ -29,7 +29,7 @@ jobs:
             TYPE="reminder"
           fi
 
-          curl -s -X POST "https://www.coduy.sk/api/push/send" \
+          curl -s -X POST "https://www.robotuy.app/api/push/send" \
             -H "Content-Type: application/json" \
             -d "{\"type\": \"$TYPE\"}" \
             | jq .

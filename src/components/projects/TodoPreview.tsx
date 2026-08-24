@@ -1,6 +1,6 @@
 'use client';
 
-const s = { bg: '#111', card: '#0c255a', border: '#0c255a', blue: '#3b82f6', text: '#fff', dim: '#666' };
+const s = { bg: '#111', card: '#1a1a1a', border: '#222', blue: '#3b82f6', text: '#fff', dim: '#666' };
 
 export default function TodoPreview({ variables }: { variables: Record<string, any> }) {
   const tasks = Array.isArray(variables.tasks) ? variables.tasks : [];
@@ -37,7 +37,7 @@ export default function TodoPreview({ variables }: { variables: Record<string, a
       {/* Empty state */}
       {isEmpty && (
         <div style={{
-          padding: 32, textAlign: 'center', color: '#0c255a', fontSize: 13, lineHeight: 1.6,
+          padding: 32, textAlign: 'center', color: '#333', fontSize: 13, lineHeight: 1.6,
         }}>
           Zatiaľ nemáš žiadne úlohy.<br />
           Začni pridaním prvej.
@@ -63,7 +63,7 @@ export default function TodoPreview({ variables }: { variables: Record<string, a
                   width: 20, height: 20, borderRadius: 5, flexShrink: 0,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: completed ? s.blue : 'transparent',
-                  border: `2px solid ${completed ? s.blue : '#0c255a'}`,
+                  border: `2px solid ${completed ? s.blue : '#333'}`,
                   transition: 'all 0.2s',
                 }}>
                   {completed && <span style={{ color: '#fff', fontSize: 11, fontWeight: 800 }}>✓</span>}
@@ -80,7 +80,7 @@ export default function TodoPreview({ variables }: { variables: Record<string, a
 
                 {/* Delete button */}
                 {hasRemoveFn && (
-                  <span style={{ color: '#0c255a', fontSize: 14, cursor: 'default' }}>×</span>
+                  <span style={{ color: '#333', fontSize: 14, cursor: 'default' }}>×</span>
                 )}
               </div>
             );

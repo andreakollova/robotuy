@@ -95,7 +95,7 @@ export function getItemById(id: string): CosmeticItem | undefined {
 
 // Rarity config
 export const rarityConfig: Record<ItemRarity, { label: string; color: string; glow: string; border: string }> = {
-  common:    { label: 'Common',    color: '#888',    glow: 'none',                                    border: '#0c255a' },
+  common:    { label: 'Common',    color: '#888',    glow: 'none',                                    border: '#222' },
   rare:      { label: 'Rare',      color: '#4a9eff', glow: '0 0 12px rgba(74,158,255,0.3)',           border: '#4a9eff' },
   epic:      { label: 'Epic',      color: '#a855f7', glow: '0 0 20px rgba(168,85,247,0.4)',           border: '#a855f7' },
   legendary: { label: 'Legendary', color: '#f59e0b', glow: '0 0 30px rgba(245,158,11,0.5)',           border: '#f59e0b' },

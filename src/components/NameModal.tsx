@@ -87,7 +87,7 @@ export default function NameModal() {
                 exit={{ scale: 0.95, opacity: 0, y: -10 }}
                 transition={{ type: 'spring', stiffness: 280, damping: 24 }}
                 style={{
-                  background: '#161616', border: '1px solid rgba(255,255,255,0.08)',
+                  background: '#041540', border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: 24, padding: '40px 32px', maxWidth: 400, width: '100%',
                   textAlign: 'center', boxShadow: '0 24px 80px rgba(1,13,51,0.8)',
                 }}
@@ -145,7 +145,7 @@ export default function NameModal() {
                 exit={{ scale: 0.95, opacity: 0, y: -10 }}
                 transition={{ type: 'spring', stiffness: 280, damping: 24 }}
                 style={{
-                  background: '#161616', border: '1px solid rgba(255,255,255,0.08)',
+                  background: '#041540', border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: 24, padding: '32px 28px', maxWidth: 440, width: '100%',
                   textAlign: 'center', boxShadow: '0 24px 80px rgba(1,13,51,0.8)',
                 }}
@@ -202,7 +202,7 @@ export default function NameModal() {
                 exit={{ scale: 0.95, opacity: 0, y: -10 }}
                 transition={{ type: 'spring', stiffness: 280, damping: 24 }}
                 style={{
-                  background: '#161616', border: '1px solid rgba(255,255,255,0.08)',
+                  background: '#041540', border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: 24, padding: '32px 28px', maxWidth: 400, width: '100%',
                   textAlign: 'center', boxShadow: '0 24px 80px rgba(1,13,51,0.8)',
                 }}

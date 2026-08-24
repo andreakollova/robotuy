@@ -10,6 +10,7 @@ import { ch22Exercises } from './lessons/ch2-2-exercises';
 import { ch231Content } from './lessons/ch2-3-1-content';
 import { ch232Content } from './lessons/ch2-3-2-content';
 import { ch232Exercises } from './lessons/ch2-3-2-exercises';
+import { ch24Content } from './lessons/ch2-4-content';
 
 export const projectTopics: ProjectTopic[] = [
   {
@@ -64,6 +65,7 @@ export const projectTopics: ProjectTopic[] = [
         id: 'ch2-4',
         unitId: 'modern-robotics',
         title: 'Chapter 2.4: Configuration and Velocity Constraints',
+        content: ch24Content,
         exercises: [],
       },
     ],

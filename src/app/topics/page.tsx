@@ -323,6 +323,7 @@ export default function TopicsPage() {
   const [activeExercise, setActiveExercise] = useState<{ exercise: Exercise; topicId: string } | null>(null);
   const [activeTab, setActiveTab] = useState<'lesson' | 'book'>('lesson');
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
 
   const activeTopic = projectTopics.find(t => t.id === openTopic);
 

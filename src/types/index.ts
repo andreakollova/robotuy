@@ -46,6 +46,7 @@ export interface Lesson {
   id: string;
   unitId: string;
   title: string;
+  content?: string;
   exercises: Exercise[];
   status?: 'locked' | 'active' | 'completed';
 }

@@ -10,9 +10,16 @@ export interface BookChapter {
   sections: BookSection[];
 }
 
+import { ch1BookSections } from './lessons/ch1-preview-book';
+
 export const bookChapters: BookChapter[] = [
   {
-    courseId: 'course1',
+    courseId: 'ch1-preview',
+    title: 'Chapter 1: Preview',
+    sections: ch1BookSections,
+  },
+  {
+    courseId: 'ch2-intro',
     title: 'Chapter 2: Configuration Space',
     sections: [
       {

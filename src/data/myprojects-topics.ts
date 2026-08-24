@@ -7,6 +7,7 @@ import { ch21Content } from './lessons/ch2-1-content';
 import { ch21Exercises } from './lessons/ch2-1-exercises';
 import { ch22Content } from './lessons/ch2-2-content';
 import { ch22Exercises } from './lessons/ch2-2-exercises';
+import { ch231Content } from './lessons/ch2-3-1-content';
 
 export const projectTopics: ProjectTopic[] = [
   {
@@ -47,6 +48,7 @@ export const projectTopics: ProjectTopic[] = [
         id: 'ch2-3-1',
         unitId: 'modern-robotics',
         title: 'Chapter 2.3.1: Configuration Space Topology',
+        content: ch231Content,
         exercises: [],
       },
       {

@@ -6,6 +6,7 @@ import { course1IntroExercises } from './lessons/course1-intro-exercises';
 import { ch21Content } from './lessons/ch2-1-content';
 import { ch21Exercises } from './lessons/ch2-1-exercises';
 import { ch22Content } from './lessons/ch2-2-content';
+import { ch22Exercises } from './lessons/ch2-2-exercises';
 
 export const projectTopics: ProjectTopic[] = [
   {
@@ -40,7 +41,7 @@ export const projectTopics: ProjectTopic[] = [
         unitId: 'modern-robotics',
         title: 'Chapter 2.2: Degrees of Freedom of a Robot',
         content: ch22Content,
-        exercises: [],
+        exercises: ch22Exercises,
       },
       {
         id: 'ch2-3-1',

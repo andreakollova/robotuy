@@ -7,7 +7,7 @@ import { useUserStore } from '@/store/userStore';
 import { useLocaleStore } from '@/store/localeStore';
 import { projectTopics } from '@/data/myprojects-topics';
 import StatusBar from '@/components/StatusBar';
-import { ArrowLeft, Check, ChevronRight, Zap, BookOpen, Lightbulb, Code, X, Play, Loader2 } from 'lucide-react';
+import { ArrowLeft, Check, ChevronRight, Zap, BookOpen, Lightbulb, Code, X, Play, Loader2, GraduationCap, HelpCircle } from 'lucide-react';
 import type { Exercise } from '@/types';
 
 export default function TopicLessonPage() {
@@ -19,6 +19,7 @@ export default function TopicLessonPage() {
   const topic = projectTopics.find(t => t.id === topicId);
   const lesson = topic?.lessons.find(l => l.id === lessonId);
   const [activeExIdx, setActiveExIdx] = useState(0);
+  const [tab, setTab] = useState<'lesson' | 'quiz'>(lesson?.content ? 'lesson' : 'quiz');
 
   if (!topic || !lesson) {
     return (
@@ -55,6 +56,79 @@ export default function TopicLessonPage() {
           </span>
         </div>
 
+        {/* Lesson / Quiz tab switcher */}
+        {lesson.content && (
+          <div style={{ display: 'flex', gap: 0, marginBottom: 24, background: '#000a2b', borderRadius: 12, padding: 3 }}>
+            <button
+              onClick={() => setTab('lesson')}
+              style={{
+                flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                background: tab === 'lesson' ? '#0c255a' : 'transparent',
+                color: tab === 'lesson' ? '#fff' : '#666',
+                fontWeight: 600, fontSize: 13, transition: 'all 0.2s',
+              }}
+            >
+              <GraduationCap size={15} />
+              Lesson
+            </button>
+            <button
+              onClick={() => setTab('quiz')}
+              style={{
+                flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                background: tab === 'quiz' ? '#0c255a' : 'transparent',
+                color: tab === 'quiz' ? '#fff' : '#666',
+                fontWeight: 600, fontSize: 13, transition: 'all 0.2s',
+              }}
+            >
+              <HelpCircle size={15} />
+              Quiz ({lesson.exercises.length})
+            </button>
+          </div>
+        )}
+
+        {/* LESSON CONTENT TAB */}
+        {tab === 'lesson' && lesson.content && (
+          <div style={{ color: '#ccc', fontSize: 15, lineHeight: 1.85, marginBottom: 32 }}>
+            {lesson.content.split('\n').map((line, i) => {
+              const trimmed = line.trim();
+              if (!trimmed) return <div key={i} style={{ height: 12 }} />;
+              if (trimmed.startsWith('# ')) return <h1 key={i} style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: '28px 0 16px', lineHeight: 1.3 }}>{trimmed.slice(2)}</h1>;
+              if (trimmed.startsWith('## ')) return <h2 key={i} style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '32px 0 12px', lineHeight: 1.3 }}>{trimmed.slice(3)}</h2>;
+              if (trimmed.startsWith('### ')) return <h3 key={i} style={{ fontSize: 15, fontWeight: 700, color: '#ddd', margin: '20px 0 8px' }}>{trimmed.slice(4)}</h3>;
+              if (trimmed === '---') return <hr key={i} style={{ border: 'none', borderTop: '1px solid #0c255a', margin: '28px 0' }} />;
+              if (trimmed.startsWith('> ')) return <div key={i} style={{ borderLeft: '3px solid #22c55e', padding: '10px 14px', margin: '14px 0', background: 'rgba(34,197,94,0.06)', borderRadius: '0 8px 8px 0', fontSize: 14, color: '#ddd', lineHeight: 1.7 }}>{trimmed.slice(2).split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: '#fff' }}>{part}</strong> : part)}</div>;
+              if (trimmed.startsWith('- ')) {
+                const content = trimmed.slice(2);
+                const formatted = content.split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: '#fff' }}>{part}</strong> : part);
+                return <div key={i} style={{ display: 'flex', gap: 8, margin: '4px 0', paddingLeft: 8 }}><span style={{ color: '#22c55e', flexShrink: 0 }}>-</span><span>{formatted}</span></div>;
+              }
+              if (trimmed.startsWith('$$') && trimmed.endsWith('$$')) return <div key={i} style={{ background: '#041540', padding: '10px 14px', borderRadius: 8, margin: '12px 0', fontFamily: 'var(--font-mono)', fontSize: 13, color: '#4ade80', overflowX: 'auto' }}>{trimmed.slice(2, -2)}</div>;
+              const imgMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+              if (imgMatch) return <img key={i} src={imgMatch[2]} alt={imgMatch[1]} style={{ width: '100%', borderRadius: 10, margin: '12px 0' }} />;
+              if (trimmed.startsWith('*') && trimmed.endsWith('*') && !trimmed.startsWith('**')) return <p key={i} style={{ fontSize: 11, color: '#777', fontStyle: 'italic', margin: '0 0 16px', lineHeight: 1.5 }}>{trimmed.slice(1, -1)}</p>;
+              const formatted = trimmed.split(/(\*\*[^*]+\*\*|\`[^`]+\`)/).map((part, j) => {
+                if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: '#fff' }}>{part.slice(2, -2)}</strong>;
+                if (part.startsWith('`') && part.endsWith('`')) return <code key={j} style={{ background: '#041540', padding: '2px 6px', borderRadius: 4, fontSize: 12, color: '#4ade80', fontFamily: 'var(--font-mono)' }}>{part.slice(1, -1)}</code>;
+                return part;
+              });
+              return <p key={i} style={{ margin: '6px 0' }}>{formatted}</p>;
+            })}
+            <button
+              onClick={() => setTab('quiz')}
+              style={{
+                width: '100%', padding: '14px', borderRadius: 12, border: 'none', cursor: 'pointer',
+                background: '#22c55e', color: '#000', fontWeight: 700, fontSize: 15, marginTop: 24,
+              }}
+            >
+              {locale === 'sk' ? 'Prejsť na otázky' : 'Go to Quiz'} ({lesson.exercises.length})
+            </button>
+          </div>
+        )}
+
+        {/* QUIZ TAB */}
+        {tab === 'quiz' && <>
         {/* Progress dots */}
         <div style={{ display: 'flex', gap: 3, marginBottom: 28 }}>
           {lesson.exercises.map((ex, i) => {
@@ -100,6 +174,7 @@ export default function TopicLessonPage() {
             </motion.div>
           )}
         </AnimatePresence>
+      </>}
       </div>
     </div>
   );

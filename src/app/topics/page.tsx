@@ -7,7 +7,8 @@ import { projectTopics } from '@/data/myprojects-topics';
 import { projects as interactiveProjects } from '@/data/projects/index';
 import StatusBar from '@/components/StatusBar';
 import { useRouter } from 'next/navigation';
-import { Check, ChevronRight, ArrowLeft, BookOpen, Code, PenTool, Lightbulb, X, Zap, Trophy, Calculator, KeyRound, ListTodo } from 'lucide-react';
+import { Check, ChevronRight, ArrowLeft, BookOpen, Code, PenTool, Lightbulb, X, Zap, Trophy, Calculator, KeyRound, ListTodo, GraduationCap, BookText } from 'lucide-react';
+import { bookChapters } from '@/data/book-content';
 import { useLocaleStore } from '@/store/localeStore';
 import { s } from '@/data/strings';
 import type { Exercise, InteractiveProject } from '@/types';
@@ -320,6 +321,8 @@ export default function TopicsPage() {
   const { locale } = useLocaleStore();
   const [openTopic, setOpenTopic] = useState<string | null>(null);
   const [activeExercise, setActiveExercise] = useState<{ exercise: Exercise; topicId: string } | null>(null);
+  const [activeTab, setActiveTab] = useState<'lesson' | 'book'>('lesson');
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   const activeTopic = projectTopics.find(t => t.id === openTopic);
 
@@ -361,84 +364,138 @@ export default function TopicsPage() {
             </div>
           </div>
 
-          <div style={{ height: 3, borderRadius: 2, background: '#1a1a1a', marginBottom: 24, overflow: 'hidden' }}>
-            {(() => {
-              const total = activeTopic.lessons.flatMap(l => l.exercises).length;
-              const done = activeTopic.lessons.flatMap(l => l.exercises).filter(e => completedLessons.includes(activeTopic.id + '-' + e.id)).length;
-              return <div style={{ height: '100%', background: '#4ade80', borderRadius: 2, width: `${total > 0 ? (done / total) * 100 : 0}%` }} />;
-            })()}
+          {/* ═══ LESSON / BOOK TAB SWITCHER ═══ */}
+          <div style={{ display: 'flex', gap: 0, marginBottom: 24, background: '#000a2b', borderRadius: 12, padding: 3 }}>
+            <button
+              onClick={() => setActiveTab('lesson')}
+              style={{
+                flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                background: activeTab === 'lesson' ? '#0c255a' : 'transparent',
+                color: activeTab === 'lesson' ? '#fff' : '#666',
+                fontWeight: 600, fontSize: 13, transition: 'all 0.2s',
+              }}
+            >
+              <GraduationCap size={15} />
+              Lesson
+            </button>
+            <button
+              onClick={() => setActiveTab('book')}
+              style={{
+                flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                background: activeTab === 'book' ? '#0c255a' : 'transparent',
+                color: activeTab === 'book' ? '#fff' : '#666',
+                fontWeight: 600, fontSize: 13, transition: 'all 0.2s',
+              }}
+            >
+              <BookText size={15} />
+              Book
+            </button>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {activeTopic.lessons.map((lesson, li) => {
-              const exercises = lesson.exercises;
-              const done = exercises.filter(e => completedLessons.includes(activeTopic.id + '-' + e.id)).length;
-              const allDone = done === exercises.length;
+          {activeTab === 'lesson' ? (
+            /* ═══ LESSON TAB - courses with exercises ═══ */
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {activeTopic.lessons.map((lesson, li) => {
+                const exercises = lesson.exercises;
+                const done = exercises.filter(e => completedLessons.includes(activeTopic.id + '-' + e.id)).length;
+                const allDone = done === exercises.length && exercises.length > 0;
 
-              return (
-                <div
-                  key={lesson.id}
-                  onClick={() => router.push(`/topics/${activeTopic.id}/${lesson.id}`)}
-                  style={{ background: '#010d33', border: `1px solid ${allDone ? 'rgba(74,222,128,0.2)' : '#1a1a1a'}`, borderRadius: 14, overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.15s' }}
-                >
-                  <div style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{
-                      width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: allDone ? '#4ade80' : '#111', border: allDone ? 'none' : '1px solid #222',
-                    }}>
-                      {allDone ? <Check size={18} color="#052e16" strokeWidth={3} /> : <span style={{ fontSize: 14, fontWeight: 700, color: '#888' }}>{li + 1}</span>}
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 700, fontSize: 14, color: allDone ? '#4ade80' : '#ddd' }}>{lesson.title}</div>
-                      <div style={{ fontSize: 11, color: '#777', marginTop: 2 }}>{done}/{exercises.length} {locale === 'sk' ? 'hotových' : 'done'}</div>
-                    </div>
-                    <ChevronRight size={16} color="#333" />
-                  </div>
-
-                  {/* Exercise list */}
-                  <div style={{ borderTop: '1px solid #111' }}>
-                    {exercises.map((ex, ei) => {
-                      const exDone = completedLessons.includes(activeTopic.id + '-' + ex.id);
-                      const TypeIcon = typeIcons[ex.type] || BookOpen;
-                      const typeLabel = ex.type === 'explain' ? (locale === 'sk' ? 'Čítanie' : 'Read')
-                        : ex.type === 'mcq' ? 'Quiz'
-                        : ex.type === 'fill' ? (locale === 'sk' ? 'Doplň kód' : 'Fill code')
-                        : (locale === 'sk' ? 'Napíš kód' : 'Write code');
-
-                      return (
-                        <div
-                          key={ex.id}
-                          style={{
-                            width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-                            padding: '10px 16px', textAlign: 'left',
-                            borderTop: ei === 0 ? 'none' : '1px solid #010d33',
-                          }}
-                        >
-                          <div style={{
-                            width: 24, height: 24, borderRadius: 7, flexShrink: 0,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            background: exDone ? '#4ade80' : 'transparent',
-                            border: exDone ? 'none' : '1px solid #2a2a2a',
-                          }}>
-                            {exDone ? <Check size={12} color="#052e16" strokeWidth={3} /> : <TypeIcon size={10} color="#555" />}
-                          </div>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: 12, color: exDone ? '#888' : '#ccc', fontWeight: 500 }}>
-                              {ex.prompt.length > 60 ? ex.prompt.slice(0, 60) + '...' : ex.prompt}
-                            </div>
-                          </div>
-                          <span style={{ fontSize: 9, color: '#555', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                            {typeLabel}
-                          </span>
+                return (
+                  <div
+                    key={lesson.id}
+                    onClick={() => exercises.length > 0 ? router.push(`/topics/${activeTopic.id}/${lesson.id}`) : null}
+                    style={{ background: '#010d33', border: `1px solid ${allDone ? 'rgba(74,222,128,0.2)' : '#1a1a1a'}`, borderRadius: 14, overflow: 'hidden', cursor: exercises.length > 0 ? 'pointer' : 'default', transition: 'border-color 0.15s' }}
+                  >
+                    <div style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <div style={{
+                        width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: allDone ? '#4ade80' : '#111', border: allDone ? 'none' : '1px solid #222',
+                      }}>
+                        {allDone ? <Check size={18} color="#052e16" strokeWidth={3} /> : <span style={{ fontSize: 14, fontWeight: 700, color: '#888' }}>{li + 1}</span>}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 700, fontSize: 14, color: allDone ? '#4ade80' : '#ddd' }}>{lesson.title}</div>
+                        <div style={{ fontSize: 11, color: '#777', marginTop: 2 }}>
+                          {exercises.length > 0
+                            ? `${done}/${exercises.length} ${locale === 'sk' ? 'hotových' : 'done'}`
+                            : (locale === 'sk' ? 'Čoskoro' : 'Coming soon')}
                         </div>
-                      );
-                    })}
+                      </div>
+                      {exercises.length > 0 && <ChevronRight size={16} color="#333" />}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          ) : (
+            /* ═══ BOOK TAB - chapter content ═══ */
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {(() => {
+                const chapter = bookChapters.find(ch => activeTopic.lessons.some(l => l.id === ch.courseId));
+                if (!chapter) return <p style={{ color: '#666', fontSize: 13 }}>{locale === 'sk' ? 'Obsah knihy bude čoskoro.' : 'Book content coming soon.'}</p>;
+                return chapter.sections.map((section) => {
+                  const isOpen = expandedSection === section.id;
+                  return (
+                    <div key={section.id} style={{ background: '#000a2b', borderRadius: 14, border: '1px solid #0c255a', overflow: 'hidden' }}>
+                      <button
+                        onClick={() => setExpandedSection(isOpen ? null : section.id)}
+                        style={{
+                          width: '100%', padding: '16px', display: 'flex', alignItems: 'center', gap: 12,
+                          background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left',
+                        }}
+                      >
+                        <BookOpen size={16} color={isOpen ? '#22c55e' : '#555'} />
+                        <span style={{ flex: 1, fontWeight: 700, fontSize: 14, color: isOpen ? '#fff' : '#ccc' }}>{section.title}</span>
+                        <ChevronRight size={16} color="#555" style={{ transform: isOpen ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }} />
+                      </button>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          style={{ padding: '0 16px 20px', color: '#ccc', fontSize: 14, lineHeight: 1.8 }}
+                        >
+                          {section.content.split('\n').map((line, i) => {
+                            const trimmed = line.trim();
+                            if (!trimmed) return <div key={i} style={{ height: 12 }} />;
+                            // Images
+                            const imgMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+                            if (imgMatch) return <img key={i} src={imgMatch[2]} alt={imgMatch[1]} style={{ width: '100%', borderRadius: 10, margin: '12px 0' }} />;
+                            // Image captions
+                            if (trimmed.startsWith('*') && trimmed.endsWith('*')) return <p key={i} style={{ fontSize: 11, color: '#777', fontStyle: 'italic', margin: '0 0 16px', lineHeight: 1.5 }}>{trimmed.slice(1, -1)}</p>;
+                            // Headers
+                            if (trimmed.startsWith('### ')) return <h3 key={i} style={{ fontSize: 16, fontWeight: 700, color: '#fff', margin: '24px 0 12px' }}>{trimmed.slice(4)}</h3>;
+                            // Blockquotes / definitions
+                            if (trimmed.startsWith('> ')) return <div key={i} style={{ borderLeft: '3px solid #22c55e', padding: '8px 12px', margin: '12px 0', background: 'rgba(34,197,94,0.06)', borderRadius: '0 8px 8px 0', fontSize: 13, color: '#ddd', lineHeight: 1.7 }}>{trimmed.slice(2).split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: '#fff' }}>{part}</strong> : part)}</div>;
+                            // Code blocks
+                            if (trimmed === '```') return null;
+                            if (trimmed.startsWith('```')) return null;
+                            // Table rows
+                            if (trimmed.startsWith('|')) {
+                              const cells = trimmed.split('|').filter(Boolean).map(c => c.trim());
+                              if (cells.every(c => /^[-:]+$/.test(c))) return null;
+                              return <div key={i} style={{ display: 'grid', gridTemplateColumns: `repeat(${cells.length}, 1fr)`, gap: 1, margin: '2px 0', fontSize: 12 }}>{cells.map((cell, ci) => <div key={ci} style={{ padding: '6px 8px', background: '#041540', color: '#ccc', fontWeight: i === 0 ? 700 : 400 }}>{cell}</div>)}</div>;
+                            }
+                            // Inline formatting
+                            const formatted = trimmed.split(/(\*\*[^*]+\*\*|\`[^`]+\`)/).map((part, j) => {
+                              if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: '#fff' }}>{part.slice(2, -2)}</strong>;
+                              if (part.startsWith('`') && part.endsWith('`')) return <code key={j} style={{ background: '#041540', padding: '2px 6px', borderRadius: 4, fontSize: 12, color: '#4ade80', fontFamily: 'var(--font-mono)' }}>{part.slice(1, -1)}</code>;
+                              return part;
+                            });
+                            // List items
+                            if (trimmed.startsWith('- ')) return <div key={i} style={{ display: 'flex', gap: 8, margin: '4px 0', paddingLeft: 4 }}><span style={{ color: '#22c55e' }}>-</span><span>{formatted.slice(0).map((f, fi) => typeof f === 'string' ? f.replace(/^- /, '') : f)}</span></div>;
+                            return <p key={i} style={{ margin: '4px 0' }}>{formatted}</p>;
+                          })}
+                        </motion.div>
+                      )}
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+          )}
         </div>
       </div>
     );

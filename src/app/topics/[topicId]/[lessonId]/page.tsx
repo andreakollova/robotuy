@@ -36,7 +36,7 @@ export default function TopicLessonPage() {
   return (
     <div className="page-shell" style={{ minHeight: '100vh', background: '#010d33', paddingBottom: 80 }}>
       <StatusBar />
-      <div style={{ maxWidth: 640, margin: '0 auto', padding: '20px 20px 120px' }}>
+      <div style={{ maxWidth: 800, margin: '0 auto', padding: '20px 20px 120px' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
           <button
@@ -90,40 +90,63 @@ export default function TopicLessonPage() {
 
         {/* LESSON CONTENT TAB */}
         {tab === 'lesson' && lesson.content && (
-          <div style={{ color: '#ccc', fontSize: 15, lineHeight: 1.85, marginBottom: 32 }}>
+          <div style={{ color: '#d4d4d4', fontSize: 15.5, lineHeight: 1.75, marginBottom: 32 }}>
             {lesson.content.split('\n').map((line, i) => {
               const trimmed = line.trim();
-              if (!trimmed) return <div key={i} style={{ height: 12 }} />;
-              if (trimmed.startsWith('# ')) return <h1 key={i} style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: '28px 0 16px', lineHeight: 1.3 }}>{trimmed.slice(2)}</h1>;
-              if (trimmed.startsWith('## ')) return <h2 key={i} style={{ fontSize: 18, fontWeight: 700, color: '#fff', margin: '32px 0 12px', lineHeight: 1.3 }}>{trimmed.slice(3)}</h2>;
-              if (trimmed.startsWith('### ')) return <h3 key={i} style={{ fontSize: 15, fontWeight: 700, color: '#ddd', margin: '20px 0 8px' }}>{trimmed.slice(4)}</h3>;
-              if (trimmed === '---') return <hr key={i} style={{ border: 'none', borderTop: '1px solid #0c255a', margin: '28px 0' }} />;
-              if (trimmed.startsWith('> ')) return <div key={i} style={{ borderLeft: '3px solid #22c55e', padding: '10px 14px', margin: '14px 0', background: 'rgba(34,197,94,0.06)', borderRadius: '0 8px 8px 0', fontSize: 14, color: '#ddd', lineHeight: 1.7 }}>{trimmed.slice(2).split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: '#fff' }}>{part}</strong> : part)}</div>;
+              if (!trimmed) return <div key={i} style={{ height: 6 }} />;
+              if (trimmed.startsWith('# ')) return <h1 key={i} style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: '16px 0 10px', lineHeight: 1.3 }}>{trimmed.slice(2)}</h1>;
+              if (trimmed.startsWith('## ')) return <h2 key={i} style={{ fontSize: 17, fontWeight: 700, color: '#fff', margin: '20px 0 8px', lineHeight: 1.3 }}>{trimmed.slice(3)}</h2>;
+              if (trimmed.startsWith('### ')) return <h3 key={i} style={{ fontSize: 15, fontWeight: 700, color: '#ddd', margin: '14px 0 6px' }}>{trimmed.slice(4)}</h3>;
+              if (trimmed === '---') return <hr key={i} style={{ border: 'none', borderTop: '1px solid #0c255a', margin: '18px 0' }} />;
+              if (trimmed.startsWith('> ')) return <div key={i} style={{ borderLeft: '3px solid #22c55e', padding: '8px 12px', margin: '10px 0', background: 'rgba(34,197,94,0.06)', borderRadius: '0 8px 8px 0', fontSize: 14, color: '#ddd', lineHeight: 1.65 }}>{trimmed.slice(2).split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: '#fff' }}>{part}</strong> : part)}</div>;
               if (trimmed.startsWith('- ')) {
                 const content = trimmed.slice(2);
                 const formatted = content.split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: '#fff' }}>{part}</strong> : part);
-                return <div key={i} style={{ display: 'flex', gap: 8, margin: '4px 0', paddingLeft: 8 }}><span style={{ color: '#22c55e', flexShrink: 0 }}>-</span><span>{formatted}</span></div>;
+                return <div key={i} style={{ display: 'flex', gap: 8, margin: '3px 0', paddingLeft: 8 }}><span style={{ color: '#22c55e', flexShrink: 0 }}>-</span><span>{formatted}</span></div>;
               }
-              if (trimmed.startsWith('$$') && trimmed.endsWith('$$')) return <div key={i} style={{ background: '#041540', padding: '10px 14px', borderRadius: 8, margin: '12px 0', fontFamily: 'var(--font-mono)', fontSize: 13, color: '#4ade80', overflowX: 'auto' }}>{trimmed.slice(2, -2)}</div>;
+              if (trimmed.startsWith('$$') && trimmed.endsWith('$$')) return <div key={i} style={{ background: '#041540', padding: '10px 14px', borderRadius: 8, margin: '8px 0', fontFamily: 'var(--font-mono)', fontSize: 13, color: '#4ade80', overflowX: 'auto' }}>{trimmed.slice(2, -2)}</div>;
               const imgMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
-              if (imgMatch) return <img key={i} src={imgMatch[2]} alt={imgMatch[1]} style={{ width: '100%', borderRadius: 10, margin: '12px 0' }} />;
-              if (trimmed.startsWith('*') && trimmed.endsWith('*') && !trimmed.startsWith('**')) return <p key={i} style={{ fontSize: 11, color: '#777', fontStyle: 'italic', margin: '0 0 16px', lineHeight: 1.5 }}>{trimmed.slice(1, -1)}</p>;
+              if (imgMatch) return <img key={i} src={imgMatch[2]} alt={imgMatch[1]} style={{ width: '100%', borderRadius: 10, margin: '10px 0' }} />;
+              if (trimmed.startsWith('*') && trimmed.endsWith('*') && !trimmed.startsWith('**')) return <p key={i} style={{ fontSize: 11, color: '#777', fontStyle: 'italic', margin: '0 0 12px', lineHeight: 1.5 }}>{trimmed.slice(1, -1)}</p>;
               const formatted = trimmed.split(/(\*\*[^*]+\*\*|\`[^`]+\`)/).map((part, j) => {
                 if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: '#fff' }}>{part.slice(2, -2)}</strong>;
                 if (part.startsWith('`') && part.endsWith('`')) return <code key={j} style={{ background: '#041540', padding: '2px 6px', borderRadius: 4, fontSize: 12, color: '#4ade80', fontFamily: 'var(--font-mono)' }}>{part.slice(1, -1)}</code>;
                 return part;
               });
-              return <p key={i} style={{ margin: '6px 0' }}>{formatted}</p>;
+              return <p key={i} style={{ margin: '4px 0' }}>{formatted}</p>;
             })}
-            <button
-              onClick={() => setTab('quiz')}
-              style={{
-                width: '100%', padding: '14px', borderRadius: 12, border: 'none', cursor: 'pointer',
-                background: '#22c55e', color: '#000', fontWeight: 700, fontSize: 15, marginTop: 24,
-              }}
-            >
-              {locale === 'sk' ? 'Prejsť na otázky' : 'Go to Quiz'} ({lesson.exercises.length})
-            </button>
+            {/* YouTube Video Embed */}
+            {lesson.videoUrl && (() => {
+              const match = lesson.videoUrl!.match(/(?:v=|\/embed\/|youtu\.be\/)([^&?#]+)/);
+              const videoId = match?.[1];
+              if (!videoId) return null;
+              return (
+                <div style={{ margin: '28px 0 16px' }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <Play size={14} color="#22c55e" /> Video k lekcii
+                  </div>
+                  <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, borderRadius: 12, overflow: 'hidden' }}>
+                    <iframe
+                      src={`https://www.youtube.com/embed/${videoId}`}
+                      style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                </div>
+              );
+            })()}
+            {lesson.exercises.length > 0 && (
+              <button
+                onClick={() => setTab('quiz')}
+                style={{
+                  width: '100%', padding: '14px', borderRadius: 12, border: 'none', cursor: 'pointer',
+                  background: '#22c55e', color: '#000', fontWeight: 700, fontSize: 15, marginTop: 16,
+                }}
+              >
+                {locale === 'sk' ? 'Prejsť na otázky' : 'Go to Quiz'} ({lesson.exercises.length})
+              </button>
+            )}
           </div>
         )}
 

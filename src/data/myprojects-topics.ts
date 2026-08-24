@@ -11,6 +11,8 @@ import { ch231Content } from './lessons/ch2-3-1-content';
 import { ch232Content } from './lessons/ch2-3-2-content';
 import { ch232Exercises } from './lessons/ch2-3-2-exercises';
 import { ch24Content } from './lessons/ch2-4-content';
+import { ch24Exercises } from './lessons/ch2-4-exercises';
+import { ch231Exercises } from './lessons/ch2-3-1-exercises';
 
 export const projectTopics: ProjectTopic[] = [
   {
@@ -31,6 +33,7 @@ export const projectTopics: ProjectTopic[] = [
         unitId: 'modern-robotics',
         title: 'Chapter 2: Configuration Space',
         content: course1IntroContent,
+        videoUrl: 'https://www.youtube.com/watch?v=csYtU2GY7FY',
         exercises: course1IntroExercises,
       },
       {
@@ -52,7 +55,7 @@ export const projectTopics: ProjectTopic[] = [
         unitId: 'modern-robotics',
         title: 'Chapter 2.3.1: Configuration Space Topology',
         content: ch231Content,
-        exercises: [],
+        exercises: ch231Exercises,
       },
       {
         id: 'ch2-3-2',
@@ -66,7 +69,7 @@ export const projectTopics: ProjectTopic[] = [
         unitId: 'modern-robotics',
         title: 'Chapter 2.4: Configuration and Velocity Constraints',
         content: ch24Content,
-        exercises: [],
+        exercises: ch24Exercises,
       },
     ],
   },

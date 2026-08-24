@@ -47,6 +47,7 @@ export interface Lesson {
   unitId: string;
   title: string;
   content?: string;
+  videoUrl?: string;
   exercises: Exercise[];
   status?: 'locked' | 'active' | 'completed';
 }

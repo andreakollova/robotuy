@@ -8,6 +8,8 @@ import { ch21Exercises } from './lessons/ch2-1-exercises';
 import { ch22Content } from './lessons/ch2-2-content';
 import { ch22Exercises } from './lessons/ch2-2-exercises';
 import { ch231Content } from './lessons/ch2-3-1-content';
+import { ch232Content } from './lessons/ch2-3-2-content';
+import { ch232Exercises } from './lessons/ch2-3-2-exercises';
 
 export const projectTopics: ProjectTopic[] = [
   {
@@ -55,7 +57,8 @@ export const projectTopics: ProjectTopic[] = [
         id: 'ch2-3-2',
         unitId: 'modern-robotics',
         title: 'Chapter 2.3.2: Configuration Space Representation',
-        exercises: [],
+        content: ch232Content,
+        exercises: ch232Exercises,
       },
       {
         id: 'ch2-4',

@@ -3,6 +3,9 @@ import { ch1PreviewContent } from './lessons/ch1-preview-content';
 import { ch1PreviewExercises } from './lessons/ch1-preview-exercises';
 import { course1IntroContent } from './lessons/course1-intro-content';
 import { course1IntroExercises } from './lessons/course1-intro-exercises';
+import { ch21Content } from './lessons/ch2-1-content';
+import { ch21Exercises } from './lessons/ch2-1-exercises';
+import { ch22Content } from './lessons/ch2-2-content';
 
 export const projectTopics: ProjectTopic[] = [
   {
@@ -29,12 +32,14 @@ export const projectTopics: ProjectTopic[] = [
         id: 'ch2-1',
         unitId: 'modern-robotics',
         title: 'Chapter 2.1: Degrees of Freedom of a Rigid Body',
-        exercises: [],
+        content: ch21Content,
+        exercises: ch21Exercises,
       },
       {
         id: 'ch2-2',
         unitId: 'modern-robotics',
         title: 'Chapter 2.2: Degrees of Freedom of a Robot',
+        content: ch22Content,
         exercises: [],
       },
       {

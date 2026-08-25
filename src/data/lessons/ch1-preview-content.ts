@@ -7,7 +7,7 @@ Robotika je relatívne mladý vedný odbor, no jej ciele sú mimoriadne ambició
 
 Keď chceme navrhnúť robotickú ruku, začneme premýšľať nad tým, prečo je ľudská ruka zostavená práve z ramena, lakťa, predlaktia a zápästia. Keď chceme, aby robot niečo uchopil, musíme riešiť, ako koordinovať viacero kĺbov naraz, ako určiť vhodnú silu úchopu a ako reagovať, ak predmet nie je presne tam, kde sme ho očakávali. Robotika preto nie je iba o stavbe strojov. Je zároveň štúdiom pohybu, mechaniky, rozhodovania a interakcie s fyzickým svetom.
 
-Modern Robotics sa sústreďuje najmä na tri veľké oblasti: mechaniku, plánovanie pohybu a riadenie. Mechanika nám pomáha pochopiť, ako je robot zostavený a aké pohyby mu jeho konštrukcia umožňuje. Plánovanie rieši, akým spôsobom sa má robot dostať zo súčasného stavu do požadovaného stavu. Riadenie potom zabezpečuje, aby robot tento plánovaný pohyb naozaj vykonal.
+Modern Robotics sa sústreďuje najmä na tri veľké oblasti: **mechaniku**, **plánovanie pohybu** a **riadenie**. Mechanika nám pomáha pochopiť, ako je robot zostavený a aké pohyby mu jeho konštrukcia umožňuje. Plánovanie rieši, akým spôsobom sa má robot dostať zo súčasného stavu do požadovaného stavu. Riadenie potom zabezpečuje, aby robot tento plánovaný pohyb naozaj vykonal.
 
 Celý kurz si môžeš predstaviť ako postupné budovanie odpovede na jednu veľkú otázku: Ako presne opísať robota, naplánovať jeho pohyb a následne ho prinútiť, aby tento pohyb bezpečne a presne vykonal v skutočnom svete?
 
@@ -19,17 +19,17 @@ Keď sa povie robot, veľa ľudí si ako prvé predstaví umelú inteligenciu al
 
 Ak robotické rameno zdvíha krabicu, musí vytvoriť skutočnú silu. Ak mobilný robot prechádza miestnosťou, jeho kolesá sa musia fyzicky otáčať a prenášať silu na podlahu. Ak robot zvára, jeho nástroj musí byť na správnom mieste, v správnej orientácii a musí sledovať správnu trajektóriu.
 
-Základný robotický mechanizmus môžeme opísať pomocou dvoch hlavných častí: linkov a kĺbov.
+Základný robotický mechanizmus môžeme opísať pomocou dvoch hlavných častí: **linkov** a **kĺbov**.
 
-Link je pevná mechanická časť robota. Pri robotickom ramene môže byť jedným linkom napríklad segment medzi ramenom a lakťom a ďalším segment medzi lakťom a zápästím.
+**Link** je pevná mechanická časť robota. Pri robotickom ramene môže byť jedným linkom napríklad segment medzi ramenom a lakťom a ďalším segment medzi lakťom a zápästím.
 
-Kĺb, po anglicky joint, spája dva linky a určuje, akým spôsobom sa môžu pohybovať jeden vzhľadom na druhý. Niektorý kĺb môže umožňovať otáčanie, iný lineárny posun a ďalší môže umožňovať viacero druhov pohybu.
+Kĺb, po anglicky **joint**, spája dva linky a určuje, akým spôsobom sa môžu pohybovať jeden vzhľadom na druhý. Niektorý kĺb môže umožňovať otáčanie, iný lineárny posun a ďalší môže umožňovať viacero druhov pohybu.
 
-Samotný kĺb však robot nerozhýbe. Na to potrebujeme pohon, po anglicky actuator. Najčastejšie ide o elektrický motor, no roboty môžu používať aj hydraulické alebo pneumatické pohony.
+Samotný kĺb však robot nerozhýbe. Na to potrebujeme pohon, po anglicky **actuator**. Najčastejšie ide o elektrický motor, no roboty môžu používať aj hydraulické alebo pneumatické pohony.
 
 Je dôležité rozlišovať medzi kĺbom a pohonom. Kĺb určuje, aký pohyb je mechanicky možný. Pohon vytvára silu alebo krútiaci moment, ktorý tento pohyb spôsobí.
 
-Na konci robotického ramena sa často nachádza end-effector, teda koncový pracovný člen. Môže to byť napríklad chápadlo, zváracia hlavica, skrutkovač, kamera, prísavka alebo chirurgický nástroj. Je to časť robota, ktorá priamo vykonáva úlohu.
+Na konci robotického ramena sa často nachádza **end-effector**, teda koncový pracovný člen. Môže to byť napríklad chápadlo, zváracia hlavica, skrutkovač, kamera, prísavka alebo chirurgický nástroj. Je to časť robota, ktorá priamo vykonáva úlohu.
 
 ---
 
@@ -37,9 +37,9 @@ Na konci robotického ramena sa často nachádza end-effector, teda koncový pra
 
 Skutočný robot nie je dokonale tuhý. Kovové časti sa môžu pri veľkom zaťažení mierne deformovať, prevody môžu mať vôľu a v kĺboch vzniká trenie. Ak by sme však od začiatku modelovali každý takýto efekt, matematický opis robota by bol zbytočne komplikovaný.
 
-Preto sa pri základnom štúdiu robotiky používa dôležité zjednodušenie: linky robota považujeme za tuhé telesá.
+Preto sa pri základnom štúdiu robotiky používa dôležité zjednodušenie: linky robota považujeme za **tuhé telesá**.
 
-Tuhé teleso, po anglicky rigid body, je idealizované teleso, ktorého tvar sa počas pohybu nemení. Ak si na takom telese vyberieme dva ľubovoľné body, ich vzájomná vzdialenosť zostáva stále rovnaká.
+Tuhé teleso, po anglicky **rigid body**, je idealizované teleso, ktorého tvar sa počas pohybu nemení. Ak si na takom telese vyberieme dva ľubovoľné body, ich vzájomná vzdialenosť zostáva stále rovnaká.
 
 Predstav si pevnú kovovú tyč dlhú 50 centimetrov. Môžeš ju presunúť, otočiť alebo zdvihnúť. Oba jej konce sa pri tom môžu nachádzať na úplne iných miestach ako predtým, ale ich vzájomná vzdialenosť zostane 50 centimetrov.
 
@@ -51,7 +51,7 @@ Táto myšlienka bude základom ďalších tém, najmä konfigurácie robota, st
 
 ## 03. Open-chain roboty
 
-Jednou z najbežnejších konštrukcií je open-chain mechanism, teda otvorený kinematický reťazec.
+Jednou z najbežnejších konštrukcií je **open-chain mechanism**, teda otvorený kinematický reťazec.
 
 Typickým príkladom je priemyselné robotické rameno. Začíname pevnou základňou, z nej pokračujeme cez kĺb na prvý link, z neho cez ďalší kĺb na ďalší link a tak ďalej, až sa dostaneme k end-effectoru.
 
@@ -67,15 +67,15 @@ Keď sa neskôr budeme venovať forward kinematics, práve pri open-chain roboto
 
 ## 04. Closed-chain roboty
 
-Nie všetky roboty sú otvorené reťazce. Niektoré obsahujú uzavreté mechanické slučky, a preto ich nazývame closed-chain mechanisms.
+Nie všetky roboty sú otvorené reťazce. Niektoré obsahujú uzavreté mechanické slučky, a preto ich nazývame **closed-chain mechanisms**.
 
-Typickým príkladom je Stewart–Gough platform. Pozostáva zo spodnej pevnej platformy a hornej pohyblivej platformy, ktoré sú prepojené viacerými nohami.
+Typickým príkladom je **Stewart–Gough platform**. Pozostáva zo spodnej pevnej platformy a hornej pohyblivej platformy, ktoré sú prepojené viacerými nohami.
 
 Ak začneš na spodnej platforme, prejdeš jednou nohou na hornú platformu a potom inou nohou späť na spodnú, vytvoríš uzavretú slučku.
 
 Toto má významný dôsledok. V open-chain robotovi sa môžu jednotlivé kĺby často meniť pomerne nezávisle. V closed-chain mechanizme sú však jednotlivé časti navzájom geometricky previazané. Ak zmeníš polohu jednej časti, ostatné sa musia prispôsobiť tak, aby sa mechanická slučka stále uzatvárala.
 
-To vytvára obmedzenia pohybu, teda constraints.
+To vytvára obmedzenia pohybu, teda **constraints**.
 
 Closed-chain roboty môžu byť vďaka svojej konštrukcii veľmi pevné a schopné prenášať veľké zaťaženie. Ich matematická analýza je však zložitejšia, pretože jednotlivé kĺby nie sú úplne nezávislé.
 
@@ -91,7 +91,7 @@ Problém je, že vlastnosti bežného elektrického motora často nezodpovedajú
 
 Mnohé motory pracujú efektívne pri vysokých otáčkach, často v tisícoch otáčok za minútu, ale vytvárajú relatívne malý krútiaci moment. Robotický kĺb zvyčajne potrebuje opačné vlastnosti: pohybovať sa pomalšie, ale vytvárať veľkú silu alebo veľký krútiaci moment.
 
-Preto sa medzi motor a kĺb často pridáva prevod.
+Preto sa medzi motor a kĺb často pridáva **prevod**.
 
 Prevod zníži rýchlosť otáčania a zároveň zvýši dostupný krútiaci moment. Môže používať ozubené kolesá, remene a remenice, reťaze, lankové systémy alebo iné mechanické riešenia.
 
@@ -101,13 +101,13 @@ Dobrý prevod by mal preniesť pohyb čo najpresnejšie a s čo najmenšími str
 
 ## 06. Backlash, trenie a ďalšie rozdiely medzi modelom a realitou
 
-Jedným z problémov mechanických prevodov je backlash, teda mechanická vôľa.
+Jedným z problémov mechanických prevodov je **backlash**, teda mechanická vôľa.
 
 Predstav si dve ozubené kolesá. Medzi ich zubami musí byť malá medzera, aby sa mohli pohybovať. Keď motor zmení smer otáčania, môže sa preto najskôr mierne pohnúť bez toho, aby sa výstupný člen okamžite pohol.
 
 Pri veľmi presnom robotovi môže aj malá vôľa spôsobovať chyby.
 
-Podobne môže vzniknúť slippage, teda prešmykovanie, pri ktorom sa pohyb vstupu neprenesie dokonale na výstup.
+Podobne môže vzniknúť **slippage**, teda prešmykovanie, pri ktorom sa pohyb vstupu neprenesie dokonale na výstup.
 
 Ďalej tu máme trenie, elasticitu materiálov alebo hysteréziu, pri ktorej správanie systému závisí aj od jeho predchádzajúceho stavu.
 
@@ -141,13 +141,13 @@ Preto robot potrebuje spätnú väzbu.
 
 Jednými z najdôležitejších senzorov sú senzory polohy kĺbov. Pri rotačnom kĺbe meriame jeho uhol. Pri lineárnom kĺbe meriame jeho vysunutie.
 
-Na to sa používajú napríklad encodery, potenciometre alebo resolvery.
+Na to sa používajú napríklad **encodery**, potenciometre alebo resolvery.
 
 Encoder môže napríklad oznámiť, že požadovaný uhol kĺbu bol 50 stupňov, ale skutočný uhol je zatiaľ iba 47 stupňov.
 
 Controller vidí rozdiel medzi požadovaným a skutočným stavom a môže podľa neho upraviť ďalší príkaz motoru.
 
-Toto je základ feedback control, teda riadenia so spätnou väzbou.
+Toto je základ **feedback control**, teda riadenia so spätnou väzbou.
 
 Namiesto princípu: „Pošlem príkaz a dúfam, že sa vykonal" používame princíp: „Pošlem príkaz, zmeriam výsledok, porovnám ho s cieľom a podľa chyby upravím ďalšie riadenie."
 
@@ -180,11 +180,11 @@ Nestačí, aby jeho nástroj prechádzal po správnej geometrickej ceste. Musí 
 
 Ak bude tlačiť príliš málo, leštenie nebude účinné. Ak príliš veľa, môže poškodiť povrch.
 
-Preto sa pri niektorých robotoch používajú force–torque sensors, teda senzory sily a krútiaceho momentu.
+Preto sa pri niektorých robotoch používajú **force–torque sensors**, teda senzory sily a krútiaceho momentu.
 
 Takýto senzor môže merať silu pôsobiacu v troch priestorových smeroch a zároveň krútiaci moment okolo troch osí. Spolu teda získavame šesť komponentov, ktoré opisujú, ako je end-effector mechanicky zaťažovaný.
 
-Neskôr ich Modern Robotics spojí do jedného matematického objektu nazývaného wrench.
+Neskôr ich Modern Robotics spojí do jedného matematického objektu nazývaného **wrench**.
 
 Zatiaľ je dôležitejšia intuitívna myšlienka: robot potrebuje niekedy vedieť nielen kde je, ale aj ako silno pôsobí na svoje okolie.
 
@@ -194,13 +194,13 @@ Zatiaľ je dôležitejšia intuitívna myšlienka: robot potrebuje niekedy vedie
 
 Senzory nemusia sledovať iba samotného robota. Môžu mu pomáhať zisťovať, čo sa nachádza okolo neho.
 
-Najjednoduchším príkladom je kamera. Klasická RGB kamera zaznamenáva farbu obrazu.
+Najjednoduchším príkladom je kamera. Klasická **RGB kamera** zaznamenáva farbu obrazu.
 
-RGB-D kamera pridáva ku každému miestu obrazu aj informáciu o hĺbke, teda približnej vzdialenosti od kamery.
+**RGB-D kamera** pridáva ku každému miestu obrazu aj informáciu o hĺbke, teda približnej vzdialenosti od kamery.
 
 To je pre robota veľmi užitočné. Z obyčajnej fotografie môže byť náročné určiť, či je predmet vzdialený 30 centimetrov alebo dva metre. Hĺbková kamera poskytuje túto informáciu priamo.
 
-Mobilné roboty často používajú aj LiDAR, ktorý pomocou laserového svetla meria vzdialenosť k okolitému prostrediu. Robot môže z týchto meraní vytvárať mapu, vyhľadávať prekážky alebo určovať svoju vlastnú polohu.
+Mobilné roboty často používajú aj **LiDAR**, ktorý pomocou laserového svetla meria vzdialenosť k okolitému prostrediu. Robot môže z týchto meraní vytvárať mapu, vyhľadávať prekážky alebo určovať svoju vlastnú polohu.
 
 Existujú tiež akustické alebo ultrazvukové senzory.
 
@@ -212,7 +212,7 @@ Oblasti ako computer vision a artificial intelligence síce do robotiky patria, 
 
 Keď máme fyzického robota, prvá zásadná matematická otázka znie: Ako presne opíšeme jeho stav?
 
-Tomu sa venuje Chapter 2 – Configuration Space.
+Tomu sa venuje Chapter 2 – **Configuration Space**.
 
 Konfigurácia robota je úplný opis polohy všetkých jeho bodov. Keďže však linky považujeme za tuhé telesá, nepotrebujeme sledovať každý bod osobitne.
 
@@ -220,17 +220,17 @@ Voľné tuhé teleso v rovine môžeme opísať tromi nezávislými hodnotami: d
 
 Voľné tuhé teleso v trojrozmernom priestore potrebuje šesť nezávislých hodnôt: tri pre polohu a tri pre orientáciu. Má teda šesť stupňov voľnosti.
 
-Degree of freedom, skrátene DOF, znamená minimálny počet nezávislých reálnych parametrov potrebných na úplný opis konfigurácie.
+**Degree of freedom**, skrátene **DOF**, znamená minimálny počet nezávislých reálnych parametrov potrebných na úplný opis konfigurácie.
 
 Pri robotovi musíme následne zohľadniť joints. Kĺby obmedzujú pohyb jednotlivých linkov a tým znižujú celkový počet možných stupňov voľnosti.
 
-Práve z tejto úvahy vznikne Grüblerova formula, pomocou ktorej dokážeme odhadovať počet DOF všeobecných robotických mechanizmov.
+Práve z tejto úvahy vznikne **Grüblerova formula**, pomocou ktorej dokážeme odhadovať počet DOF všeobecných robotických mechanizmov.
 
 ---
 
 ## 13. Configuration Space nie je iba zoznam čísel
 
-Configuration space, skrátene C-space, je priestor všetkých možných konfigurácií robota.
+Configuration space, skrátene **C-space**, je priestor všetkých možných konfigurácií robota.
 
 Ak má robot dva stupne voľnosti, môžeme jeho konfiguráciu často reprezentovať dvomi súradnicami. Ak má šesť DOF, jeho C-space je šesťrozmerný.
 
@@ -238,7 +238,7 @@ Dôležité však je, že nestačí vedieť iba počet rozmerov. Záleží aj na
 
 Predstav si obyčajnú rovinu a povrch zemegule. Oba priestory sú dvojrozmerné. Na označenie polohy na oboch môžeme použiť dve čísla. Ich geometrická štruktúra je však úplne odlišná. Rovina pokračuje do nekonečna. Povrch gule je uzavretý.
 
-Práve takéto vlastnosti študuje topológia.
+Práve takéto vlastnosti študuje **topológia**.
 
 V robotike je to dôležité hlavne pri rotáciách. Uhol 0 stupňov a 360 stupňov predstavujú rovnakú orientáciu. Uhlová súradnica sa teda nespráva rovnako ako obyčajná nekonečná číselná os.
 
@@ -252,13 +252,13 @@ Jeden geometrický priestor môžeme matematicky reprezentovať viacerými spôs
 
 Predstav si povrch Zeme.
 
-Jednou možnosťou je použiť zemepisnú šírku a dĺžku. Na určenie bodu potrebujeme dve čísla. To je explicitná parametrizácia – používame priamo minimálny počet parametrov.
+Jednou možnosťou je použiť zemepisnú šírku a dĺžku. Na určenie bodu potrebujeme dve čísla. To je **explicitná parametrizácia** – používame priamo minimálny počet parametrov.
 
 Existuje však aj iný spôsob. Zem môžeme vložiť do trojrozmerného priestoru a bod na jej povrchu opísať tromi súradnicami x, y a z. Tieto tri hodnoty však nemôžu byť ľubovoľné. Musia spĺňať rovnicu povrchu gule.
 
-Používame teda viac čísel, ale pridáme matematické obmedzenie. To je implicitná reprezentácia.
+Používame teda viac čísel, ale pridáme matematické obmedzenie. To je **implicitná reprezentácia**.
 
-Modern Robotics často používa práve takéto reprezentácie. Napríklad orientácia tuhého telesa v priestore má iba tri rotačné stupne voľnosti, ale budeme ju reprezentovať pomocou rotation matrix, ktorá obsahuje deväť čísel podliehajúcich určitým obmedzeniam.
+Modern Robotics často používa práve takéto reprezentácie. Napríklad orientácia tuhého telesa v priestore má iba tri rotačné stupne voľnosti, ale budeme ju reprezentovať pomocou **rotation matrix**, ktorá obsahuje deväť čísel podliehajúcich určitým obmedzeniam.
 
 Na prvý pohľad môže pôsobiť zvláštne používať deväť čísel namiesto troch. Výhodou je však veľmi čistá matematika, dobré vlastnosti pri výpočtoch a vyhnutie sa niektorým problémom, ktoré vznikajú pri minimálnych reprezentáciách.
 
@@ -270,11 +270,11 @@ Configuration space opisuje celý robot. Pri konkrétnej úlohe nás však čast
 
 Predstav si robotické rameno, ktoré má zdvihnúť pohár. Z pohľadu úlohy môže byť najdôležitejšie, aby gripper dosiahol správnu polohu a orientáciu. Nemusí nás priamo zaujímať, či je lakeť robota otočený trochu doprava alebo doľava, pokiaľ je výsledná poloha grippera správna.
 
-Priestor, v ktorom prirodzene opisujeme samotnú úlohu, nazývame task space.
+Priestor, v ktorom prirodzene opisujeme samotnú úlohu, nazývame **task space**.
 
 Je však možné, že niektoré požadované polohy v task space robot nedokáže dosiahnuť. Možno sú príliš ďaleko, príliš vysoko alebo im bráni jeho mechanická konštrukcia.
 
-Množinu polôh a orientácií end-effectora, ktoré robot skutočne dokáže dosiahnuť, nazývame workspace.
+Množinu polôh a orientácií end-effectora, ktoré robot skutočne dokáže dosiahnuť, nazývame **workspace**.
 
 Je preto dobré rozlišovať tri pojmy:
 - **Configuration space** opisuje možné stavy celého robota.
@@ -291,11 +291,11 @@ Keď už vieme, čo je konfigurácia, ďalšia otázka znie: Ako matematicky op�
 
 Tomu sa venuje Chapter 3.
 
-Predstav si, že k robotickému linku pevne pripevníme malý súradnicový systém, teda reference frame. Keď sa link pohybuje, tento frame sa pohybuje spolu s ním.
+Predstav si, že k robotickému linku pevne pripevníme malý súradnicový systém, teda **reference frame**. Keď sa link pohybuje, tento frame sa pohybuje spolu s ním.
 
 Namiesto sledovania celého telesa potom môžeme sledovať polohu a orientáciu jeho frame.
 
-Orientácia sa bude reprezentovať pomocou rotation matrix, teda rotačnej matice. Rotation matrix je matica veľkosti 3 × 3. Obsahuje deväť čísel, ale tieto čísla nie sú nezávislé. V skutočnosti reprezentuje iba tri rotačné stupne voľnosti.
+Orientácia sa bude reprezentovať pomocou **rotation matrix**, teda rotačnej matice. Rotation matrix je matica veľkosti 3 × 3. Obsahuje deväť čísel, ale tieto čísla nie sú nezávislé. V skutočnosti reprezentuje iba tri rotačné stupne voľnosti.
 
 Jej veľkou výhodou je, že pomocou bežnej lineárnej algebry dokážeme jednoducho opisovať rotácie a prechody medzi rôznymi reference frames.
 
@@ -309,9 +309,9 @@ Veľmi intuitívny spôsob, ako si predstaviť trojrozmernú rotáciu, je urči�
 
 Predstav si ceruzku smerujúcu určitým smerom. Tá predstavuje os rotácie. Potom povieme napríklad: otoč teleso o 40 stupňov okolo tejto osi.
 
-Modern Robotics túto myšlienku formalizuje pomocou exponential coordinates.
+Modern Robotics túto myšlienku formalizuje pomocou **exponential coordinates**.
 
-Dôvodom, prečo sú tieto súradnice dôležité, nie je iba reprezentácia samotnej rotácie. Rovnaká myšlienka sa neskôr rozšíri na všeobecný pohyb tuhého telesa a spojí sa s klasickou screw theory.
+Dôvodom, prečo sú tieto súradnice dôležité, nie je iba reprezentácia samotnej rotácie. Rovnaká myšlienka sa neskôr rozšíri na všeobecný pohyb tuhého telesa a spojí sa s klasickou **screw theory**.
 
 To je jedna z hlavných matematických tém knihy.
 
@@ -325,13 +325,13 @@ Ak chceme opísať jeho okamžitý pohyb, potrebujeme teda dve veci:
 - lineárnu rýchlosť
 - uhlovú rýchlosť
 
-Modern Robotics ich spojí do jedného šesťrozmerného objektu nazývaného twist.
+Modern Robotics ich spojí do jedného šesťrozmerného objektu nazývaného **twist**.
 
-Twist teda predstavuje kompletný opis okamžitého pohybu tuhého telesa.
+**Twist** teda predstavuje kompletný opis okamžitého pohybu tuhého telesa.
 
 Nemusíš si teraz pamätať jeho presnú matematickú podobu. Podstatné je pochopiť filozofiu: namiesto toho, aby sme transláciu a rotáciu neustále riešili oddelene, vytvoríme jeden matematický objekt, ktorý opisuje oboje naraz.
 
-Podobný princíp použijeme pri silách. Lineárnu silu a krútiaci moment spojíme do objektu nazývaného wrench.
+Podobný princíp použijeme pri silách. Lineárnu silu a krútiaci moment spojíme do objektu nazývaného **wrench**.
 
 Twist teda opisuje pohyb a wrench opisuje mechanické pôsobenie. Tieto dva pojmy sa neskôr budú objavovať prakticky všade.
 
@@ -345,13 +345,13 @@ Predstav si, že poznáme všetky ich hodnoty. Pri rotačných joints poznáme u
 
 Otázka znie: Kde sa pri týchto hodnotách nachádza end-effector a ako je otočený?
 
-To je problém forward kinematics.
+To je problém **forward kinematics**.
 
 Smer výpočtu je: **joint configuration → end-effector configuration**
 
 Pri open-chain robotovi je tento problém typicky jednoznačný. Ak poznáme geometriu robota a všetky joint positions, výsledná poloha a orientácia end-effectora sú určené.
 
-Modern Robotics bude forward kinematics opisovať pomocou Product of Exponentials formula, skrátene PoE.
+Modern Robotics bude forward kinematics opisovať pomocou **Product of Exponentials** formula, skrátene PoE.
 
 Táto formulácia veľmi prirodzene nadväzuje na exponential coordinates z predchádzajúcej kapitoly.
 
@@ -365,9 +365,9 @@ Forward kinematics nám povie, kde end-effector je.
 
 Predstav si dvojkĺbové rameno. Prvý joint sa otáča určitou rýchlosťou a druhý inou. Výsledný pohyb konca ramena závisí od oboch rýchlostí a zároveň od aktuálnej konfigurácie robota.
 
-Presne tento vzťah opisuje Jacobian.
+Presne tento vzťah opisuje **Jacobian**.
 
-Jacobian je matica, ktorá prepája joint velocities s okamžitou rýchlosťou end-effectora. Je to jeden z najdôležitejších objektov celej robotiky.
+**Jacobian** je matica, ktorá prepája joint velocities s okamžitou rýchlosťou end-effectora. Je to jeden z najdôležitejších objektov celej robotiky.
 
 Pomocou Jacobianu dokážeme napríklad zistiť:
 - ako sa bude end-effector pohybovať pri daných joint velocities
@@ -387,7 +387,7 @@ Predstav si jednoduché dvojlinkové rameno, ktoré úplne vystrieš do jednej p
 
 Robot síce má stále rovnaké joints, ale ich konkrétne geometrické usporiadanie spôsobilo, že sa niektoré možnosti okamžitého pohybu stratili.
 
-Takúto konfiguráciu nazývame kinematic singularity.
+Takúto konfiguráciu nazývame **kinematic singularity**.
 
 Matematicky sa singularity prejavujú v Jacobiane.
 
@@ -403,7 +403,7 @@ Forward kinematics rieši otázku: Poznám joints. Kde bude end-effector?
 
 Inverse kinematics rieši opačný problém: Viem, kde chcem mať end-effector. Aké joint values potrebujem?
 
-Toto je inverse kinematics. A práve tento problém je zvyčajne komplikovanejší.
+Toto je **inverse kinematics**. A práve tento problém je zvyčajne komplikovanejší.
 
 Ak poznáme hodnoty všetkých joints, end-effector má pri open-chain robotovi spravidla jedno konkrétne umiestnenie.
 
@@ -422,7 +422,7 @@ Inverse kinematics preto môže mať:
 
 ## 23. Redundantné roboty
 
-Robot je kinematicky redundantný, ak má viac stupňov voľnosti, než potrebuje jeho aktuálna úloha.
+Robot je **kinematicky redundantný**, ak má viac stupňov voľnosti, než potrebuje jeho aktuálna úloha.
 
 Predstav si robotické rameno so siedmimi joints, ktoré vykonáva úlohu vyžadujúcu iba šesť nezávislých parametrov end-effectora.
 
@@ -442,7 +442,7 @@ Closed-chain roboty prinášajú ďalšiu komplikáciu.
 
 Pri open-chain robotovi môže mať každý joint svoju hodnotu a forward kinematics nám z nej určí výslednú polohu end-effectora.
 
-Pri closed chain však musia všetky linky zároveň spĺňať podmienku, že mechanická slučka zostáva uzavretá. Vznikajú loop-closure constraints.
+Pri closed chain však musia všetky linky zároveň spĺňať podmienku, že mechanická slučka zostáva uzavretá. Vznikajú **loop-closure constraints**.
 
 To znamená, že hodnoty jednotlivých joints nie je možné voliť úplne nezávisle.
 
@@ -458,9 +458,9 @@ Doteraz sme riešili najmä kinematiku. Kinematics sa pýta: Ako sa robot pohybu
 
 Nevysvetľuje však ešte: Prečo sa tak pohybuje a aké sily sú na to potrebné?
 
-To je úloha dynamics.
+To je úloha **dynamics**.
 
-Dynamics berie do úvahy hmotnosť linkov, ich zotrvačnosť, gravitáciu, forces a torques.
+**Dynamics** berie do úvahy hmotnosť linkov, ich zotrvačnosť, gravitáciu, forces a torques.
 
 Základnú myšlienku poznáš z fyziky: sila spôsobuje zrýchlenie.
 
@@ -474,9 +474,9 @@ Preto sú dynamické rovnice robotov omnoho komplexnejšie.
 
 Rovnako ako pri kinematics máme aj pri dynamics dva opačné problémy.
 
-Pri forward dynamics poznáme sily alebo krútiace momenty, ktoré vytvárajú actuators, a chceme zistiť, aké zrýchlenie robota z nich vznikne. Teda približne: **torques → accelerations**
+Pri **forward dynamics** poznáme sily alebo krútiace momenty, ktoré vytvárajú actuators, a chceme zistiť, aké zrýchlenie robota z nich vznikne. Teda približne: **torques → accelerations**
 
-Pri inverse dynamics robíme opak. Máme požadovaný pohyb robota a chceme vypočítať, aké joint forces alebo torques musia actuators vytvoriť. Teda: **desired motion → required torques**
+Pri **inverse dynamics** robíme opak. Máme požadovaný pohyb robota a chceme vypočítať, aké joint forces alebo torques musia actuators vytvoriť. Teda: **desired motion → required torques**
 
 Inverse dynamics je mimoriadne dôležitá pri robotickom control. Ak chceme, aby rameno vykonalo určitý pohyb, controller potrebuje vedieť, aké momenty má prikázať motorom.
 
@@ -504,9 +504,9 @@ Predstav si robotické rameno a dve konfigurácie: začiatočnú a cieľovú.
 
 Ak robotovi povieme iba: Presuň sa zo štartovacej konfigurácie do cieľovej, stále sme mu nepovedali, ako presne sa má medzi nimi pohybovať.
 
-Práve to rieši trajectory generation.
+Práve to rieši **trajectory generation**.
 
-Je dôležité rozlišovať medzi path a trajectory.
+Je dôležité rozlišovať medzi **path** a **trajectory**.
 
 **Path** je geometrická cesta. Hovorí, cez aké konfigurácie robot prejde.
 
@@ -526,11 +526,11 @@ Trajectory generation ešte automaticky nerieši prekážky.
 
 Predstav si, že medzi robotom a cieľom stojí stĺp. Najkratšia cesta môže viesť priamo cez stĺp, čo je fyzicky nemožné.
 
-Robot preto potrebuje motion planning.
+Robot preto potrebuje **motion planning**.
 
-Motion planning rieši otázku: Ako nájsť pohyb zo štartovacej konfigurácie do cieľovej konfigurácie tak, aby robot nekolaboval s prostredím a zároveň rešpektoval svoje fyzické obmedzenia?
+**Motion planning** rieši otázku: Ako nájsť pohyb zo štartovacej konfigurácie do cieľovej konfigurácie tak, aby robot nekolaboval s prostredím a zároveň rešpektoval svoje fyzické obmedzenia?
 
-Jednoduchšou podúlohou je path planning, ktorý hľadá geometricky prípustnú cestu, často bez riešenia času a dynamiky.
+Jednoduchšou podúlohou je **path planning**, ktorý hľadá geometricky prípustnú cestu, často bez riešenia času a dynamiky.
 
 Motion planning môže navyše zohľadňovať joint limits, actuator limits, dynamiku alebo ďalšie fyzikálne constraints.
 
@@ -542,7 +542,7 @@ V knihe sa stretneme s viacerými skupinami metód, napríklad s grid-based met�
 
 Predstav si, že už máme dokonale vypočítanú trajectory.
 
-Robot však stále potrebuje controller, ktorý zabezpečí, aby sa podľa tejto trajectory skutočne pohyboval.
+Robot však stále potrebuje **controller**, ktorý zabezpečí, aby sa podľa tejto trajectory skutočne pohyboval.
 
 V reálnom svete pôsobí gravitácia, trenie, nepresnosť motorov, vôľa v prevodoch a vonkajšie sily.
 
@@ -606,7 +606,7 @@ Doteraz sme sa väčšinou zaoberali tým, ako pohybovať samotným robotom.
 
 Robot však zvyčajne staviame preto, aby robil niečo so svojím okolím.
 
-Preto sa neskôr dostaneme ku grasping and manipulation.
+Preto sa neskôr dostaneme ku **grasping and manipulation**.
 
 Tu už nestačí vedieť, kde sa nachádza gripper. Potrebujeme pochopiť kontakt medzi robotom a objektom.
 

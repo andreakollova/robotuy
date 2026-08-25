@@ -87,7 +87,7 @@ export default function TopicLessonPage() {
 
         {/* LESSON CONTENT TAB */}
         {tab === 'lesson' && lesson.content && (
-          <div className="lesson-content" style={{ color: 'var(--text-secondary)', fontSize: 14.5, lineHeight: 1.75, marginBottom: 32 }}>
+          <div className="lesson-content" style={{ color: 'var(--text-secondary)', fontSize: 14.5, lineHeight: 1.75, marginBottom: 32, background: '#fff', borderRadius: 16, padding: '24px 28px', border: '1px solid var(--border)' }}>
             {lesson.content.split('\n').map((line, i) => {
               const trimmed = line.trim();
               if (!trimmed) return <div key={i} style={{ height: 6 }} />;

@@ -90,13 +90,13 @@ export default function TopicLessonPage() {
 
         {/* LESSON CONTENT TAB */}
         {tab === 'lesson' && lesson.content && (
-          <div className="lesson-content" style={{ color: 'var(--text-secondary)', fontSize: 15.5, lineHeight: 1.75, marginBottom: 32 }}>
+          <div className="lesson-content" style={{ color: 'var(--text-secondary)', fontSize: 14.5, lineHeight: 1.75, marginBottom: 32 }}>
             {lesson.content.split('\n').map((line, i) => {
               const trimmed = line.trim();
               if (!trimmed) return <div key={i} style={{ height: 6 }} />;
-              if (trimmed.startsWith('# ')) return <h1 key={i} style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', margin: '10px 0 8px', lineHeight: 1.3 }}>{trimmed.slice(2)}</h1>;
-              if (trimmed.startsWith('## ')) return <h2 key={i} style={{ fontSize: 17, fontWeight: 700, color: 'var(--text)', margin: '12px 0 6px', lineHeight: 1.3, paddingLeft: 10, borderLeft: '3px solid var(--green)' }}>{trimmed.slice(3)}</h2>;
-              if (trimmed.startsWith('### ')) return <h3 key={i} style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-secondary)', margin: '10px 0 4px' }}>{trimmed.slice(4)}</h3>;
+              if (trimmed.startsWith('# ')) return <h1 key={i} style={{ fontSize: 22, fontWeight: 800, color: '#010d33', margin: '10px 0 8px', lineHeight: 1.3 }}>{trimmed.slice(2)}</h1>;
+              if (trimmed.startsWith('## ')) return <h2 key={i} style={{ fontSize: 17, fontWeight: 700, color: '#010d33', margin: '12px 0 6px', lineHeight: 1.3, paddingLeft: 10, borderLeft: '3px solid var(--green)' }}>{trimmed.slice(3)}</h2>;
+              if (trimmed.startsWith('### ')) return <h3 key={i} style={{ fontSize: 15, fontWeight: 700, color: '#010d33', margin: '10px 0 4px' }}>{trimmed.slice(4)}</h3>;
               if (trimmed === '---') return <hr key={i} style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '10px 0' }} />;
               if (trimmed.startsWith('> ')) return <div key={i} style={{ borderLeft: '3px solid var(--green)', padding: '8px 12px', margin: '10px 0', background: 'var(--green-bg)', borderRadius: '0 8px 8px 0', fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.65 }}>{trimmed.slice(2).split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: 'var(--text)' }}>{part}</strong> : part)}</div>;
               if (trimmed.startsWith('- ')) {

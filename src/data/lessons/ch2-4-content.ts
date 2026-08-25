@@ -13,6 +13,8 @@ Rozdiel medzi nimi je veľmi dôležitý. Práve na ňom stoja pojmy **holonomic
 
 ## 01. Prečo closed-chain robot potrebuje configuration constraints
 
+![Štvorkĺbový mechanizmus](/book/ch2/fig2-10.png)
+
 Začnime so four-bar linkage, teda štvorčlánkovým mechanizmom. Tvoria ho štyri links spojené revolute joints do uzavretej slučky. Jeden z links pritom predstavuje ground a zostáva pevný.
 
 Každému revolute joint môžeme priradiť určitý uhol. Ak máme štyri joint angles, mohlo by sa na prvý pohľad zdať, že môžeme každý z nich nastaviť nezávisle. Pri closed chain to však nie je možné.
@@ -280,6 +282,8 @@ Teraz prichádza zásadný rozdiel.
 Existujú systémy, pri ktorých máme jasné obmedzenia na okamžitú velocity, ale neexistuje zodpovedajúca configuration constraint, ktorá by vylučovala určitú časť configuration space.
 
 Najznámejším príkladom je koleso alebo minca kotúľajúca sa po rovine bez šmyku.
+
+![Minca kotúľajúca sa po rovine bez šmyku](/book/ch2/fig2-11.png)
 
 Predstav si mincu stojacu na hrane.
 

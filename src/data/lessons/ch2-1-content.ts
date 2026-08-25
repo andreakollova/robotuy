@@ -23,6 +23,8 @@ Keď chceme riadiť robotické rameno, mobilného robota alebo napríklad dron, 
 
 Tieto nezávislé možnosti nazývame degrees of freedom – stupne voľnosti (DOF).
 
+![Konfigurácia dverí, bodu v rovine a mince](/book/ch2/fig2-1.png)
+
 ---
 
 ## 01. Najskôr potrebujeme zjednodušiť skutočný svet
@@ -130,6 +132,8 @@ Nemusíme zatiaľ riešiť konkrétne matematické značenie. Podstatná je pred
 Teraz sa na rovnakú mincu pozrieme trochu hlbšie.
 
 Označme na nej tri body: A, B a C.
+
+![Tri body na minci a ich constraints](/book/ch2/fig2-2.png)
 
 Keby to boli tri samostatné bodky, ktoré môžeme ľubovoľne presúvať po stole, každý bod by potreboval dve hodnoty na určenie svojej polohy.
 

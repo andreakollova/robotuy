@@ -61,6 +61,8 @@ Takéto roboty sú veľmi rozšírené najmä preto, že ich pohyb sa dá relat�
 
 Keď sa neskôr budeme venovať forward kinematics, práve pri open-chain robotovi budeme riešiť otázku: Ak poznáme všetky uhly alebo posuny kĺbov, kde sa nachádza end-effector?
 
+![Open-chain a closed-chain robotické mechanizmy](/book/ch1/fig1-1.png)
+
 ---
 
 ## 04. Closed-chain roboty

@@ -69,6 +69,8 @@ Práve hľadanie minimálneho počtu takýchto čísel nás privedie k pojmu **d
 
 ## 03. Najjednoduchší príklad konfigurácie: dvere
 
+![Konfigurácia dverí, bodu v rovine a mince na stole](/book/ch2/fig2-1.png)
+
 Predstav si obyčajné dvere pripevnené k stene pomocou pántu. Dvere sa nemôžu ľubovoľne pohybovať po miestnosti. Nemôžeme ich bez odpojenia od pántov posunúť o meter doprava, zdvihnúť k stropu alebo otočiť okolo ľubovoľnej osi.
 
 Pánt obmedzuje ich pohyb tak, že zostáva iba jedna nezávislá možnosť: **rotácia okolo osi pántu**.

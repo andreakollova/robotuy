@@ -91,6 +91,8 @@ Prečo na tom záleží? Pretože neskôr budeme pri Grüblerovej formule počí
 
 ## 05. Revolute joint – rotačný kĺb
 
+![Základné typy robotických kĺbov](/book/ch2/fig2-3.png)
+
 Najbežnejším jointom je **revolute joint**, označovaný písmenom **R**.
 
 Najjednoduchším príkladom je pánt na dverách. Dve telesá sú spojené tak, že medzi nimi zostáva možná rotácia okolo jednej konkrétnej osi.
@@ -294,6 +296,8 @@ Práve preto sa pri mnohých priemyselných manipulátoroch stretneš so šiesti
 
 ## 16. kR serial robot
 
+![Sériový reťazec, päťkĺbový a šesťkĺbové mechanizmy](/book/ch2/fig2-5.png)
+
 V knihe sa používa všeobecný príklad k-link planar serial chain of revolute joints, označovaný ako **kR robot**.
 
 Písmeno R znamená revolute joint a k nám hovorí, koľko takýchto joints máme.
@@ -327,6 +331,8 @@ Closed chains preto často vyžadujú dôkladnejšie počítanie DOF a Grüblero
 ---
 
 ## 18. Four-bar linkage – štyri joints, ale iba jeden DOF
+
+![Four-bar linkage a slider-crank mechanism](/book/ch2/fig2-4.png)
 
 Klasickým príkladom closed-chain mechanism je **four-bar linkage**.
 
@@ -380,6 +386,8 @@ Mechanizmus môže mať veľa pohyblivých častí, ale constraints ich môžu n
 
 ## 21. Viac joints môže byť uložených na rovnakom mieste
 
+![Mechanizmus s prekrývajúcimi sa kĺbmi](/book/ch2/fig2-6.png)
+
 Pri zložitejších mechanizmoch si musíme dať pozor na situáciu, keď sa na jednom fyzickom mieste stretávajú tri alebo viac links.
 
 Ako sme si povedali, jeden joint podľa našej definície spája iba dve telesá.
@@ -411,6 +419,8 @@ Grüblerova formula potom môže dať číslo, ktoré je **nižšie** než skuto
 ---
 
 ## 23. Parallelogram linkage – príklad, keď formula môže zavádzať
+
+![Paralelogramový mechanizmus a singulárna konfigurácia](/book/ch2/fig2-7.png)
 
 Kniha ukazuje veľmi pekný príklad **parallelogram linkage**.
 
@@ -447,6 +457,8 @@ Neskôr budú singularities v robotike veľmi dôležité. Nejde iba o matematic
 ---
 
 ## 25. Delta robot – DOF celého mechanizmu nemusí byť to isté ako viditeľný pohyb platformy
+
+![Delta robot](/book/ch2/fig2-8.png)
 
 Teraz prichádza veľmi zaujímavý príklad: **Delta robot**.
 

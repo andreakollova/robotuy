@@ -92,7 +92,7 @@ export default function TopicLessonPage() {
               const trimmed = line.trim();
               if (!trimmed) return <div key={i} style={{ height: 6 }} />;
               if (trimmed.startsWith('# ')) return <h1 key={i} style={{ fontSize: 22, fontWeight: 800, color: '#4f2a85', margin: '10px 0 8px', lineHeight: 1.3 }}>{trimmed.slice(2)}</h1>;
-              if (trimmed.startsWith('## ')) return <h2 key={i} style={{ fontSize: 17, fontWeight: 700, color: '#4f2a85', margin: '12px 0 6px', lineHeight: 1.3, paddingLeft: 10, borderLeft: '3px solid #4f2a85' }}>{trimmed.slice(3)}</h2>;
+              if (trimmed.startsWith('## ')) return <h2 key={i} style={{ fontSize: 17, fontWeight: 700, color: '#4f2a85', margin: '12px 0 6px', lineHeight: 1.3, paddingLeft: 10, borderLeft: '3px solid #22c55e' }}>{trimmed.slice(3)}</h2>;
               if (trimmed.startsWith('### ')) return <h3 key={i} style={{ fontSize: 15, fontWeight: 700, color: '#4f2a85', margin: '10px 0 4px' }}>{trimmed.slice(4)}</h3>;
               if (trimmed === '---') return <hr key={i} style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '10px 0' }} />;
               if (trimmed.startsWith('> ')) return <div key={i} style={{ borderLeft: '3px solid #4f2a85', padding: '8px 12px', margin: '10px 0', background: 'rgba(79,42,133,0.05)', borderRadius: '0 8px 8px 0', fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.65 }}>{trimmed.slice(2).split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: 'var(--text)' }}>{part}</strong> : part)}</div>;

@@ -631,7 +631,7 @@ Posledná časť knihy sa presúva od robotických ramien k robotom pohybujúcim
 
 Nie všetky kolesové roboty sa môžu pohybovať rovnakým spôsobom.
 
-Robot s omniwheels alebo mecanum wheels môže byť prakticky omnidirectional. Dokáže sa pohybovať dopredu, do strán alebo rotovať na mieste.
+Robot s **omniwheels** alebo **mecanum wheels** môže byť prakticky omnidirectional. Dokáže sa pohybovať dopredu, do strán alebo rotovať na mieste.
 
 Klasické auto sa však nedokáže okamžite posunúť bokom. Jeho kolesá sa majú odvaľovať v smere jazdy a nemali by sa bočne šmýkať.
 
@@ -657,7 +657,7 @@ Auto sa môže dostať na parkovacie miesto bokom, ale musí vykonať sériu poh
 
 Mobilný robot potrebuje vedieť, kde sa nachádza.
 
-Jedným zo základných spôsobov odhadu polohy je odometry.
+Jedným zo základných spôsobov odhadu polohy je **odometry**.
 
 Robot sleduje, ako sa otáčali jeho kolesá, a z encoder údajov odhaduje, ako ďaleko sa posunul a ako sa otočil.
 
@@ -673,7 +673,7 @@ Preto sa v reálnych systémoch často kombinuje s kamerami, LiDARom, GPS alebo 
 
 ## 38. Mobile Manipulation
 
-Veľmi zaujímavým prípadom je robot, ktorý kombinuje mobilnú základňu s robotickým ramenom. Taký systém nazývame mobile manipulator.
+Veľmi zaujímavým prípadom je robot, ktorý kombinuje mobilnú základňu s robotickým ramenom. Taký systém nazývame **mobile manipulator**.
 
 Predstav si robota v sklade. Základňa ho dovezie k polici a robotické rameno potom uchopí produkt.
 

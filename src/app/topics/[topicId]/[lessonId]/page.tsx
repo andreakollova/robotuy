@@ -23,7 +23,7 @@ export default function TopicLessonPage() {
 
   if (!topic || !lesson) {
     return (
-      <div style={{ minHeight: '100vh', background: '#010d33', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>
+      <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-hint)' }}>
         Not found
       </div>
     );
@@ -34,22 +34,22 @@ export default function TopicLessonPage() {
   const totalDone = lesson.exercises.filter(e => completedLessons.includes(topic.id + '-' + e.id)).length;
 
   return (
-    <div className="page-shell" style={{ minHeight: '100vh', background: '#010d33', paddingBottom: 80 }}>
+    <div className="page-shell" style={{ minHeight: '100vh', background: 'var(--bg)', paddingBottom: 80 }}>
       <StatusBar />
       <div style={{ maxWidth: 800, margin: '0 auto', padding: '20px 20px 120px' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
           <button
             onClick={() => router.push('/topics')}
-            style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', padding: 4, display: 'flex' }}
+            style={{ background: 'none', border: 'none', color: 'var(--text-hint)', cursor: 'pointer', padding: 4, display: 'flex' }}
           >
             <ArrowLeft size={18} />
           </button>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 11, color: '#555', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            <div style={{ fontSize: 11, color: 'var(--text-dim)', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
               {topic.title}
             </div>
-            <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: 0 }}>{lesson.title}</h1>
+            <h1 style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)', margin: 0 }}>{lesson.title}</h1>
           </div>
           <span style={{ fontSize: 11, color: '#4ade80', fontWeight: 600 }}>
             {totalDone}/{lesson.exercises.length}
@@ -58,14 +58,14 @@ export default function TopicLessonPage() {
 
         {/* Lesson / Quiz tab switcher */}
         {lesson.content && (
-          <div style={{ display: 'flex', gap: 0, marginBottom: 24, background: '#000a2b', borderRadius: 12, padding: 3 }}>
+          <div style={{ display: 'flex', gap: 0, marginBottom: 24, background: 'var(--bg-card)', borderRadius: 12, padding: 3 }}>
             <button
               onClick={() => setTab('lesson')}
               style={{
                 flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                background: tab === 'lesson' ? '#0c255a' : 'transparent',
-                color: tab === 'lesson' ? '#fff' : '#666',
+                background: tab === 'lesson' ? 'var(--bg-raised)' : 'transparent',
+                color: tab === 'lesson' ? 'var(--text)' : 'var(--text-hint)',
                 fontWeight: 600, fontSize: 13, transition: 'all 0.2s',
               }}
             >
@@ -77,8 +77,8 @@ export default function TopicLessonPage() {
               style={{
                 flex: 1, padding: '10px 0', borderRadius: 10, border: 'none', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                background: tab === 'quiz' ? '#0c255a' : 'transparent',
-                color: tab === 'quiz' ? '#fff' : '#666',
+                background: tab === 'quiz' ? 'var(--bg-raised)' : 'transparent',
+                color: tab === 'quiz' ? 'var(--text)' : 'var(--text-hint)',
                 fontWeight: 600, fontSize: 13, transition: 'all 0.2s',
               }}
             >
@@ -90,27 +90,27 @@ export default function TopicLessonPage() {
 
         {/* LESSON CONTENT TAB */}
         {tab === 'lesson' && lesson.content && (
-          <div style={{ color: '#d4d4d4', fontSize: 15.5, lineHeight: 1.75, marginBottom: 32 }}>
+          <div className="lesson-content" style={{ color: 'var(--text-secondary)', fontSize: 15.5, lineHeight: 1.75, marginBottom: 32 }}>
             {lesson.content.split('\n').map((line, i) => {
               const trimmed = line.trim();
               if (!trimmed) return <div key={i} style={{ height: 6 }} />;
-              if (trimmed.startsWith('# ')) return <h1 key={i} style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: '16px 0 10px', lineHeight: 1.3 }}>{trimmed.slice(2)}</h1>;
-              if (trimmed.startsWith('## ')) return <h2 key={i} style={{ fontSize: 17, fontWeight: 700, color: '#fff', margin: '20px 0 8px', lineHeight: 1.3 }}>{trimmed.slice(3)}</h2>;
-              if (trimmed.startsWith('### ')) return <h3 key={i} style={{ fontSize: 15, fontWeight: 700, color: '#ddd', margin: '14px 0 6px' }}>{trimmed.slice(4)}</h3>;
-              if (trimmed === '---') return <hr key={i} style={{ border: 'none', borderTop: '1px solid #0c255a', margin: '18px 0' }} />;
-              if (trimmed.startsWith('> ')) return <div key={i} style={{ borderLeft: '3px solid #22c55e', padding: '8px 12px', margin: '10px 0', background: 'rgba(34,197,94,0.06)', borderRadius: '0 8px 8px 0', fontSize: 14, color: '#ddd', lineHeight: 1.65 }}>{trimmed.slice(2).split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: '#fff' }}>{part}</strong> : part)}</div>;
+              if (trimmed.startsWith('# ')) return <h1 key={i} style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', margin: '16px 0 10px', lineHeight: 1.3 }}>{trimmed.slice(2)}</h1>;
+              if (trimmed.startsWith('## ')) return <h2 key={i} style={{ fontSize: 17, fontWeight: 700, color: 'var(--text)', margin: '20px 0 8px', lineHeight: 1.3 }}>{trimmed.slice(3)}</h2>;
+              if (trimmed.startsWith('### ')) return <h3 key={i} style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-secondary)', margin: '14px 0 6px' }}>{trimmed.slice(4)}</h3>;
+              if (trimmed === '---') return <hr key={i} style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '18px 0' }} />;
+              if (trimmed.startsWith('> ')) return <div key={i} style={{ borderLeft: '3px solid var(--green)', padding: '8px 12px', margin: '10px 0', background: 'var(--green-bg)', borderRadius: '0 8px 8px 0', fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.65 }}>{trimmed.slice(2).split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: 'var(--text)' }}>{part}</strong> : part)}</div>;
               if (trimmed.startsWith('- ')) {
                 const content = trimmed.slice(2);
-                const formatted = content.split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: '#fff' }}>{part}</strong> : part);
-                return <div key={i} style={{ display: 'flex', gap: 8, margin: '3px 0', paddingLeft: 8 }}><span style={{ color: '#22c55e', flexShrink: 0 }}>-</span><span>{formatted}</span></div>;
+                const formatted = content.split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: 'var(--text)' }}>{part}</strong> : part);
+                return <div key={i} style={{ display: 'flex', gap: 8, margin: '3px 0', paddingLeft: 8 }}><span style={{ color: 'var(--green)', flexShrink: 0 }}>-</span><span>{formatted}</span></div>;
               }
-              if (trimmed.startsWith('$$') && trimmed.endsWith('$$')) return <div key={i} style={{ background: '#041540', padding: '10px 14px', borderRadius: 8, margin: '8px 0', fontFamily: 'var(--font-mono)', fontSize: 13, color: '#4ade80', overflowX: 'auto' }}>{trimmed.slice(2, -2)}</div>;
+              if (trimmed.startsWith('$$') && trimmed.endsWith('$$')) return <div key={i} style={{ background: 'var(--bg-card)', padding: '10px 14px', borderRadius: 8, margin: '8px 0', fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--green)', overflowX: 'auto', border: '1px solid var(--border)' }}>{trimmed.slice(2, -2)}</div>;
               const imgMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
               if (imgMatch) return <img key={i} src={imgMatch[2]} alt={imgMatch[1]} style={{ width: '100%', borderRadius: 10, margin: '10px 0' }} />;
-              if (trimmed.startsWith('*') && trimmed.endsWith('*') && !trimmed.startsWith('**')) return <p key={i} style={{ fontSize: 11, color: '#777', fontStyle: 'italic', margin: '0 0 12px', lineHeight: 1.5 }}>{trimmed.slice(1, -1)}</p>;
+              if (trimmed.startsWith('*') && trimmed.endsWith('*') && !trimmed.startsWith('**')) return <p key={i} style={{ fontSize: 11, color: 'var(--text-hint)', fontStyle: 'italic', margin: '0 0 12px', lineHeight: 1.5 }}>{trimmed.slice(1, -1)}</p>;
               const formatted = trimmed.split(/(\*\*[^*]+\*\*|\`[^`]+\`)/).map((part, j) => {
-                if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: '#fff' }}>{part.slice(2, -2)}</strong>;
-                if (part.startsWith('`') && part.endsWith('`')) return <code key={j} style={{ background: '#041540', padding: '2px 6px', borderRadius: 4, fontSize: 12, color: '#4ade80', fontFamily: 'var(--font-mono)' }}>{part.slice(1, -1)}</code>;
+                if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: 'var(--text)' }}>{part.slice(2, -2)}</strong>;
+                if (part.startsWith('`') && part.endsWith('`')) return <code key={j} style={{ background: 'var(--bg-card)', padding: '2px 6px', borderRadius: 4, fontSize: 12, color: 'var(--green)', fontFamily: 'var(--font-mono)', border: '1px solid var(--border)' }}>{part.slice(1, -1)}</code>;
                 return part;
               });
               return <p key={i} style={{ margin: '4px 0' }}>{formatted}</p>;
@@ -122,7 +122,7 @@ export default function TopicLessonPage() {
               if (!videoId) return null;
               return (
                 <div style={{ margin: '28px 0 16px' }}>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
                     <Play size={14} color="#22c55e" /> Video k lekcii
                   </div>
                   <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, borderRadius: 12, overflow: 'hidden' }}>
@@ -141,7 +141,7 @@ export default function TopicLessonPage() {
                 onClick={() => setTab('quiz')}
                 style={{
                   width: '100%', padding: '14px', borderRadius: 12, border: 'none', cursor: 'pointer',
-                  background: '#22c55e', color: '#000', fontWeight: 700, fontSize: 15, marginTop: 16,
+                  background: '#22c55e', color: 'var(--btn-primary-text)', fontWeight: 700, fontSize: 15, marginTop: 16,
                 }}
               >
                 {locale === 'sk' ? 'Prejsť na otázky' : 'Go to Quiz'} ({lesson.exercises.length})
@@ -299,21 +299,21 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
         <span style={{ fontSize: 11, fontWeight: 700, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           {typeLabel}
         </span>
-        <span style={{ fontSize: 11, color: '#555', display: 'flex', alignItems: 'center', gap: 3, marginLeft: 'auto' }}>
+        <span style={{ fontSize: 11, color: 'var(--text-dim)', display: 'flex', alignItems: 'center', gap: 3, marginLeft: 'auto' }}>
           <Zap size={11} /> +{exercise.xp} XP
         </span>
       </div>
 
       {/* Prompt / Question */}
-      <h2 style={{ fontSize: 20, fontWeight: 800, color: '#fff', lineHeight: 1.4, marginBottom: 20 }}>
+      <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)', lineHeight: 1.4, marginBottom: 20 }}>
         {exercise.prompt}
       </h2>
 
       {/* Code snippet */}
       {exercise.codeSnippet && (
         <pre style={{
-          background: '#111', border: '1px solid #1a1a1a', borderRadius: 12,
-          padding: '16px 18px', fontSize: 13, color: '#ccc', lineHeight: 1.7,
+          background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 12,
+          padding: '16px 18px', fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.7,
           overflow: 'auto', marginBottom: 20, fontFamily: 'JetBrains Mono, Fira Code, monospace',
           whiteSpace: 'pre-wrap',
         }}>
@@ -325,17 +325,17 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
       {exercise.type === 'explain' && exercise.explanation && (
         <>
           <div style={{
-            background: '#010d33', border: '1px solid #1a1a1a', borderRadius: 14,
+            background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 14,
             padding: '20px', marginBottom: 20,
           }}>
-            <div style={{ fontSize: 15, color: '#bbb', lineHeight: 1.9 }}>
+            <div style={{ fontSize: 15, color: 'var(--text-secondary)', lineHeight: 1.9 }}>
               {exercise.explanation.split('\n\n').map((para, i) => {
                 const parts = para.split('**');
                 return (
                   <p key={i} style={{ margin: '0 0 12px' }}>
                     {parts.map((part, j) =>
                       j % 2 === 1
-                        ? <strong key={j} style={{ color: '#fff', fontWeight: 700 }}>{part}</strong>
+                        ? <strong key={j} style={{ color: 'var(--text)', fontWeight: 700 }}>{part}</strong>
                         : <span key={j}>{part}</span>
                     )}
                   </p>
@@ -346,7 +346,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
           {!isDone && showResult !== 'correct' && (
             <button onClick={handleMarkRead} style={{
               width: '100%', padding: '14px', borderRadius: 12,
-              background: '#EDEDED', color: '#000', fontWeight: 700, fontSize: 15,
+              background: 'var(--btn-primary)', color: 'var(--btn-primary-text)', fontWeight: 700, fontSize: 15,
               border: 'none', cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
             }}>
@@ -382,7 +382,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
                     width: 26, height: 26, borderRadius: 8, flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     background: isCorrect ? '#4ade80' : isWrong ? '#ff8080' : isSelected ? '#333' : '#041540',
-                    color: isCorrect || isWrong ? '#000' : '#888',
+                    color: isCorrect || isWrong ? 'var(--btn-primary-text)' : 'var(--text-hint)',
                     fontSize: 11, fontWeight: 700,
                   }}>
                     {isCorrect ? <Check size={12} strokeWidth={3} /> : label}
@@ -408,8 +408,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
           {!showResult && (
             <button onClick={handleSubmitMcq} disabled={!selected} style={{
               width: '100%', padding: '14px', borderRadius: 12,
-              background: selected ? '#EDEDED' : '#1a1a1a',
-              color: selected ? '#000' : '#555', fontWeight: 700, fontSize: 15,
+              background: selected ? 'var(--btn-primary)' : 'var(--border)',
+              color: selected ? 'var(--btn-primary-text)' : 'var(--text-dim)', fontWeight: 700, fontSize: 15,
               border: 'none', cursor: selected ? 'pointer' : 'not-allowed',
             }}>
               {locale === 'sk' ? 'Odoslať' : 'Submit'}
@@ -418,8 +418,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
           {showResult === 'wrong' && (
             <button onClick={handleRetry} style={{
               width: '100%', padding: '14px', borderRadius: 12,
-              background: '#041540', color: '#ccc', fontWeight: 700, fontSize: 14,
-              border: '1px solid #222', cursor: 'pointer',
+              background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontWeight: 700, fontSize: 14,
+              border: '1px solid var(--border)', cursor: 'pointer',
             }}>
               {locale === 'sk' ? 'Skúsiť znova' : 'Try again'}
             </button>
@@ -433,7 +433,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 16 }}>
             {exercise.blanks.map(blank => (
               <div key={blank.id}>
-                <div style={{ fontSize: 11, color: '#888', marginBottom: 8, fontWeight: 600 }}>
+                <div style={{ fontSize: 11, color: 'var(--text-hint)', marginBottom: 8, fontWeight: 600 }}>
                   {locale === 'sk' ? 'Vyber správnu odpoveď:' : 'Pick the correct answer:'}
                 </div>
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -469,8 +469,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
               disabled={exercise.blanks.some(b => !fillAnswers[b.id])}
               style={{
                 width: '100%', padding: '14px', borderRadius: 12,
-                background: exercise.blanks.every(b => fillAnswers[b.id]) ? '#EDEDED' : '#1a1a1a',
-                color: exercise.blanks.every(b => fillAnswers[b.id]) ? '#000' : '#555',
+                background: exercise.blanks.every(b => fillAnswers[b.id]) ? 'var(--btn-primary)' : 'var(--border)',
+                color: exercise.blanks.every(b => fillAnswers[b.id]) ? 'var(--btn-primary-text)' : 'var(--text-dim)',
                 fontWeight: 700, fontSize: 15, border: 'none',
                 cursor: exercise.blanks.every(b => fillAnswers[b.id]) ? 'pointer' : 'not-allowed',
               }}
@@ -481,8 +481,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
           {showResult === 'wrong' && (
             <button onClick={handleRetry} style={{
               width: '100%', padding: '14px', borderRadius: 12,
-              background: '#041540', color: '#ccc', fontWeight: 700, fontSize: 14,
-              border: '1px solid #222', cursor: 'pointer',
+              background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontWeight: 700, fontSize: 14,
+              border: '1px solid var(--border)', cursor: 'pointer',
             }}>
               {locale === 'sk' ? 'Skúsiť znova' : 'Try again'}
             </button>
@@ -494,9 +494,9 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
       {exercise.type === 'write' && (
         <>
           <div style={{ borderRadius: 14, overflow: 'hidden', border: `1px solid ${writeRun === 'passed' ? 'rgba(74,222,128,0.2)' : writeRun === 'failed' ? 'rgba(255,80,80,0.2)' : '#1a1a1a'}`, marginBottom: 16, transition: 'border-color 0.2s' }}>
-            <div style={{ background: '#111', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 6, borderBottom: '1px solid #1a1a1a' }}>
+            <div style={{ background: 'var(--bg-card)', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 6, borderBottom: '1px solid #1a1a1a' }}>
               {['#ff5f57','#febc2e','#28c840'].map(c => <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c, opacity: 0.7 }} />)}
-              <span style={{ marginLeft: 8, fontSize: 10, color: '#555', fontFamily: 'JetBrains Mono, monospace' }}>python</span>
+              <span style={{ marginLeft: 8, fontSize: 10, color: 'var(--text-dim)', fontFamily: 'JetBrains Mono, monospace' }}>python</span>
             </div>
             <textarea
               value={writeCode}
@@ -510,8 +510,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
               spellCheck={false} autoCapitalize="none" autoCorrect="off"
               rows={Math.max(5, writeCode.split('\n').length + 1)}
               style={{
-                width: '100%', padding: '14px 16px', background: '#010d33', border: 'none', outline: 'none',
-                color: '#ccc', fontSize: 13, fontFamily: 'JetBrains Mono, Fira Code, monospace',
+                width: '100%', padding: '14px 16px', background: 'var(--bg)', border: 'none', outline: 'none',
+                color: 'var(--text-secondary)', fontSize: 13, fontFamily: 'JetBrains Mono, Fira Code, monospace',
                 lineHeight: 1.7, resize: 'vertical', minHeight: 120,
               }}
             />
@@ -533,8 +533,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
             <button onClick={handleWriteRun} disabled={writeRun === 'running' || !writeCode.trim()}
               style={{
                 width: '100%', padding: '14px', borderRadius: 12,
-                background: writeCode.trim() ? '#EDEDED' : '#1a1a1a',
-                color: writeCode.trim() ? '#000' : '#555',
+                background: writeCode.trim() ? 'var(--btn-primary)' : 'var(--border)',
+                color: writeCode.trim() ? 'var(--btn-primary-text)' : 'var(--text-dim)',
                 fontWeight: 700, fontSize: 15, border: 'none',
                 cursor: writeCode.trim() ? 'pointer' : 'not-allowed',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -566,7 +566,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
           {!isLast && (
             <button onClick={handleNext} style={{
               width: '100%', padding: '14px', borderRadius: 12,
-              background: '#EDEDED', color: '#000', fontWeight: 700, fontSize: 15,
+              background: 'var(--btn-primary)', color: 'var(--btn-primary-text)', fontWeight: 700, fontSize: 15,
               border: 'none', cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
             }}>

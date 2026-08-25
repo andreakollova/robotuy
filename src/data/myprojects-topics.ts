@@ -26,6 +26,7 @@ export const projectTopics: ProjectTopic[] = [
         unitId: 'modern-robotics',
         title: 'Chapter 1: Preview',
         content: ch1PreviewContent,
+        videoUrl: 'https://www.youtube.com/watch?v=csYtU2GY7FY',
         exercises: ch1PreviewExercises,
       },
       {
@@ -41,6 +42,7 @@ export const projectTopics: ProjectTopic[] = [
         unitId: 'modern-robotics',
         title: 'Chapter 2.1: Degrees of Freedom of a Rigid Body',
         content: ch21Content,
+        videoUrl: 'https://www.youtube.com/watch?v=z29hYlagOYM',
         exercises: ch21Exercises,
       },
       {
@@ -48,6 +50,7 @@ export const projectTopics: ProjectTopic[] = [
         unitId: 'modern-robotics',
         title: 'Chapter 2.2: Degrees of Freedom of a Robot',
         content: ch22Content,
+        videoUrl: 'https://www.youtube.com/watch?v=zI64DyaRUvQ',
         exercises: ch22Exercises,
       },
       {
@@ -55,6 +58,7 @@ export const projectTopics: ProjectTopic[] = [
         unitId: 'modern-robotics',
         title: 'Chapter 2.3.1: Configuration Space Topology',
         content: ch231Content,
+        videoUrl: 'https://www.youtube.com/watch?v=FyLNR3edOds',
         exercises: ch231Exercises,
       },
       {
@@ -62,6 +66,7 @@ export const projectTopics: ProjectTopic[] = [
         unitId: 'modern-robotics',
         title: 'Chapter 2.3.2: Configuration Space Representation',
         content: ch232Content,
+        videoUrl: 'https://www.youtube.com/watch?v=PPgJPjCUIXU',
         exercises: ch232Exercises,
       },
       {
@@ -69,6 +74,7 @@ export const projectTopics: ProjectTopic[] = [
         unitId: 'modern-robotics',
         title: 'Chapter 2.4: Configuration and Velocity Constraints',
         content: ch24Content,
+        videoUrl: 'https://www.youtube.com/watch?v=A14ArEZ47LE',
         exercises: ch24Exercises,
       },
     ],

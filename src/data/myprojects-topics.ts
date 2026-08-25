@@ -27,6 +27,7 @@ export const projectTopics: ProjectTopic[] = [
         title: 'Chapter 1: Preview',
         content: ch1PreviewContent,
         videoUrl: 'https://www.youtube.com/watch?v=csYtU2GY7FY',
+        bookPage: 1,
         exercises: ch1PreviewExercises,
       },
       {
@@ -35,6 +36,7 @@ export const projectTopics: ProjectTopic[] = [
         title: 'Chapter 2: Configuration Space',
         content: course1IntroContent,
         videoUrl: 'https://www.youtube.com/watch?v=csYtU2GY7FY',
+        bookPage: 17,
         exercises: course1IntroExercises,
       },
       {
@@ -43,6 +45,7 @@ export const projectTopics: ProjectTopic[] = [
         title: 'Chapter 2.1: Degrees of Freedom of a Rigid Body',
         content: ch21Content,
         videoUrl: 'https://www.youtube.com/watch?v=z29hYlagOYM',
+        bookPage: 20,
         exercises: ch21Exercises,
       },
       {
@@ -51,6 +54,7 @@ export const projectTopics: ProjectTopic[] = [
         title: 'Chapter 2.2: Degrees of Freedom of a Robot',
         content: ch22Content,
         videoUrl: 'https://www.youtube.com/watch?v=zI64DyaRUvQ',
+        bookPage: 23,
         exercises: ch22Exercises,
       },
       {
@@ -59,6 +63,7 @@ export const projectTopics: ProjectTopic[] = [
         title: 'Chapter 2.3.1: Configuration Space Topology',
         content: ch231Content,
         videoUrl: 'https://www.youtube.com/watch?v=FyLNR3edOds',
+        bookPage: 30,
         exercises: ch231Exercises,
       },
       {
@@ -67,6 +72,7 @@ export const projectTopics: ProjectTopic[] = [
         title: 'Chapter 2.3.2: Configuration Space Representation',
         content: ch232Content,
         videoUrl: 'https://www.youtube.com/watch?v=PPgJPjCUIXU',
+        bookPage: 33,
         exercises: ch232Exercises,
       },
       {
@@ -75,6 +81,7 @@ export const projectTopics: ProjectTopic[] = [
         title: 'Chapter 2.4: Configuration and Velocity Constraints',
         content: ch24Content,
         videoUrl: 'https://www.youtube.com/watch?v=A14ArEZ47LE',
+        bookPage: 36,
         exercises: ch24Exercises,
       },
     ],

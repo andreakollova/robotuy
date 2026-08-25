@@ -68,7 +68,7 @@ export default function TopicLessonPage() {
             {(['lesson', 'quiz', 'book'] as const).map(t => {
               const icon = t === 'lesson' ? <GraduationCap size={14} /> : t === 'quiz' ? <HelpCircle size={14} /> : <BookText size={14} />;
               const label = t === 'lesson' ? 'Lesson' : t === 'quiz' ? `Quiz (${lesson.exercises.length})` : 'Book';
-              const show = t !== 'book' || !!bookChapter;
+              const show = t !== 'book' || !!lesson.bookPage;
               if (!show) return null;
               return (
                 <button key={t} onClick={() => setTab(t)} style={{
@@ -197,55 +197,25 @@ export default function TopicLessonPage() {
       </>}
 
         {/* BOOK TAB */}
-        {tab === 'book' && bookChapter && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {bookChapter.sections.map((section) => {
-              const isOpen = expandedBookSection === section.id;
-              return (
-                <div key={section.id} style={{ background: 'var(--bg-card)', borderRadius: 14, border: '1px solid var(--border)', overflow: 'hidden' }}>
-                  <button
-                    onClick={() => setExpandedBookSection(isOpen ? null : section.id)}
-                    style={{
-                      width: '100%', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12,
-                      background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left',
-                    }}
-                  >
-                    <BookOpen size={15} color={isOpen ? 'var(--green)' : 'var(--text-dim)'} />
-                    <span style={{ flex: 1, fontWeight: 700, fontSize: 13.5, color: isOpen ? '#010d33' : 'var(--text-secondary)' }}>{section.title}</span>
-                    <ChevronRight size={15} color="var(--text-dim)" style={{ transform: isOpen ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }} />
-                  </button>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      style={{ padding: '0 16px 20px', color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.75 }}
-                    >
-                      {section.content.split('\n').map((line, i) => {
-                        const trimmed = line.trim();
-                        if (!trimmed) return <div key={i} style={{ height: 4 }} />;
-                        const imgMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
-                        if (imgMatch) return <img key={i} src={imgMatch[2]} alt={imgMatch[1]} style={{ width: '100%', borderRadius: 10, margin: '8px 0' }} />;
-                        if (trimmed.startsWith('*') && trimmed.endsWith('*') && !trimmed.startsWith('**')) return <p key={i} style={{ fontSize: 11, color: 'var(--text-hint)', fontStyle: 'italic', margin: '0 0 10px', lineHeight: 1.5 }}>{trimmed.slice(1, -1)}</p>;
-                        if (trimmed.startsWith('### ')) return <h3 key={i} style={{ fontSize: 15, fontWeight: 700, color: '#010d33', margin: '14px 0 6px' }}>{trimmed.slice(4)}</h3>;
-                        if (trimmed.startsWith('> ')) return <div key={i} style={{ borderLeft: '3px solid var(--green)', padding: '6px 10px', margin: '8px 0', background: 'var(--green-bg)', borderRadius: '0 8px 8px 0', fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.65 }}>{trimmed.slice(2).split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: '#010d33' }}>{part}</strong> : part)}</div>;
-                        if (trimmed.startsWith('- ')) return <div key={i} style={{ display: 'flex', gap: 6, margin: '2px 0', paddingLeft: 4 }}><span style={{ color: 'var(--green)' }}>-</span><span>{trimmed.slice(2)}</span></div>;
-                        if (trimmed.startsWith('|')) {
-                          const cells = trimmed.split('|').filter(Boolean).map(c => c.trim());
-                          if (cells.every(c => /^[-:]+$/.test(c))) return null;
-                          return <div key={i} style={{ display: 'grid', gridTemplateColumns: `repeat(${cells.length}, 1fr)`, gap: 1, margin: '2px 0', fontSize: 12 }}>{cells.map((cell, ci) => <div key={ci} style={{ padding: '5px 6px', background: 'var(--bg-surface)', color: 'var(--text-secondary)' }}>{cell}</div>)}</div>;
-                        }
-                        const formatted = trimmed.split(/(\*\*[^*]+\*\*|\`[^`]+\`)/).map((part, j) => {
-                          if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: '#010d33' }}>{part.slice(2, -2)}</strong>;
-                          if (part.startsWith('`') && part.endsWith('`')) return <code key={j} style={{ background: 'var(--bg-surface)', padding: '1px 5px', borderRadius: 4, fontSize: 12, color: 'var(--green)', fontFamily: 'var(--font-mono)' }}>{part.slice(1, -1)}</code>;
-                          return part;
-                        });
-                        return <p key={i} style={{ margin: '3px 0' }}>{formatted}</p>;
-                      })}
-                    </motion.div>
-                  )}
-                </div>
-              );
-            })}
+        {tab === 'book' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <a
+              href={`https://hades.mech.northwestern.edu/images/7/7f/MR.pdf${lesson.bookPage ? '#page=' + lesson.bookPage : ''}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex', alignItems: 'center', gap: 10, padding: '16px 20px',
+                background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 14,
+                textDecoration: 'none', transition: 'all 0.15s',
+              }}
+            >
+              <BookText size={20} color="var(--green)" />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 700, fontSize: 14, color: '#010d33' }}>Modern Robotics — Full Book (PDF)</div>
+                <div style={{ fontSize: 12, color: 'var(--text-hint)', marginTop: 2 }}>Kevin M. Lynch & Frank C. Park{lesson.bookPage ? ` — strana ${lesson.bookPage}` : ''}</div>
+              </div>
+              <ChevronRight size={16} color="var(--text-dim)" />
+            </a>
           </div>
         )}
       </div>

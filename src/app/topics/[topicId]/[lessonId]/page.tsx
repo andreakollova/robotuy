@@ -53,7 +53,7 @@ export default function TopicLessonPage() {
               {topic.title}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <h1 style={{ fontSize: 18, fontWeight: 800, color: '#010d33', margin: 0 }}>{lesson.title}</h1>
+              <h1 style={{ fontSize: 18, fontWeight: 800, color: '#4f2a85', margin: 0 }}>{lesson.title}</h1>
               {topic.id === 'modern-robotics' && <img src="/northwestern-logo.png" alt="" style={{ height: 16, objectFit: 'contain', opacity: 0.6 }} />}
             </div>
           </div>
@@ -91,23 +91,23 @@ export default function TopicLessonPage() {
             {lesson.content.split('\n').map((line, i) => {
               const trimmed = line.trim();
               if (!trimmed) return <div key={i} style={{ height: 6 }} />;
-              if (trimmed.startsWith('# ')) return <h1 key={i} style={{ fontSize: 22, fontWeight: 800, color: '#010d33', margin: '10px 0 8px', lineHeight: 1.3 }}>{trimmed.slice(2)}</h1>;
-              if (trimmed.startsWith('## ')) return <h2 key={i} style={{ fontSize: 17, fontWeight: 700, color: '#010d33', margin: '12px 0 6px', lineHeight: 1.3, paddingLeft: 10, borderLeft: '3px solid var(--green)' }}>{trimmed.slice(3)}</h2>;
-              if (trimmed.startsWith('### ')) return <h3 key={i} style={{ fontSize: 15, fontWeight: 700, color: '#010d33', margin: '10px 0 4px' }}>{trimmed.slice(4)}</h3>;
+              if (trimmed.startsWith('# ')) return <h1 key={i} style={{ fontSize: 22, fontWeight: 800, color: '#4f2a85', margin: '10px 0 8px', lineHeight: 1.3 }}>{trimmed.slice(2)}</h1>;
+              if (trimmed.startsWith('## ')) return <h2 key={i} style={{ fontSize: 17, fontWeight: 700, color: '#4f2a85', margin: '12px 0 6px', lineHeight: 1.3, paddingLeft: 10, borderLeft: '3px solid #4f2a85' }}>{trimmed.slice(3)}</h2>;
+              if (trimmed.startsWith('### ')) return <h3 key={i} style={{ fontSize: 15, fontWeight: 700, color: '#4f2a85', margin: '10px 0 4px' }}>{trimmed.slice(4)}</h3>;
               if (trimmed === '---') return <hr key={i} style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '10px 0' }} />;
-              if (trimmed.startsWith('> ')) return <div key={i} style={{ borderLeft: '3px solid var(--green)', padding: '8px 12px', margin: '10px 0', background: 'var(--green-bg)', borderRadius: '0 8px 8px 0', fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.65 }}>{trimmed.slice(2).split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: 'var(--text)' }}>{part}</strong> : part)}</div>;
+              if (trimmed.startsWith('> ')) return <div key={i} style={{ borderLeft: '3px solid #4f2a85', padding: '8px 12px', margin: '10px 0', background: 'rgba(79,42,133,0.05)', borderRadius: '0 8px 8px 0', fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.65 }}>{trimmed.slice(2).split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: 'var(--text)' }}>{part}</strong> : part)}</div>;
               if (trimmed.startsWith('- ')) {
                 const content = trimmed.slice(2);
                 const formatted = content.split(/\*\*([^*]+)\*\*/).map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: 'var(--text)' }}>{part}</strong> : part);
-                return <div key={i} style={{ display: 'flex', gap: 8, margin: '3px 0', paddingLeft: 8 }}><span style={{ color: 'var(--green)', flexShrink: 0 }}>-</span><span>{formatted}</span></div>;
+                return <div key={i} style={{ display: 'flex', gap: 8, margin: '3px 0', paddingLeft: 8 }}><span style={{ color: '#4f2a85', flexShrink: 0 }}>-</span><span>{formatted}</span></div>;
               }
-              if (trimmed.startsWith('$$') && trimmed.endsWith('$$')) return <div key={i} style={{ background: 'var(--bg-card)', padding: '10px 14px', borderRadius: 8, margin: '8px 0', fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--green)', overflowX: 'auto', border: '1px solid var(--border)' }}>{trimmed.slice(2, -2)}</div>;
+              if (trimmed.startsWith('$$') && trimmed.endsWith('$$')) return <div key={i} style={{ background: 'rgba(79,42,133,0.05)', padding: '10px 14px', borderRadius: 8, margin: '8px 0', fontFamily: 'var(--font-mono)', fontSize: 13, color: '#4f2a85', overflowX: 'auto', border: '1px solid var(--border)' }}>{trimmed.slice(2, -2)}</div>;
               const imgMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
               if (imgMatch) return <img key={i} src={imgMatch[2]} alt={imgMatch[1]} style={{ width: '100%', borderRadius: 10, margin: '10px 0' }} />;
               if (trimmed.startsWith('*') && trimmed.endsWith('*') && !trimmed.startsWith('**')) return <p key={i} style={{ fontSize: 11, color: 'var(--text-hint)', fontStyle: 'italic', margin: '0 0 12px', lineHeight: 1.5 }}>{trimmed.slice(1, -1)}</p>;
               const formatted = trimmed.split(/(\*\*[^*]+\*\*|\`[^`]+\`)/).map((part, j) => {
                 if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: 'var(--text)' }}>{part.slice(2, -2)}</strong>;
-                if (part.startsWith('`') && part.endsWith('`')) return <code key={j} style={{ background: 'var(--bg-card)', padding: '2px 6px', borderRadius: 4, fontSize: 12, color: 'var(--green)', fontFamily: 'var(--font-mono)', border: '1px solid var(--border)' }}>{part.slice(1, -1)}</code>;
+                if (part.startsWith('`') && part.endsWith('`')) return <code key={j} style={{ background: 'rgba(79,42,133,0.06)', padding: '2px 6px', borderRadius: 4, fontSize: 12, color: '#4f2a85', fontFamily: 'var(--font-mono)', border: '1px solid rgba(79,42,133,0.15)' }}>{part.slice(1, -1)}</code>;
                 return part;
               });
               return <p key={i} style={{ margin: '4px 0' }}>{formatted}</p>;
@@ -211,7 +211,7 @@ export default function TopicLessonPage() {
             >
               <BookText size={20} color="var(--green)" />
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 700, fontSize: 14, color: '#010d33' }}>Modern Robotics — Full Book (PDF)</div>
+                <div style={{ fontWeight: 700, fontSize: 14, color: '#4f2a85' }}>Modern Robotics — Full Book (PDF)</div>
                 <div style={{ fontSize: 12, color: 'var(--text-hint)', marginTop: 2 }}>Kevin M. Lynch & Frank C. Park{lesson.bookPage ? ` — strana ${lesson.bookPage}` : ''}</div>
               </div>
               <ChevronRight size={16} color="var(--text-dim)" />
@@ -393,7 +393,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
                     padding: '14px 16px', borderRadius: 12, textAlign: 'left',
                     fontSize: 14, fontWeight: 500, cursor: showResult ? 'default' : 'pointer',
                     display: 'flex', alignItems: 'center', gap: 12,
-                    background: isCorrect ? 'rgba(74,222,128,0.08)' : isWrong ? 'rgba(255,80,80,0.06)' : isSelected ? '#1a1a1a' : '#010d33',
+                    background: isCorrect ? 'rgba(74,222,128,0.08)' : isWrong ? 'rgba(255,80,80,0.06)' : isSelected ? 'var(--border)' : 'var(--bg)',
                     border: `1.5px solid ${isCorrect ? 'rgba(74,222,128,0.5)' : isWrong ? 'rgba(255,80,80,0.3)' : isSelected ? '#444' : '#1a1a1a'}`,
                     color: isCorrect ? '#4ade80' : isWrong ? '#ff8080' : '#ccc',
                   }}
@@ -469,7 +469,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
                           padding: '10px 16px', borderRadius: 10, fontSize: 14, fontWeight: 600,
                           cursor: showResult ? 'default' : 'pointer',
                           fontFamily: 'JetBrains Mono, Fira Code, monospace',
-                          background: isCorrectAnswer ? 'rgba(74,222,128,0.1)' : isWrongAnswer ? 'rgba(255,80,80,0.1)' : isSel ? '#222' : '#010d33',
+                          background: isCorrectAnswer ? 'rgba(74,222,128,0.1)' : isWrongAnswer ? 'rgba(255,80,80,0.1)' : isSel ? 'var(--bg-raised)' : 'var(--bg)',
                           border: `1.5px solid ${isCorrectAnswer ? '#4ade80' : isWrongAnswer ? '#ff8080' : isSel ? '#555' : '#1a1a1a'}`,
                           color: isCorrectAnswer ? '#4ade80' : isWrongAnswer ? '#ff8080' : '#ccc',
                         }}

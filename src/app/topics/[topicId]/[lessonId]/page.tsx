@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUserStore } from '@/store/userStore';
@@ -23,6 +23,19 @@ export default function TopicLessonPage() {
   const [tab, setTab] = useState<'lesson' | 'quiz' | 'book'>(lesson?.content ? 'lesson' : 'quiz');
   const [expandedBookSection, setExpandedBookSection] = useState<string | null>(null);
   const bookChapter = bookChapters.find(ch => ch.courseId === lessonId);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    if (tab !== 'lesson') { setScrollProgress(0); return; }
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      setScrollProgress(docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [tab]);
 
   if (!topic || !lesson) {
     return (
@@ -38,6 +51,18 @@ export default function TopicLessonPage() {
 
   return (
     <div className="page-shell" style={{ minHeight: '100vh', background: 'var(--bg)', paddingBottom: 80 }}>
+      {/* Scroll progress bar — right side */}
+      {tab === 'lesson' && scrollProgress > 0 && (
+        <div style={{
+          position: 'fixed', right: 6, top: 80, bottom: 80, width: 4, zIndex: 50,
+          background: 'rgba(79,42,133,0.1)', borderRadius: 4,
+        }}>
+          <div style={{
+            width: '100%', borderRadius: 4, transition: 'height 0.1s',
+            background: '#4f2a85', height: `${scrollProgress * 100}%`,
+          }} />
+        </div>
+      )}
       <StatusBar />
       <div style={{ maxWidth: 800, margin: '0 auto', padding: '20px 20px 120px' }}>
         {/* Header */}

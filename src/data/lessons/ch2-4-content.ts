@@ -139,7 +139,7 @@ Preto musí v každom čase platiť: **g(theta(t)) = 0**
 
 Robot sa teda pri pohybe nemôže z configuration space „odtrhnúť". Jeho trajectory musí celý čas zostať medzi configurations, ktoré spĺňajú constraint.
 
-A práve tu vzniká spojenie medzi configuration constraints a velocity constraints.
+A práve tu vzniká spojenie medzi configuration constraints a **velocity constraints**.
 
 ---
 
@@ -330,7 +330,7 @@ Minca má configuration: x, y, phi, theta a teda **4-dimensional configuration s
 
 Napriek tomu sa v jednom konkrétnom okamihu nemôže pohybovať všetkými možnými smermi v tomto štvorrozmernom priestore.
 
-Rolling without slipping jej okamžitú velocity obmedzuje.
+**Rolling without slipping** jej okamžitú velocity obmedzuje.
 
 Mohlo by sa preto zdať, že constraints znižujú počet DOF mince.
 

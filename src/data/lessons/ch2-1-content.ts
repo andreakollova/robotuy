@@ -21,7 +21,7 @@ A presne tým sa začína robotika.
 
 Keď chceme riadiť robotické rameno, mobilného robota alebo napríklad dron, počítač musí mať spôsob, ako matematicky opísať ich stav. Nemôžeme mu jednoducho povedať, že „rameno je trochu vpravo". Potrebujeme presne určiť, koľko nezávislých hodnôt je potrebných na opis jeho konfigurácie.
 
-Tieto nezávislé možnosti nazývame degrees of freedom – stupne voľnosti (DOF).
+Tieto nezávislé možnosti nazývame **degrees of freedom** – stupne voľnosti (**DOF**).
 
 ![Konfigurácia dverí, bodu v rovine a mince](/book/ch2/fig2-1.png)
 
@@ -33,7 +33,7 @@ Reálne objekty nie sú dokonale pevné. Kovové rameno robota sa pri veľkom za
 
 Ak by sme však pri každom pohybe robota museli počítať deformáciu každého milimetra materiálu, aj jednoduché problémy by sa veľmi rýchlo stali zložité.
 
-Preto si v základnej robotike vytvárame zjednodušený model a jednotlivé pevné časti robota považujeme za rigid bodies – tuhé telesá.
+Preto si v základnej robotike vytvárame zjednodušený model a jednotlivé pevné časti robota považujeme za **rigid bodies** – tuhé telesá.
 
 Tuhé teleso je objekt, ktorého tvar a rozmery považujeme za nemenné. Môže sa presúvať a otáčať, ale nemôže sa naťahovať, skracovať ani ohýbať.
 
@@ -123,7 +123,7 @@ Nemusíme zatiaľ riešiť konkrétne matematické značenie. Podstatná je pred
 
 > **Malý mentálny experiment:** Polož si dlaň naplocho na stôl a predstav si, že ju nesmieš zdvihnúť. Posuň ju doprava. Posuň ju dopredu. Otoč ju na mieste. To sú tri nezávislé pohyby. Teraz skús urobiť štvrtý pohyb bez toho, aby si dlaň zdvihla alebo naklonila mimo roviny stola. Nenájdeš ho. Každá ďalšia poloha dlane na stole sa dá vytvoriť kombináciou týchto troch možností. To je intuitívny význam 3 DOF v rovine.
 
-> **Poznámka:** 2D robot nemusí byť fyzicky plochý. Keď v robotike hovoríme o planar robot alebo planar rigid body, neznamená to, že samotný robot musí byť dvojrozmerný. Reálny robot je samozrejme 3D objekt. Ide o to, že jeho povolený pohyb je obmedzený na jednu rovinu.
+> **Poznámka:** 2D robot nemusí byť fyzicky plochý. Keď v robotike hovoríme o planar robot alebo **planar rigid body**, neznamená to, že samotný robot musí byť dvojrozmerný. Reálny robot je samozrejme 3D objekt. Ide o to, že jeho povolený pohyb je obmedzený na jednu rovinu.
 
 ---
 

@@ -542,7 +542,7 @@ Preto počet DOF nemusí byť vždy rovnaký ako počet motorov.
 
 Pri jednoduchom serial robotovi býva často každý joint actuated, takže napríklad šesť jedno-DOF joints môže mať šesť motorov. To však nie je univerzálne pravidlo.
 
-Pri closed-chain mechanisms môžu byť niektoré joints passive. Pohybujú sa preto, že ich k pohybu prinútia ostatné časti mechanizmu, nie preto, že majú vlastný actuator.
+Pri closed-chain mechanisms môžu byť niektoré joints **passive**. Pohybujú sa preto, že ich k pohybu prinútia ostatné časti mechanizmu, nie preto, že majú vlastný actuator.
 
 Keď teda počítame DOF, pýtame sa: **Koľko nezávislých hodnôt potrebujeme na opis konfigurácie mechanizmu?**
 

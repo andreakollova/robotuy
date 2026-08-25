@@ -55,7 +55,7 @@ Táto definícia je presnejšia, než sa na prvý pohľad zdá. Nehovorí iba o 
 
 Keby sme túto definíciu interpretovali úplne doslovne, mohlo by sa zdať, že musíme poznať súradnice obrovského množstva bodov. Ak by sme napríklad modelovali kovový link v trojrozmernom priestore, mohli by sme sa pokúsiť zapísať súradnice každého jeho bodu. To by však bolo úplne nepraktické.
 
-Práve tu využijeme predpoklad, že link je rigid body. Pretože poznáme jeho tvar a vzdialenosti medzi jeho bodmi sa nemenia, jeho body sa nemôžu pohybovať nezávisle. Ak dostatočne presne určíme polohu a orientáciu celého rigidného telesa, poloha všetkých jeho bodov je už jednoznačne daná.
+Práve tu využijeme predpoklad, že link je **rigid body**. Pretože poznáme jeho tvar a vzdialenosti medzi jeho bodmi sa nemenia, jeho body sa nemôžu pohybovať nezávisle. Ak dostatočne presne určíme polohu a orientáciu celého rigidného telesa, poloha všetkých jeho bodov je už jednoznačne daná.
 
 To je jedna z najdôležitejších myšlienok tejto kapitoly:
 

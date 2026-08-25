@@ -93,7 +93,7 @@ Inými slovami: **0° a 360° predstavujú tú istú konfiguráciu.**
 
 Rovnako 10° a 370° opisujú rovnakú orientáciu. Uhol sa po jednej celej otáčke opakuje.
 
-Configuration space takéhoto revolute jointu preto nie je nekonečná priamka. Je to kružnica, ktorá sa označuje **S1**.
+Configuration space takéhoto revolute jointu preto nie je nekonečná priamka. Je to **kružnica**, ktorá sa označuje **S1**.
 
 Toto je veľmi dôležitý rozdiel medzi lineárnym a rotačným pohybom. Prismatic joint bez limits môžeme modelovať pomocou R, zatiaľ čo revolute joint s neobmedzenou rotáciou pomocou S1. Oba majú 1 DOF, ale ich C-spaces majú inú topológiu.
 

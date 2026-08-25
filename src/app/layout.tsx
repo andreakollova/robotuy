@@ -124,7 +124,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={lang} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('robotuy-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}` }} />
+        <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('robotuy-theme');if(!t){t='light';localStorage.setItem('robotuy-theme','light')}document.documentElement.setAttribute('data-theme',t)}catch(e){}` }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="alternate" hrefLang="en" href="https://robotuy.app" />
@@ -132,7 +132,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="alternate" hrefLang="x-default" href="https://robotuy.app" />
         <JsonLd isSk={isSk} />
       </head>
-      <body style={{ margin: 0, background: '#010d33' }}>
+      <body style={{ margin: 0, background: '#F5F5F7' }}>
         <LocaleInit />
         <AuthGate>
           <BottomNav />

@@ -82,7 +82,7 @@ export default function TopicLessonPage() {
               {topic.id === 'modern-robotics' && <img src="/northwestern-logo.png" alt="" style={{ height: 16, objectFit: 'contain', opacity: 0.6 }} />}
             </div>
           </div>
-          <span style={{ fontSize: 11, color: '#4ade80', fontWeight: 600 }}>
+          <span style={{ fontSize: 11, color: 'var(--green)', fontWeight: 600 }}>
             {totalDone}/{lesson.exercises.length}
           </span>
         </div>
@@ -184,7 +184,7 @@ export default function TopicLessonPage() {
                 onClick={() => setActiveExIdx(i)}
                 style={{
                   flex: 1, height: 3, borderRadius: 2, cursor: 'pointer',
-                  background: done ? '#4ade80' : i === activeExIdx ? '#fff' : '#222',
+                  background: done ? 'var(--green)' : i === activeExIdx ? 'var(--text)' : 'var(--border)',
                 }}
               />
             );
@@ -340,8 +340,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
     <div>
       {/* Type badge + XP */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-        {(() => { const Icon = typeIcon; return <Icon size={14} color="#4ade80" />; })()}
-        <span style={{ fontSize: 11, fontWeight: 700, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        {(() => { const Icon = typeIcon; return <Icon size={14} color="var(--green)" />; })()}
+        <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           {typeLabel}
         </span>
         <span style={{ fontSize: 11, color: 'var(--text-dim)', display: 'flex', alignItems: 'center', gap: 3, marginLeft: 'auto' }}>
@@ -419,14 +419,14 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
                     fontSize: 14, fontWeight: 500, cursor: showResult ? 'default' : 'pointer',
                     display: 'flex', alignItems: 'center', gap: 12,
                     background: isCorrect ? 'rgba(74,222,128,0.08)' : isWrong ? 'rgba(255,80,80,0.06)' : isSelected ? 'var(--border)' : 'var(--bg)',
-                    border: `1.5px solid ${isCorrect ? 'rgba(74,222,128,0.5)' : isWrong ? 'rgba(255,80,80,0.3)' : isSelected ? '#444' : '#1a1a1a'}`,
-                    color: isCorrect ? '#4ade80' : isWrong ? '#ff8080' : '#ccc',
+                    border: `1.5px solid ${isCorrect ? 'var(--green)' : isWrong ? 'rgba(255,80,80,0.3)' : isSelected ? 'var(--text-dim)' : 'var(--border)'}`,
+                    color: isCorrect ? 'var(--green)' : isWrong ? '#dc2626' : 'var(--text)',
                   }}
                 >
                   <div style={{
                     width: 26, height: 26, borderRadius: 8, flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: isCorrect ? '#4ade80' : isWrong ? '#ff8080' : isSelected ? '#333' : '#041540',
+                    background: isCorrect ? 'var(--green)' : isWrong ? '#ff8080' : isSelected ? 'var(--bg-raised)' : 'var(--bg-surface)',
                     color: isCorrect || isWrong ? 'var(--btn-primary-text)' : 'var(--text-hint)',
                     fontSize: 11, fontWeight: 700,
                   }}>
@@ -444,7 +444,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
               border: `1px solid ${showResult === 'correct' ? 'rgba(74,222,128,0.2)' : 'rgba(255,80,80,0.15)'}`,
               borderRadius: 12, padding: '14px 16px', marginBottom: 12,
             }}>
-              <p style={{ fontSize: 13, color: showResult === 'correct' ? '#86efac' : '#fca5a5', margin: 0, lineHeight: 1.6 }}>
+              <p style={{ fontSize: 13, color: showResult === 'correct' ? 'var(--green)' : '#dc2626', margin: 0, lineHeight: 1.6 }}>
                 {exercise.explanation}
               </p>
             </div>
@@ -495,8 +495,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
                           cursor: showResult ? 'default' : 'pointer',
                           fontFamily: 'JetBrains Mono, Fira Code, monospace',
                           background: isCorrectAnswer ? 'rgba(74,222,128,0.1)' : isWrongAnswer ? 'rgba(255,80,80,0.1)' : isSel ? 'var(--bg-raised)' : 'var(--bg)',
-                          border: `1.5px solid ${isCorrectAnswer ? '#4ade80' : isWrongAnswer ? '#ff8080' : isSel ? '#555' : '#1a1a1a'}`,
-                          color: isCorrectAnswer ? '#4ade80' : isWrongAnswer ? '#ff8080' : '#ccc',
+                          border: `1.5px solid ${isCorrectAnswer ? 'var(--green)' : isWrongAnswer ? '#ff8080' : isSel ? 'var(--text-dim)' : 'var(--border)'}`,
+                          color: isCorrectAnswer ? 'var(--green)' : isWrongAnswer ? '#dc2626' : 'var(--text)',
                         }}
                       >
                         {opt}
@@ -569,8 +569,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
                 background: writeRun === 'passed' ? 'rgba(74,222,128,0.06)' : 'rgba(255,80,80,0.06)',
                 border: `1px solid ${writeRun === 'passed' ? 'rgba(74,222,128,0.2)' : 'rgba(255,80,80,0.15)'}`,
               }}>
-              {writeRun === 'passed' ? <Check size={14} color="#4ade80" /> : <X size={14} color="#ff8080" />}
-              <span style={{ fontSize: 13, color: writeRun === 'passed' ? '#4ade80' : '#ff9090' }}>{writeMsg}</span>
+              {writeRun === 'passed' ? <Check size={14} color="var(--green)" /> : <X size={14} color="#ff8080" />}
+              <span style={{ fontSize: 13, color: writeRun === 'passed' ? 'var(--green)' : '#ff9090' }}>{writeMsg}</span>
             </motion.div>
           )}
 
@@ -603,8 +603,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
             background: 'rgba(74,222,128,0.06)', border: '1px solid rgba(74,222,128,0.2)',
             display: 'flex', alignItems: 'center', gap: 8,
           }}>
-            <Check size={16} color="#4ade80" />
-            <span style={{ fontSize: 14, fontWeight: 700, color: '#4ade80' }}>
+            <Check size={16} color="var(--green)" />
+            <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--green)' }}>
               {locale === 'sk' ? 'Správne!' : 'Correct!'} +{exercise.xp} XP
             </span>
           </div>

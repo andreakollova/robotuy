@@ -418,16 +418,16 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
                     padding: '14px 16px', borderRadius: 12, textAlign: 'left',
                     fontSize: 14, fontWeight: 500, cursor: showResult ? 'default' : 'pointer',
                     display: 'flex', alignItems: 'center', gap: 12,
-                    background: isCorrect ? 'rgba(74,222,128,0.08)' : isWrong ? 'rgba(255,80,80,0.06)' : isSelected ? 'var(--border)' : 'var(--bg)',
-                    border: `1.5px solid ${isCorrect ? 'var(--green)' : isWrong ? 'rgba(255,80,80,0.3)' : isSelected ? 'var(--text-dim)' : 'var(--border)'}`,
+                    background: isCorrect ? 'rgba(22,163,74,0.1)' : isWrong ? 'rgba(220,38,38,0.08)' : isSelected ? 'var(--bg-surface)' : 'var(--bg)',
+                    border: `1.5px solid ${isCorrect ? 'var(--green)' : isWrong ? '#dc2626' : isSelected ? 'var(--text-dim)' : 'var(--border)'}`,
                     color: isCorrect ? 'var(--green)' : isWrong ? '#dc2626' : 'var(--text)',
                   }}
                 >
                   <div style={{
                     width: 26, height: 26, borderRadius: 8, flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: isCorrect ? 'var(--green)' : isWrong ? '#ff8080' : isSelected ? 'var(--bg-raised)' : 'var(--bg-surface)',
-                    color: isCorrect || isWrong ? 'var(--btn-primary-text)' : 'var(--text-hint)',
+                    background: isCorrect ? 'var(--green)' : isWrong ? '#dc2626' : isSelected ? 'var(--bg-raised)' : 'var(--bg-surface)',
+                    color: isCorrect || isWrong ? '#fff' : 'var(--text-hint)',
                     fontSize: 11, fontWeight: 700,
                   }}>
                     {isCorrect ? <Check size={12} strokeWidth={3} /> : label}
@@ -440,8 +440,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
 
           {showResult && exercise.explanation && (
             <div style={{
-              background: showResult === 'correct' ? 'rgba(74,222,128,0.05)' : 'rgba(255,80,80,0.05)',
-              border: `1px solid ${showResult === 'correct' ? 'rgba(74,222,128,0.2)' : 'rgba(255,80,80,0.15)'}`,
+              background: showResult === 'correct' ? 'rgba(22,163,74,0.08)' : 'rgba(220,38,38,0.06)',
+              border: `1px solid ${showResult === 'correct' ? 'rgba(22,163,74,0.3)' : 'rgba(220,38,38,0.2)'}`,
               borderRadius: 12, padding: '14px 16px', marginBottom: 12,
             }}>
               <p style={{ fontSize: 13, color: showResult === 'correct' ? 'var(--green)' : '#dc2626', margin: 0, lineHeight: 1.6 }}>
@@ -494,8 +494,8 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
                           padding: '10px 16px', borderRadius: 10, fontSize: 14, fontWeight: 600,
                           cursor: showResult ? 'default' : 'pointer',
                           fontFamily: 'JetBrains Mono, Fira Code, monospace',
-                          background: isCorrectAnswer ? 'rgba(74,222,128,0.1)' : isWrongAnswer ? 'rgba(255,80,80,0.1)' : isSel ? 'var(--bg-raised)' : 'var(--bg)',
-                          border: `1.5px solid ${isCorrectAnswer ? 'var(--green)' : isWrongAnswer ? '#ff8080' : isSel ? 'var(--text-dim)' : 'var(--border)'}`,
+                          background: isCorrectAnswer ? 'rgba(22,163,74,0.1)' : isWrongAnswer ? 'rgba(220,38,38,0.08)' : isSel ? 'var(--bg-raised)' : 'var(--bg)',
+                          border: `1.5px solid ${isCorrectAnswer ? 'var(--green)' : isWrongAnswer ? '#dc2626' : isSel ? 'var(--text-dim)' : 'var(--border)'}`,
                           color: isCorrectAnswer ? 'var(--green)' : isWrongAnswer ? '#dc2626' : 'var(--text)',
                         }}
                       >
@@ -538,7 +538,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
       {/* WRITE type */}
       {exercise.type === 'write' && (
         <>
-          <div style={{ borderRadius: 14, overflow: 'hidden', border: `1px solid ${writeRun === 'passed' ? 'rgba(74,222,128,0.2)' : writeRun === 'failed' ? 'rgba(255,80,80,0.2)' : '#1a1a1a'}`, marginBottom: 16, transition: 'border-color 0.2s' }}>
+          <div style={{ borderRadius: 14, overflow: 'hidden', border: `1px solid ${writeRun === 'passed' ? 'rgba(22,163,74,0.3)' : writeRun === 'failed' ? 'rgba(220,38,38,0.2)' : 'var(--border)'}`, marginBottom: 16, transition: 'border-color 0.2s' }}>
             <div style={{ background: 'var(--bg-card)', padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 6, borderBottom: '1px solid #1a1a1a' }}>
               {['#ff5f57','#febc2e','#28c840'].map(c => <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c, opacity: 0.7 }} />)}
               <span style={{ marginLeft: 8, fontSize: 10, color: 'var(--text-dim)', fontFamily: 'JetBrains Mono, monospace' }}>python</span>
@@ -566,10 +566,10 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
             <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
               style={{
                 display: 'flex', gap: 8, padding: '12px 14px', borderRadius: 12, marginBottom: 12,
-                background: writeRun === 'passed' ? 'rgba(74,222,128,0.06)' : 'rgba(255,80,80,0.06)',
-                border: `1px solid ${writeRun === 'passed' ? 'rgba(74,222,128,0.2)' : 'rgba(255,80,80,0.15)'}`,
+                background: writeRun === 'passed' ? 'rgba(22,163,74,0.08)' : 'rgba(220,38,38,0.06)',
+                border: `1px solid ${writeRun === 'passed' ? 'rgba(22,163,74,0.3)' : 'rgba(220,38,38,0.2)'}`,
               }}>
-              {writeRun === 'passed' ? <Check size={14} color="var(--green)" /> : <X size={14} color="#ff8080" />}
+              {writeRun === 'passed' ? <Check size={14} color="var(--green)" /> : <X size={14} color="#dc2626" />}
               <span style={{ fontSize: 13, color: writeRun === 'passed' ? 'var(--green)' : '#ff9090' }}>{writeMsg}</span>
             </motion.div>
           )}
@@ -600,7 +600,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
         >
           <div style={{
             padding: '14px 16px', borderRadius: 12, marginBottom: 12,
-            background: 'rgba(74,222,128,0.06)', border: '1px solid rgba(74,222,128,0.2)',
+            background: 'rgba(22,163,74,0.08)', border: '1px solid rgba(22,163,74,0.3)',
             display: 'flex', alignItems: 'center', gap: 8,
           }}>
             <Check size={16} color="var(--green)" />

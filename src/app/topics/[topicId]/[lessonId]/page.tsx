@@ -24,6 +24,15 @@ export default function TopicLessonPage() {
   const [expandedBookSection, setExpandedBookSection] = useState<string | null>(null);
   const bookChapter = bookChapters.find(ch => ch.courseId === lessonId);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [wrongIds, setWrongIds] = useState<Set<string>>(new Set());
+  const [quizDone, setQuizDone] = useState(false);
+
+  // Attempt history stored in localStorage
+  const attemptsKey = `robotuy-attempts-${topicId}-${lessonId}`;
+  const [attempts, setAttempts] = useState<{ correct: number; total: number; wrongIds: string[]; date: string }[]>([]);
+  useEffect(() => {
+    try { const saved = localStorage.getItem(attemptsKey); if (saved) setAttempts(JSON.parse(saved)); } catch {}
+  }, [attemptsKey]);
 
   useEffect(() => {
     if (tab !== 'lesson') { setScrollProgress(0); return; }
@@ -173,7 +182,104 @@ export default function TopicLessonPage() {
         )}
 
         {/* QUIZ TAB */}
-        {tab === 'quiz' && <>
+        {tab === 'quiz' && quizDone && (() => {
+          const total = lesson.exercises.length;
+          const lastAttempt = attempts[attempts.length - 1];
+          const correct = lastAttempt?.correct ?? (total - wrongIds.size);
+          const pct = Math.round((correct / total) * 100);
+          const grade = pct >= 90 ? '1' : pct >= 75 ? '2' : pct >= 50 ? '3' : pct >= 30 ? '4' : '5';
+          const gradeLabel = grade === '1' ? 'Výborný' : grade === '2' ? 'Chválitebný' : grade === '3' ? 'Dobrý' : grade === '4' ? 'Dostatočný' : 'Nedostatočný';
+          const gradeColor = grade <= '2' ? 'var(--green)' : grade === '3' ? '#f59e0b' : '#dc2626';
+          const passed = pct >= 50;
+          const wrongExercises = lesson.exercises.filter(ex => (lastAttempt?.wrongIds ?? Array.from(wrongIds)).includes(ex.id));
+
+          return (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: 32 }}>
+              {/* Score card */}
+              <div style={{ background: '#fff', borderRadius: 20, padding: '32px 28px', border: '1px solid var(--border)', textAlign: 'center', marginBottom: 20 }}>
+                <div style={{ width: 80, height: 80, borderRadius: '50%', margin: '0 auto 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: passed ? 'rgba(22,163,74,0.1)' : 'rgba(220,38,38,0.08)', border: `3px solid ${gradeColor}` }}>
+                  <span style={{ fontSize: 28, fontWeight: 800, color: gradeColor }}>{pct}%</span>
+                </div>
+                <div style={{ fontSize: 24, fontWeight: 800, color: gradeColor, marginBottom: 4 }}>{gradeLabel}</div>
+                <div style={{ fontSize: 14, color: 'var(--text-hint)', marginBottom: 16 }}>
+                  {locale === 'sk' ? `Známka ${grade}` : `Grade ${grade}`} - {correct}/{total} {locale === 'sk' ? 'správnych' : 'correct'}
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 24, fontSize: 13, color: 'var(--text-secondary)' }}>
+                  <div><span style={{ fontWeight: 700, color: 'var(--green)' }}>{correct}</span> {locale === 'sk' ? 'správne' : 'correct'}</div>
+                  <div><span style={{ fontWeight: 700, color: '#dc2626' }}>{total - correct}</span> {locale === 'sk' ? 'nesprávne' : 'wrong'}</div>
+                </div>
+
+                {/* Attempt history */}
+                {attempts.length > 0 && (
+                  <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-hint)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>
+                      {locale === 'sk' ? 'História pokusov' : 'Attempt History'}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      {attempts.map((a, i) => {
+                        const aPct = Math.round((a.correct / a.total) * 100);
+                        const aGrade = aPct >= 90 ? '1' : aPct >= 75 ? '2' : aPct >= 50 ? '3' : aPct >= 30 ? '4' : '5';
+                        return (
+                          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, padding: '6px 12px', borderRadius: 8, background: i === attempts.length - 1 ? 'rgba(79,42,133,0.06)' : 'transparent' }}>
+                            <span style={{ fontWeight: 700, color: '#4f2a85', minWidth: 70 }}>Attempt {i + 1}</span>
+                            <span style={{ color: 'var(--text-secondary)' }}>{aPct}%</span>
+                            <span style={{ color: 'var(--text-hint)' }}>({a.correct}/{a.total})</span>
+                            <span style={{ color: 'var(--text-hint)', fontSize: 11, marginLeft: 'auto' }}>{locale === 'sk' ? `Známka ${aGrade}` : `Grade ${aGrade}`}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Wrong answers list */}
+              {wrongExercises.length > 0 && (
+                <div style={{ background: '#fff', borderRadius: 16, padding: '20px 24px', border: '1px solid var(--border)', marginBottom: 20 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                    <AlertCircle size={16} color="#dc2626" />
+                    <span style={{ fontWeight: 700, fontSize: 14, color: '#dc2626' }}>
+                      {locale === 'sk' ? 'Nesprávne odpovede' : 'Wrong answers'} ({wrongExercises.length})
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {wrongExercises.map((ex, i) => (
+                      <div key={ex.id} style={{ padding: '12px 14px', borderRadius: 10, background: 'rgba(220,38,38,0.04)', border: '1px solid rgba(220,38,38,0.12)' }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>
+                          {i + 1}. {ex.prompt.length > 80 ? ex.prompt.slice(0, 80) + '...' : ex.prompt}
+                        </div>
+                        {ex.correctAnswer && (
+                          <div style={{ fontSize: 12, color: 'var(--green)' }}>
+                            {locale === 'sk' ? 'Správna odpoveď' : 'Correct answer'}: {ex.correctAnswer}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Retake button */}
+              <button
+                onClick={() => {
+                  setQuizDone(false);
+                  setActiveExIdx(0);
+                  setWrongIds(new Set());
+                }}
+                style={{
+                  width: '100%', padding: '16px', borderRadius: 14, border: 'none', cursor: 'pointer',
+                  background: '#4f2a85', color: '#fff', fontWeight: 700, fontSize: 15,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                }}
+              >
+                <RotateCcw size={16} />
+                {locale === 'sk' ? `Skúsiť znova (Attempt ${attempts.length + 1})` : `Try again (Attempt ${attempts.length + 1})`}
+              </button>
+            </motion.div>
+          );
+        })()}
+
+        {tab === 'quiz' && !quizDone && <>
         {/* Progress dots */}
         <div style={{ display: 'flex', gap: 3, marginBottom: 28 }}>
           {lesson.exercises.map((ex, i) => {
@@ -205,12 +311,22 @@ export default function TopicLessonPage() {
                 exercise={exercise}
                 topicId={topic.id}
                 locale={locale}
-                onComplete={() => {
+                onComplete={(wasCorrect: boolean) => {
                   completeLesson(exKey, exercise.xp);
+                  if (!wasCorrect) setWrongIds(prev => new Set(prev).add(exercise.id));
                 }}
                 onNext={() => {
                   if (activeExIdx < lesson.exercises.length - 1) {
                     setActiveExIdx(activeExIdx + 1);
+                  } else {
+                    // Quiz finished — save attempt
+                    const total = lesson.exercises.length;
+                    const correct = total - wrongIds.size;
+                    const attempt = { correct, total, wrongIds: Array.from(wrongIds), date: new Date().toISOString() };
+                    const newAttempts = [...attempts, attempt];
+                    setAttempts(newAttempts);
+                    try { localStorage.setItem(attemptsKey, JSON.stringify(newAttempts)); } catch {}
+                    setQuizDone(true);
                   }
                 }}
                 isLast={activeExIdx === lesson.exercises.length - 1}
@@ -254,7 +370,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
   exercise: Exercise;
   topicId: string;
   locale: 'en' | 'sk';
-  onComplete: () => void;
+  onComplete: (wasCorrect: boolean) => void;
   onNext: () => void;
   isLast: boolean;
   isDone: boolean;
@@ -299,9 +415,10 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
     if (!selected) return;
     if (selected === exercise.correctAnswer) {
       setShowResult('correct');
-      if (!isDone) onComplete();
+      if (!isDone) onComplete(true);
     } else {
       setShowResult('wrong');
+      if (!isDone) onComplete(false);
     }
   };
 
@@ -310,16 +427,17 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
     const allCorrect = exercise.blanks.every(b => fillAnswers[b.id] === b.correct);
     if (allCorrect) {
       setShowResult('correct');
-      if (!isDone) onComplete();
+      if (!isDone) onComplete(true);
     } else {
       setShowResult('wrong');
+      if (!isDone) onComplete(false);
     }
   };
 
   const handleMarkRead = () => {
     setShowResult('correct');
     setShowExplanation(true);
-    if (!isDone) onComplete();
+    if (!isDone) onComplete(true);
   };
 
   const handleRetry = () => {
@@ -461,13 +579,25 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
             </button>
           )}
           {showResult === 'wrong' && (
-            <button onClick={handleRetry} style={{
-              width: '100%', padding: '14px', borderRadius: 12,
-              background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontWeight: 700, fontSize: 14,
-              border: '1px solid var(--border)', cursor: 'pointer',
-            }}>
-              {locale === 'sk' ? 'Skúsiť znova' : 'Try again'}
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {!isLast && (
+                <button onClick={handleRetry} style={{
+                  width: '100%', padding: '14px', borderRadius: 12,
+                  background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontWeight: 700, fontSize: 14,
+                  border: '1px solid var(--border)', cursor: 'pointer',
+                }}>
+                  {locale === 'sk' ? 'Skúsiť znova' : 'Try again'}
+                </button>
+              )}
+              <button onClick={handleNext} style={{
+                width: '100%', padding: '14px', borderRadius: 12,
+                background: isLast ? '#4f2a85' : 'var(--btn-primary)', color: isLast ? '#fff' : 'var(--btn-primary-text)', fontWeight: 700, fontSize: 14,
+                border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+              }}>
+                {isLast ? (locale === 'sk' ? 'Zobraziť výsledky' : 'Show results') : (locale === 'sk' ? 'Ďalej' : 'Next')} {isLast ? <Trophy size={16} /> : <ChevronRight size={16} />}
+              </button>
+            </div>
           )}
         </>
       )}
@@ -608,16 +738,14 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
               {locale === 'sk' ? 'Správne!' : 'Correct!'} +{exercise.xp} XP
             </span>
           </div>
-          {!isLast && (
-            <button onClick={handleNext} style={{
-              width: '100%', padding: '14px', borderRadius: 12,
-              background: 'var(--btn-primary)', color: 'var(--btn-primary-text)', fontWeight: 700, fontSize: 15,
-              border: 'none', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            }}>
-              {locale === 'sk' ? 'Ďalej' : 'Next'} <ChevronRight size={16} />
-            </button>
-          )}
+          <button onClick={handleNext} style={{
+            width: '100%', padding: '14px', borderRadius: 12,
+            background: isLast ? '#4f2a85' : 'var(--btn-primary)', color: isLast ? '#fff' : 'var(--btn-primary-text)', fontWeight: 700, fontSize: 15,
+            border: 'none', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+          }}>
+            {isLast ? (locale === 'sk' ? 'Zobraziť výsledky' : 'Show results') : (locale === 'sk' ? 'Ďalej' : 'Next')} {isLast ? <Trophy size={16} /> : <ChevronRight size={16} />}
+          </button>
         </motion.div>
       )}
     </div>

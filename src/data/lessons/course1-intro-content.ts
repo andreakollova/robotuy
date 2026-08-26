@@ -1,539 +1,417 @@
-// Lekcia 1: Konfigurácia robota, stupne voľnosti a konfiguračný priestor
+// Lekcia 2: Konfigurácia robota, stupne voľnosti a konfiguračný priestor
 // Full lesson content - DO NOT SHORTEN
 
-export const course1IntroContent = `# Lekcia 1: Konfigurácia robota, stupne voľnosti a konfiguračný priestor
+export const course1IntroContent = `# Lekcia 2: Konfigurácia robota, stupne voľnosti a konfiguračný priestor
 
-Kapitola o **Configuration Space** začína otázkou, ktorá na prvý pohľad vyzerá veľmi jednoducho: **Kde sa robot nachádza?** V robotike však odpoveď na túto otázku nie je taká jednoduchá ako povedať, že robot stojí na určitom mieste v miestnosti. Robot sa skladá z viacerých pohyblivých častí a dve robotické ramená môžu mať napríklad koniec ruky na presne rovnakom mieste, ale zvyšok ramena môže byť usporiadaný úplne inak. Ak chceme robot presne matematicky opísať, potrebujeme preto zachytiť stav celého mechanizmu.
+Keď sa pozeráme na robota, prirodzene nás napadne otázka: **Kde sa robot práve nachádza?** Pri jednoduchom objekte by možno stačilo uviesť jeho polohu v priestore. Pri robotovi je však situácia zložitejšia. Robotické rameno môže mať napríklad gripper na presne rovnakom mieste dvoma rôznymi spôsobmi — raz môže byť jeho „lakeť" otočený nahor a inokedy nadol. Poloha konca ramena je rovnaká, ale usporiadanie celého robota je odlišné.
 
-Práve na to slúžia tri základné pojmy tejto kapitoly: **configuration**, **degrees of freedom** a **configuration space**. Sú základom pre ďalšie témy robotiky, pretože bez nich by sme nemohli presne opisovať polohu robota, plánovať jeho pohyb, určovať, ktoré polohy dokáže dosiahnuť, ani neskôr počítať jeho rýchlosti.
+Ak teda chceme robot matematicky opisovať, nestačí nám vedieť iba to, kde sa nachádza jedna jeho časť. Potrebujeme spôsob, ako zachytiť **celkový stav jeho mechanizmu**. Práve preto robotika používa pojmy **configuration (konfigurácia)**, **degrees of freedom (stupne voľnosti)** a **configuration space (konfiguračný priestor)**.
+
+Tieto pojmy patria medzi úplné základy robotiky. Neskôr nám umožnia opisovať pohyb robota, počítať jeho rýchlosť, zisťovať, ktoré polohy dokáže dosiahnuť, alebo plánovať cestu robotického ramena medzi prekážkami. Najskôr si však musíme vytvoriť presnú predstavu o tom, čo vlastne znamená „stav robota".
 
 ---
 
 ## 01. Robot ako mechanický systém
 
-Robot môže mať veľmi komplikovaný vzhľad, ale z mechanického hľadiska ho môžeme rozložiť na niekoľko základných stavebných prvkov. Najdôležitejšie z nich sú **links**, teda články, a **joints**, teda kĺby.
+Robot môže na prvý pohľad vyzerať ako veľmi komplikovaný stroj. Môže obsahovať stovky súčiastok, motory, káble, senzory, prevody, elektroniku a riadiace jednotky. Keď však skúmame jeho mechanický pohyb, nemusíme modelovať každú skrutku zvlášť. Celý systém si môžeme zjednodušiť na niekoľko základných stavebných prvkov.
 
-**Link** je pevná mechanická časť robota. Pri priemyselnom robotickom ramene sú linkmi napríklad jednotlivé pevné segmenty medzi kĺbmi. Pri robotickej nohe nimi môžu byť časti pripomínajúce stehno alebo predkolenie. Link nemusí mať tvar jednoduchej tyče — môže ísť o pomerne komplikovanú konštrukciu. Podstatné je, že ho pri matematickom modelovaní považujeme za jeden pevný celok.
+Jedným z nich je **link**, teda článok robota. Link je pevná mechanická časť, ktorá sa pri pohybe robota pohybuje ako jeden celok. Pri priemyselnom robotickom ramene sú linkmi napríklad jednotlivé pevné segmenty medzi kĺbmi. Pri robotickej nohe môžeme za link považovať časť pripomínajúcu stehno alebo predkolenie. Link pritom nemusí vyzerať ako jednoduchá tyč. Môže mať pomerne komplikovaný tvar — dôležité je, že ho z pohľadu mechaniky považujeme za jeden pevný celok.
 
-V Modern Robotics sa linky modelujú ako **rigid bodies — tuhé telesá**. Tuhé teleso je idealizované teleso, ktorého tvar sa počas pohybu nemení. Ak na jednom linku vyberieme dva ľubovoľné body (A) a (B), ich polohy vo svete sa pri pohybe robota môžu meniť, ale vzdialenosť medzi nimi zostáva rovnaká:
+V robotike sa preto linky často modelujú ako **rigid bodies — tuhé telesá**. Tuhé teleso je idealizovaný objekt, ktorého tvar a rozmery sa počas pohybu nemenia. Ak si na jednom linku vyberieme dva body A a B, vzdialenosť medzi nimi zostáva rovnaká bez ohľadu na to, ako sa celý link pohybuje.
 
-$$d(A,B) = \\text{konštanta}$$
+Napríklad kovová tyč dlhá 30 cm sa môže presúvať, otáčať alebo prevracať, ale v našom modeli zostáva vzdialenosť medzi jej koncami stále 30 cm. Mení sa teda poloha a orientácia tyče v priestore, nie jej vnútorná geometria.
 
-Predstav si kovovú tyč dlhú 30 cm. Môžeš ju presunúť doprava, zdvihnúť, otočiť alebo prevrátiť, ale ak ju považujeme za dokonale tuhé teleso, jej dva konce zostávajú stále 30 cm od seba. Mení sa teda **poloha telesa v priestore**, nie jeho vnútorná geometria.
+V skutočnosti samozrejme dokonale tuhé telesá neexistujú. Kov sa môže mierne ohnúť, plast deformovať a mechanické súčiastky môžu mať určitú vôľu. Pri mnohých robotických úlohách sú však tieto deformácie také malé, že ich môžeme zanedbať. Predpoklad tuhého telesa nám výrazne zjednoduší matematický model robota bez toho, aby sme pri bežných úlohách stratili podstatné informácie.
 
-V skutočnom svete samozrejme dokonale tuhé telesá neexistujú. Kov sa môže veľmi mierne ohýbať, plast deformovať a jednotlivé súčiastky majú vôľu. Pre veľké množstvo robotických úloh sú však tieto deformácie natoľko malé, že ich môžeme zanedbať. Model tuhého telesa nám potom výrazne zjednoduší matematiku bez toho, aby sme stratili informácie dôležité pre danú úlohu.
+Jednotlivé linky sú medzi sebou spojené pomocou **joints — kĺbov**. Kĺb určuje, aký relatívny pohyb je medzi dvoma linkmi povolený. Niektoré kĺby umožňujú otáčanie, iné posúvanie a niektoré komplikovanejšie kĺby umožňujú viacero pohybov súčasne. Kĺb teda neurčuje, ako silno sa robot pohne, ale **akým spôsobom sa jeho časti vôbec môžu voči sebe pohybovať**.
 
-Jednotlivé linky robota sú spojené pomocou **joints — kĺbov**. Kĺb určuje, aký relatívny pohyb je medzi dvoma linkmi dovolený. Niektoré kĺby umožňujú otáčanie, iné posúvanie a existujú aj kĺby umožňujúce viacero druhov pohybu. Neskôr si jednotlivé typy rozoberieme presne, ale už teraz je dôležité pochopiť základný princíp: **link je pevná časť a joint určuje, ako sa môže jeden link pohybovať vzhľadom na druhý**.
+Samotný kĺb však pohyb nevytvára. Na to potrebujeme **actuator — pohon alebo akčný člen**. Typickým príkladom je elektrický motor, ktorý vytvára silu alebo **torque — krútiaci moment** potrebný na pohyb mechanizmu. Je preto dôležité odlišovať tieto dva pojmy: **joint určuje dovolený pohyb, zatiaľ čo actuator vytvára silu alebo moment potrebný na jeho uskutočnenie.**
 
-Pohyb však nevznikne iba tým, že mechanizmus určitý pohyb umožňuje. Potrebujeme niečo, čo vytvorí potrebnú silu alebo krútiaci moment. Túto úlohu majú **actuators — pohony alebo akčné členy**. Typickým actuatorom je elektrický motor. Motor môže vytvárať **torque**, teda krútiaci moment, ktorým otáča kĺbom, alebo môže mechanizmus vytvárať lineárnu silu potrebnú na posun.
+Na konci robotického ramena sa často nachádza **end-effector**, teda časť robota, ktorá priamo vykonáva požadovanú úlohu. Môže to byť gripper na uchopenie predmetov, zváracia hlavica, skrutkovač, prísavka, kamera, chirurgický nástroj alebo napríklad striekacia tryska.
 
-Je preto užitočné od začiatku odlišovať dve veci. **Joint určuje, aký pohyb je mechanicky možný. Actuator vytvára silu alebo moment potrebný na uskutočnenie pohybu.** Tieto pojmy nie sú synonymá.
+Robotické rameno si preto môžeme z mechanického pohľadu predstaviť ako postupnosť:
 
-Na niektorom z linkov, často na poslednom článku robotického ramena, býva pripevnený **end-effector**. Je to časť robota, ktorá priamo vykonáva požadovanú úlohu. End-effectorom môže byť gripper na uchopenie predmetov, zváracia hlavica, skrutkovač, chirurgický nástroj, kamera, prísavka alebo striekacia tryska.
+**základňa → kĺb → link → kĺb → link → ... → end-effector**
 
-Robotické rameno si teda môžeme v základnom modeli predstaviť približne ako reťaz:
-
-$$\\text{ground} \\rightarrow \\text{joint} \\rightarrow \\text{link} \\rightarrow \\text{joint} \\rightarrow \\text{link} \\rightarrow \\cdots \\rightarrow \\text{end-effector}$$
-
-Toto zjednodušenie je veľmi dôležité. Namiesto toho, aby sme robot vnímali ako tisíce skrutiek, káblov, krytov a elektronických súčiastok, pre mechanickú analýzu ho môžeme chápať ako **systém tuhých telies spojených kĺbmi**.
+Takéto zjednodušenie je veľmi užitočné. Namiesto tisícov jednotlivých súčiastok môžeme robot pri analýze pohybu chápať ako **systém tuhých telies spojených kĺbmi**.
 
 ---
 
 ## 02. Čo znamená konfigurácia robota
 
-Keď už máme mechanický model robota, môžeme sa vrátiť k otázke: **Kde robot je?**
+Keď už máme základný mechanický model robota, môžeme sa vrátiť k pôvodnej otázke: **Ako presne opíšeme, kde sa robot nachádza?**
 
-Pri jednoduchom objekte by sme možno odpovedali jeho súradnicami. Pri robotovi to však často nestačí. Predstav si robotické rameno s niekoľkými kĺbmi. Jeho gripper môže byť na určitom mieste nad stolom, ale lakeť robota môže smerovať nahor alebo nadol. V oboch prípadoch môže byť gripper na rovnakom mieste, hoci celý robot má inú polohu.
+Pri robotovi väčšinou nestačí poznať polohu jedného bodu. Predstav si robotické rameno, ktorého gripper sa nachádza nad konkrétnym miestom na stole. Rameno môže túto polohu dosiahnuť s lakťom otočeným jedným smerom, ale pri vhodnej konštrukcii aj s lakťom otočeným iným smerom. Gripper môže zostať na rovnakom mieste, zatiaľ čo zvyšok robota má inú polohu.
 
-Potrebujeme preto pojem, ktorý opisuje celý mechanický stav robota. Týmto pojmom je **configuration — konfigurácia**.
+Potrebujeme preto pojem, ktorý opisuje **celé usporiadanie mechanického systému**. Tento stav nazývame **configuration — konfigurácia**.
 
-Formálne je konfigurácia definovaná ako:
+Konfiguráciu môžeme definovať ako **úplnú špecifikáciu polohy každého bodu robota**. Táto definícia zámerne nehovorí iba o end-effectore alebo o strede robota. Ak poznáme konfiguráciu, máme dostatok informácií na to, aby sme jednoznačne určili polohu celého mechanizmu.
 
-> **úplná špecifikácia polohy každého bodu robota.**
+Na prvý pohľad to môže znieť neprakticky. Robotické rameno obsahuje obrovské množstvo bodov. Znamená to, že musíme zapisovať súradnice každého z nich? Našťastie nie.
 
-Táto definícia je presnejšia, než sa na prvý pohľad zdá. Nehovorí iba o polohe end-effectora. Nehovorí iba o polohe stredu robota. Hovorí o stave **celého robota**.
+Práve tu využívame predpoklad rigidného telesa. Ak poznáme tvar linku a vieme, kde sa nachádza a ako je natočený, automaticky vieme určiť aj polohu všetkých jeho bodov. Nemusíme ich teda sledovať samostatne.
 
-Keby sme túto definíciu interpretovali úplne doslovne, mohlo by sa zdať, že musíme poznať súradnice obrovského množstva bodov. Ak by sme napríklad modelovali kovový link v trojrozmernom priestore, mohli by sme sa pokúsiť zapísať súradnice každého jeho bodu. To by však bolo úplne nepraktické.
+Predstav si obyčajné dvere. Pri otvorení sa pohne prakticky každý bod na ich povrchu. Napriek tomu nemusíme merať polohu každého centimetra dverí. Ak poznáme ich rozmery, polohu pántu a uhol otvorenia, vieme z týchto informácií odvodiť polohu všetkých ostatných bodov.
 
-Práve tu využijeme predpoklad, že link je **rigid body**. Pretože poznáme jeho tvar a vzdialenosti medzi jeho bodmi sa nemenia, jeho body sa nemôžu pohybovať nezávisle. Ak dostatočne presne určíme polohu a orientáciu celého rigidného telesa, poloha všetkých jeho bodov je už jednoznačne daná.
-
-To je jedna z najdôležitejších myšlienok tejto kapitoly:
-
-**Kompletná konfigurácia môže opisovať polohu obrovského množstva bodov, ale na jej reprezentáciu často potrebujeme iba niekoľko nezávislých čísel.**
-
-Ak sa napríklad otočia dvere okolo pántu, každý bod na dverách zmení svoju polohu. Napriek tomu nepotrebujeme sledovať každý bod zvlášť. Ak poznáme rozmery dverí, polohu pántu a uhol otvorenia, vieme určiť polohu všetkých ich bodov.
-
-Práve hľadanie minimálneho počtu takýchto čísel nás privedie k pojmu **degrees of freedom**.
+To nás privádza k jednej z najdôležitejších myšlienok tejto lekcie: **úplná konfigurácia môže opisovať obrovské množstvo bodov, ale na jej jednoznačné určenie často potrebujeme iba niekoľko nezávislých čísel.**
 
 ---
 
 ## 03. Najjednoduchší príklad konfigurácie: dvere
 
+Predstav si obyčajné dvere pripevnené k stene pomocou pántov. Dvere existujú v trojrozmernom priestore, ale kvôli pántom sa nemôžu pohybovať ľubovoľne. Nemôžeme ich bez odpojenia zdvihnúť k stropu, posunúť o meter doprava ani otočiť okolo ľubovoľnej osi.
+
+Pánty obmedzujú ich pohyb tak, že zostáva jediná nezávislá možnosť: **otáčanie okolo osi pántov**. Ak teda chceme presne určiť konfiguráciu dverí, stačí nám poznať jeden údaj — uhol ich otvorenia.
+
+Tento uhol môžeme označiť θ. Konfiguráciu potom jednoducho zapíšeme:
+
+**q = θ**
+
+Symbol **q** sa v robotike veľmi často používa na označenie konfigurácie.
+
+Ak je napríklad θ = 0°, dvere môžu byť zatvorené. Pri θ = 30° sú mierne otvorené a pri θ = 90° môžu byť otvorené kolmo na stenu. Každá hodnota uhla teda predstavuje inú konfiguráciu dverí.
+
+Na tomto príklade si všimni jednu dôležitú vec. Dvere sú fyzický objekt nachádzajúci sa v trojrozmernom svete, ale na úplný opis ich konfigurácie potrebujeme iba **jedno číslo**. Počet parametrov potrebných na opis systému preto nezávisí iba od toho, či sa nachádza v 2D alebo 3D priestore. Závisí najmä od toho, **koľkými nezávislými spôsobmi sa systém môže pohybovať**.
+
 ![Konfigurácia dverí, bodu v rovine a mince na stole](/book/ch2/fig2-1.png)
-
-Predstav si obyčajné dvere pripevnené k stene pomocou pántu. Dvere sa nemôžu ľubovoľne pohybovať po miestnosti. Nemôžeme ich bez odpojenia od pántov posunúť o meter doprava, zdvihnúť k stropu alebo otočiť okolo ľubovoľnej osi.
-
-Pánt obmedzuje ich pohyb tak, že zostáva iba jedna nezávislá možnosť: **rotácia okolo osi pántu**.
-
-Na opis konfigurácie dverí preto stačí jeden uhol:
-
-$$\\theta$$
-
-Ak poznáme θ, vieme, ako veľmi sú dvere otvorené. Pretože poznáme aj ich tvar a umiestnenie pántu, z tejto jednej hodnoty môžeme odvodiť polohu každého bodu dverí.
-
-Môžeme teda zapísať:
-
-$$q = \\theta$$
-
-kde symbol q budeme používať pre konfiguráciu systému.
-
-Napríklad hodnoty
-
-$$\\theta = 0°, \\quad \\theta = 30°, \\quad \\theta = 90°$$
-
-predstavujú tri rôzne konfigurácie tých istých dverí.
-
-Všimni si podstatnú vec: dvere sú fyzický objekt existujúci v trojrozmernom svete, ale na opis ich konfigurácie potrebujeme iba **jedno číslo**. Počet parametrov konfigurácie preto nie je automaticky rovnaký ako počet rozmerov fyzického priestoru, v ktorom sa objekt nachádza. Rozhodujúce je, **koľkými nezávislými spôsobmi sa systém môže pohybovať vzhľadom na svoje obmedzenia**.
 
 ---
 
 ## 04. Bod pohybujúci sa v rovine
 
-Teraz si predstav bod, ktorý sa môže voľne pohybovať po rovnej ploche. Na rozdiel od dverí nie je pripútaný k jednému pántu. Môže meniť svoju polohu v dvoch nezávislých smeroch.
+Teraz si predstav jednoduchý bod, ktorý sa môže voľne pohybovať po rovnej ploche. Na rozdiel od dverí nie je pripevnený k pántu a môže meniť svoju polohu v dvoch nezávislých smeroch.
 
-Jeho konfiguráciu môžeme opísať dvojicou súradníc:
+Jeho konfiguráciu môžeme opísať pomocou dvoch súradníc:
 
-$$q = (x, y)$$
+**q = (x, y)**
 
-Súradnica x určuje jeho polohu v jednom smere a y v druhom. Ak poznáme obe hodnoty, poloha bodu v rovine je úplne určená.
+Hodnota x určuje polohu v jednom smere a hodnota y v druhom. Keď poznáme obe, poloha bodu v rovine je jednoznačne určená.
 
-Dôležité je, že x a y sú **nezávislé**. Ak zmeníme x, nemusíme automaticky zmeniť y. Bod sa môže posunúť horizontálne bez vertikálneho pohybu alebo vertikálne bez horizontálneho pohybu.
+Podstatné je, že x a y sú **nezávislé**. Bod môžeme posunúť doprava bez toho, aby sme ho museli posunúť nahor. Rovnako môžeme meniť y bez toho, aby sme museli meniť x. Na úplný opis konfigurácie preto potrebujeme dve nezávislé hodnoty.
 
-Preto potrebujeme dve nezávislé čísla.
-
-Pri samotnom geometrickom bode nemusíme riešiť orientáciu. Bod nemá prednú alebo zadnú stranu a jeho otočenie nemení jeho geometrický stav. To sa však zmení, keď bod nahradíme telesom.
+Pri samotnom geometrickom bode pritom nemusíme riešiť orientáciu. Bod nemá prednú ani zadnú stranu. Ak ho „otočíme", z geometrického hľadiska sa nič nezmení. Pri skutočnom telese to však už platiť nebude.
 
 ---
 
-## 05. Prečo pri telese nestačí iba jeho poloha
+## 05. Prečo pri telese nestačí iba poloha
 
-Predstav si mincu položenú lícom nahor na stole. Najskôr vyberieme jeden konkrétny bod mince, napríklad jej stred. Polohu tohto bodu môžeme opísať pomocou:
+Predstav si mincu položenú na stole. Vyberieme si jej stred a jeho polohu zapíšeme pomocou súradníc x a y. Mohlo by sa zdať, že tým máme konfiguráciu mince úplne určenú. V skutočnosti nám však stále jedna informácia chýba.
 
-$$(x, y)$$
+Polož dve rovnaké mince tak, aby ich stredy ležali na presne rovnakom mieste. Jednu mincu potom otoč o 90°. Ich stredy majú stále rovnaké súradnice x a y, ale mince očividne nie sú v rovnakom stave. Rozdiel je v tom, **ako sú natočené**.
 
-Mohlo by sa zdať, že tým poznáme konfiguráciu mince. Nie je to však pravda.
+Okrem polohy preto potrebujeme poznať aj **orientation — orientáciu**. V rovine ju môžeme vyjadriť jediným uhlom θ. Konfigurácia mince je potom:
 
-Polož dve rovnaké mince tak, aby ich stredy boli na presne rovnakom mieste. Jednu nechaj otočenú tak, že Lincoln na americkej minci „pozerá" smerom nahor, a druhú otoč o 90°. Obe mince majú rovnaké (x, y), ale očividne nie sú v rovnakej konfigurácii.
+**q = (x, y, θ)**
 
-Chýba nám totiž informácia o **orientation — orientácii**.
+Súradnice x a y nám hovoria, kde sa minca nachádza, zatiaľ čo θ určuje jej natočenie.
 
-Preto konfiguráciu mince zapíšeme:
+Tým sa dostávame k dôležitému rozdielu medzi **position** a **configuration**. Position opisuje polohu konkrétneho bodu. Configuration musí obsahovať všetky informácie potrebné na úplné určenie stavu celého telesa.
 
-$$q = (x, y, \\theta)$$
-
-kde x a y opisujú polohu zvoleného bodu a θ opisuje natočenie mince.
-
-Tento príklad ukazuje veľmi dôležité rozlíšenie medzi **position** a **configuration**. Poloha hovorí, kde sa určitý bod nachádza. Konfigurácia musí obsahovať všetky informácie potrebné na úplné určenie stavu telesa.
-
-Pre robotiku je to zásadné. End-effector robotického ramena môže byť na správnom mieste, ale môže byť otočený nesprávnym smerom. Ak robot drží skrutkovač, nestačí dostať jeho hrot na správnu súradnicu. Skrutkovač musí mať aj správnu orientáciu vzhľadom na skrutku.
-
-Preto budeme v robotike veľmi často pracovať súčasne s **position** aj **orientation**.
+V robotike je tento rozdiel veľmi praktický. Ak robot drží skrutkovač, nestačí dostať jeho hrot na správne miesto. Skrutkovač musí byť zároveň správne natočený voči skrutke. Robot preto často potrebuje kontrolovať nielen **position**, ale aj **orientation** svojho end-effectora.
 
 ---
 
 ## 06. Degrees of Freedom – stupne voľnosti
 
-Teraz máme všetko potrebné na zavedenie jedného z najdôležitejších pojmov celej robotiky: **degree of freedom**, skrátene **DOF**, po slovensky **stupeň voľnosti**.
+Teraz môžeme zaviesť jeden z najdôležitejších pojmov celej robotiky: **degree of freedom**, skrátene **DOF**, po slovensky **stupeň voľnosti**.
 
-Formálna definícia hovorí:
+Počet stupňov voľnosti systému je **najmenší počet nezávislých reálnych hodnôt, ktoré potrebujeme na úplné určenie jeho konfigurácie**.
 
-> **Počet stupňov voľnosti systému je najmenší počet reálnych súradníc potrebných na úplné opísanie jeho konfigurácie.**
+Slovo **najmenší** je v tejto definícii veľmi dôležité. Nezaujíma nás, koľko rôznych čísel dokážeme pri opisovaní objektu zapísať. Zaujíma nás, koľko nezávislých hodnôt skutočne potrebujeme.
 
-Slovo **najmenší** je v tejto definícii zásadné. Nezaujíma nás, koľko čísel dokážeme pri opisovaní systému vymyslieť. Zaujíma nás minimálny počet **nezávislých** hodnôt, ktoré potrebujeme.
+Pri dverách nám stačí jeden uhol θ, takže dvere majú **1 DOF**. Bod voľne sa pohybujúci v rovine potrebuje súradnice x a y, takže má **2 DOF**. Minca pohybujúca sa po stole potrebuje x, y a θ, preto má **3 DOF**.
 
-Pri dverách potrebujeme iba:
+Intuitívne si teda môžeš stupne voľnosti predstaviť ako počet nezávislých spôsobov, ktorými môžeme meniť konfiguráciu systému. Minca sa môže posúvať v jednom smere, posúvať v druhom smere a otáčať. Tieto tri možnosti môžeme meniť nezávisle, preto má tri stupne voľnosti.
 
-$$q = \\theta$$
-
-Preto majú dvere jeden stupeň voľnosti: **1 DOF**.
-
-Pri bode v rovine potrebujeme:
-
-$$q = (x, y)$$
-
-takže má: **2 DOF**.
-
-Pri minci na stole potrebujeme:
-
-$$q = (x, y, \\theta)$$
-
-a preto má: **3 DOF**.
-
-Intuitívne môžeme DOF chápať ako počet **nezávislých spôsobov, ktorými môžeme meniť konfiguráciu systému**. Minca sa môže v rovine nezávisle posúvať v dvoch smeroch a otáčať. Preto má tri stupne voľnosti.
-
-Treba si však dávať pozor na príliš jednoduché pravidlo typu „jeden druh pohybu = jeden DOF". Presnejšia definícia je vždy založená na počte nezávislých reálnych parametrov potrebných na opis konfigurácie. Neskôr sa stretneme s mechanizmami, pri ktorých jednoduché vizuálne počítanie pohybov nestačí.
+Pri komplikovanejších mechanizmoch však už nemusí byť počet DOF na prvý pohľad zrejmý. Preto sa budeme držať presnej definície: **DOF je minimálny počet nezávislých reálnych parametrov potrebných na úplný opis konfigurácie.**
 
 ---
 
-## 07. Prečo počet súradníc nemusí byť počet DOF
+## 07. Počet súradníc nemusí byť počet DOF
 
-Toto je veľmi dôležitý bod, pretože na ňom bude postavená nasledujúca časť kapitoly.
+Predstav si bod, ktorý sa nemôže pohybovať po celej rovine, ale iba po kružnici s polomerom r. Jeho polohu môžeme stále zapísať pomocou dvoch súradníc:
 
-Predstav si, že bod sa môže pohybovať iba po kružnici s polomerom r. Jeho polohu stále môžeme zapísať dvoma súradnicami:
+**q = (x, y)**
 
-$$(x, y)$$
+Na prvý pohľad by sme teda mohli povedať, že máme dve hodnoty a systém má dva stupne voľnosti. To by však nebolo správne, pretože x a y už nemôžeme voliť nezávisle.
 
-Má teda dva stupne voľnosti?
-
-Nie.
-
-Súradnice totiž nemôžeme voliť nezávisle. Musia vždy spĺňať rovnicu kružnice:
+Bod musí stále zostať na kružnici, takže jeho súradnice musia spĺňať podmienku:
 
 $$x^2 + y^2 = r^2$$
 
-Ak zvolíme x, hodnota y už nemôže byť úplne ľubovoľná. Obe premenné sú navzájom previazané **constraintom — obmedzením**.
+Ak si zvolíme ľubovoľnú hodnotu x, nemôžeme potom zvoliť úplne ľubovoľné y. Obe hodnoty sú navzájom prepojené. Takúto podmienku nazývame **constraint — obmedzenie**.
 
-Rovnaký bod môžeme oveľa úspornejšie opísať jediným uhlom:
+Ten istý bod môžeme opísať oveľa jednoduchšie pomocou jediného uhla θ. Keď poznáme θ, jeho súradnice vieme vypočítať:
 
-$$\\theta$$
+$$x = r \\cos(\\theta)$$
+$$y = r \\sin(\\theta)$$
 
-Potom:
+Na úplný opis konfigurácie teda v skutočnosti potrebujeme iba **jeden nezávislý parameter**. Bod pohybujúci sa po kružnici má preto **1 DOF**, aj keď sme jeho polohu pôvodne zapísali pomocou dvoch čísel.
 
-$$x = r \\cos\\theta$$
-$$y = r \\sin\\theta$$
+Toto je veľmi dôležité rozlíšenie: **počet čísel použitých v reprezentácii nemusí byť rovnaký ako počet stupňov voľnosti systému**. Rozhoduje počet nezávislých informácií.
 
-Na určenie konfigurácie teda v skutočnosti stačí jeden nezávislý parameter. Bod pohybujúci sa po kružnici má preto: **1 DOF**, hoci sme jeho polohu pôvodne reprezentovali dvoma číslami (x, y).
-
-To nám ukazuje rozdiel medzi **počtom čísel použitých v reprezentácii** a **skutočným počtom stupňov voľnosti systému**.
-
-Tento rozdiel bude v Modern Robotics veľmi dôležitý. Neskôr napríklad budeme orientáciu rigidného telesa reprezentovať pomocou **rotation matrix**, ktorá obsahuje deväť čísel. To však neznamená, že orientácia telesa má deväť DOF. Týchto deväť čísel musí spĺňať určité constraints a v skutočnosti reprezentuje iba tri nezávislé rotačné stupne voľnosti.
-
-Práve preto je definícia DOF založená na **minimálnom počte nezávislých parametrov**, nie jednoducho na počte hodnôt, ktoré máme zapísané v nejakej tabuľke alebo matici.
+Neskôr sa s tým stretneme napríklad pri **rotation matrix — rotačnej matici**. Tá obsahuje deväť čísel, ale orientácia rigidného telesa v priestore nemá deväť stupňov voľnosti. Čísla v matici totiž nie sú všetky nezávislé a musia spĺňať určité constraints.
 
 ---
 
-## 08. Constraints odoberajú voľnosť
+## 08. Constraints odoberajú systému voľnosť
 
-Predchádzajúci príklad nám ukazuje všeobecnú myšlienku, ktorá sa bude opakovať v celej kapitole.
+Predchádzajúci príklad ukazuje všeobecný princíp. Ak sa bod môže pohybovať kdekoľvek v rovine, potrebujeme dve nezávislé súradnice x a y, a preto má 2 DOF. Ak však pridáme podmienku, že musí zostať na kružnici, množina jeho možných konfigurácií sa zmenší.
 
-Ak by bod mohol byť kdekoľvek v rovine, mal by dve nezávislé súradnice:
+Práve takúto podmienku nazývame **constraint**. Constraint určuje, ktoré konfigurácie alebo pohyby už systém nemôže vykonať.
 
-$$(x, y)$$
+Rovnaký princíp funguje pri mechanických systémoch. Predstav si dvere, ktoré ešte nie sú pripevnené k stene. Môžeme ich premiestňovať a otáčať rôznymi spôsobmi. Keď ich však pripevníme pomocou pántov, väčšina týchto pohybov prestane byť možná. Pánty vytvoria mechanické constraints a ponechajú iba určitý dovolený pohyb — v tomto prípade rotáciu okolo osi pántov.
 
-a teda dva DOF.
+Pre jednoduché prípady môžeme túto myšlienku vyjadriť vzťahom:
 
-Ak mu však prikážeme:
+**DOF = počet premenných - počet nezávislých obmedzení**
 
-$$x^2 + y^2 = r^2$$
+Zatiaľ tento vzťah nemusíš používať na komplikované výpočty. Dôležitá je jeho logika: **ak pridáme nezávislé obmedzenie, systému môžeme odobrať určitú časť jeho voľnosti**.
 
-už nemôže byť kdekoľvek. Musí zostať na kružnici.
-
-Pridali sme **constraint**, ktorý zmenšil množinu dovolených konfigurácií.
-
-Podobný princíp platí pri robotoch. Voľný rigidný objekt môže mať veľa možností pohybu. Keď ho však pripojíme k ďalšiemu telesu pomocou kĺbu, kĺb niektoré pohyby zakáže.
-
-Dvere bez pántov by sme mohli zobrať a voľne premiestňovať v priestore. Po pripevnení k stene pomocou pántov už väčšina týchto pohybov nie je možná. Pánt vytvoril mechanické constraints a ponechal iba rotáciu okolo svojej osi.
-
-Túto myšlienku neskôr zapíšeme veľmi dôležitým pravidlom:
-
-$$\\text{DOF} = \\text{počet premenných} - \\text{počet nezávislých constraints}$$
-
-Zatiaľ ho nemusíš používať na výpočty. Dôležité je pochopiť jeho význam: **každé nezávislé obmedzenie môže systému odobrať určitú voľnosť**.
-
-V ďalšej časti kapitoly presne týmto spôsobom odvodíme, prečo má rigidné teleso pohybujúce sa v rovine tri DOF a rigidné teleso voľne sa pohybujúce v trojrozmernom priestore šesť DOF.
+Práve tento princíp neskôr použijeme na vysvetlenie toho, prečo má rigidné teleso pohybujúce sa v rovine 3 DOF a rigidné teleso voľne sa pohybujúce v trojrozmernom priestore 6 DOF.
 
 ---
 
 ## 09. Spojité a diskrétne informácie nie sú to isté
 
-Vráťme sa ešte raz k minci na stole. Jej konfiguráciu sme opísali ako:
+Vráťme sa ešte raz k minci na stole. Jej konfiguráciu sme zatiaľ opisovali pomocou:
 
-$$q = (x, y, \\theta)$$
+**q = (x, y, θ)**
 
-Predpokladali sme pritom, že minca leží napríklad hlavou nahor. Teraz však dovolíme, aby mohla ležať buď **heads up**, alebo **tails up**.
+Predstavme si však, že minca môže ležať na stole dvoma stranami — napríklad **heads up** alebo **tails up**. Na úplný opis jej stavu potom okrem x, y a θ potrebujeme vedieť aj to, ktorá strana smeruje nahor.
 
-Na úplné určenie jej stavu teraz potrebujeme vedieť:
+Mohlo by sa zdať, že sme práve pridali štvrtý stupeň voľnosti. Nie je to však tak.
 
-$$x, \\quad y, \\quad \\theta, \\quad \\text{heads/tails}$$
+Hodnoty x, y a θ sa môžu meniť **spojito**. Minca môže byť napríklad na x = 1, potom na x = 1,1, potom 1,11 a medzi týmito hodnotami existuje nekonečne veľa ďalších možností. Heads/tails je však iný typ informácie. Máme iba dve oddelené možnosti — jedna alebo druhá strana.
 
-Mohlo by sa zdať, že sme pridali štvrtý stupeň voľnosti. Nie je to však tak.
+Takúto hodnotu nazývame **discrete variable — diskrétna premenná**.
 
-Prvé tri hodnoty sa môžu meniť **spojito**. Súradnica x môže byť napríklad 1, 1.1, 1.11, 1.111 a ľubovoľná ďalšia reálna hodnota v povolenom rozsahu. Podobne sa môže spojito meniť y a uhol θ.
+Pri počítaní degrees of freedom nás zaujíma minimálny počet **spojitých reálnych súradníc** potrebných na opis konfigurácie. Diskrétna voľba medzi heads a tails preto nepridáva ďalší DOF. Minca má stále **3 DOF**.
 
-Informácia heads/tails je však iného typu. Má iba dve oddelené možnosti:
-
-\$\${\\text{heads}, \\text{tails}}\$\$
-
-Ide o **discrete variable — diskrétnu premennú**.
-
-Definícia DOF v tejto kapitole počíta minimálny počet **real-valued coordinates**, teda reálnych spojitých parametrov potrebných na reprezentáciu konfigurácie. Diskrétna voľba medzi dvoma oddelenými stavmi preto nepridáva ďalší DOF.
-
-Minca má stále: **3 DOF**.
-
-Jej priestor možných konfigurácií však môže mať viac oddelených častí — jednu zodpovedajúcu heads up a druhú tails up. To je prvý malý náznak toho, že pri configuration space nás nebude zaujímať iba jeho dimenzia, ale neskôr aj jeho **tvar a topológia**.
+Jej configuration space však môže obsahovať viac oddelených častí. Jedna časť môže reprezentovať konfigurácie, v ktorých je minca heads up, a druhá konfigurácie, v ktorých je tails up. To je prvý náznak toho, že pri configuration space nás nebude zaujímať iba jeho počet rozmerov, ale neskôr aj jeho **tvar a topológia**.
 
 ---
 
-## 10. Configuration Space – priestor všetkých možných stavov robota
+## 10. Configuration Space – priestor všetkých možných konfigurácií
 
-Doteraz sme hovorili o jednej konkrétnej konfigurácii. Robot sa však môže nachádzať v mnohých rôznych konfiguráciách.
+Doteraz sme vždy opisovali jednu konkrétnu konfiguráciu systému. Robot sa však počas svojho fungovania môže nachádzať v obrovskom množstve rôznych konfigurácií.
 
-Množinu **všetkých možných konfigurácií robota** nazývame:
+Množinu **všetkých konfigurácií, ktoré môže systém nadobudnúť**, nazývame **Configuration Space**, skrátene **C-space**, po slovensky **konfiguračný priestor**.
 
-**Configuration Space** alebo skrátene **C-space**.
+Toto je ústredná myšlienka celej kapitoly. Jedna konkrétna konfigurácia robota predstavuje **jeden bod v jeho C-space**.
 
-Toto je ústredný pojem celej kapitoly.
-
-Najdôležitejšia predstava je nasledujúca:
-
-> **Jedna konfigurácia robota je jeden bod v jeho configuration space.**
-
-Robot samotný môže byť veľký mechanický systém s množstvom článkov. V C-space však celý jeho stav reprezentujeme jediným bodom.
-
-Ak má robot konfiguráciu:
+Ak má robot napríklad konfiguráciu:
 
 $$q = (q_1, q_2, \\ldots, q_n)$$
 
-potom konkrétne hodnoty všetkých q_i určujú jeden bod v C-space.
+potom konkrétna kombinácia hodnôt q1 až qn predstavuje jeden konkrétny stav robota, a teda jeden bod v jeho konfiguračnom priestore.
 
-Keď robot pohne kĺbmi, hodnoty q_i sa zmenia. Bod reprezentujúci konfiguráciu sa preto presunie na iné miesto v C-space.
+Keď robot pohne kĺbmi, hodnoty jeho konfiguračných súradníc sa zmenia. Tým sa zmení konfigurácia q a bod reprezentujúci robota sa v C-space presunie na iné miesto.
 
-To vedie k veľmi silnej abstrakcii:
+Práve tu vzniká veľmi silný mentálny model: **pohyb celého fyzického robota môžeme matematicky reprezentovať ako pohyb jediného bodu cez jeho configuration space**.
 
-**Fyzický pohyb celého robota môžeme matematicky chápať ako pohyb jedného bodu cez jeho configuration space.**
+Robot môže mať niekoľko ramien, množstvo linkov a komplikovanú geometriu, ale jedna konkrétna kombinácia všetkých jeho konfiguračných súradníc je stále iba jeden bod q.
 
-Táto myšlienka bude neskôr základom motion planningu. Namiesto otázky „ako má každý článok robota prejsť okolo prekážky?" môžeme problém transformovať na otázku „akú cestu má bod reprezentujúci konfiguráciu robota prejsť cez C-space?"
+Táto abstrakcia bude neskôr mimoriadne dôležitá pri **motion planning — plánovaní pohybu**.
 
 ---
 
 ## 11. C-space dverí
 
-Vráťme sa k dverám. Ich konfiguráciu určuje jediný parameter:
+Pri dverách sme zistili, že ich konfiguráciu môžeme opísať jediným uhlom:
 
-$$q = \\theta$$
+**q = θ**
 
-Ak by sa teoreticky mohli otáčať o celý kruh, možné hodnoty uhla by prechádzali od 0 do 2π.
+Každá povolená hodnota θ predstavuje inú konfiguráciu dverí. Množina všetkých povolených hodnôt θ preto tvorí ich configuration space.
 
-Každá hodnota θ predstavuje inú konfiguráciu dverí. Všetky možné hodnoty spolu tvoria ich C-space.
+Ak sa napríklad dvere môžu otvárať iba od 0° do 120°, ich C-space obsahuje všetky hodnoty v tomto rozsahu. Na určenie konkrétneho bodu v tomto priestore potrebujeme iba jedno číslo — θ.
 
-V reálnom svete však stena alebo mechanický doraz pravdepodobne obmedzí rozsah pohybu. Dvere sa môžu napríklad otvárať iba medzi:
+Configuration space dverí je preto **jednorozmerný**.
 
-$$0° \\leq \\theta \\leq 120°$$
-
-Potom ich C-space tvorí práve tento povolený rozsah uhlov.
-
-Pretože na identifikáciu bodu v tomto C-space potrebujeme iba jedno číslo, priestor je **jednorozmerný**.
-
-Dvere teda majú 1 DOF a ich C-space má 1 dimension.
+Dvere majú 1 DOF a zároveň má ich C-space jednu dimenziu. Tento vzťah nie je náhodný. Práve počet stupňov voľnosti určuje dimenziu konfiguračného priestoru.
 
 ---
 
 ## 12. C-space bodu v rovine
 
-Bod pohybujúci sa voľne v rovine má konfiguráciu:
+Bod, ktorý sa môže voľne pohybovať po rovine, má konfiguráciu:
 
-$$q = (x, y)$$
+**q = (x, y)**
 
-Každá dvojica (x, y) predstavuje jednu konfiguráciu. Ak pohyb nie je nijako obmedzený, všetky možné dvojice vytvoria celú dvojrozmernú rovinu.
+Každá dvojica hodnôt x a y predstavuje jednu možnú konfiguráciu. Ak pohyb bodu nijako neobmedzíme, všetky tieto konfigurácie spolu vytvoria celú dvojrozmernú rovinu.
 
-Preto je jeho C-space dvojrozmerný:
+Jeho C-space je teda dvojrozmerný a bod má **2 DOF**.
 
-$$\\dim(\\mathcal{C}) = 2$$
+Tým sa dostávame k základnému vzťahu:
 
-A systém má 2 DOF.
+**počet DOF = dimenzia C-space**
 
-Tu už vidíme základný vzťah medzi stupňami voľnosti a configuration space:
-
-$$\\text{number of DOF} = \\text{dimension of C-space}$$
-
-Toto nie sú dve nezávislé vlastnosti. Počet stupňov voľnosti **je práve dimenzia konfiguračného priestoru**.
+Ak na opis konfigurácie potrebujeme dva nezávislé parametre, configuration space má dve dimenzie. Ak potrebujeme tri, má tri dimenzie. Rovnaký princíp platí aj pri robotoch s oveľa väčším počtom stupňov voľnosti.
 
 ---
 
 ## 13. C-space mince na stole
 
-Pri minci potrebujeme:
+Minca pohybujúca sa po stole má konfiguráciu:
 
-$$q = (x, y, \\theta)$$
+**q = (x, y, θ)**
 
-Prvé dve súradnice určujú polohu mince na stole a tretia jej orientáciu.
+Dve súradnice určujú jej polohu a tretia jej orientáciu. Minca preto má 3 DOF a jej configuration space je trojrozmerný.
 
-Preto má minca 3 DOF a jej C-space je trojrozmerný.
+Je tu však jedna zaujímavá vlastnosť. Súradnice x a y sa správajú ako obyčajné polohové súradnice, ale uhol θ je iný. Ak mincu otočíme o 360°, dostaneme sa späť do rovnakej orientácie, v akej bola pred otočením.
 
-Tu si však treba dať pozor na jednu vec. Hoci používame tri parametre, C-space mince nie je úplne rovnaký ako obyčajný trojrozmerný priestor R³.
+Orientácie θ = 0° a θ = 360° teda nepredstavujú dve rôzne konfigurácie orientácie. Predstavujú ten istý stav.
 
-Dôvodom je uhol θ.
+Uhlová súradnica sa preto správa **cyklicky**. Keď prejdeme celú jednu otáčku, vrátime sa na začiatok.
 
-Ak mincu otočíme o 360°, dostaneme rovnakú orientáciu ako pri 0°.
-
-Takže θ = 0 a θ = 2π nepredstavujú dve rôzne orientácie. Predstavujú ten istý stav.
-
-Uhlová súradnica sa teda **wraps around — cyklicky uzatvára**.
-
-Práve toto je jeden z dôvodov, prečo bude neskôr dôležité skúmať nielen dimenziu C-space, ale aj jeho **topológiu**, teda jeho základný tvar.
-
-Pre mincu na nekonečnej rovine budeme neskôr jej C-space zapisovať ako:
+Matematicky sa preto configuration space takejto mince často zapisuje ako:
 
 $$\\mathbb{R}^2 \\times S^1$$
 
-kde R² reprezentuje polohu (x, y) a S¹ reprezentuje kruhový priestor orientácie θ.
+R2 predstavuje všetky možné polohy x a y v rovine a S1 predstavuje kruhový priestor všetkých možných orientácií.
 
-Toto zatiaľ nemusíš vedieť matematicky používať. Dôležitá je intuícia: **uhol nie je obyčajná nekonečná číselná os, pretože po jednej celej otáčke sa vrátime do rovnakej orientácie.**
+Tento zápis zatiaľ nemusíš vedieť používať. Dôležitá je myšlienka, ktorá sa za ním skrýva: **dva configuration spaces môžu mať rovnaký počet dimenzií, ale pritom môžu mať odlišný tvar**. Práve tým sa neskôr dostaneme k pojmu **topology — topológia**.
 
 ---
 
 ## 14. Dimenzia C-space a počet DOF
 
-Teraz môžeme spojiť všetky predchádzajúce myšlienky.
+Teraz môžeme všetky predchádzajúce príklady spojiť do jedného všeobecného pravidla.
 
-Ak na opis konfigurácie potrebujeme minimálne n nezávislých reálnych parametrov, potom robot má n DOF. A priestor všetkých jeho konfigurácií má dimenziu n.
+Ak potrebujeme na úplný opis konfigurácie systému minimálne n nezávislých reálnych parametrov, systém má **n degrees of freedom**. Configuration space takéhoto systému má zároveň **n dimenzií**.
 
-Teda:
+Platí teda:
 
 $$\\text{DOF} = \\dim(\\mathcal{C})$$
 
-Ak má robot jeden DOF, jeho configuration space je jednorozmerný. Ak má dva DOF, je dvojrozmerný. Ak má šesť DOF, jeho C-space je šesťrozmerný.
-
-To neznamená, že šesťrozmerný priestor musíme vedieť fyzicky predstaviť. Naše oči a mozog sú zvyknuté na tri priestorové rozmery, ale matematika bez problémov pracuje s vektormi obsahujúcimi šesť, sedem alebo sto súradníc.
-
-Napríklad robot so šiestimi nezávislými kĺbovými uhlami môže mať konfiguráciu:
+Robot so šiestimi nezávislými konfiguračnými súradnicami môže mať napríklad konfiguráciu:
 
 $$q = (\\theta_1, \\theta_2, \\theta_3, \\theta_4, \\theta_5, \\theta_6)$$
 
-Jedna konkrétna šestica hodnôt predstavuje jeden bod v šesťrozmernom C-space.
+Jedna konkrétna šestica hodnôt predstavuje jeden bod v šesťrozmernom configuration space.
 
-Ak robot zmení kĺby z q_A na q_B, matematicky môžeme jeho pohyb interpretovať ako trajektóriu medzi dvoma bodmi v tomto šesťrozmernom priestore.
+Šesťrozmerný priestor si samozrejme nedokážeme predstaviť rovnakým spôsobom ako miestnosť okolo nás. To však matematike neprekáža. Konfiguráciu môžeme jednoducho chápať ako zoznam šiestich čísel, ktoré spolu určujú jeden konkrétny stav robota.
+
+Ak robot prejde z konfigurácie qa do konfigurácie qb, jeho pohyb môžeme matematicky reprezentovať ako cestu medzi dvoma bodmi v tomto šesťrozmernom priestore.
 
 ---
 
 ## 15. Fyzický priestor a configuration space nie sú to isté
 
-Toto rozlíšenie je veľmi dôležité.
+Jedna z najdôležitejších vecí, ktoré si treba z tejto lekcie odniesť, je rozdiel medzi **physical space** a **configuration space**.
 
-Robot existuje vo fyzickom trojrozmernom svete. Jeho **configuration space však nemusí byť trojrozmerný**.
+Robot fyzicky existuje v trojrozmernom svete. To však vôbec neznamená, že jeho configuration space musí mať tri dimenzie.
 
-Dvere existujú v 3D svete, ale ich C-space môže byť jednorozmerný.
+Dvere existujú v 3D priestore, ale kvôli pántom majú iba 1 DOF, takže ich C-space je jednorozmerný. Mobilný robot jazdiaci po podlahe môže mať konfiguráciu (x, y, θ), a teda trojrozmerný C-space. Robotické rameno so siedmimi nezávislými kĺbmi môže stále fyzicky stáť v tej istej trojrozmernej miestnosti, ale jeho configuration space môže mať sedem dimenzií.
 
-Mobilný robot pohybujúci sa po podlahe môže existovať v 3D miestnosti, ale ak zostáva na podlahe a jeho konfiguráciu určujeme pomocou (x, y, θ), má trojrozmerný C-space.
-
-Robotické rameno so siedmimi nezávislými rotačnými kĺbmi môže fyzicky existovať v tom istom 3D priestore, ale jeho configuration space môže byť sedemrozmerný.
-
-Preto si tieto dva priestory nesmieme zamieňať:
+Preto platí:
 
 $$\\text{physical space} \\neq \\text{configuration space}$$
 
-Fyzický priestor opisuje, kde sa nachádzajú fyzické objekty.
+Fyzický priestor opisuje prostredie, v ktorom sa robot a ostatné objekty nachádzajú. Configuration space opisuje **všetky možné konfigurácie celého mechanického systému**.
 
-Configuration space opisuje **všetky možné stavy celého mechanického systému**.
+Toto rozlíšenie bude neskôr veľmi dôležité, pretože veľká časť robotickej matematiky sa nebude odohrávať priamo v priestore, ktorý vidíme okolo seba, ale práve v configuration space.
 
 ---
 
-## 16. Poloha end-effectora nie je konfigurácia celého robota
+## 16. Poloha end-effectora nie je konfigurácia robota
 
-Veľmi častá chyba pri prvom kontakte s robotikou je predstava, že ak poznáme polohu end-effectora, poznáme konfiguráciu robota.
+Pri robotických ramenách je veľmi ľahké sústrediť sa iba na end-effector. Koniec ramena je napokon často tá časť, ktorá nás zaujíma najviac — má niečo uchopiť, zvárať, skrutkovať alebo presunúť.
 
-Vo všeobecnosti to neplatí.
+Poloha end-effectora však vo všeobecnosti nestačí na určenie konfigurácie celého robota.
 
-Predstav si ľudskú ruku. Polož dlaň na konkrétny bod stola. Bez toho, aby si výrazne zmenila polohu dlane, môžeš v určitom rozsahu meniť polohu lakťa a ramena. Rovnaká poloha dlane teda môže zodpovedať viacerým konfiguráciám celej ruky.
+Predstav si vlastnú ruku. Polož dlaň na jedno konkrétne miesto na stole. V určitom rozsahu môžeš meniť polohu lakťa bez toho, aby si dlaň výrazne posunula. Rovnaká poloha dlane teda môže zodpovedať viacerým rôznym konfiguráciám celej ruky.
 
-Podobne robotické rameno môže dostať gripper na rovnaké miesto pomocou rôznych nastavení kĺbov.
+Rovnaký jav sa objavuje pri robotických ramenách. Dve rôzne kombinácie uhlov v kĺboch môžu v niektorých mechanizmoch dostať end-effector na rovnaké miesto.
 
-Napríklad dve konfigurácie q_A = (θ₁, θ₂) a q_B = (θ₁', θ₂') môžu v niektorých mechanizmoch umiestniť koniec robota do rovnakého bodu.
-
-Preto:
+Preto si treba zapamätať:
 
 $$\\text{end-effector position} \\neq \\text{robot configuration}$$
 
-Konfigurácia opisuje celý robot. Poloha end-effectora opisuje iba určitý aspekt jeho výsledného stavu.
+Konfigurácia opisuje celý mechanizmus. Poloha a orientácia end-effectora opisujú iba výsledný stav jednej konkrétnej časti robota.
 
-Tento rozdiel nás neskôr privedie k pojmom **task space** a **workspace**.
-
----
-
-## 17. Prečo je configuration space v robotike taký užitočný
-
-Configuration space nie je iba abstraktná matematická definícia. Je to spôsob, ako transformovať komplikovaný fyzický problém do formy, s ktorou sa dá matematicky pracovať.
-
-Predstav si robotické rameno pohybujúce sa medzi prekážkami. Vo fyzickom priestore musíme sledovať veľa vecí naraz: jeden link môže naraziť do stola, druhý do steny, gripper do objektu a jednotlivé časti robota sa pritom všetky pohybujú súčasne.
-
-V C-space však celý robot reprezentujeme jediným bodom q.
-
-Počiatočná konfigurácia je q_start, cieľová konfigurácia q_goal.
-
-Pohyb robota potom môžeme chápať ako hľadanie trajektórie q(t) spájajúcej tieto konfigurácie.
-
-Nie všetky body C-space musia byť povolené. Niektoré konfigurácie môžu viesť ku kolízii so stenou, iné môžu porušovať limity kĺbov a ďalšie môžu byť mechanicky nemožné. Motion planning sa potom dá formulovať ako hľadanie cesty cez povolenú časť C-space.
-
-To je jedna z najsilnejších myšlienok modernej robotiky:
-
-**Namiesto plánovania pohybu mnohých fyzických častí môžeme plánovať pohyb jedného abstraktného bodu v configuration space.**
+Tento rozdiel nás neskôr privedie k ďalším dôležitým pojmom, ako sú **task space** a **workspace**.
 
 ---
 
-## 18. Čo presne znamená zápis q
+## 17. Prečo je configuration space taký užitočný
 
-V robotike sa konfigurácia často označuje symbolom q.
+Configuration space môže na začiatku pôsobiť ako pomerne abstraktný matematický pojem. Jeho skutočná sila sa však ukáže pri riešení praktických problémov.
 
-Ak má systém n stupňov voľnosti, môžeme ju všeobecne zapísať ako:
+Predstav si robotické rameno pracujúce medzi stolom, stenou a ďalšími objektmi. Pri každom pohybe sa súčasne mení poloha viacerých linkov. Jeden link môže naraziť do stola, ďalší do steny a end-effector môže naraziť do objektu, ktorý sa robot snaží obísť.
+
+Vo fyzickom priestore preto sledujeme komplikovaný pohyb celého mechanizmu. V configuration space však môžeme celý robot reprezentovať jediným bodom **q**.
+
+Jeho počiatočný stav označíme napríklad ako **q_start** a cieľový stav ako **q_goal**. Pohyb robota potom môžeme chápať ako hľadanie cesty medzi týmito dvoma bodmi.
+
+Nie každý bod v C-space musí byť povolený. Niektoré konfigurácie môžu znamenať, že robot narazil do prekážky. Iné môžu prekračovať mechanický rozsah kĺbov alebo môžu byť z iného dôvodu nedosiahnuteľné. Motion planning potom môžeme formulovať ako problém hľadania cesty cez tú časť configuration space, ktorá obsahuje iba dovolené konfigurácie.
+
+Práve preto je C-space taký silný koncept: **namiesto sledovania pohybu mnohých fyzických častí môžeme analyzovať pohyb jedného abstraktného bodu v konfiguračnom priestore.**
+
+---
+
+## 18. Čo presne znamená symbol q
+
+V robotike sa konfigurácia veľmi často označuje písmenom **q**. Pri jednoduchom systéme môže q predstavovať iba jednu hodnotu. Pri zložitejšom robotovi môže obsahovať viacero konfiguračných súradníc.
+
+Všeobecne môžeme konfiguráciu zapísať:
 
 $$q = (q_1, q_2, \\ldots, q_n)$$
 
-Jednotlivé q_i sú **configuration coordinates — konfiguračné súradnice**.
+Jednotlivé hodnoty q1, q2 až qn nazývame **configuration coordinates — konfiguračné súradnice**.
 
-Nemusia všetky predstavovať rovnaký typ veličiny. Jedna môže byť vzdialenosť, druhá uhol, tretia poloha a podobne.
+Nemusia pritom všetky predstavovať rovnaký typ veličiny. Niektoré môžu byť uhly, iné vzdialenosti alebo polohy.
 
-Pri minci: q = (x, y, θ).
-Pri jednoduchých dverách: q = θ.
-Pri dvojkĺbovom rotačnom ramene: q = (θ₁, θ₂).
+Pri dverách máme napríklad: q = θ
 
-Keď sa robot pohybuje, konfigurácia sa mení v čase, takže môžeme písať q(t). To znamená „konfigurácia robota v čase t".
+Pri minci na stole: q = (x, y, θ)
 
-Neskôr budeme derivovať konfiguráciu podľa času a dostaneme q̇(t), čo bude súvisieť s **rýchlosťou konfigurácie**. Preto je veľmi dôležité už teraz chápať, čo samotné q znamená.
+A pri jednoduchom robotickom ramene s dvoma rotačnými kĺbmi môžeme mať: q = (θ1, θ2)
+
+Keď sa robot pohybuje, jeho konfigurácia sa mení v čase. Preto môžeme písať **q(t)**, čo jednoducho znamená „konfigurácia robota v čase t".
+
+Neskôr budeme sledovať aj to, **ako rýchlo sa konfigurácia mení**. Objaví sa preto zápis **q̇(t)**, teda časová derivácia konfigurácie. Aby však tento pojem dával zmysel, musíme najskôr veľmi dobre rozumieť tomu, čo predstavuje samotné q.
 
 ---
 
 ## 19. Najdôležitejší mentálny model celej lekcie
 
-Celú prvú časť Chapter 2 si môžeš spojiť do jedného reťazca.
+Celú lekciu si môžeme spojiť do jedného logického príbehu.
 
-Máme fyzického robota vytvoreného z **links + joints**.
+Robot z mechanického pohľadu modelujeme ako systém **rigidných linkov spojených joints**. Kĺby určujú, ako sa jednotlivé časti môžu voči sebe pohybovať, a tým zároveň obmedzujú možné stavy celého mechanizmu.
 
-V určitom okamihu sa všetky jeho časti nachádzajú v konkrétnom usporiadaní. Toto usporiadanie nazývame **configuration q**.
+Jeden konkrétny stav robota nazývame **configuration** a označujeme ho symbolom q. Konfigurácia musí obsahovať dostatok informácií na úplné určenie polohy celého mechanizmu.
 
-Na úplné určenie konfigurácie potrebujeme určitý minimálny počet nezávislých reálnych parametrov. Tento počet nazývame **degrees of freedom**.
+Na jej opis potrebujeme určitý minimálny počet nezávislých reálnych parametrov. Tento počet nazývame **degrees of freedom — DOF**.
 
-Ak zozbierame všetky konfigurácie, ktoré môže robot nadobudnúť, dostaneme **configuration space C**.
+Ak potom vezmeme všetky konfigurácie, ktoré robot môže nadobudnúť, dostaneme jeho **configuration space — C-space**. Každá konkrétna konfigurácia q predstavuje jeden bod v tomto priestore.
 
-Každá konfigurácia q je jeden bod v C.
+Počet stupňov voľnosti zároveň určuje počet dimenzií configuration space:
 
-A platí:
+$$\\text{DOF} = \\dim(\\mathcal{C})$$
 
-$$\\dim(\\mathcal{C}) = \\text{DOF}$$
+Keď sa robot začne pohybovať, jeho konfigurácia sa postupne mení. Namiesto jednej hodnoty q preto máme q(t). Z pohľadu configuration space môžeme tento proces chápať ako pohyb bodu po určitej trajektórii.
 
-Keď sa robot pohybuje, jeho konfigurácia sa mení: q(t), čo môžeme chápať ako pohyb bodu cez C-space.
+Toto je základný mentálny model, na ktorom bude stáť veľká časť ďalšej robotiky:
 
-Toto je základný jazyk, ktorým Modern Robotics začne odteraz opisovať robotické mechanizmy.
+**robot → configuration q → degrees of freedom → configuration space → pohyb cez C-space**
 
 ---
 
 ## Zhrnutie lekcie
 
-Robot je z mechanického pohľadu sústava **rigidných linkov spojených joints**. Kĺby určujú, aké relatívne pohyby sú medzi linkmi možné, zatiaľ čo actuators vytvárajú sily alebo krútiace momenty potrebné na ich pohyb. Časť robota, ktorá vykonáva samotnú úlohu, nazývame end-effector.
+Robot môžeme pri mechanickej analýze zjednodušiť na systém **rigidných linkov spojených joints**. Link predstavuje pevnú časť mechanizmu, zatiaľ čo joint určuje, aký relatívny pohyb je medzi jednotlivými linkmi dovolený. Actuator vytvára silu alebo krútiaci moment potrebný na uskutočnenie pohybu a end-effector je časť robota, ktorá priamo vykonáva požadovanú úlohu.
 
-**Konfigurácia** je úplný opis polohy všetkých bodov robota. Pretože linky modelujeme ako rigid bodies, nemusíme zapisovať polohu každého bodu samostatne. Vďaka pevným geometrickým vzťahom medzi bodmi často stačí malý počet nezávislých parametrov.
+**Configuration — konfigurácia** predstavuje úplný mechanický stav robota. Hoci formálne opisuje polohu všetkých jeho bodov, vďaka modelu rigidných telies nemusíme každý bod zapisovať samostatne. Celú konfiguráciu často dokážeme jednoznačne určiť pomocou relatívne malého počtu nezávislých parametrov.
 
-Najmenší počet nezávislých reálnych parametrov potrebných na úplné určenie konfigurácie nazývame **degrees of freedom — DOF**. Dvere na pánte majú 1 DOF, bod voľne sa pohybujúci v rovine 2 DOF a rigidná minca ležiaca na stole 3 DOF, pretože potrebuje dve súradnice polohy a jednu súradnicu orientácie.
+Najmenší počet takýchto nezávislých reálnych parametrov nazývame **degrees of freedom — stupne voľnosti**. Dvere pripevnené pántom majú 1 DOF, bod pohybujúci sa voľne v rovine 2 DOF a minca pohybujúca sa po stole 3 DOF, pretože okrem polohy x a y potrebujeme poznať aj jej orientáciu θ.
 
-Počet čísel použitých v nejakej reprezentácii nemusí byť rovnaký ako počet DOF. Ak medzi premennými existujú **constraints**, nemôžeme ich voliť nezávisle. Bod na kružnici môžeme napríklad reprezentovať dvoma súradnicami (x, y), ale constraint x² + y² = r² znamená, že systém má v skutočnosti iba jeden stupeň voľnosti.
+Pri určovaní DOF nestačí jednoducho spočítať všetky čísla použité v nejakej reprezentácii. Niektoré z nich môžu byť navzájom prepojené pomocou **constraints — obmedzení**. Bod pohybujúci sa po kružnici môžeme napríklad reprezentovať dvojicou (x, y), ale pretože musí spĺňať podmienku x2 + y2 = r2, v skutočnosti potrebuje iba jeden nezávislý parameter a má 1 DOF.
 
-Množinu všetkých možných konfigurácií nazývame **configuration space alebo C-space**. Jedna konkrétna konfigurácia robota predstavuje jeden bod v tomto priestore a jeho dimenzia sa rovná počtu stupňov voľnosti:
+Množinu všetkých možných konfigurácií systému nazývame **configuration space alebo C-space**. Jedna konfigurácia q predstavuje jeden bod v tomto priestore a počet stupňov voľnosti systému sa rovná dimenzii jeho C-space:
 
 $$\\text{DOF} = \\dim(\\mathcal{C})$$
 
-Keď sa robot pohybuje, jeho konfigurácia q(t) opisuje trajektóriu v C-space. Táto abstrakcia je základom veľkej časti robotiky, pretože umožňuje previesť komplikovaný pohyb celého mechanizmu na matematický problém pohybu jedného bodu v konfiguračnom priestore.
+Keď sa robot pohybuje, jeho konfigurácia q(t) sa mení a v configuration space tak vzniká trajektória. Táto abstrakcia nám neskôr umožní riešiť komplikované robotické problémy oveľa jednoduchšie — namiesto sledovania každého linku samostatne môžeme pracovať s pohybom jedného bodu v konfiguračnom priestore.
 
-V ďalšej časti už na tomto základe môžeme presne odvodiť, **prečo planar rigid body má 3 DOF a spatial rigid body 6 DOF**. Tam sa prvýkrát naplno použije princíp:
-
-$$\\text{DOF} = \\text{variables} - \\text{independent constraints}$$
-
-a na bodoch A, B a C si ukážeme, prečo pevné vzdialenosti vo vnútri rigidného telesa postupne odoberajú zdanlivé stupne voľnosti.`;
+V ďalšej lekcii môžeme na tomto základe presne odvodiť, **prečo má planar rigid body 3 DOF a spatial rigid body 6 DOF**. Práve tam sa naplno ukáže význam constraints a vzťahu medzi počtom použitých premenných a skutočným počtom nezávislých stupňov voľnosti.`;

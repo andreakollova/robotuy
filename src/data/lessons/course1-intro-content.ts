@@ -143,8 +143,8 @@ Ak si zvolíme ľubovoľnú hodnotu x, nemôžeme potom zvoliť úplne ľubovoľ
 
 Ten istý bod môžeme opísať oveľa jednoduchšie pomocou jediného uhla θ. Keď poznáme θ, jeho súradnice vieme vypočítať:
 
-$$x = r \\cos(\\theta)$$
-$$y = r \\sin(\\theta)$$
+$$x = r cos(θ)$$
+$$y = r sin(θ)$$
 
 Na úplný opis konfigurácie teda v skutočnosti potrebujeme iba **jeden nezávislý parameter**. Bod pohybujúci sa po kružnici má preto **1 DOF**, aj keď sme jeho polohu pôvodne zapísali pomocou dvoch čísel.
 
@@ -202,7 +202,7 @@ Toto je ústredná myšlienka celej kapitoly. Jedna konkrétna konfigurácia rob
 
 Ak má robot napríklad konfiguráciu:
 
-$$q = (q_1, q_2, \\ldots, q_n)$$
+$$q = (q1, q2, ..., qn)$$
 
 potom konkrétna kombinácia hodnôt q1 až qn predstavuje jeden konkrétny stav robota, a teda jeden bod v jeho konfiguračnom priestore.
 
@@ -266,7 +266,7 @@ Uhlová súradnica sa preto správa **cyklicky**. Keď prejdeme celú jednu otá
 
 Matematicky sa preto configuration space takejto mince často zapisuje ako:
 
-$$\\mathbb{R}^2 \\times S^1$$
+$$R² × S¹$$
 
 R2 predstavuje všetky možné polohy x a y v rovine a S1 predstavuje kruhový priestor všetkých možných orientácií.
 
@@ -282,11 +282,11 @@ Ak potrebujeme na úplný opis konfigurácie systému minimálne n nezávislých
 
 Platí teda:
 
-$$\\text{DOF} = \\dim(\\mathcal{C})$$
+$$DOF = dim(C)$$
 
 Robot so šiestimi nezávislými konfiguračnými súradnicami môže mať napríklad konfiguráciu:
 
-$$q = (\\theta_1, \\theta_2, \\theta_3, \\theta_4, \\theta_5, \\theta_6)$$
+$$q = (θ₁, θ₂, θ₃, θ₄, θ₅, θ₆)$$
 
 Jedna konkrétna šestica hodnôt predstavuje jeden bod v šesťrozmernom configuration space.
 
@@ -306,7 +306,7 @@ Dvere existujú v 3D priestore, ale kvôli pántom majú iba 1 DOF, takže ich C
 
 Preto platí:
 
-$$\\text{physical space} \\neq \\text{configuration space}$$
+$$physical space ≠ configuration space$$
 
 Fyzický priestor opisuje prostredie, v ktorom sa robot a ostatné objekty nachádzajú. Configuration space opisuje **všetky možné konfigurácie celého mechanického systému**.
 
@@ -326,7 +326,7 @@ Rovnaký jav sa objavuje pri robotických ramenách. Dve rôzne kombinácie uhlo
 
 Preto si treba zapamätať:
 
-$$\\text{end-effector position} \\neq \\text{robot configuration}$$
+$$end-effector position ≠ robot configuration$$
 
 Konfigurácia opisuje celý mechanizmus. Poloha a orientácia end-effectora opisujú iba výsledný stav jednej konkrétnej časti robota.
 
@@ -356,7 +356,7 @@ V robotike sa konfigurácia veľmi často označuje písmenom **q**. Pri jednodu
 
 Všeobecne môžeme konfiguráciu zapísať:
 
-$$q = (q_1, q_2, \\ldots, q_n)$$
+$$q = (q1, q2, ..., qn)$$
 
 Jednotlivé hodnoty q1, q2 až qn nazývame **configuration coordinates — konfiguračné súradnice**.
 
@@ -388,7 +388,7 @@ Ak potom vezmeme všetky konfigurácie, ktoré robot môže nadobudnúť, dostan
 
 Počet stupňov voľnosti zároveň určuje počet dimenzií configuration space:
 
-$$\\text{DOF} = \\dim(\\mathcal{C})$$
+$$DOF = dim(C)$$
 
 Keď sa robot začne pohybovať, jeho konfigurácia sa postupne mení. Namiesto jednej hodnoty q preto máme q(t). Z pohľadu configuration space môžeme tento proces chápať ako pohyb bodu po určitej trajektórii.
 
@@ -410,7 +410,7 @@ Pri určovaní DOF nestačí jednoducho spočítať všetky čísla použité v 
 
 Množinu všetkých možných konfigurácií systému nazývame **configuration space alebo C-space**. Jedna konfigurácia q predstavuje jeden bod v tomto priestore a počet stupňov voľnosti systému sa rovná dimenzii jeho C-space:
 
-$$\\text{DOF} = \\dim(\\mathcal{C})$$
+$$DOF = dim(C)$$
 
 Keď sa robot pohybuje, jeho konfigurácia q(t) sa mení a v configuration space tak vzniká trajektória. Táto abstrakcia nám neskôr umožní riešiť komplikované robotické problémy oveľa jednoduchšie — namiesto sledovania každého linku samostatne môžeme pracovať s pohybom jedného bodu v konfiguračnom priestore.
 

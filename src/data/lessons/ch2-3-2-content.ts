@@ -1,7 +1,7 @@
-// Chapter 2.3.2 – Configuration Space Representation
+// Chapter 2.3.2 – Lekcia 6: Reprezentácia konfiguračného priestoru
 // Full lesson content - DO NOT SHORTEN
 
-export const ch232Content = `# Chapter 2.3.2 – Configuration Space Representation
+export const ch232Content = `# Lekcia 6: Reprezentácia konfiguračného priestoru
 
 V predchádzajúcej časti sme sa venovali topológii configuration space. Zistili sme, že dva systémy môžu mať rovnaký počet degrees of freedom, ale ich configuration spaces môžu mať úplne odlišný tvar. Rovina a povrch gule sú napríklad oba dvojrozmerné priestory, no z pohľadu topológie nie sú rovnaké.
 

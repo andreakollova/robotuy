@@ -1,7 +1,7 @@
-// Chapter 2.4 – Configuration and Velocity Constraints
+// Chapter 2.4 – Lekcia 7: Obmedzenia konfigurácie a rýchlosti
 // Full lesson content - DO NOT SHORTEN
 
-export const ch24Content = `# Chapter 2.4 – Configuration and Velocity Constraints
+export const ch24Content = `# Lekcia 7: Obmedzenia konfigurácie a rýchlosti
 
 V predchádzajúcej časti sme sa naučili, že configuration space môžeme reprezentovať aj implicitne. Namiesto toho, aby sme hľadali minimálny počet nezávislých súradníc, môžeme použiť viac premenných a pomocou constraints určiť, ktoré ich kombinácie sú skutočne možné.
 

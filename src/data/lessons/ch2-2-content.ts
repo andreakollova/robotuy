@@ -1,7 +1,7 @@
-// Chapter 2.2 – Degrees of Freedom of a Robot
+// Chapter 2.2 – Lekcia 4: Stupne voľnosti robota
 // Full lesson content - DO NOT SHORTEN
 
-export const ch22Content = `# Chapter 2.2 – Degrees of Freedom of a Robot
+export const ch22Content = `# Lekcia 4: Stupne voľnosti robota
 
 ## Ako zistíme, koľko nezávislých pohybov má celý robot
 

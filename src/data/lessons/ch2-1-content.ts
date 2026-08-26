@@ -1,7 +1,7 @@
-// Chapter 2.1 – Degrees of Freedom of a Rigid Body
+// Chapter 2.1 – Lekcia 3: Stupne voľnosti tuhého telesa
 // Full lesson content - DO NOT SHORTEN
 
-export const ch21Content = `# Chapter 2.1 – Degrees of Freedom of a Rigid Body
+export const ch21Content = `# Lekcia 3: Stupne voľnosti tuhého telesa
 
 ## Stupne voľnosti tuhého telesa
 

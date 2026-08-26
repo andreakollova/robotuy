@@ -1,7 +1,7 @@
-// Chapter 2.3.1 – Configuration Space Topology
+// Chapter 2.3.1 – Lekcia 5: Topológia konfiguračného priestoru
 // Full lesson content - DO NOT SHORTEN
 
-export const ch231Content = `# Chapter 2.3.1 – Configuration Space Topology
+export const ch231Content = `# Lekcia 5: Topológia konfiguračného priestoru
 
 ## Topológia konfiguračného priestoru
 

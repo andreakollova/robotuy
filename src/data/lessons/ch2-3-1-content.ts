@@ -3,417 +3,680 @@
 
 export const ch231Content = `# Lekcia 5: Topológia konfiguračného priestoru
 
-## Topológia konfiguračného priestoru
+V predchádzajúcich lekciách sme si vysvetlili, že **degrees of freedom — stupne voľnosti** hovoria, koľko nezávislých hodnôt potrebujeme na úplné určenie configuration systému. Bod pohybujúci sa po rovine má napríklad 2 DOF, planar rigid body má 3 DOF a voľné rigid body pohybujúce sa v trojrozmernom priestore má 6 DOF.
 
-V predchádzajúcich častiach sme sa naučili rozmýšľať nad robotom pomocou jeho degrees of freedom (DOF). Počet DOF nám hovorí, koľko nezávislých hodnôt potrebujeme na úplný opis konfigurácie systému. Napríklad bod pohybujúci sa po rovine má 2 DOF, pretože potrebujeme poznať jeho polohu v dvoch smeroch. Planar rigid body má 3 DOF, pretože okrem polohy potrebujeme poznať aj jeho orientáciu.
+Počet DOF nám zároveň určuje dimenziu **configuration space — konfiguračného priestoru**. Ak má robot 2 DOF, jeho C-space je dvojrozmerný. Robot s 5 DOF má päťrozmerný C-space a robot so 7 DOF sedemrozmerný C-space.
 
-Keď poznáme počet DOF, poznáme zároveň dimenziu configuration space (C-space). Robot s dvomi DOF má dvojrozmerný C-space, robot s tromi DOF trojrozmerný C-space a podobne. Samotná dimenzia nám však ešte nepovie, ako je tento priestor usporiadaný. Dva systémy môžu mať rovnaký počet DOF, a teda rovnako veľa dimenzií, ale ich configuration spaces môžu mať úplne odlišnú štruktúru.
+Samotná dimenzia nám však ešte nepovie všetko.
 
-Práve túto vlastnosť opisuje **topology** – topológia. V robotike nám topológia pomáha pochopiť základný „tvar" configuration space: či priestor pokračuje do nekonečna, či má hranice, či sa uzatvára sám do seba a ktoré konfigurácie sa v ňom nachádzajú vedľa seba. To bude dôležité nielen pri matematickom opise robotov, ale neskôr aj pri reprezentácii konfigurácie a plánovaní pohybu.
+Dva rôzne systémy môžu mať rovnaký počet stupňov voľnosti, a teda rovnaký počet dimenzií, ale ich configuration spaces sa môžu správať úplne odlišne. Jeden môže pokračovať do nekonečna, druhý môže mať hranice, ďalší sa môže cyklicky uzatvárať do kruhu a iný môže mať ešte zložitejšiu štruktúru.
 
----
+Práve touto vlastnosťou configuration space sa zaoberá **topology — topológia**.
 
-## 01. Rovnaká dimenzia, rozdielny configuration space
+Topológia nám pomáha pochopiť základnú štruktúru priestoru všetkých možných configurations. Nezaujíma nás iba to, koľko má priestor dimenzií, ale aj to, **ako sú jeho body navzájom prepojené, či má hranice, či pokračuje do nekonečna alebo či sa niektoré jeho smery uzatvárajú späť do seba**.
 
-Predstav si bod, ktorý sa môže pohybovať kdekoľvek po nekonečnej rovnej ploche. Na určenie jeho polohy potrebujeme dve hodnoty, napríklad x a y. Bod má preto 2 DOF a jeho configuration space je dvojrozmerný.
-
-Teraz si predstav bod, ktorý sa môže pohybovať iba po povrchu gule. Aj tu potrebujeme na určenie polohy dve nezávislé hodnoty. Na Zemi by sme napríklad mohli použiť zemepisnú šírku a zemepisnú dĺžku. Tento systém má teda tiež 2 DOF a jeho configuration space je tiež dvojrozmerný.
-
-Tieto dva priestory sa však správajú rozdielne. Rovina pokračuje do nekonečna. Ak sa po nej pohybuješ stále rovnakým smerom, môžeš pokračovať ďalej a ďalej. Povrch gule sa naopak uzatvára sám do seba. Ak by si sa po Zemi pohybovala vhodným smerom dostatočne dlho, môžeš obísť celú Zem a vrátiť sa na miesto, z ktorého si vyšla.
-
-Oba priestory majú rovnakú dimenziu, ale nemajú rovnakú topológiu. Počet DOF nám teda odpovedá na otázku „koľko nezávislých hodnôt potrebujem?", zatiaľ čo topológia nám pomáha odpovedať na otázku „akú štruktúru má priestor všetkých týchto možností?".
-
-To je hlavná myšlienka tejto kapitoly.
+Táto myšlienka bude neskôr veľmi dôležitá. Ovplyvní spôsob, akým budeme configuration space matematicky reprezentovať, ako budeme určovať blízkosť dvoch configurations a ako budeme plánovať pohyb robota.
 
 ---
 
-## 02. Čo znamená topológia
+## 01. Rovnaký počet DOF ešte neznamená rovnaký configuration space
 
-Topológia je samostatná oblasť matematiky a dá sa študovať veľmi do hĺbky. Pre túto časť robotiky však nepotrebujeme jej formálnu matematickú definíciu. Stačí nám intuitívna predstava, ktorú používa aj Modern Robotics.
+Predstav si bod, ktorý sa môže voľne pohybovať po nekonečnej rovnej ploche. Na úplné určenie jeho position potrebujeme dve nezávislé hodnoty, napríklad x a y. Bod preto má 2 DOF a jeho configuration space je dvojrozmerný.
 
-Dva priestory budeme považovať za **topologicky ekvivalentné**, ak môžeme jeden plynulo zdeformovať na druhý bez toho, aby sme ho museli rozrezať alebo zlepiť časti, ktoré predtým spojené neboli. Môžeme ho naťahovať, stláčať, ohýbať alebo meniť jeho veľkosť. Podstatné je, aby sme nemenili jeho základný spôsob prepojenia.
+Teraz si predstav iný bod, ktorý sa nemôže pohybovať po rovine, ale iba po povrchu gule. Aj v tomto prípade potrebujeme na určenie jeho position dve nezávislé hodnoty. Pri Zemi by sme mohli použiť napríklad zemepisnú šírku a zemepisnú dĺžku.
 
-Predstav si napríklad povrch malej gumenej lopty. Môžeš ju nafúknuť a dostať väčšiu guľu. Z pohľadu geometrie sa zmenila jej veľkosť, ale z pohľadu topológie sa nič podstatné nestalo. Rovnako ju môžeš natiahnuť do oválneho tvaru podobného lopte na americký futbal. Povrch už geometricky nie je guľový, ale stále sme nič nerozrezali ani neprilepili.
+Aj tento systém má teda 2 DOF a jeho configuration space má dve dimenzie.
 
-Preto majú povrch malej gule, povrch veľkej gule a povrch oválnej lopty rovnakú topológiu. Ich presný geometrický tvar je rozdielny, ale základná štruktúra priestoru je rovnaká.
+Napriek tomu tieto dva priestory nie sú rovnaké.
 
-Pri robotike je toto rozlíšenie užitočné. **Geometry** rieši presné vzdialenosti, rozmery, uhly a tvary. **Topology** sa pozerá na základnú štruktúru priestoru bez ohľadu na jeho presné rozmery.
+Rovina pokračuje do nekonečna. Ak sa po nej vydáme stále rovnakým smerom, môžeme pokračovať ďalej a ďalej bez toho, aby sme sa automaticky vrátili na miesto, z ktorého sme vyšli.
 
----
+Povrch gule sa správa inak. Nemá klasický okraj a uzatvára sa sám do seba. Ak by sme sa po povrchu Zeme pohybovali správnym smerom dostatočne dlho, mohli by sme obísť celú Zem a nakoniec sa vrátiť na miesto, z ktorého sme začali.
 
-## 03. Prečo rovina a povrch gule nie sú to isté
+Oba priestory sú dvojrozmerné, ale majú **odlišnú topológiu**.
 
-Skúsme teraz rovnakú úvahu použiť na rovinu a povrch gule. Guľu môžeme zväčšovať, zmenšovať alebo naťahovať, ale stále zostane uzavretým povrchom. Ak z nej chceme vytvoriť obyčajnú rovinu, niekde ju musíme otvoriť.
+To je hlavná myšlienka celej lekcie:
 
-Dobrou predstavou je mapa Zeme. Zem má približne guľový povrch, ale mapu chceme vytlačiť na rovný papier. Celý povrch Zeme nedokážeme jednoducho „položiť" na papier bez toho, aby sme ho určitým spôsobom rozdelili alebo skreslili. Práve preto existujú rôzne mapové projekcie a každá niečo deformuje.
-
-Rovina a povrch gule teda môžu byť oba dvojrozmerné, ale nie sú topologicky ekvivalentné. Jeden priestor je otvorený a pokračuje do nekonečna, zatiaľ čo druhý sa uzatvára sám do seba.
-
-Pre robotiku z toho vyplýva dôležité pravidlo: keď povieme, že robot má napríklad 2 DOF, ešte sme nepovedali všetko o jeho configuration space. Potrebujeme vedieť aj to, aký typ priestoru tieto dve dimenzie vytvárajú.
+**DOF nám hovorí, koľko nezávislých hodnôt potrebujeme. Topológia nám hovorí, ako je priestor všetkých týchto možností usporiadaný.**
 
 ---
 
-## 04. Rozdiely vidíme už pri jednorozmerných priestoroch
+## 02. Čo vlastne znamená topológia
 
-Nemusíme začínať guľami a komplikovanými robotmi. Rovnaký princíp môžeme pochopiť na troch veľmi jednoduchých jednorozmerných priestoroch: nekonečnej priamke, kružnici a konečnom úseku priamky.
+Topológia je samostatná oblasť matematiky a jej formálna definícia môže byť pomerne abstraktná. Pre naše potreby však zatiaľ stačí intuitívne vysvetlenie.
 
-V každom prípade potrebujeme na určenie konfigurácie iba jednu hodnotu. Všetky tieto priestory majú teda jednu dimenziu. Napriek tomu sa správajú úplne odlišne.
+Dva priestory môžeme považovať za **topologicky ekvivalentné**, ak dokážeme jeden plynulo zdeformovať na druhý bez toho, aby sme ho museli rozrezať alebo zlepiť časti, ktoré predtým spojené neboli.
 
-Nekonečná priamka nemá koniec. Kružnica sa uzatvára sama do seba. Úsek priamky má dva konce. Dimenzia všetkých troch priestorov je 1, ale ich topológia je rozdielna.
+Môžeme ho teda naťahovať, stláčať, ohýbať alebo meniť jeho rozmery. Z pohľadu topológie nám neprekáža, že sa zmení presný tvar. Podstatné je, aby sme nezmenili základný spôsob, akým je priestor pospájaný.
 
-Práve tieto jednoduché priestory sa pritom v robotike objavujú veľmi prirodzene.
+Predstav si napríklad povrch gumenej lopty. Môžeme ju nafúknuť a vytvoriť väčšiu guľu. Môžeme ju stlačiť a vytvoriť oválnejší tvar. Môžeme ju mierne natiahnuť alebo zdeformovať.
+
+Geometricky sa pritom veľa vecí zmení. Zmenia sa vzdialenosti medzi bodmi, zakrivenie aj presný tvar povrchu. Z topologického pohľadu sa však nestalo nič zásadné, pretože sme povrch nikde nerozrezali ani sme v ňom nevytvorili nový otvor.
+
+Práve tu vidíme rozdiel medzi **geometry — geometriou** a **topology — topológiou**.
+
+Geometria sa zaujíma o presné vzdialenosti, uhly, veľkosti a tvary. Topológia sa pozerá na základnejšiu otázku: **ako je priestor ako celok prepojený**.
+
+---
+
+## 03. Prečo rovina a povrch gule nie sú topologicky rovnaké
+
+Skúsme túto myšlienku použiť na rovinu a povrch gule.
+
+Guľu môžeme naťahovať alebo meniť jej veľkosť, ale stále zostáva uzavretým povrchom. Ak by sme z nej chceli vytvoriť nekonečnú rovinu, museli by sme ju niekde otvoriť.
+
+Dobrou intuitívnou predstavou je mapa Zeme. Zem má približne guľový povrch, ale mapu chceme vytlačiť na rovný papier. Celý povrch Zeme nedokážeme bez problémov jednoducho „rozložiť" na rovinu.
+
+Musíme ho určitým spôsobom rozdeliť alebo geometricky deformovať.
+
+Práve preto existujú rôzne mapové projekcie. Jedna lepšie zachováva smery, iná plochy a ďalšia vzdialenosti, ale žiadna nedokáže dokonale preniesť celý guľový povrch do roviny bez skreslenia.
+
+Pre robotiku z toho vyplýva dôležitá vec. Ak povieme:
+
+**„Robot má 2 DOF."**
+
+stále sme o jeho configuration space nepovedali všetko.
+
+Vieme, že je dvojrozmerný. Nevieme však, či má štruktúru roviny, sféry, torusu alebo úplne iného priestoru.
+
+Dimenzia je teda iba jedna vlastnosť configuration space. **Topológia nám hovorí, akú základnú štruktúru tento priestor má.**
+
+---
+
+## 04. Rozdiel v topológii vidíme už pri jednom DOF
+
+Na pochopenie tejto myšlienky nepotrebujeme začínať viacrozmernými priestormi. Úplne stačia systémy s jedným stupňom voľnosti.
+
+Predstavme si tri priestory: nekonečnú priamku, kružnicu a konečný úsek.
+
+V každom prípade potrebujeme na určenie konkrétneho bodu iba jednu hodnotu. Všetky tri priestory preto majú jednu dimenziu a môžu predstavovať configuration space systému s 1 DOF.
+
+Ich štruktúra je však rozdielna.
+
+Nekonečná priamka nemá konce. Kružnica sa po jednej celej otočke uzatvára späť do seba. Konečný úsek má naopak dva skutočné konce.
+
+To znamená, že tri systémy môžu mať rovnaký počet DOF a pritom úplne inú topológiu configuration space.
+
+A práve tieto tri prípady sa v robotike objavujú veľmi prirodzene.
 
 ---
 
 ## 05. Nekonečná priamka a priestor R
 
-Predstav si objekt, ktorý sa môže pohybovať iba doľava a doprava po jednej nekonečnej osi. Na opis jeho konfigurácie nám stačí jedno číslo. Môže byť napríklad na pozícii -2, 0, 4,5 alebo 100.
+Predstav si objekt, ktorý sa môže pohybovať iba po jednej osi.
 
-Takýto priestor môžeme stotožniť s množinou všetkých reálnych čísel a označujeme ho **R** alebo presnejšie **R1**.
+Na jeho configuration nám stačí jedno číslo, napríklad x. Ak pohyb nemá žiadne obmedzenie rozsahu, x môže byť ľubovoľné reálne číslo — napríklad -5, 0, 2,7 alebo 1000.
 
-R1 je teda obyčajná nekonečná číselná os. Nemá ľavý ani pravý koniec. Nech sa nachádzaš kdekoľvek, môžeš pokračovať ďalej oboma smermi.
+Takýto configuration space označujeme:
 
-V robotike by podobný priestor mohol opisovať ideálny prismatic joint bez joint limits. Ak by sa mohol vysúvať a zasúvať bez akéhokoľvek fyzického obmedzenia, jeho pozíciu by sme mohli opísať ľubovoľným reálnym číslom.
+**R**
 
-Samozrejme, reálny prismatic joint nebude nekonečný. Tento model však bude užitočný pri matematickom opise.
+Presnejšie môžeme písať aj **R1**, ale pri jednorozmernom prípade sa často používa jednoducho R.
 
----
+R predstavuje všetky reálne čísla, teda nekonečnú číselnú os. Nemá ľavý ani pravý koniec. Z ľubovoľného bodu môžeme pokračovať ďalej oboma smermi.
 
-## 06. Kružnica a priestor S1
+V robotike si takýto configuration space môžeme predstaviť napríklad pri idealizovanom **prismatic jointe bez joint limits**. Jeho position by mohla teoreticky nadobúdať ľubovoľnú reálnu hodnotu.
 
-Teraz si namiesto lineárneho pohybu predstav rotáciu. Máme revolute joint, ktorý sa môže voľne otáčať okolo svojej osi bez joint limits.
-
-Na opis jeho konfigurácie opäť potrebujeme iba jednu hodnotu – uhol. Joint má preto 1 DOF.
-
-Mohlo by sa zdať, že jeho configuration space je rovnaký ako pri prismatic jointe. Oba predsa potrebujú jedno číslo. Rozdiel si však všimneme pri celej otáčke.
-
-Ak joint otočíme z 0° na 90°, dostali sme inú konfiguráciu. Pri 180° máme opäť inú konfiguráciu. Ale keď pokračujeme až na 360°, nedostali sme nový fyzický stav. Joint sa vrátil do rovnakej orientácie ako pri 0°.
-
-Inými slovami: **0° a 360° predstavujú tú istú konfiguráciu.**
-
-Rovnako 10° a 370° opisujú rovnakú orientáciu. Uhol sa po jednej celej otáčke opakuje.
-
-Configuration space takéhoto revolute jointu preto nie je nekonečná priamka. Je to **kružnica**, ktorá sa označuje **S1**.
-
-Toto je veľmi dôležitý rozdiel medzi lineárnym a rotačným pohybom. Prismatic joint bez limits môžeme modelovať pomocou R, zatiaľ čo revolute joint s neobmedzenou rotáciou pomocou S1. Oba majú 1 DOF, ale ich C-spaces majú inú topológiu.
+Reálny prismatic joint samozrejme nekonečný rozsah nemá. Matematický model R je však veľmi užitočný, pretože nám umožňuje oddeliť samotnú topológiu od fyzických limitov konkrétneho mechanizmu.
 
 ---
 
-## 07. Ktoré rotačné konfigurácie sú v skutočnosti blízko seba
+## 06. Revolute joint má namiesto priamky kružnicu S1
 
-Kruhová topológia má praktický dôsledok, ktorý sa oplatí pochopiť.
+Teraz si predstav **revolute joint**, ktorý sa môže voľne otáčať bez joint limits.
 
-Predstav si dve konfigurácie revolute jointu. V prvej je uhol 1°. V druhej je 359°.
+Aj on má iba 1 DOF, pretože na jeho configuration potrebujeme jednu hodnotu — uhol θ.
 
-Ak by sme sa pozerali iba na čísla na obyčajnej číselnej osi, rozdiel medzi 1 a 359 je 358. Mohlo by teda vyzerať, že tieto konfigurácie sú od seba veľmi vzdialené.
+Mohlo by sa preto zdať, že jeho configuration space je rovnaký ako pri prismatic jointe. Veď v oboch prípadoch zapisujeme jednu hodnotu.
 
-Fyzicky však stačí joint otočiť o 2° cez hranicu medzi 359°, 360° a 1°. Konfigurácie sú teda v skutočnosti veľmi blízko.
+Rozdiel si však všimneme po jednej celej otáčke.
 
-To je presne informácia, ktorú zachytáva kružnica S1. Na kružnici sa totiž „začiatok" a „koniec" uhlového zápisu stretávajú.
+Ak začneme na 0° a joint otočíme na 90°, dostaneme inú configuration. Pri 180° ďalšiu. Keď však pokračujeme až na 360°, dostaneme sa späť do rovnakého fyzického stavu ako pri 0°.
 
-Toto bude neskôr dôležité napríklad pri motion planning. Ak chceme naplánovať najkratší pohyb rotačného jointu, musíme vedieť, že cesta z 359° na 1° nemusí viesť takmer celou otáčkou. Môže viesť iba dva stupne opačným smerom.
+Preto:
+
+**0° a 360° predstavujú tú istú configuration.**
+
+Rovnako 10° a 370° predstavujú rovnakú orientation.
+
+Uhol teda nie je obyčajná nekonečná lineárna súradnica. Po jednej celej otáčke sa configuration opakuje.
+
+Configuration space neobmedzeného revolute jointu má preto topológiu **kružnice**, ktorú označujeme:
+
+**S1**
+
+Prismatic joint bez limitov má teda configuration space R, zatiaľ čo revolute joint bez limitov má S1.
+
+Oba majú 1 DOF, ale ich topológia je úplne iná.
 
 ---
 
-## 08. Closed interval – priestor s dvomi hranicami
+## 07. Prečo sú 359° a 1° v skutočnosti blízko
 
-Tretím jednoduchým príkladom je uzavretý interval. Predstav si reálny prismatic joint, ktorý sa môže vysunúť od 0 cm do 30 cm.
+Kruhová topológia revolute jointu má veľmi praktický dôsledok.
 
-Jeho možné konfigurácie môžeme zapísať ako interval: **[0, 30]**
+Predstav si dve configurations:
 
-Hranaté zátvorky znamenajú, že hodnoty 0 aj 30 sú súčasťou priestoru. Joint môže byť úplne zasunutý aj úplne vysunutý.
+**θ = 359°**
 
-Tento configuration space má opäť jednu dimenziu, ale na rozdiel od R má dva konce. Ak sme na 30 cm, nemôžeme pokračovať na 31 cm. A na rozdiel od S1 sa tieto konce navzájom nespájajú. Z maximálneho vysunutia sa nemôžeme ďalším pohybom rovnakým smerom zrazu dostať na minimálne vysunutie.
+a
 
-Takýto priestor nazývame **closed interval** – uzavretý interval.
+**θ = 1°**
 
-Vidíme teda tri rôzne možnosti pre 1 DOF: R nemá konce, S1 sa uzatvára do kruhu a closed interval má dva koncové body. Počet DOF je vo všetkých prípadoch rovnaký, no spôsob usporiadania konfigurácií je iný.
+Ak by sme sa pozerali iba na čísla na obyčajnej číselnej osi, rozdiel medzi nimi by bol 358°. Mohlo by sa preto zdať, že sú od seba veľmi ďaleko.
+
+Fyzicky je to však nesprávna predstava.
+
+Z 359° sa môžeme otočiť o 1° na 360°, čo je tá istá orientation ako 0°, a potom ešte o 1° na 1°.
+
+Najkratší pohyb je teda iba:
+
+**2°**
+
+Práve kružnica S1 túto situáciu správne zachytáva. Na kružnici totiž miesto, ktoré v číselnom zápise označujeme ako „začiatok", a miesto označené ako „koniec" nie sú dve odlišné hranice. Sú navzájom spojené.
+
+Toto bude veľmi dôležité pri **motion planning**. Ak má robot otočiť joint z 359° na 1°, správny planner by mal rozumieť tomu, že najkratšia cesta nemusí viesť cez takmer celú otáčku.
+
+Topológia teda ovplyvňuje aj to, **ktoré configurations sú si blízke a aká cesta medzi nimi je prirodzená alebo najkratšia**.
+
+---
+
+## 08. Closed interval — jednorozmerný priestor s hranicami
+
+Teraz si predstav prismatic joint s reálnym fyzickým rozsahom.
+
+Povedzme, že sa môže vysunúť od 0 cm do 30 cm. Jeho configuration space potom nie je celé R, ale iba:
+
+**[0, 30]**
+
+Takýto priestor nazývame **closed interval — uzavretý interval**.
+
+Hranaté zátvorky znamenajú, že obe hraničné hodnoty do priestoru patria. Joint môže byť presne na 0 cm aj presne na 30 cm.
+
+Tento configuration space má stále jednu dimenziu. Na jeho configuration nám stále stačí jedna hodnota.
+
+Topologicky však nie je rovnaký ako R ani ako S1.
+
+Na rozdiel od R má dva konce. Ak sme na 30 cm, nemôžeme pokračovať na 31 cm.
+
+Na rozdiel od S1 sa dva konce nespájajú. Ak sa dostaneme na maximálne vysunutie, ďalší pohyb tým istým smerom nás nevráti na minimálnu hodnotu.
+
+Máme teda tri priestory s jednou dimenziou:
+
+**R — nekonečná priamka bez koncov**
+
+**S1 — kružnica, ktorá sa uzatvára sama do seba**
+
+**[a, b] — uzavretý interval s dvoma hranicami**
+
+Všetky zodpovedajú 1 DOF, ale ich topológia je odlišná.
 
 ---
 
 ## 09. Open interval a closed interval
 
-Pri intervaloch budeme rozlišovať medzi closed interval a open interval.
+Pri intervaloch ešte rozlišujeme **open interval — otvorený interval** a **closed interval — uzavretý interval**.
 
-**Closed interval** zapisujeme: **[a, b]** a oba body a aj b doň patria.
+Closed interval zapisujeme:
 
-**Open interval** zapisujeme: **(a, b)** a body a a b doň nepatria. Môžeme sa k nim približovať akokoľvek blízko, ale samotné koncové hodnoty nie sú súčasťou priestoru.
+**[a, b]**
 
-Zaujímavým výsledkom je, že open interval je topologicky ekvivalentný nekonečnej priamke R.
+a body a aj b sú jeho súčasťou.
 
-Najskôr to môže znieť nesprávne. Interval medzi dvomi hodnotami predsa vyzerá konečne, zatiaľ čo R pokračuje do nekonečna. Topológia však nerieši fyzickú dĺžku priestoru.
+Open interval zapisujeme:
 
-Predstav si open interval ako dokonale pružnú gumu. Jeho stred môžeme ponechať približne na mieste, ale čím viac sa približujeme k ľavému koncu, tým viac priestor naťahujeme smerom doľava. Podobne pravú časť naťahujeme smerom doprava. Pretože samotné koncové body a a b v priestore nie sú, môžeme sa k nim približovať stále viac a ich obraz posúvať stále ďalej.
+**(a, b)**
 
-Takýmto plynulým naťahovaním môžeme open interval zmeniť na celú nekonečnú priamku.
+a koncové body a a b doň nepatria. Môžeme sa k nim ľubovoľne približovať, ale nikdy ich priamo nedosiahneme.
 
-Pri closed intervale to nefunguje, pretože jeho dva koncové body sú skutočnou súčasťou priestoru. Nemôžeme ich jednoducho nechať „zmiznúť v nekonečne" a stále tvrdiť, že ide o rovnaký topologický priestor.
+Zaujímavé je, že z topologického pohľadu je open interval ekvivalentný nekonečnej priamke R.
 
----
+Na prvý pohľad to vyzerá zvláštne. Interval (a, b) predsa pôsobí konečne, zatiaľ čo R pokračuje do nekonečna.
 
-## 10. Rn – Euclidean spaces
+Topológia však nerieši presnú dĺžku.
 
-Symbol R môžeme používať aj vo viacerých dimenziách.
+Predstav si open interval ako dokonale pružný materiál. Čím viac sa približujeme k ľavému koncu, tým viac ho môžeme naťahovať smerom doľava. Rovnako môžeme pravú časť naťahovať doprava.
 
-- **R1** je nekonečná priamka.
-- **R2** je nekonečná rovina.
-- **R3** je bežný trojrozmerný priestor.
+Keďže samotné koncové body do priestoru nepatria, nič nám nebráni v tom, aby sme ich obraz „odsunuli" až do nekonečna.
 
-Všeobecne **Rn** označuje **n-dimensional Euclidean space**.
+Pri closed intervale to už nejde. Body a a b sú skutočnou súčasťou priestoru a predstavujú jeho hranice.
 
-Pre R2 môžeme každý bod opísať dvojicou čísel, napríklad x a y. Pre R3 potrebujeme tri čísla, napríklad x, y a z. Pre R6 by sme potrebovali šesť nezávislých reálnych hodnôt.
-
-R6 si už nedokážeme nakresliť ani priamo predstaviť, ale matematicky s ním môžeme pracovať rovnako ako s R2 alebo R3. To je v robotike bežné, pretože configuration spaces môžu mať mnoho dimenzií.
-
-Euclidean spaces sú „ploché" priestory, ktoré poznáme zo základnej analytickej geometrie. Dôležité však je, že nie každý configuration space je Euclidean space. Rotácie nám už ukázali jednoduchý príklad – S1 nie je to isté ako R1.
+Preto open interval a closed interval nie sú topologicky rovnaké.
 
 ---
 
-## 11. Sn – kružnice a sféry
+## 10. Euclidean spaces Rn
+
+Priestor R môžeme prirodzene rozšíriť do viacerých dimenzií.
+
+**R1** je nekonečná priamka. **R2** je nekonečná rovina a **R3** je bežný trojrozmerný priestor, v ktorom opisujeme polohy pomocou x, y a z.
+
+Všeobecne označujeme:
+
+**Rn**
+
+ako **n-dimensional Euclidean space — n-rozmerný euklidovský priestor**.
+
+Každý bod v Rn môžeme opísať n nezávislými reálnymi číslami.
+
+Bod v R2 potrebuje dvojicu (x, y). Bod v R3 potrebuje (x, y, z). A bod v R6 by potreboval šesť nezávislých hodnôt.
+
+R6 si už nevieme priamo predstaviť alebo nakresliť, ale matematicky s ním môžeme pracovať úplne rovnako ako s R2 alebo R3.
+
+To je v robotike bežné, pretože configuration spaces môžu mať mnoho dimenzií.
+
+Musíme si však stále pamätať jednu dôležitú vec:
+
+**n-rozmerný configuration space nemusí byť automaticky Rn.**
+
+Počet DOF určuje dimenziu. Neurčuje topológiu.
+
+---
+
+## 11. Priestory Sn — kružnice a sféry
 
 Druhou dôležitou rodinou priestorov je **Sn**.
 
-- **S1** je jednorozmerná kružnica.
-- **S2** je dvojrozmerný povrch gule.
+Najjednoduchším príkladom je:
 
-Pri S2 je dôležité slovo povrch. Nehovoríme o celom objeme gule. Myslíme iba jej vonkajší povrch, podobne ako povrch Zeme.
+**S1 — kružnica**
 
-Prečo sa povrch gule nazýva S2, keď sa nachádza v trojrozmernom priestore? Pretože index označuje dimenziu samotného povrchu. Na určenie bodu na povrchu gule potrebujeme dve nezávislé hodnoty. Preto má povrch dve dimenzie.
+Kružnica má jednu dimenziu, pretože na určenie jedného bodu na nej nám stačí jedna nezávislá hodnota.
 
-Podobne kružnica S1 leží v dvojrozmernej rovine, ale samotná kružnica má iba jednu dimenziu. Na určenie bodu na nej stačí jedna nezávislá hodnota.
+Ďalším dôležitým príkladom je:
 
-Všeobecne je **Sn** n-dimensional surface of a sphere v priestore s n + 1 dimenziami.
+**S2 — povrch gule**
 
----
+Je dôležité zdôrazniť slovo **povrch**. S2 nepredstavuje celý objem gule. Predstavuje iba body na jej povrchu.
 
-## 12. Topológia a súradnice nie sú to isté
+Povrch Zeme môžeme približne chápať ako S2. Na určenie bodu na ňom nám stačia dve nezávislé hodnoty, napríklad latitude a longitude.
 
-Teraz prichádza jedna z najdôležitejších myšlienok celej podkapitoly.
+Preto má S2 dve dimenzie, aj keď samotný povrch existuje v trojrozmernom priestore.
 
-**Configuration space existuje nezávisle od toho, aké čísla použijeme na jeho opis.**
+Rovnako S1 má jednu dimenziu, hoci kružnicu bežne kreslíme v dvojrozmernej rovine.
 
-Vráťme sa ku kružnici S1. Bod na kružnici môžeme opísať pomocou jedného uhla. Napríklad môžeme povedať, že jeho poloha zodpovedá uhlu 60°.
-
-Ale existuje aj iný spôsob. Kružnicu môžeme vložiť do roviny a bod na nej opísať pomocou dvoch súradníc x a y. V takom prípade používame dve čísla namiesto jedného. Tieto dve čísla však nie sú nezávislé – musia spĺňať podmienku, že bod naozaj leží na kružnici.
-
-Máme teda dve rôzne matematické reprezentácie toho istého priestoru.
-
-V jednom prípade používame jeden uhol. V druhom používame dve čísla s obmedzením. Samotný configuration space je však stále tá istá kružnica S1.
-
-To znamená, že **topológia je vlastnosť priestoru**, zatiaľ čo **súradnice sú nástroj**, ktorý sme si vybrali na jeho opis.
-
-Tento rozdiel bude základom nasledujúcej kapitoly 2.3.2, kde budeme riešiť explicitné a implicitné reprezentácie configuration space.
+To ukazuje ďalší dôležitý rozdiel: **dimenzia priestoru nie je to isté ako dimenzia okolitého priestoru, do ktorého je vložený**.
 
 ---
 
-## 13. Cartesian product – spájanie jednoduchších priestorov
+## 12. Configuration space nie je to isté ako jeho súradnice
 
-Configuration space robota často nie je iba jedno R alebo jedno S1. Robot môže mať viac nezávislých častí konfigurácie a každá z nich môže patriť do iného typu priestoru.
+Teraz prichádza jedna z najdôležitejších myšlienok celej lekcie.
 
-Na spojenie takýchto priestorov používame **Cartesian product** – kartézsky súčin, ktorý zapisujeme symbolom **x**.
+**Configuration space existuje nezávisle od toho, aké súradnice si zvolíme na jeho opis.**
 
-Predstav si, že jedna časť konfigurácie môže nadobúdať hodnoty z priestoru A a druhá nezávislá časť z priestoru B. Celá konfigurácia potom musí obsahovať informáciu z A aj z B. Configuration space zapíšeme ako: **A x B**
+Vráťme sa ku kružnici S1.
 
-Najjednoduchší príklad poznáš zo súradnicovej roviny. Jedna súradnica x patrí do R a druhá súradnica y tiež patrí do R. Spoločne vytvárajú: **R x R = R2**
+Jeden bod na kružnici môžeme opísať pomocou jediného uhla θ. V takom prípade používame jedno číslo.
 
-Pri robotike však môžeme kombinovať aj priestory s rozdielnou topológiou. Môžeme napríklad spojiť lineárny priestor R s kruhovým priestorom S1. Práve vtedy začína byť Cartesian product veľmi užitočný.
+Rovnaký bod však môžeme opísať aj pomocou dvojice súradníc (x, y), ak je kružnica vložená v rovine.
+
+Používame teda dve čísla namiesto jedného.
+
+To však neznamená, že kružnica má zrazu 2 DOF.
+
+Hodnoty x a y totiž nie sú nezávislé. Ak má kružnica polomer r, musia spĺňať:
+
+**x2 + y2 = r2**
+
+Stále teda opisujeme jednorozmerný priestor S1. Iba sme si vybrali inú reprezentáciu.
+
+To znamená, že **topológia je vlastnosť samotného configuration space**, zatiaľ čo súradnice predstavujú iba matematický nástroj, ktorým sa rozhodneme jeho body zapisovať.
+
+Tento rozdiel bude veľmi dôležitý v ďalšej lekcii o **Configuration Space Representation**.
+
+---
+
+## 13. Cartesian product — skladanie väčšieho configuration space
+
+Configuration space robota často pozostáva z viacerých nezávislých častí.
+
+Predstav si, že prvá časť configuration môže nadobúdať hodnoty z priestoru A a druhá z priestoru B.
+
+Na úplné určenie configuration potrebujeme obe informácie naraz.
+
+Celkový priestor potom zapisujeme pomocou **Cartesian product — kartézskeho súčinu**:
+
+**A × B**
+
+Najjednoduchším príkladom je obyčajná rovina.
+
+Súradnica x patrí do R a súradnica y tiež do R. Ich kombinácia preto vytvára:
+
+**R × R = R2**
+
+Každý bod v R2 môžeme chápať ako dvojicu (x, y).
+
+V robotike však nemusíme kombinovať iba Euclidean spaces. Môžeme napríklad spojiť lineárny priestor R a kruhový priestor S1.
+
+Vďaka Cartesian product tak dokážeme zostaviť configuration space komplikovanejšieho robota z jednoduchších častí.
 
 ---
 
 ## 14. Configuration space planar rigid body
 
-Predstav si malého mobilného robota na nekonečnej rovnej podlahe. Robot nie je iba bod. Má určitý smer, ktorým je otočený.
+Predstav si mobilného robota, ktorý sa môže voľne pohybovať po nekonečnej rovnej podlahe.
 
-Na úplný opis jeho configuration potrebujeme tri informácie. Dve určujú jeho polohu na podlahe a jedna jeho orientation.
+Na úplný opis jeho configuration potrebujeme tri hodnoty: (x, y, θ)
 
-Poloha môže byť kdekoľvek na rovine. Preto patrí do: **R2**
+Súradnice x a y určujú jeho position v rovine. Táto časť configuration patrí do:
 
-Orientation sa však správa cyklicky. Po otočení o celú otáčku máme opäť rovnakú orientáciu. Preto patrí do: **S1**
+**R2**
 
-Celý configuration space planar rigid body je teda: **R2 x S1**
+Uhol θ určuje orientation robota.
 
-Tento zápis nám dáva viac informácií než jednoduché tvrdenie „robot má 3 DOF".
+Orientation sa však správa cyklicky. Po jednej celej otáčke sa robot vráti do rovnakej orientation.
 
-Áno, priestor má tri dimenzie. Ale teraz zároveň vieme, aké tieto dimenzie sú. Dve sú lineárne a tvoria rovinu, zatiaľ čo tretia je rotačná a uzatvára sa do kruhu.
+Preto táto časť patrí do:
 
-Práve toto je výhoda topologického opisu C-space.
+**S1**
 
----
+Configuration space planar rigid body je teda:
 
-## 15. PR robot – rovnaké 2 DOF, ale nie obyčajná rovina
+**R2 × S1**
 
-Predstav si robot s dvomi joints. Prvý je prismatic joint P a druhý revolute joint R.
+Tento zápis obsahuje viac informácií než jednoduché tvrdenie:
 
-Ak zatiaľ ignorujeme joint limits, konfigurácia prismatic jointu patrí do R. Môžeme si ju predstaviť ako pozíciu na nekonečnej číselnej osi.
+**„Robot má 3 DOF."**
 
-Konfigurácia revolute jointu patrí do S1, pretože po celej otáčke sa jeho uhol opakuje.
+Počet DOF nám povedal, že C-space má tri dimenzie. Zápis R2 × S1 nám navyše hovorí, že dve dimenzie sú lineárne a jedna je cyklická.
 
-Configuration space celého PR robota je preto: **R x S1**
-
-Robot má 2 DOF, takže C-space je dvojrozmerný. Nie je však topologicky rovnaký ako obyčajná rovina R2.
-
-Intuitívne si R x S1 môžeš predstaviť ako povrch nekonečne dlhého valca. V jednom smere môžeš pokračovať stále ďalej – to zodpovedá R. V druhom smere môžeš obísť celý valec a vrátiť sa na rovnaké miesto – to zodpovedá S1.
-
-Toto je veľmi dobrý príklad významu topológie. PR robot má 2 DOF rovnako ako bod na rovine, ale jeho C-space nemá rovnaký tvar ako rovina.
+Práve toto je sila topologického opisu.
 
 ---
 
-## 16. Joint limits môžu tento priestor zmeniť
+## 15. PR robot — 2 DOF, ale nie R2
 
-V predchádzajúcom príklade sme joint limits zámerne ignorovali. Reálne robotické joints však zvyčajne majú obmedzený rozsah.
+Predstav si robot s dvoma joints.
 
-Predstav si, že prismatic joint sa môže pohybovať iba od 0 do 20 cm. Namiesto celého R máme closed interval [0, 20].
+Prvý je **prismatic joint P** a druhý **revolute joint R**.
 
-Ak sa zároveň revolute joint môže otáčať iba od -90° do +90°, ani jeho konfigurácia už netvorí celú kružnicu S1. Máme opäť interval.
+Ak ignorujeme joint limits, configuration space prismatic jointu je:
 
-Configuration space robota je potom Cartesian product dvoch intervalov. Intuitívne si ho môžeme predstaviť ako obdĺžnikovú oblasť: jeden smer predstavuje možné polohy prismatic jointu a druhý možné uhly revolute jointu.
+**R**
 
-Preto pri určovaní topológie C-space nestačí poznať iba názov jointu. Musíme tiež vedieť, či má joint limits a aké konfigurácie sú skutočne povolené.
+Configuration space revolute jointu je:
 
----
+**S1**
 
-## 17. 2R robot – dva uhly vytvoria torus
+Celý robot má teda:
 
-Teraz si predstav planar robotické rameno s dvomi revolute joints. Takýto robot označujeme **2R robot**.
+**R × S1**
 
-Ak oba joints môžu vykonať celú rotáciu a joint limits ignorujeme, prvý joint má configuration space S1. Druhý joint má tiež configuration space S1.
+Robot má 2 DOF, takže jeho C-space je dvojrozmerný.
 
-Celý robot preto má: **S1 x S1**
+Nie je však topologicky rovnaký ako obyčajná rovina R2.
 
-Tento priestor označujeme: **T2** a nazývame ho **two-dimensional torus** – dvojrozmerný torus.
+Priestor R × S1 si môžeme intuitívne predstaviť ako **povrch nekonečne dlhého valca**. Pozdĺž osi valca môžeme pokračovať stále ďalej — to zodpovedá R. Okolo valca sa však môžeme otočiť a vrátiť na to isté miesto — to zodpovedá S1.
 
-Torus si môžeš predstaviť ako povrch nafukovacieho kruhu alebo šišky s dierou uprostred.
-
-Na prvý pohľad je to zvláštne. Robotické rameno predsa fyzicky nemá tvar šišky. Torus však nepredstavuje fyzický tvar robota. Predstavuje priestor všetkých možných kombinácií jeho dvoch joint angles.
-
-Každý jeden bod na tomto abstraktnom toruse predstavuje jednu konkrétnu konfiguráciu 2R robota.
+PR robot a bod voľne sa pohybujúci po rovine teda majú oba 2 DOF, ale configuration spaces majú odlišnú topológiu.
 
 ---
 
-## 18. Prečo z dvoch rotačných joints vznikne torus
+## 16. Joint limits môžu topológiu zmeniť
 
-Tento výsledok sa dá pochopiť veľmi pekne bez zložitej matematiky.
+Predchádzajúci opis predpokladal, že joints nemajú limits.
 
-Predstav si tabuľku. Horizontálny smer predstavuje uhol prvého jointu a vertikálny smer uhol druhého jointu.
+Reálne joints ich však takmer vždy majú.
 
-Na prvý pohľad máme štvorec všetkých kombinácií dvoch uhlov.
+Predstav si prismatic joint, ktorý sa môže vysunúť iba od 0 cm do 20 cm. Jeho configuration space už nie je R, ale:
 
-Lenže pri prvom uhle sú 0° a 360° tá istá konfigurácia. Ľavý a pravý okraj našej tabuľky preto v skutočnosti predstavujú rovnaké stavy. Ak ich spojíme, štvorec sa zvinie do valca.
+**[0, 20]**
 
-Stále však zostávajú dva okraje valca. Tie zodpovedajú 0° a 360° druhého jointu. Aj tieto hodnoty predstavujú rovnaké konfigurácie, takže musíme spojiť aj tieto dva okraje.
+Teraz si predstav revolute joint, ktorý sa namiesto celej rotácie môže pohybovať iba od -90° do +90°.
 
-Keď spojíme oba konce valca, vznikne: **torus.**
+Jeho configuration space už nie je celá kružnica S1, ale iba interval:
 
-Preto platí: **S1 x S1 = T2**
+**[-90°, 90°]**
 
-Torus má dve dimenzie, rovnako ako rovina alebo povrch gule. Napriek tomu má inú topológiu než oba tieto priestory.
+Ak má robot tieto dva joints, jeho configuration space je Cartesian product dvoch intervalov.
+
+Geometricky si ho môžeme predstaviť ako obdĺžnikovú oblasť. Jeden smer predstavuje možné positions prismatic jointu a druhý možné angles revolute jointu.
+
+To znamená, že pri určovaní topológie configuration space nestačí poznať iba typ jointu. Musíme poznať aj jeho **joint limits**.
+
+Tie totiž určujú, ktoré configurations sú skutočne dostupné.
 
 ---
 
-## 19. Torus Tn
+## 17. 2R robot — dva rotačné joints vytvoria torus
 
-Myšlienku môžeme rozšíriť na viac revolute joints.
+Predstav si teraz planar robotické rameno s dvoma revolute joints — **2R robot**.
 
-- Jeden neobmedzený revolute joint má C-space: **S1**
-- Dva takéto joints vytvoria: **S1 x S1 = T2**
-- Tri nezávislé revolute joints vytvoria: **S1 x S1 x S1 = T3**
+Ak sa oba joints môžu otáčať o celých 360° bez joint limits, configuration space prvého jointu je S1 a druhého tiež S1.
 
-A všeobecne Cartesian product n kružníc označujeme: **Tn**
+Celý configuration space je preto:
 
-Tn nazývame **n-dimensional torus**.
+**S1 × S1**
 
-Tu si treba zapamätať dôležitý rozdiel:
+Tento priestor označujeme:
 
-**S1 x S1 nie je S2.**
+**T2**
 
-S2 je povrch gule. S1 x S1 je T2, teda torus.
+a nazývame ho **two-dimensional torus — dvojrozmerný torus**.
 
-Oba priestory majú dve dimenzie, ale ich topológia je odlišná. Na toruse je „diera", zatiaľ čo povrch gule ju nemá. Jeden teda nemožno plynulo zmeniť na druhý bez rozrezania alebo zlepenia.
+Torus si môžeš predstaviť ako povrch nafukovacieho kruhu alebo klasickej šišky s otvorom uprostred.
+
+Dôležité je pochopiť, že torus nemá nič spoločné s fyzickým tvarom robotického ramena. Robot nemusí vôbec vyzerať ako šiška.
+
+Torus predstavuje **abstraktný priestor všetkých možných kombinácií dvoch joint angles**.
+
+Každý bod na toruse predstavuje jednu konkrétnu dvojicu (θ1, θ2) a teda jednu konkrétnu configuration robota.
+
+---
+
+## 18. Prečo práve torus
+
+Vznik torusu sa dá pochopiť veľmi intuitívne.
+
+Predstav si štvorec, kde horizontálna os predstavuje uhol prvého jointu od 0° do 360° a vertikálna os uhol druhého jointu od 0° do 360°.
+
+Každý bod v tomto štvorci predstavuje jednu kombináciu dvoch uhlov.
+
+Lenže pri prvom jointe sú 0° a 360° rovnaká configuration. Ľavý a pravý okraj štvorca preto v skutočnosti predstavujú tie isté stavy.
+
+Ak tieto dva okraje spojíme, štvorec sa zvinie do valca.
+
+Teraz zostávajú dva kruhové konce valca. Tie predstavujú 0° a 360° druhého jointu.
+
+Aj tie sú rovnakými configurations, takže ich musíme spojiť.
+
+Keď spojíme oba konce valca, vznikne torus.
+
+Preto platí:
+
+**S1 × S1 = T2**
+
+Tento príklad nádherne ukazuje, ako topológia configuration space prirodzene vzniká z fyzickej periodicity rotačných joints.
+
+---
+
+## 19. Tn — viac revolute joints
+
+Myšlienku torusu môžeme rozšíriť na ľubovoľný počet neobmedzených revolute joints.
+
+Jeden revolute joint má:
+
+**S1**
+
+Dva majú:
+
+**S1 × S1 = T2**
+
+Tri nezávislé revolute joints vytvárajú:
+
+**S1 × S1 × S1 = T3**
+
+A všeobecne Cartesian product n kružníc označujeme:
+
+**Tn**
+
+Nazýva sa **n-dimensional torus**.
+
+Je pritom dôležité nezamieňať podobné zápisy.
+
+**S1 × S1 nie je S2.**
+
+S2 je povrch gule, zatiaľ čo S1 × S1 je torus T2.
+
+Oba priestory sú dvojrozmerné, ale ich topológia je rozdielna.
+
+A práve toto je ďalší dôkaz toho, že samotná dimension ešte configuration space úplne neopisuje.
 
 ---
 
 ## 20. Mobilný robot s 2R ramenom
 
-Teraz už dokážeme poskladať configuration space zložitejšieho robota.
+Teraz môžeme spojiť viac predchádzajúcich príkladov.
 
-Predstav si mobilnú základňu, ktorá sa môže voľne pohybovať po rovine a otáčať sa. Ako sme už zistili, jej configuration space je: **R2 x S1**
+Predstav si mobilnú základňu, ktorá sa môže pohybovať po rovine a meniť orientation. Jej C-space je:
 
-Na základňu teraz namontujeme 2R robotické rameno. Jeho dva revolute joints pridávajú: **S1 x S1**
+**R2 × S1**
 
-Celý configuration space teda je: **R2 x S1 x S1 x S1**
+Na základňu teraz pripevníme 2R rameno.
 
-Tri kruhové časti môžeme zapísať ako T3, takže dostaneme: **R2 x T3**
+Každý z jeho dvoch revolute joints pridáva ďalšie S1.
 
-Robot má spolu 5 DOF. Dve opisujú polohu mobilnej základne na rovine, jedna jej orientation a ďalšie dve joint angles robotického ramena.
+Celý configuration space robota preto je:
 
-Ale povedať iba „5 DOF" by nám opäť nedalo celý obraz. C-space nie je jednoducho obyčajné R5. Obsahuje dve lineárne dimensions a tri cyklické dimensions.
+**R2 × S1 × S1 × S1**
+
+Tri kruhové časti môžeme skrátene zapísať ako:
+
+**T3**
+
+takže:
+
+**R2 × T3**
+
+Robot má spolu 5 DOF.
+
+Dve hodnoty určujú position mobilnej základne, jedna jej orientation a ďalšie dve joint angles ramena.
+
+Keby sme povedali iba:
+
+**„Robot má 5 DOF."**
+
+poznali by sme dimension.
+
+Zápis R2 × T3 nám však navyše hovorí, **akého typu jednotlivé dimensions sú**.
+
+To je oveľa presnejší opis jeho configuration space.
 
 ---
 
 ## 21. Configuration space spatial rigid body
 
-V Chapter 2.1 sme odvodili, že rigid body pohybujúce sa voľne v trojrozmernom priestore má 6 DOF.
+Z predchádzajúcej lekcie vieme, že voľné spatial rigid body má:
 
-Tri DOF potrebujeme na jeho position. Tú môžeme reprezentovať tromi súradnicami, takže pozičná časť patrí do: **R3**
+**6 DOF**
 
-Pri odvodení v Chapter 2.1 sme potom použili tri nekolineárne body A, B a C. Po určení polohy bodu A sme polohu bodu B mohli vybrať na povrchu sféry okolo A. Na určenie jeho smeru sme teda potrebovali dve nezávislé hodnoty, čo zodpovedá priestoru **S2**.
+Tri potrebujeme na position.
 
-Po určení A a B zostávala ešte jedna rotačná freedom pre bod C. Tá sa správa ako kružnica **S1**.
+Position môžeme reprezentovať pomocou (x, y, z) a patrí teda do:
 
-V topologickom opise uvedenom v tejto časti knihy tak dostávame: **R3 x S2 x S1**
+**R3**
 
-Počet dimenzií si môžeme skontrolovať. R3 má tri dimenzie, S2 dve a S1 jednu. Spolu: **3 + 2 + 1 = 6**, čo zodpovedá šiestim degrees of freedom spatial rigid body.
+Pri odvodení pomocou bodov A, B a C sme zároveň videli, že po určení bodu A môžeme smer k bodu B vyberať na povrchu sféry.
 
-Dôležitá pointa však opäť nie je iba číslo 6. Tento príklad ukazuje, že šesťrozmerný configuration space nemusí byť obyčajný Euclidean space R6. Rotačná časť má inú štruktúru než jednoduché translácie.
+Táto časť zodpovedá:
 
----
+**S2**
 
-## 22. Čo nám topológia o robotovi hovorí
+Po určení A a B zostáva ešte jedna rotačná freedom pre bod C, ktorá sa správa cyklicky ako:
 
-Po tejto kapitole sa na počet DOF môžeme pozerať presnejšie.
+**S1**
 
-Keď povieme: „Robot má 2 DOF," vieme iba to, že na jeho konfiguráciu potrebujeme dve nezávislé hodnoty.
+V topologickom opise použitého v tejto časti preto dostávame:
 
-Stále však nevieme, aký configuration space tieto dve hodnoty vytvárajú.
+**R3 × S2 × S1**
 
-Môže to byť napríklad rovina R2. Môže to byť kombinácia R x S1. Môže to byť torus T2. Alebo môže ísť o povrch sféry S2.
+Dimenzie si môžeme skontrolovať. R3 má tri, S2 dve a S1 jednu.
 
-Všetky tieto priestory sú dvojrozmerné, ale ich konfigurácie sú navzájom usporiadané iným spôsobom.
+Spolu:
 
-Preto pri robotike rozlišujeme dve otázky:
-- **Dimension:** Koľko nezávislých hodnôt potrebujem?
-- **Topology:** Akú základnú štruktúru má priestor všetkých možných hodnôt?
+**3 + 2 + 1 = 6**
 
-Obe informácie sú dôležité.
+čo sú presne degrees of freedom spatial rigid body.
 
----
-
-## 23. Prečo nás to bude zaujímať pri reprezentácii C-space
-
-Možno sa teraz pýtaš, prečo vôbec potrebujeme vedieť, či je C-space rovina, kružnica, sféra alebo torus.
-
-Dôvod uvidíme hneď v Chapter 2.3.2.
-
-Počítač potrebuje configuration reprezentovať pomocou čísel. Pri Euclidean space je to jednoduché. Bod v R2 môžeme zapísať dvomi číslami a bod v R3 tromi.
-
-Pri zakrivených alebo uzavretých priestoroch je situácia komplikovanejšia.
-
-Kružnicu môžeme reprezentovať jedným uhlom, ale potom máme zvláštnosť pri prechode medzi 359° a 0°. Povrch Zeme môžeme reprezentovať latitude a longitude, ale pri póloch vznikajú problémy so súradnicami. Alebo môžeme použiť viac čísel a pridať medzi ne constraints.
-
-Topológia priestoru teda ovplyvňuje to, aké matematické reprezentácie sú preň vhodné a aké problémy pri nich môžu vzniknúť.
-
-A presne to bude témou nasledujúcej časti – Configuration Space Representation.
+Tento zápis nám však opäť hovorí viac než číslo šesť. Ukazuje, že translational a rotational časti configuration space majú odlišnú štruktúru.
 
 ---
 
-## Zhrnutie Chapter 2.3.1
+## 22. Dimension a topology odpovedajú na dve rôzne otázky
 
-Configuration space je množina všetkých možných konfigurácií systému a jeho dimension sa rovná počtu DOF. Poznať iba dimenziu však nestačí na úplný opis priestoru, pretože priestory s rovnakou dimenziou môžu mať rozdielnu topológiu.
+Po tejto lekcii môžeme vetu:
 
-**Topology** opisuje základnú štruktúru priestoru. Dva priestory sú topologicky ekvivalentné, ak môžeme jeden plynulo zdeformovať na druhý bez rezania alebo zlepovania. Preto majú napríklad malá guľa, veľká guľa a oválna lopta rovnakú topológiu, zatiaľ čo rovina a povrch gule ju rovnakú nemajú.
+**„Robot má 2 DOF."**
 
-Pri robotike sa často stretávame s priestormi **Rn**, ktoré predstavujú n-dimensional Euclidean spaces, a **Sn**, ktoré predstavujú n-dimensional sféry. S1 je kružnica a S2 je povrch gule. Open interval je topologicky ekvivalentný R, zatiaľ čo closed interval má vlastné koncové body a nie je topologicky ekvivalentný celej priamke.
+čítať presnejšie.
 
-Configuration spaces môžeme skladať pomocou **Cartesian product**. Planar rigid body má C-space R2 x S1. PR robot bez joint limits má R x S1. 2R robot má S1 x S1 = T2, teda torus. Mobilná planar základňa s 2R ramenom má R2 x T3.
+Vieme, že jeho configuration space má dve dimenzie. Stále však nevieme, ako sú configurations v tomto priestore usporiadané.
 
-Najdôležitejšia myšlienka je preto jednoduchá: **DOF nám hovorí, koľko dimenzií configuration space má. Topológia nám hovorí, akú štruktúru tento priestor má.** A samotná topológia sa nemení podľa toho, aké súradnice si neskôr vyberieme na jej matematickú reprezentáciu.`;
+Môže ísť o R2, napríklad pri bode na rovine.
+
+Môže ísť o R × S1 pri PR robotovi.
+
+Môže ísť o T2 pri 2R robotovi.
+
+Alebo môže ísť o S2 pri bode pohybujúcom sa po povrchu gule.
+
+Všetky tieto priestory sú dvojrozmerné. Napriek tomu sa správajú úplne inak.
+
+Preto si môžeme zapamätať dve oddelené otázky.
+
+**Dimension** sa pýta:
+
+**Koľko nezávislých hodnôt potrebujem na configuration?**
+
+**Topology** sa pýta:
+
+**Ako je priestor všetkých možných configurations prepojený a usporiadaný?**
+
+Na pochopenie configuration space potrebujeme obe odpovede.
+
+---
+
+## 23. Prečo bude topológia dôležitá pri representation
+
+Topológia môže zatiaľ pôsobiť abstraktne, ale jej význam sa ukáže hneď pri ďalšej téme.
+
+Počítač potrebuje configurations reprezentovať pomocou čísel.
+
+Pri R2 je to jednoduché. Použijeme x a y.
+
+Pri R3 použijeme x, y a z.
+
+Pri kružnici S1 môžeme použiť jeden uhol θ, ale okamžite sa objaví zvláštnosť medzi 359° a 0°. Číselne vyzerajú ďaleko, hoci v configuration space sú vedľa seba.
+
+Povrch gule S2 môžeme opísať pomocou latitude a longitude. V určitých miestach, napríklad pri póloch, sa však táto reprezentácia začne správať problematicky.
+
+Alternatívou môže byť používanie väčšieho počtu čísel spolu s constraints.
+
+Topológia configuration space teda ovplyvňuje, **aké súradnice môžeme zvoliť a či jeden systém súradníc dokáže celý priestor reprezentovať bez problémov**.
+
+Práve tým sa budeme zaoberať v ďalšej lekcii o **Configuration Space Representation**.
+
+---
+
+## Zhrnutie lekcie
+
+Configuration space predstavuje množinu všetkých možných configurations systému a jeho dimension sa rovná počtu degrees of freedom. Samotný počet DOF však nestačí na úplné pochopenie C-space, pretože priestory s rovnakou dimenziou môžu mať úplne rozdielnu štruktúru.
+
+Túto základnú štruktúru opisuje **topology — topológia**.
+
+Topológia sa nezaujíma o presné rozmery alebo vzdialenosti. Dôležité je, ako je priestor prepojený, či má hranice a či sa niektoré jeho smery uzatvárajú späť do seba.
+
+Aj systémy s jediným DOF môžu mať rôzne configuration spaces. Neobmedzený prismatic joint môžeme modelovať priestorom R. Neobmedzený revolute joint má configuration space S1. Joint s konečným rozsahom môže mať configuration space v tvare closed interval [a, b].
+
+Priestor Rn označuje n-dimensional Euclidean space. S1 je kružnica a S2 je povrch gule. Dimenzia pritom opisuje samotný priestor, nie dimenziu okolitého sveta, v ktorom si ho vizualizujeme.
+
+Dôležité je tiež rozlišovať medzi samotným configuration space a jeho súradnicovou reprezentáciou. Kružnica S1 môže byť opísaná jedným uhlom θ alebo dvojicou x a y spojenou constraintom x2 + y2 = r2. Configuration space je v oboch prípadoch rovnaký; mení sa iba reprezentácia.
+
+Zložitejšie spaces môžeme skladať pomocou **Cartesian product**. Planar rigid body má C-space R2 × S1. PR robot bez joint limits má R × S1. 2R robot má S1 × S1 = T2, teda torus. Mobilná základňa s 2R ramenom môže mať configuration space R2 × T3.
+
+Najdôležitejšia myšlienka celej lekcie je preto veľmi jednoduchá:
+
+**DOF nám hovorí, koľko dimenzií configuration space má. Topológia nám hovorí, akú štruktúru tento priestor má.**
+
+Dva roboty preto môžu mať rovnaký počet DOF a pritom úplne odlišný configuration space. A práve táto štruktúra neskôr ovplyvní spôsob, akým budeme robotické configurations reprezentovať, porovnávať a používať pri plánovaní pohybu.`;

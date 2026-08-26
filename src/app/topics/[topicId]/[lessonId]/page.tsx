@@ -225,7 +225,7 @@ export default function TopicLessonPage() {
                         const aGrade = aPct >= 90 ? '1' : aPct >= 75 ? '2' : aPct >= 50 ? '3' : aPct >= 30 ? '4' : '5';
                         return (
                           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, padding: '6px 12px', borderRadius: 8, background: i === attempts.length - 1 ? 'rgba(79,42,133,0.06)' : 'transparent' }}>
-                            <span style={{ fontWeight: 700, color: '#4f2a85', minWidth: 70 }}>Attempt {i + 1}</span>
+                            <span style={{ fontWeight: 700, color: '#4f2a85', minWidth: 70 }}>Pokus {i + 1}</span>
                             <span style={{ color: 'var(--text-secondary)' }}>{aPct}%</span>
                             <span style={{ color: 'var(--text-hint)' }}>({a.correct}/{a.total})</span>
                             <span style={{ color: 'var(--text-hint)', fontSize: 11, marginLeft: 'auto' }}>{locale === 'sk' ? `Známka ${aGrade}` : `Grade ${aGrade}`}</span>
@@ -277,7 +277,7 @@ export default function TopicLessonPage() {
                 }}
               >
                 <RotateCcw size={16} />
-                {locale === 'sk' ? `Skúsiť znova (Attempt ${attempts.length + 1})` : `Try again (Attempt ${attempts.length + 1})`}
+                {locale === 'sk' ? `Skúsiť znova (Pokus ${attempts.length + 1})` : `Try again (Attempt ${attempts.length + 1})`}
               </button>
             </motion.div>
           );

@@ -60,18 +60,17 @@ export default function TopicLessonPage() {
 
   return (
     <div className="page-shell" style={{ minHeight: '100vh', background: 'var(--bg)', paddingBottom: 80 }}>
-      {/* Scroll progress bar — right side scrollbar indicator */}
+      {/* Scroll progress bar — right side */}
       {tab === 'lesson' && (
         <div style={{
-          position: 'fixed', right: 10, top: 80, bottom: 80, width: 6, zIndex: 999,
-          background: 'rgba(79,42,133,0.08)', borderRadius: 6,
+          position: 'fixed', right: 10, top: 70, bottom: 70, width: 4, zIndex: 999,
+          background: 'rgba(79,42,133,0.1)', borderRadius: 4,
         }}>
           <div style={{
-            position: 'absolute', width: '100%', borderRadius: 6,
-            background: '#4f2a85', opacity: 0.7,
-            height: '15%', minHeight: 30,
-            top: `${scrollProgress * 85}%`,
-            transition: 'top 0.1s ease-out',
+            width: '100%', borderRadius: 4,
+            background: '#4f2a85',
+            height: `${Math.max(scrollProgress * 100, 1)}%`,
+            transition: 'height 0.1s ease-out',
           }} />
         </div>
       )}

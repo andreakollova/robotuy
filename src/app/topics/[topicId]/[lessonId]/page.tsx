@@ -7,7 +7,7 @@ import { useUserStore } from '@/store/userStore';
 import { useLocaleStore } from '@/store/localeStore';
 import { projectTopics } from '@/data/myprojects-topics';
 import StatusBar from '@/components/StatusBar';
-import { ArrowLeft, Check, ChevronRight, Zap, BookOpen, Lightbulb, Code, X, Play, Loader2, GraduationCap, HelpCircle, BookText } from 'lucide-react';
+import { ArrowLeft, Check, ChevronRight, Zap, BookOpen, Lightbulb, Code, X, Play, Loader2, GraduationCap, HelpCircle, BookText, RotateCcw, Trophy, AlertCircle } from 'lucide-react';
 import { bookChapters } from '@/data/book-content';
 import type { Exercise } from '@/types';
 
@@ -52,14 +52,14 @@ export default function TopicLessonPage() {
   return (
     <div className="page-shell" style={{ minHeight: '100vh', background: 'var(--bg)', paddingBottom: 80 }}>
       {/* Scroll progress bar — right side */}
-      {tab === 'lesson' && scrollProgress > 0 && (
+      {tab === 'lesson' && (
         <div style={{
-          position: 'fixed', right: 6, top: 80, bottom: 80, width: 4, zIndex: 50,
-          background: 'rgba(79,42,133,0.1)', borderRadius: 4,
+          position: 'fixed', right: 12, top: 100, bottom: 100, width: 5, zIndex: 999,
+          background: 'rgba(79,42,133,0.12)', borderRadius: 6,
         }}>
           <div style={{
-            width: '100%', borderRadius: 4, transition: 'height 0.1s',
-            background: '#4f2a85', height: `${scrollProgress * 100}%`,
+            width: '100%', borderRadius: 6, transition: 'height 0.15s ease-out',
+            background: '#4f2a85', height: `${scrollProgress * 100}%`, minHeight: scrollProgress > 0 ? 8 : 0,
           }} />
         </div>
       )}

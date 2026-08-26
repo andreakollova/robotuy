@@ -288,13 +288,14 @@ export default function TopicLessonPage() {
         <div style={{ display: 'flex', gap: 3, marginBottom: 28 }}>
           {lesson.exercises.map((ex, i) => {
             const done = completedLessons.includes(topic.id + '-' + ex.id);
+            const isWrong = wrongIds.has(ex.id);
             return (
               <div
                 key={ex.id}
                 onClick={() => setActiveExIdx(i)}
                 style={{
                   flex: 1, height: 3, borderRadius: 2, cursor: 'pointer',
-                  background: done ? 'var(--green)' : i === activeExIdx ? 'var(--text)' : 'var(--border)',
+                  background: isWrong ? '#dc2626' : done ? 'var(--green)' : i === activeExIdx ? 'var(--text)' : 'var(--border)',
                 }}
               />
             );

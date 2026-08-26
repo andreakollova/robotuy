@@ -3,395 +3,472 @@
 
 export const ch21Content = `# Lekcia 3: Stupne voľnosti tuhého telesa
 
-## Stupne voľnosti tuhého telesa
+V predchádzajúcej lekcii sme si vysvetlili, že **configuration — konfigurácia** opisuje úplný stav mechanického systému a že počet nezávislých hodnôt potrebných na jej určenie nazývame **degrees of freedom — stupne voľnosti**, skrátene **DOF**.
 
-V tejto časti sa naučíme, koľkými spôsobmi sa môže pohybovať tuhé teleso a ako z toho určíme jeho počet stupňov voľnosti. Toto je jeden zo základov robotiky, pretože jednotlivé pevné časti robota môžeme považovať za tuhé telesá. Keď pochopíme pohyb jedného telesa, neskôr môžeme začať tieto telesá spájať kĺbmi a zisťovať, ako sa môže pohybovať celý robot.
+Teraz sa na túto myšlienku pozrieme podrobnejšie a položíme si konkrétnu otázku: **Koľko stupňov voľnosti má jedno tuhé teleso?**
 
-Najdôležitejšie čísla, ku ktorým sa dostaneme, sú jednoduché: tuhé teleso v rovine má 3 stupne voľnosti a tuhé teleso v trojrozmernom priestore má 6 stupňov voľnosti. Dôležitejšie než zapamätať si tieto čísla je však pochopiť, prečo to tak je.
+Táto otázka je pre robotiku veľmi dôležitá. Jednotlivé pevné časti robota — jeho links — totiž modelujeme ako **rigid bodies, teda tuhé telesá**. Ak pochopíme, ako sa môže pohybovať jedno voľné teleso, neskôr môžeme začať viac takýchto telies spájať pomocou joints a zisťovať, koľko stupňov voľnosti zostane celému robotickému mechanizmu.
 
----
+Výsledok, ku ktorému sa v tejto lekcii dostaneme, je jednoduchý: **tuhé teleso pohybujúce sa v rovine má 3 DOF a tuhé teleso voľne sa pohybujúce v trojrozmernom priestore má 6 DOF**.
 
-## Ako opísať pohyb tuhého telesa
-
-Predstav si, že pred tebou na stole leží telefón. Posunieš ho doprava. Potom ho posunieš smerom od seba. Nakoniec ho na tom istom mieste otočíš o 90°.
-
-Urobila si tri rôzne zmeny jeho konfigurácie. Telefón sa pritom nezmenil – stále má rovnaký tvar a rozmery. Menilo sa iba kde sa nachádza a ako je otočený.
-
-A presne tým sa začína robotika.
-
-Keď chceme riadiť robotické rameno, mobilného robota alebo napríklad dron, počítač musí mať spôsob, ako matematicky opísať ich stav. Nemôžeme mu jednoducho povedať, že „rameno je trochu vpravo". Potrebujeme presne určiť, koľko nezávislých hodnôt je potrebných na opis jeho konfigurácie.
-
-Tieto nezávislé možnosti nazývame **degrees of freedom** – stupne voľnosti (**DOF**).
+Samotné čísla však nie sú to najdôležitejšie. Podstatné je pochopiť, **prečo** práve tri a šesť — a ako sa k týmto hodnotám môžeme dostať systematicky.
 
 ![Konfigurácia dverí, bodu v rovine a mince](/book/ch2/fig2-1.png)
 
 ---
 
-## 01. Najskôr potrebujeme zjednodušiť skutočný svet
+## 01. Najskôr si musíme zjednodušiť skutočný svet
 
-Reálne objekty nie sú dokonale pevné. Kovové rameno robota sa pri veľkom zaťažení môže nepatrne ohnúť, plast sa môže deformovať a dokonca aj oceľ sa pod silou mierne mení.
+Skutočné objekty nie sú dokonale pevné. Kovové rameno robota sa môže pri veľkom zaťažení nepatrne ohnúť, plast sa môže deformovať a dokonca aj oceľ pri pôsobení sily mierne zmení svoj tvar.
 
-Ak by sme však pri každom pohybe robota museli počítať deformáciu každého milimetra materiálu, aj jednoduché problémy by sa veľmi rýchlo stali zložité.
+Keby sme však pri každom pohybe robota museli sledovať deformáciu každého milimetra materiálu, aj veľmi jednoduchá analýza by sa rýchlo stala extrémne komplikovanou. Pri základnej robotike preto používame zjednodušený model a pevné časti robota považujeme za **rigid bodies — tuhé telesá**.
 
-Preto si v základnej robotike vytvárame zjednodušený model a jednotlivé pevné časti robota považujeme za **rigid bodies** – tuhé telesá.
+Rigid body je idealizovaný objekt, ktorého tvar a rozmery považujeme za nemenné. Teleso sa môže presúvať a otáčať, ale v našom modeli sa nenaťahuje, neskracuje ani neohýba.
 
-Tuhé teleso je objekt, ktorého tvar a rozmery považujeme za nemenné. Môže sa presúvať a otáčať, ale nemôže sa naťahovať, skracovať ani ohýbať.
+Predstav si napríklad kovový link robotického ramena. Na jeho povrchu označíme dva body A a B. Keď sa rameno pohne, oba body môžu skončiť na úplne inom mieste v priestore. Jedna vec sa však nezmení — **vzdialenosť medzi A a B zostane rovnaká**.
 
-Predstav si, že na kovovej časti robota označíme dva body A a B. Robot sa môže pohnúť a oba body môžu skončiť úplne inde. Jedna vec však zostáva rovnaká:
+Ak je ich vzdialenosť 20 cm, potom bez ohľadu na to, ako teleso presunieme alebo otočíme, musí stále platiť:
 
-**vzdialenosť medzi A a B.**
+**vzdialenosť A–B = 20 cm**
 
-To je podstata modelu rigid body.
+Práve toto je základná vlastnosť rigid body.
 
-Prečo je to také užitočné?
+Táto predstava nám výrazne zjednodušuje opis pohybu. Keď poznáme konfiguráciu tuhého telesa, nemusíme samostatne určovať polohu každého jeho bodu. Pretože všetky body sú medzi sebou pevne geometricky prepojené, z polohy a orientácie celého telesa vieme odvodiť polohu ktoréhokoľvek jeho bodu.
 
-Pretože potom nemusíme samostatne sledovať každý bod robota.
+Robotický link môže fyzicky obsahovať obrovské množstvo bodov, ale na úplný opis voľného rigidného telesa v 3D priestore nám bude stačiť iba **šesť nezávislých hodnôt**.
 
-Ak poznáme polohu a orientáciu jedného tuhého článku, automaticky vieme, kde sa nachádzajú všetky jeho body.
-
-To je obrovské zjednodušenie.
-
-> Robot môže mať milióny fyzických bodov, ale na opis jedného voľného tuhého článku ich nepotrebujeme milióny. V trojrozmernom priestore nám na úplný opis jeho konfigurácie stačí šesť nezávislých hodnôt. Práve rigidita telesa umožňuje zredukovať obrovské množstvo informácií na niekoľko čísel.
+A práve rigidita je dôvod, prečo je to možné.
 
 ---
 
-## 02. Čo vlastne znamená degree of freedom?
+## 02. Čo presne znamená degree of freedom
 
-Degree of freedom (DOF) môžeme na začiatku chápať ako jednu nezávislú možnosť, ktorou môžeme meniť konfiguráciu objektu.
+**Degree of freedom — DOF** môžeme intuitívne chápať ako jednu nezávislú možnosť, ktorou môžeme meniť konfiguráciu systému.
 
-Predstav si výťah. Kabína sa môže pohybovať hore alebo dole. Nemôže sa normálne pohybovať doľava, doprava ani sa otáčať.
+Predstav si napríklad výťah. Kabína sa môže pohybovať hore alebo dole, ale za normálnych okolností sa nemôže posúvať doľava, doprava ani sa otáčať. Na určenie jej polohy stačí jedna hodnota — napríklad výška.
 
-Výťah má preto **1 DOF**.
+Výťah preto môžeme považovať za systém s **1 DOF**.
 
-Hore a dole pritom nie sú dva stupne voľnosti. Ide o jeden pohyb, ktorý môže prebiehať dvoma smermi.
+Je pritom dôležité uvedomiť si, že pohyb hore a pohyb dole nie sú dva rôzne stupne voľnosti. Ide stále o jednu nezávislú súradnicu, ktorá sa môže meniť v dvoch smeroch.
 
-Teraz si predstav bod na stole. Môžeme ho posúvať doľava a doprava a nezávisle od toho dopredu a dozadu. Potrebujeme teda dve hodnoty na určenie jeho polohy.
+Ak napríklad označíme výšku kabíny ako h, hodnota h môže rásť alebo klesať. Stále však potrebujeme iba jedno číslo.
 
-Takýto bod má **2 DOF**.
+Teraz si predstav geometrický bod voľne sa pohybujúci po stole. Jeho polohu môžeme meniť v dvoch nezávislých smeroch — napríklad pomocou súradníc x a y. Na úplné určenie jeho polohy potrebujeme dve hodnoty, takže má **2 DOF**.
 
-Ešte presnejšie preto môžeme povedať:
+Presnejšie preto môžeme povedať:
 
-> **Počet stupňov voľnosti je najmenší počet nezávislých reálnych hodnôt, ktoré potrebujeme na úplný opis konfigurácie systému.**
+**Počet stupňov voľnosti je najmenší počet nezávislých reálnych hodnôt potrebných na úplné určenie konfigurácie systému.**
 
-Slovo nezávislých je veľmi dôležité. Ak zmena jednej hodnoty automaticky určuje inú, potom tieto dve hodnoty nepredstavujú dve nezávislé možnosti.
+Slovo **nezávislých** je tu zásadné. Ak je jedna hodnota automaticky určená ostatnými, nepridáva systému ďalší stupeň voľnosti.
 
 ---
 
-## 03. Poloha nie je to isté ako orientácia
+## 03. Poloha a orientácia opisujú dve rôzne veci
 
-Predstav si telefón položený na stole.
+Predstav si telefón položený presne v strede stola. Ak poviem iba to, kde sa nachádza jeho stred, ešte stále nevieme úplne určiť, ako telefón leží.
 
-Povieš mi: „Je presne v strede stola."
+Môže byť hornou hranou otočený smerom k tebe, môže byť otočený o 90° alebo môže ležať šikmo. Jeho stred sa pritom môže stále nachádzať na rovnakom mieste.
 
-Viem už úplne presne, ako telefón leží?
+V robotike preto rozlišujeme dva základné pojmy: **position — poloha** a **orientation — orientácia**.
 
-Nie.
+Position odpovedá na otázku **kde sa teleso nachádza**. Orientation odpovedá na otázku **ako je teleso natočené**.
 
-Môže byť displejom smerom k tebe, môže byť otočený o 90° alebo môže byť otočený šikmo. Jeho position – poloha môže byť rovnaká, zatiaľ čo jeho orientation – orientácia je iná.
+Pri samotnom geometrickom bode orientáciu riešiť nemusíme. Bod nemá žiadny tvar, takže jeho otočenie nič nemení. Rigid body však tvar má. Preto pri úplnom opise jeho konfigurácie väčšinou potrebujeme poznať polohu aj orientáciu.
 
-Toto rozdelenie bude v robotike veľmi dôležité.
-
-**Position** odpovedá na otázku: Kde sa objekt nachádza?
-
-**Orientation** odpovedá na otázku: Ako je objekt otočený?
-
-Keď chceme úplne opísať konfiguráciu tuhého telesa, väčšinou potrebujeme poznať oboje.
+Toto rozlíšenie sa bude v robotike objavovať neustále. Robotický gripper môže byť na správnom mieste, ale ak je nesprávne natočený, úlohu nemusí vedieť vykonať. Pri uchopení predmetu, skrutkovaní alebo zváraní preto často nestačí kontrolovať iba position — potrebujeme správnu aj orientation.
 
 ---
 
 ## 04. Tuhé teleso pohybujúce sa v rovine
 
-Začnime jednoduchším svetom – pohybom v 2D rovine.
+Začnime jednoduchším prípadom a obmedzme pohyb telesa na jednu rovinu.
 
-Predstav si mincu položenú naplocho na stole. Minca musí zostať na stole, nesmieme ju zdvihnúť ani nakloniť.
+Predstav si mincu položenú naplocho na stole. Minca musí počas celého pohybu zostať na stole. Nemôžeme ju zdvihnúť, prevrátiť ani nakloniť mimo roviny.
 
-Čo všetko s ňou môžeme urobiť?
+Aké nezávislé pohyby môže vykonať?
 
-- Môžeme ju posúvať doľava a doprava. To je jedna nezávislá možnosť.
-- Môžeme ju posúvať dopredu a dozadu. To je druhá.
-- A môžeme ju na stole otáčať. To je tretia.
+Môžeme ju posunúť v jednom smere po stole, napríklad doľava alebo doprava. Nezávisle od toho ju môžeme posunúť v druhom smere, napríklad dopredu alebo dozadu. A napokon ju môžeme na mieste otáčať.
 
-Máme teda:
+Máme teda **dva translačné stupne voľnosti** a **jeden rotačný stupeň voľnosti**.
 
-**2 translačné DOF + 1 rotačný DOF = 3 DOF.**
+Výsledok je:
 
-Tuhé teleso pohybujúce sa v rovine má preto tri stupne voľnosti.
+**2 translácie + 1 rotácia = 3 DOF**
 
-Jeho konfiguráciu môžeme opísať napríklad tromi hodnotami: prvé dve povedia, kde sa nachádza, a tretia povie, ako je otočené.
+Tuhé teleso, ktorého pohyb je obmedzený na rovinu, preto nazývame **planar rigid body** a má **3 degrees of freedom**.
 
-Nemusíme zatiaľ riešiť konkrétne matematické značenie. Podstatná je predstava: **kde som + ako som otočený**.
+Jeho konfiguráciu môžeme napríklad zapísať ako:
 
-> **Malý mentálny experiment:** Polož si dlaň naplocho na stôl a predstav si, že ju nesmieš zdvihnúť. Posuň ju doprava. Posuň ju dopredu. Otoč ju na mieste. To sú tri nezávislé pohyby. Teraz skús urobiť štvrtý pohyb bez toho, aby si dlaň zdvihla alebo naklonila mimo roviny stola. Nenájdeš ho. Každá ďalšia poloha dlane na stole sa dá vytvoriť kombináciou týchto troch možností. To je intuitívny význam 3 DOF v rovine.
+**q = (x, y, θ)**
 
-> **Poznámka:** 2D robot nemusí byť fyzicky plochý. Keď v robotike hovoríme o planar robot alebo **planar rigid body**, neznamená to, že samotný robot musí byť dvojrozmerný. Reálny robot je samozrejme 3D objekt. Ide o to, že jeho povolený pohyb je obmedzený na jednu rovinu.
+Súradnice x a y určujú polohu telesa v rovine a θ určuje jeho orientáciu.
+
+Veľmi jednoduchý spôsob, ako si to predstaviť, je položiť dlaň naplocho na stôl. Bez toho, aby si ju zdvihla alebo naklonila, ju môžeš posunúť doľava alebo doprava, dopredu alebo dozadu a môžeš ju otočiť na mieste. Každá ďalšia poloha dlane v rovine sa dá vytvoriť kombináciou týchto troch možností.
+
+Žiadny štvrtý nezávislý pohyb v tej istej rovine už neexistuje.
+
+Je tiež dôležité pochopiť, že označenie **planar rigid body** neznamená, že samotný objekt je fyzicky dvojrozmerný. Telefón, mobilný robot alebo kovová súčiastka sú stále trojrozmerné objekty. Slovo planar hovorí iba o tom, že **ich povolený pohyb je obmedzený na jednu rovinu**.
 
 ---
 
-## 05. Prečo rigidita znižuje počet nezávislých hodnôt?
+## 05. Prečo tri body na telese nemajú šesť stupňov voľnosti
 
-Teraz sa na rovnakú mincu pozrieme trochu hlbšie.
+Teraz sa na rovnaký problém pozrieme iným spôsobom. Tento pohľad nám ukáže, prečo rigidita telesa znižuje počet nezávislých možností.
 
-Označme na nej tri body: A, B a C.
+Predstav si, že na minci označíme tri rôzne body A, B a C.
 
 ![Tri body na minci a ich constraints](/book/ch2/fig2-2.png)
 
-Keby to boli tri samostatné bodky, ktoré môžeme ľubovoľne presúvať po stole, každý bod by potreboval dve hodnoty na určenie svojej polohy.
+Ak by tieto body neboli súčasťou jedného telesa a mohli sa po stole pohybovať úplne nezávisle, každý z nich by potreboval dve súradnice na určenie svojej polohy.
 
-Tri nezávislé body by teda mali spolu: **2 + 2 + 2 = 6 DOF.**
+Bod A by mal 2 DOF, bod B ďalšie 2 DOF a bod C ďalšie 2 DOF.
 
-Lenže naše body nie sú nezávislé.
+Spolu by teda tri úplne nezávislé body mali:
 
-Sú súčasťou jednej pevnej mince.
+**2 + 2 + 2 = 6 DOF**
 
-Ak posunieš A, nemôže B zostať na pôvodnom mieste, pretože by sa minca musela natiahnuť. Ak pohneš B, musí sa zodpovedajúcim spôsobom pohnúť aj C.
+Lenže naše body nie sú nezávislé. Sú súčasťou jednej pevnej mince.
 
-Prečo?
+Ak pohneme bodom A, body B a C sa musia pohybovať spolu s ním. Nemôžeme napríklad posunúť A doprava a nechať B na pôvodnom mieste, pretože tým by sme zmenili vzdialenosť medzi A a B — a minca by sa musela natiahnuť alebo deformovať.
 
-Pretože vzdialenosti medzi bodmi musia zostať rovnaké.
+Pri rigid body sa však vzdialenosti medzi bodmi meniť nesmú.
 
-- Vzdialenosť A–B je pevná.
-- Vzdialenosť B–C je pevná.
-- Vzdialenosť A–C je pevná.
+Preto zostávajú pevné vzdialenosti:
 
-Takéto pravidlo, ktoré obmedzuje možné konfigurácie systému, nazývame **constraint** – obmedzenie alebo väzba.
+**A–B**, **B–C** a **A–C**.
 
-A práve constraints nám postupne odoberajú možnosti, ktoré by samostatné body mali.
+Tieto pevné geometrické vzťahy predstavujú **constraints — obmedzenia**. Constraints hovoria, ktoré kombinácie polôh bodov sú dovolené a ktoré nie.
 
----
-
-## 06. Umiestnime mincu krok za krokom
-
-Najskôr vyberieme, kde bude bod A.
-
-A môžeme položiť kamkoľvek na stôl. Na určenie jeho polohy potrebujeme dve nezávislé hodnoty.
-
-Máme teda prvé: **2 DOF.**
-
-Teraz chceme umiestniť B.
-
-B však nemôžeme položiť hocikam. Je pevnou súčasťou mince a musí zostať v rovnakej vzdialenosti od A.
-
-Predstav si, že vzdialenosť A–B je 3 cm. Keď už poznáme A, všetky možné miesta vzdialené presne 3 cm od A vytvoria kružnicu okolo A.
-
-B môže byť kdekoľvek na tejto kružnici.
-
-Na výber konkrétneho miesta nám stačí jedna ďalšia hodnota – môžeme si ju predstaviť ako uhol okolo A.
-
-B teda pridá: **1 DOF.**
-
-Dokopy máme: **2 + 1 = 3 DOF.**
-
-A tým sme už v podstate určili, kde minca leží a ako je otočená.
+Práve vďaka nim nemá trojica bodov na pevnom telese šesť nezávislých stupňov voľnosti.
 
 ---
 
-## 07. Prečo bod C nepridá ďalšie DOF?
+## 06. Umiestnime body A, B a C krok za krokom
 
-Zostáva bod C.
+Najskôr umiestnime bod A.
 
-Ten musí byť v správnej vzdialenosti od A a zároveň v správnej vzdialenosti od B.
+Pretože sa pohybujeme v rovine, môžeme A položiť kamkoľvek na stôl. Na určenie jeho polohy potrebujeme dve nezávislé hodnoty — napríklad x a y.
 
-Predstav si kružnicu okolo A, ktorá určuje všetky možné miesta C podľa jeho vzdialenosti od A. Potom druhú kružnicu okolo B, ktorá určuje všetky možné miesta C podľa jeho vzdialenosti od B.
+Bod A nám teda dáva:
 
-C musí spĺňať obe podmienky naraz.
+**2 DOF**
 
-Preto sa nemôže voľne pohybovať po stole.
+Teraz chceme umiestniť bod B. Ten už však nemôžeme položiť ľubovoľne. B je súčasťou toho istého rigidného telesa a jeho vzdialenosť od A musí zostať pevná.
 
-V bežnej situácii dostaneme dve možné polohy – dve zrkadlové verzie toho istého usporiadania. Pri minci si ich môžeme predstaviť ako rozdiel medzi jednou a druhou stranou mince.
+Predstav si napríklad, že vzdialenosť medzi A a B je 3 cm. Keď už poznáme polohu A, bod B sa musí nachádzať presne 3 cm od neho.
 
-Ak však už vieme, ktorou stranou minca leží nahor, poloha C je určená.
+Všetky body v rovine, ktoré sú vzdialené presne 3 cm od A, vytvárajú kružnicu.
 
-C teda nepridáva ďalší spojitý stupeň voľnosti.
+B teda nemôže byť kdekoľvek na stole. Môže sa nachádzať iba niekde na tejto kružnici.
 
-Preto má minca stále iba **3 DOF**, hoci pozostáva z obrovského množstva bodov.
+Na výber konkrétneho miesta na kružnici nám stačí jedna hodnota — môžeme si ju predstaviť ako uhol okolo bodu A.
 
----
+Bod B preto pridáva iba:
 
-## 08. Heads alebo tails nie je ďalší DOF
+**1 DOF**
 
-Tu sa objavuje jeden detail, ktorý je dobré pochopiť hneď.
+Dohromady máme:
 
-Minca môže ležať: **heads up** alebo **tails up**.
+**2 + 1 = 3 DOF**
 
-Prečo teda nepovieme, že toto je štvrtý stupeň voľnosti?
-
-Pretože DOF v tejto definícii opisujú spojité možnosti.
-
-Napríklad polohu mince môžeš meniť plynulo. Môže byť 10 cm od okraja, potom 10,1 cm, 10,2 cm a tak ďalej. Aj jej uhol môžeš meniť plynulo.
-
-Heads/tails je však iba voľba medzi dvoma oddelenými stavmi.
-
-Nemáme niečo ako: heads → trochu heads → polovica heads → skoro tails → tails, pokiaľ stále požadujeme, aby minca ležala naplocho na stole.
-
-Preto táto diskrétna voľba nezvyšuje počet stupňov voľnosti.
+A tým sme už v podstate určili polohu aj orientáciu rigidného telesa v rovine.
 
 ---
 
-## 09. Čo sa stane, keď pridáme ďalší bod?
+## 07. Prečo bod C nepridáva ďalší spojitý DOF
 
-Pridajme na mincu bod D.
+Zostáva nám bod C.
 
-Keďže bod v rovine má dve súradnice, mohlo by sa zdať, že sme pridali ďalšie dva stupne voľnosti.
+C musí zostať v pevnej vzdialenosti od A a zároveň v pevnej vzdialenosti od B.
 
-Lenže D je opäť pevnou súčasťou mince.
+Predstav si najskôr kružnicu so stredom v A. Tá predstavuje všetky možné body, ktoré majú správnu vzdialenosť od A. Potom si predstav druhú kružnicu so stredom v B, ktorá predstavuje všetky body so správnou vzdialenosťou od B.
 
-Jeho vzdialenosť od ostatných bodov je daná. Keď už poznáme konfiguráciu mince, poloha D je automaticky určená.
+C musí ležať na oboch kružniciach súčasne.
 
-Môžeme dokonca napísať viacero constraints – napríklad pevnú vzdialenosť D od A, B a C. Nie všetky však musia poskytovať novú informáciu.
+V bežnom prípade sa tieto dve kružnice pretínajú v dvoch bodoch. Dostaneme teda dve možné zrkadlové usporiadania trojice A, B a C.
 
-Tu sa stretávame s pojmom **independent constraint** – nezávislé obmedzenie.
+To však neznamená, že C získal ďalší **spojitý** stupeň voľnosti. Nemôžeme ho plynulo posúvať po nejakej novej osi alebo krivke bez toho, aby sme porušili pevnú vzdialenosť od A alebo B.
 
-Ak jedno obmedzenie iba opakuje informáciu, ktorú už vieme z ostatných, je redundantné. Pri počítaní DOF preto nestačí slepo spočítať všetky možné constraints. Musíme vedieť, koľko z nich je skutočne nezávislých.
+Keď navyše vieme, ktorou stranou teleso smeruje, správna poloha C je už jednoznačne určená.
 
-Táto myšlienka bude veľmi dôležitá pri zložitejších robotických mechanizmoch.
+C teda nepridáva nový spojitý DOF.
 
----
+Výsledkom zostáva:
 
-## 10. Z toho vzniká základné pravidlo
+**planar rigid body = 3 DOF**
 
-Teraz môžeme formulovať jeden z hlavných princípov tejto kapitoly.
-
-Ak máme systém s určitým počtom možností a potom naň pridáme nezávislé constraints, tieto constraints mu niektoré možnosti odoberú.
-
-Preto môžeme uvažovať:
-
-**DOF = pôvodný počet možností - počet nezávislých constraints.**
-
-Alebo matematickejšie:
-
-**DOF = počet premenných - počet nezávislých rovníc, ktoré ich obmedzujú.**
-
-Toto pravidlo si zapamätaj hlavne významovo.
-
-Predstav si DOF ako slobodu pohybu a constraints ako pravidlá, ktoré časť tejto slobody odoberajú.
-
-Neskôr urobíme presne to isté s robotom. Jednotlivé linky budú mať určité možnosti pohybu a joints medzi nimi tieto možnosti obmedzia.
-
-> **Poznámka:** Kĺb robotovi pohyb nielen umožňuje, ale zároveň ho aj zakazuje. Keď sa pozrieš na pánt dverí, intuitívne vidíš, že dverám umožňuje otáčanie. Z pohľadu robotiky je však rovnako dôležité to, že im zároveň zakazuje ostatné pohyby. Práve takýto pohľad na joints vedie k počítaniu stupňov voľnosti celých robotov.
+Tento príklad zároveň ukazuje, akú veľkú úlohu pri určovaní stupňov voľnosti zohrávajú constraints. Keby body A, B a C mohli meniť svoju vzájomnú vzdialenosť, mali by spolu šesť stupňov voľnosti. Pretože však tvoria rigid body, ich pohyb je navzájom previazaný.
 
 ---
 
-## 11. Z roviny sa presunieme do 3D priestoru
+## 08. Prečo heads alebo tails nie je ďalší stupeň voľnosti
 
-Teraz mincu zdvihneme zo stola.
+Pri predchádzajúcom príklade nám zostali dve možné zrkadlové polohy bodu C. Pri minci si ich môžeme intuitívne predstaviť ako situáciu, keď leží jednou alebo druhou stranou nahor.
 
-Už nie je obmedzená na jednu rovinu a môže sa voľne pohybovať vo vzduchu.
+Mohli by sme sa preto opýtať: Ak môže byť minca **heads up** alebo **tails up**, nemala by mať ďalší stupeň voľnosti?
 
-Najskôr riešme iba jej position – polohu.
+Nie.
 
-V 3D priestore ju môžeme posúvať v troch nezávislých smeroch:
-- doľava a doprava
-- dopredu a dozadu
-- hore a dole
+Dôvodom je rozdiel medzi **continuous** a **discrete** možnosťou.
 
-Na presné určenie polohy teda potrebujeme 3 hodnoty.
+Poloha mince sa môže meniť spojito. Môžeme ju posunúť o 1 cm, potom o 1,1 cm, 1,11 cm a medzi týmito hodnotami existujú ďalšie možné polohy. Rovnako môžeme jej orientáciu meniť o ľubovoľne malý uhol.
 
-To znamená: **3 translačné DOF.**
+Heads a tails však tvoria dve oddelené možnosti. Pokiaľ požadujeme, aby minca stále ležala naplocho na stole, neexistuje plynulý stav „trochu heads" alebo „polovica heads a polovica tails".
 
-Lenže poloha stále nehovorí nič o tom, ako je minca otočená.
+Ide teda o **discrete variable — diskrétnu premennú**.
 
----
+DOF v tomto kontexte počíta počet potrebných **spojitých reálnych parametrov**, nie počet všetkých možných diskrétnych stavov systému.
 
-## 12. V priestore máme aj tri možnosti rotácie
-
-Predstav si teraz namiesto mince mobil, ktorý držíš vo vzduchu.
-
-- Môžeš ho nakloniť dopredu a dozadu.
-- Môžeš ho nakloniť do strán.
-- A môžeš ho otočiť okolo ďalšej osi.
-
-Na úplné určenie jeho orientácie v priestore preto potrebujeme ďalšie tri nezávislé rotačné DOF.
-
-Celkový výsledok je:
-
-**3 translačné DOF + 3 rotačné DOF = 6 DOF.**
-
-Tuhé teleso voľne sa pohybujúce v trojrozmernom priestore má teda: **6 degrees of freedom.**
-
-Toto číslo sa bude v robotike objavovať neustále.
-
-Napríklad keď budeme neskôr hovoriť o robotickom ramene, ktoré dokáže ľubovoľne nastaviť polohu aj orientáciu svojho end-effectora, veľmi často budeme hovoriť práve o úlohe so šiestimi stupňami voľnosti.
+Preto minca stále zostáva systémom s **3 DOF**.
 
 ---
 
-## 13. Rovnakých 6 DOF vieme odvodiť pomocou bodov A, B a C
+## 09. Čo ak na teleso pridáme ďalší bod?
 
-Kniha opäť používa body A, B a C, pretože nám ukazujú, prečo dostaneme práve číslo šesť.
+Predstav si, že na mincu pridáme štvrtý bod D.
 
-Najskôr umiestnime **bod A**. Keďže sme v trojrozmernom priestore, A môžeme umiestniť kdekoľvek – doprava alebo doľava, dopredu alebo dozadu a hore alebo dole. Preto A poskytuje: **3 DOF.**
+Samostatný bod v rovine by potreboval dve súradnice. Mohlo by sa teda zdať, že sme systému pridali ďalšie 2 DOF.
 
-Potom umiestnime **bod B**. B musí zostať v pevnej vzdialenosti od A. Predstav si A v strede neviditeľnej gule. B môže byť kdekoľvek na povrchu tejto gule. Na výber miesta na povrchu gule potrebujeme dve nezávislé hodnoty. Intuitívne si ich môžeš predstaviť ako zemepisnú šírku a dĺžku na Zemi. B teda pridáva: **2 DOF.**
+Lenže D je opäť pevnou súčasťou toho istého rigidného telesa. Jeho poloha voči A, B a C je daná. Keď už poznáme konfiguráciu mince, poloha D je automaticky určená.
 
-Nakoniec umiestnime **bod C**. C musí byť v správnej vzdialenosti od A aj od B. Tieto dve podmienky ho obmedzia tak, že sa v bežnom prípade môže pohybovať už iba po určitej kružnici. Na výber miesta na kružnici stačí jedna hodnota. C preto pridáva: **1 DOF.**
+Môžeme pritom zapísať viacero constraints — napríklad pevnú vzdialenosť D od A, D od B a D od C. Tu sa však objavuje ďalšia dôležitá myšlienka: **nie všetky constraints musia byť nezávislé**.
 
-A dostávame:
+Predstav si, že už máme dostatok informácií na jednoznačné určenie polohy bodu D. Ďalšia rovnica môže iba potvrdiť informáciu, ktorá už vyplýva z predchádzajúcich constraints. Takéto obmedzenie označujeme ako **redundantné**.
 
-**3 + 2 + 1 = 6 DOF.**
+Pri počítaní stupňov voľnosti preto nemôžeme jednoducho spočítať každé pravidlo alebo každú rovnicu, ktorú dokážeme napísať. Zaujíma nás počet **independent constraints — nezávislých obmedzení**.
 
-Tri vybrané body pritom nesmú ležať na jednej priamke. Potrebujeme ich rozložené tak, aby skutočne dokázali určiť orientáciu celého telesa.
-
----
-
-## 14. Planar vs. spatial rigid body
-
-Teraz už môžeme jasne rozlíšiť dva pojmy, ktoré sa budú v Modern Robotics používať ďalej.
-
-**Planar rigid body** je tuhé teleso, ktorého pohyb je obmedzený na rovinu. Má: **2 translačné DOF + 1 rotačný DOF = 3 DOF.** Typickým príkladom je predmet, ktorý sa môže voľne posúvať a otáčať po stole.
-
-**Spatial rigid body** je tuhé teleso, ktoré sa môže voľne pohybovať v trojrozmernom priestore. Má: **3 translačné DOF + 3 rotačné DOF = 6 DOF.** Typickým príkladom môže byť voľne letiaci objekt.
-
-Dá sa na to pozrieť ešte jedným veľmi užitočným spôsobom. Planárne teleso je stále fyzicky trojrozmerné teleso. Len sme mu pomocou constraints zakázali tri z jeho šiestich možností pohybu.
-
-Preto:
-- spatial rigid body → 6 DOF
-- planar rigid body → 3 DOF
+Táto myšlienka bude pri zložitejších robotoch veľmi dôležitá. Mechanizmus môže obsahovať veľké množstvo geometrických vzťahov, ale nie každý z nich odoberá ďalší stupeň voľnosti.
 
 ---
 
-## 15. Prečo je práve 6 DOF v robotike také dôležité?
+## 10. Základný princíp: voľnosť mínus obmedzenia
+
+Teraz už môžeme sformulovať všeobecnú myšlienku, ktorá sa bude používať aj pri ďalších robotických mechanizmoch.
+
+Najskôr si predstavíme, koľko nezávislých možností by systém mal bez určitých väzieb. Potom sa pozrieme na constraints, ktoré niektoré z týchto možností zakazujú.
+
+Pre jednoduché prípady môžeme uvažovať:
+
+**DOF = počet nezávislých premenných - počet nezávislých obmedzení**
+
+Podstatná však nie je samotná formulka, ale spôsob premýšľania.
+
+**Degrees of freedom predstavujú voľnosť systému. Constraints túto voľnosť obmedzujú.**
+
+Presne tak sa môžeme pozerať aj na joints robota.
+
+Pánt dverí na prvý pohľad vnímame ako mechanizmus, ktorý **umožňuje rotáciu**. Z pohľadu počítania DOF je však rovnako dôležité všimnúť si všetky pohyby, ktoré pánt **neumožňuje**.
+
+Dvere by sa bez pántov mohli voľne premiestňovať a otáčať v priestore. Po pripevnení pántom väčšinu týchto pohybov stratia a zostane im iba rotácia okolo jednej osi.
+
+Joint teda nie je iba „miesto, kde sa robot môže pohybovať". Z matematického pohľadu zároveň predstavuje súbor constraints, ktoré niektoré relatívne pohyby medzi linkmi zakazujú.
+
+Práve tento pohľad budeme potrebovať pri počítaní stupňov voľnosti celých robotov.
+
+---
+
+## 11. Z roviny sa presunieme do trojrozmerného priestoru
+
+Doteraz sme teleso držali na stole. Teraz toto obmedzenie odstránime a necháme ho voľne sa pohybovať v priestore.
+
+Predstav si napríklad telefón, ktorý držíš vo vzduchu.
+
+Najskôr sa sústreďme iba na jeho **position — polohu**.
+
+V trojrozmernom priestore sa môže nezávisle presúvať v troch smeroch. Môže sa pohybovať doľava alebo doprava, dopredu alebo dozadu a hore alebo dole.
+
+Na určenie jeho polohy preto potrebujeme tri nezávislé súradnice, napríklad:
+
+**x, y, z**
+
+Voľné teleso v priestore má teda:
+
+**3 translačné DOF**
+
+Tieto tri hodnoty však určujú iba to, kde sa teleso nachádza. Stále nevieme, ako je natočené.
+
+A preto musíme pridať orientáciu.
+
+---
+
+## 12. V 3D priestore má teleso aj tri rotačné stupne voľnosti
+
+Drž telefón pred sebou vo vzduchu a bez toho, aby si výrazne zmenila polohu jeho stredu, začni meniť jeho orientáciu.
+
+Môžeš ho nakloniť dopredu alebo dozadu. Môžeš ho nakloniť doľava alebo doprava. A môžeš ho otočiť okolo ďalšej osi tak, akoby si ho otáčala na stole.
+
+Na úplné určenie orientácie voľného rigidného telesa v 3D priestore potrebujeme **tri nezávislé rotačné parametre**.
+
+K trom translačným stupňom voľnosti preto pridáme tri rotačné:
+
+**3 translačné DOF + 3 rotačné DOF = 6 DOF**
+
+Voľné rigidné teleso v trojrozmernom priestore má teda:
+
+**6 degrees of freedom**
+
+Tento výsledok patrí medzi najdôležitejšie základné fakty robotiky.
+
+Môžeme si ho zapamätať veľmi intuitívne:
+
+**3 DOF hovoria, kde teleso je. Ďalšie 3 DOF hovoria, ako je natočené.**
+
+Spolu máme úplný opis jeho konfigurácie v priestore.
+
+---
+
+## 13. Prečo je to práve 6 DOF: dôkaz pomocou bodov A, B a C
+
+K rovnakému výsledku sa môžeme dostať aj pomocou bodov A, B a C. Tento pohľad nám zároveň ukáže, ako rigidita postupne obmedzuje pohyb jednotlivých bodov.
+
+Začneme bodom A.
+
+V trojrozmernom priestore ho môžeme umiestniť kamkoľvek. Na jeho polohu potrebujeme tri súradnice — napríklad x, y a z.
+
+Bod A preto poskytuje:
+
+**3 DOF**
+
+Teraz pridáme bod B. Keďže B patrí k tomu istému rigidnému telesu, jeho vzdialenosť od A musí zostať pevná.
+
+Ak je napríklad vzdialenosť A–B rovná 10 cm, B sa musí nachádzať presne 10 cm od A.
+
+V trojrozmernom priestore tvoria všetky body vzdialené 10 cm od A **povrch gule**.
+
+B teda už nemôžeme umiestniť ľubovoľne v celom priestore. Môžeme ho vybrať iba niekde na povrchu tejto gule.
+
+Na určenie konkrétneho bodu na povrchu gule potrebujeme dve nezávislé hodnoty. Intuitívne si ich môžeš predstaviť podobne ako zemepisnú šírku a zemepisnú dĺžku na povrchu Zeme.
+
+Bod B preto pridáva:
+
+**2 DOF**
+
+Zatiaľ máme:
+
+**3 + 2 = 5 DOF**
+
+Nakoniec pridáme bod C. C musí zostať v pevnej vzdialenosti od A a zároveň v pevnej vzdialenosti od B.
+
+Prvá podmienka ho obmedzí na povrch jednej gule a druhá na povrch druhej gule. Prienikom týchto dvoch povrchov je v bežnom prípade **kružnica**.
+
+C sa teda už nemôže pohybovať po celej guli. Môže sa pohybovať iba po tejto kružnici.
+
+Na výber konkrétneho miesta na kružnici potrebujeme už len jednu hodnotu.
+
+Bod C preto pridáva:
+
+**1 DOF**
+
+A výsledok je:
+
+**3 + 2 + 1 = 6 DOF**
+
+Takto sme nezávisle od predchádzajúcej predstavy troch translácií a troch rotácií opäť dostali šesť stupňov voľnosti.
+
+Je pritom dôležité, aby body A, B a C neležali na jednej priamke. Tri vhodne zvolené nekolineárne body dokážu jednoznačne určiť polohu aj orientáciu rigidného telesa.
+
+---
+
+## 14. Planar rigid body a spatial rigid body
+
+Teraz už môžeme presne rozlíšiť dva pojmy, s ktorými sa budeme v Modern Robotics stretávať veľmi často.
+
+**Planar rigid body** je tuhé teleso, ktorého pohyb je obmedzený na jednu rovinu. Má dva translačné a jeden rotačný stupeň voľnosti, teda spolu:
+
+**planar rigid body = 3 DOF**
+
+Typickým príkladom môže byť objekt, ktorý sa môže voľne posúvať a otáčať po stole, ale nemôže sa zdvihnúť ani nakloniť.
+
+**Spatial rigid body** je tuhé teleso, ktoré sa môže voľne pohybovať v trojrozmernom priestore. Má tri translačné a tri rotačné stupne voľnosti:
+
+**spatial rigid body = 6 DOF**
+
+Typickým príkladom je voľný objekt pohybujúci sa vo vzduchu.
+
+Dôležité je uvedomiť si, že planar rigid body je stále fyzicky trojrozmerný objekt. Rozdiel je iba v tom, že jeho pohyb je pomocou constraints obmedzený.
+
+Na spatial rigid body sa preto môžeme pozerať ako na teleso so šiestimi možnosťami pohybu. Ak mu mechanickými obmedzeniami zakážeme tri z nich a dovolíme mu zostať iba v jednej rovine, dostaneme planar rigid body s tromi stupňami voľnosti.
+
+Tento spôsob uvažovania bude veľmi užitočný aj pri joints: **najskôr sa pozrieme na všetky možné pohyby a potom zisťujeme, ktoré z nich mechanické väzby odstránia.**
+
+---
+
+## 15. Prečo je 6 DOF v robotike také dôležité
+
+Šesť stupňov voľnosti sa v robotike objavuje veľmi často, pretože práve šesť nezávislých hodnôt potrebujeme na úplný opis konfigurácie voľného rigidného telesa v trojrozmernom priestore.
 
 Predstav si robotické rameno s gripperom.
 
-Ak chceme gripper dostať k predmetu, potrebujeme určiť jeho position – napríklad aby sa nachádzal presne nad predmetom.
+Ak chceme gripper dostať k predmetu, potrebujeme určiť jeho polohu. Môžeme napríklad požadovať, aby sa nachádzal presne 20 cm nad konkrétnym miestom na stole.
 
-Často však nestačí byť iba na správnom mieste. Gripper musí mať aj správnu orientation. Ak chceme chytiť fľašu zhora, gripper musí byť otočený inak, než keby ju chytal zboku.
+Samotná poloha však často nestačí.
 
-Pre úplnú konfiguráciu voľného rigid body v priestore preto riešime: **3 DOF pre position + 3 DOF pre orientation.**
+Ak má gripper uchopiť fľašu zhora, musí mať inú orientáciu, než keby ju mal uchopiť zboku. Pri zváraní musí byť nástroj natočený správnym smerom voči povrchu. Pri skrutkovaní musí os skrutkovača smerovať pozdĺž osi skrutky.
 
-To je jeden z dôvodov, prečo má mnoho priemyselných robotických ramien práve šesť riadených osí. Šesť vhodne usporiadaných stupňov voľnosti umožňuje end-effectoru dosiahnuť všeobecnú polohu a orientáciu v 3D priestore v rámci pracovného priestoru robota.
+Pre úplný opis **pose — polohy a orientácie** end-effectora v 3D priestore preto vo všeobecnosti potrebujeme:
 
-Viac DOF však nemusí znamenať „lepší robot". Ak má robot napríklad sedem stupňov voľnosti, môže mať pre rovnakú požadovanú polohu a orientáciu end-effectora viacero možných konfigurácií. Tomu sa neskôr budeme venovať ako kinematic redundancy.
+**3 DOF pre position + 3 DOF pre orientation = 6 DOF**
 
----
+To je jeden z dôvodov, prečo má veľa priemyselných robotických ramien šesť riadených osí. Šesť vhodne usporiadaných stupňov voľnosti môže robotu umožniť nastavovať polohu aj orientáciu end-effectora v rámci jeho pracovného priestoru.
 
-## 16. Najdôležitejšia myšlienka celej lekcie
+Treba však dávať pozor na jednu vec: **robot so šiestimi joints automaticky nemusí dosiahnuť každú možnú polohu a orientáciu v priestore**. Záleží na konštrukcii robota, rozsahoch kĺbov, dĺžkach linkov, singularitách a ďalších obmedzeniach.
 
-Pointou Chapter 2.1 nie je iba naučiť sa naspamäť čísla 3 a 6.
+Rovnako platí, že viac DOF automaticky neznamená „lepší robot".
 
-Dôležitejšie je pochopiť spôsob uvažovania.
+Robot môže mať napríklad sedem stupňov voľnosti a stále pracovať v šesťrozmernom priestore polohy a orientácie end-effectora. V takom prípade môže existovať viacero rôznych konfigurácií robota, ktoré vedú k rovnakému pose end-effectora.
 
-Najskôr sa pozrieme na systém a predstavíme si, aké možnosti by mal, keby neexistovali žiadne obmedzenia.
-
-Potom sa pozrieme na constraints a zisťujeme, ktoré možnosti pohybu systému odoberajú.
-
-To, čo zostane, predstavuje jeho degrees of freedom.
-
-Pri rigid body sú constraints spôsobené tým, že vzdialenosti medzi jeho bodmi sa nesmú meniť.
-
-V ďalšej kapitole už nebudeme skúmať iba jedno teleso. Začneme spájať viac rigid bodies pomocou joints.
-
-A zrazu budeme môcť rovnakú myšlienku použiť na celý robot: **Koľko možností pohybu by jednotlivé linky mali samostatne a koľko z nich im odoberú kĺby?**
-
-Práve z tejto otázky vznikne Grüblerova formula, ktorú budeme používať v Chapter 2.2 – Degrees of Freedom of a Robot.
+Takýto jav nazývame **kinematic redundancy — kinematická redundancia** a vrátime sa k nemu neskôr.
 
 ---
 
-## Čo by ti po tejto lekcii malo zostať v hlave
+## 16. Ako premýšľať nad stupňami voľnosti
 
-- Keď uvidíš pojem **rigid body**, predstav si pevný objekt, ktorého tvar sa počas pohybu nemení.
-- Keď uvidíš **degree of freedom**, rozmýšľaj nad jednou nezávislou hodnotou potrebnou na opis konfigurácie.
-- Keď uvidíš **planar rigid body**, myslí na: 2 posunutia + 1 otočenie = **3 DOF**.
-- Keď uvidíš **spatial rigid body**, myslí na: 3 posunutia + 3 otočenia = **6 DOF**.
-- A keď uvidíš **constraint**, predstav si pravidlo, ktoré systému niektorú možnosť pohybu odoberá.
+Najdôležitejším výsledkom tejto lekcie nie sú samotné čísla 3 a 6. Oveľa dôležitejší je spôsob premýšľania, ktorý sme pri ich odvodzovaní použili.
 
-Ak toto chápeš, máš presne ten základ, ktorý potrebuješ na ďalšiu časť Chapter 2.2.`;
+Najskôr sa pozeráme na systém a zisťujeme, koľko nezávislých možností by mal bez určitých obmedzení. Potom identifikujeme constraints a sledujeme, ktoré z týchto možností nám odoberajú.
+
+Pri rigid body vznikajú constraints preto, že vzdialenosti medzi jednotlivými bodmi telesa zostávajú pevné. Body sa preto nemôžu pohybovať nezávisle.
+
+Rovnakú logiku budeme môcť použiť pri celom robotovi.
+
+Ak máme viacero samostatných rigid bodies, každé z nich by malo určitý počet stupňov voľnosti. Keď ich však spojíme pomocou joints, pohyb už nebude úplne voľný. Každý joint dovolí iba určité relatívne pohyby a ostatné zakáže.
+
+Namiesto otázky:
+
+**„Koľko pohybov tento joint umožňuje?"**
+
+je preto často užitočné položiť si aj opačnú otázku:
+
+**„Ktoré pohyby tento joint odoberá?"**
+
+Práve tento pohľad nás privedie k systematickému počítaniu stupňov voľnosti celých mechanizmov.
+
+---
+
+## Zhrnutie lekcie
+
+**Rigid body — tuhé teleso** je idealizovaný objekt, ktorého tvar a rozmery sa počas pohybu nemenia. Jednotlivé body telesa sa môžu presúvať v priestore, ale ich vzájomné vzdialenosti zostávajú konštantné. Vďaka tomu nemusíme sledovať každý bod zvlášť — konfiguráciu celého telesa dokážeme opísať malým počtom nezávislých hodnôt.
+
+**Degree of freedom — DOF** predstavuje jednu nezávislú reálnu hodnotu potrebnú na opis konfigurácie systému. Nejde o počet smerov, ako napríklad „hore" a „dole", ale o počet nezávislých súradníc, ktoré môžeme meniť.
+
+Pri rigidnom telese zároveň rozlišujeme **position — polohu** a **orientation — orientáciu**. Poloha hovorí, kde sa teleso nachádza, zatiaľ čo orientácia určuje, ako je natočené.
+
+**Planar rigid body** sa môže pohybovať iba v jednej rovine. Má dve nezávislé translácie a jednu rotáciu:
+
+**2 translačné DOF + 1 rotačný DOF = 3 DOF**
+
+**Spatial rigid body** sa môže voľne pohybovať v trojrozmernom priestore. Má tri nezávislé translácie a tri nezávislé rotácie:
+
+**3 translačné DOF + 3 rotačné DOF = 6 DOF**
+
+Rovnaký výsledok môžeme odvodiť pomocou troch bodov A, B a C. V 3D priestore dostane A tri stupne voľnosti, B vďaka pevnej vzdialenosti od A pridá iba dva a C vďaka pevnej vzdialenosti od A aj B pridá už len jeden:
+
+**3 + 2 + 1 = 6 DOF**
+
+Kľúčovú úlohu pritom zohrávajú **constraints — obmedzenia**. Tie prepájajú jednotlivé premenné a odoberajú systému nezávislé možnosti pohybu. Pri počítaní DOF nás zaujímajú iba **independent constraints**, teda obmedzenia, ktoré prinášajú skutočne novú informáciu.
+
+Najdôležitejší mentálny model tejto lekcie je preto veľmi jednoduchý:
+
+**voľný pohyb → pridáme constraints → zostanú degrees of freedom**
+
+V ďalšej lekcii môžeme tento princíp preniesť z jedného rigidného telesa na **celého robota**. Namiesto pevných vzdialeností medzi bodmi budeme sledovať links a joints a ukážeme si, ako z nich systematicky vypočítať počet stupňov voľnosti robotického mechanizmu.`;

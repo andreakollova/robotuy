@@ -13,6 +13,8 @@ V tejto lekcii sa dostaneme k dvom dôležitým výsledkom. **Tuhé teleso, ktor
 
 ---
 
+:::recap
+
 ## 01. Čo je rigid body
 
 Skutočné predmety nie sú dokonale pevné. Kovové rameno robota sa môže pri zaťažení nepatrne ohnúť, plast sa môže deformovať a aj oceľ pri pôsobení sily mierne zmení svoj tvar. Ak by sme však pri každom pohybe robota museli počítať aj tieto malé deformácie, už veľmi jednoduchý mechanický model by sa rýchlo stal neprehľadným.
@@ -40,6 +42,8 @@ Presnejšie teda môžeme povedať, že počet DOF je **najmenší počet nezáv
 Slovo **nezávislých** je zásadné. Ak je jedna hodnota automaticky určená ostatnými, nepridáva systému nový stupeň voľnosti.
 
 ---
+
+:::
 
 ## 03. Pri telese potrebujeme polohu aj orientáciu
 

@@ -126,9 +126,13 @@ export default function TopicLessonPage() {
         {/* LESSON CONTENT TAB */}
         {tab === 'lesson' && lesson.content && (
           <div className="lesson-content" style={{ color: 'var(--text-secondary)', fontSize: 14.5, lineHeight: 1.75, marginBottom: 32, background: '#fff', borderRadius: 16, padding: '24px 28px', border: '1px solid var(--border)' }}>
-            {lesson.content.split('\n').map((line, i) => {
+            {(() => {
+              let inRecap = false;
+              return lesson.content!.split('\n').map((line, i) => {
               const trimmed = line.trim();
-              if (!trimmed) return <div key={i} style={{ height: 6 }} />;
+              if (trimmed === ':::recap') { inRecap = true; return <div key={i} style={{ margin: '12px 0 6px', padding: '10px 14px', background: 'rgba(34,197,94,0.06)', borderRadius: 12, border: '1px solid rgba(34,197,94,0.15)' }}><div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}><RotateCcw size={13} color="var(--green)" /><span style={{ fontSize: 11, fontWeight: 700, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Opakovanie z predchádzajúcej lekcie</span></div></div>; }
+              if (trimmed === ':::') { inRecap = false; return <div key={i} style={{ height: 2 }} />; }
+              if (!trimmed) return <div key={i} style={{ height: inRecap ? 4 : 6 }} />;
               if (trimmed.startsWith('# ')) return <h1 key={i} style={{ fontSize: 22, fontWeight: 800, color: '#4f2a85', margin: '10px 0 8px', lineHeight: 1.3 }}>{trimmed.slice(2)}</h1>;
               if (trimmed.startsWith('## ')) return <h2 key={i} style={{ fontSize: 17, fontWeight: 700, color: '#4f2a85', margin: '12px 0 6px', lineHeight: 1.3, paddingLeft: 10, borderLeft: '3px solid #22c55e' }}>{trimmed.slice(3)}</h2>;
               if (trimmed.startsWith('### ')) return <h3 key={i} style={{ fontSize: 15, fontWeight: 700, color: '#4f2a85', margin: '10px 0 4px' }}>{trimmed.slice(4)}</h3>;
@@ -148,8 +152,9 @@ export default function TopicLessonPage() {
                 if (part.startsWith('`') && part.endsWith('`')) return <code key={j} style={{ background: 'rgba(79,42,133,0.06)', padding: '2px 6px', borderRadius: 4, fontSize: 12, color: '#4f2a85', fontFamily: 'var(--font-mono)', border: '1px solid rgba(79,42,133,0.15)' }}>{part.slice(1, -1)}</code>;
                 return part;
               });
-              return <p key={i} style={{ margin: '4px 0' }}>{formatted}</p>;
-            })}
+              return <p key={i} style={{ margin: '4px 0', ...(inRecap ? { fontSize: 13.5, color: 'var(--text-hint)' } : {}) }}>{formatted}</p>;
+            });
+            })()}
             {/* YouTube Video Embed */}
             {lesson.videoUrl && (() => {
               const match = lesson.videoUrl!.match(/(?:v=|\/embed\/|youtu\.be\/)([^&?#]+)/);

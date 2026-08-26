@@ -37,13 +37,15 @@ export default function TopicLessonPage() {
   useEffect(() => {
     if (tab !== 'lesson') { setScrollProgress(0); return; }
     const handleScroll = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      setScrollProgress(docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0);
+      const scrollTop = Math.max(window.scrollY, window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop);
+      const docHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - window.innerHeight;
+      setScrollProgress(docHeight > 0 ? Math.min(Math.max(scrollTop / docHeight, 0), 1) : 0);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('scroll', handleScroll, { passive: true });
+    const t = setInterval(handleScroll, 200);
     handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => { window.removeEventListener('scroll', handleScroll); document.removeEventListener('scroll', handleScroll); clearInterval(t); };
   }, [tab]);
 
   if (!topic || !lesson) {

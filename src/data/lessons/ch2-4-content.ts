@@ -1,494 +1,637 @@
-// Chapter 2.4 – Lekcia 7: Obmedzenia konfigurácie a rýchlosti
+// Chapter 2.4 – Lekcia 7: Configuration and Velocity Constraints
 // Full lesson content - DO NOT SHORTEN
 
-export const ch24Content = `# Lekcia 7: Obmedzenia konfigurácie a rýchlosti
+export const ch24Content = `# Lekcia 7: Configuration and Velocity Constraints
 
-V predchádzajúcej časti sme sa naučili, že configuration space môžeme reprezentovať aj implicitne. Namiesto toho, aby sme hľadali minimálny počet nezávislých súradníc, môžeme použiť viac premenných a pomocou constraints určiť, ktoré ich kombinácie sú skutočne možné.
+V predchádzajúcej lekcii sme sa naučili, že configuration space nemusíme vždy opisovať minimálnym počtom nezávislých súradníc. Niekedy je praktickejšie použiť viac premenných a pomocou constraints — obmedzení určiť, ktoré kombinácie týchto premenných predstavujú skutočne možné konfigurácie systému. Takýto spôsob sme nazvali implicit representation.
 
-Teraz túto myšlienku rozvinieme ďalej. Pri robotoch totiž existujú dva zásadne odlišné druhy obmedzení. Niektoré obmedzujú samotnú configuration – určujú, v akých konfiguráciách sa systém vôbec môže nachádzať. Iné obmedzujú iba velocity – určujú, akým spôsobom sa systém môže pohybovať v konkrétnom okamihu.
+Teraz túto myšlienku posunieme ďalej. Constraints totiž nemusia obmedzovať iba to, kde sa robot môže nachádzať. Môžu obmedzovať aj to, ako sa robot môže v danom okamihu pohybovať.
 
-Rozdiel medzi nimi je veľmi dôležitý. Práve na ňom stoja pojmy **holonomic constraints** a **nonholonomic constraints**.
+To sú dve rozdielne veci. Predstav si bod, ktorý je mechanicky pripevnený ku kruhovej dráhe. Tento bod sa mimo kružnice jednoducho nemôže nachádzať. Jeho možné configurations sú teda priamo obmedzené. Potom si predstav auto. Auto sa môže nachádzať na mieste ležiacom napravo od svojej aktuálnej polohy, ale nedokáže sa tam okamžite posunúť priamo bokom. Musí sa tam dostať vhodnou kombináciou jazdy dopredu, dozadu a zatáčania. Cieľová configuration teda môže byť možná, hoci určitý okamžitý smer pohybu možný nie je.
+
+Prvý prípad nás privedie k **holonomic constraints**. Druhý k **nonholonomic constraints**.
+
+Rozdiel medzi nimi patrí medzi základné myšlienky robotickej kinematiky.
 
 ---
 
-## 01. Prečo closed-chain robot potrebuje configuration constraints
+## 01. Closed-chain robot nemôže mať ľubovoľné joint coordinates
+
+Začnime známym **four-bar linkage** — štvorčlánkovým mechanizmom. Tvoria ho štyri links spojené revolute joints do uzavretej mechanickej slučky. Jeden link predstavuje ground a zostáva pevný, zatiaľ čo ostatné sa voči nemu pohybujú.
+
+Každému revolute jointu môžeme priradiť jeden joint angle. Ak teda mechanizmus obsahuje štyri revolute joints, môžeme jeho stav zapísať pomocou štyroch uhlov, napríklad θ1, θ2, θ3 a θ4.
+
+To však neznamená, že všetky štyri uhly môžeme nastavovať nezávisle.
+
+Links majú pevné dĺžky a ich konce musia zostať spojené. Keď zmeníme jeden joint angle, ostatné časti mechanizmu sa musia pohybovať tak, aby sa uzavretá slučka nerozpojila. Ak by sme jednoducho vybrali štyri ľubovoľné hodnoty uhlov, vo väčšine prípadov by sme dostali geometricky nemožnú situáciu — posledné links by sa už nestretli v spoločnom jointe.
+
+Closed-chain mechanism preto potrebuje matematické podmienky, ktoré hovoria:
+
+**„Po prejdení celej mechanickej slučky sa musíme dostať presne tam, kde sme začali."**
+
+Tieto podmienky nazývame **loop-closure equations**.
 
 ![Štvorkĺbový mechanizmus](/book/ch2/fig2-10.png)
 
-Začnime so four-bar linkage, teda štvorčlánkovým mechanizmom. Tvoria ho štyri links spojené revolute joints do uzavretej slučky. Jeden z links pritom predstavuje ground a zostáva pevný.
+---
 
-Každému revolute joint môžeme priradiť určitý uhol. Ak máme štyri joint angles, mohlo by sa na prvý pohľad zdať, že môžeme každý z nich nastaviť nezávisle. Pri closed chain to však nie je možné.
+## 02. Čo loop-closure equations skutočne vyjadrujú
 
-Dôvodom je samotná mechanická konštrukcia. Links majú pevné dĺžky a sú navzájom spojené. Keď sa pohne jeden link, ostatné sa mu musia prispôsobiť tak, aby všetky joints zostali spojené a mechanizmus zostal uzavretý.
+Predstav si, že si na four-bar linkage vyberieme jeden bod a začneme od neho postupovať po mechanizme. Prejdeme prvým linkom, potom druhým, tretím a nakoniec štvrtým.
 
-Predstav si napríklad skutočný kovový four-bar mechanism. Nemôžeš otočiť jeden joint do ľubovoľnej polohy a potom úplne nezávisle nastaviť všetky ostatné. V určitom momente by sa posledné dva links už nedokázali spojiť. Taká kombinácia joint angles jednoducho nie je fyzicky možnou configuration mechanizmu.
+Každý link má určitú dĺžku a orientation. Prechod cez jeden link preto môžeme chápať ako určitý posun v priestore. Keďže však ide o uzavretú slučku, po prejdení všetkých links sa musíme dostať presne späť do počiatočného bodu.
 
-Potrebujeme preto equations, ktoré vyjadrujú podmienku, že uzavretá slučka musí zostať uzavretá. Nazývame ich **loop-closure equations**.
+Pri planar four-bar linkage to znamená, že po prejdení slučky nesmie zostať žiadny výsledný posun v smere x ani v smere y. Zároveň musí správne sedieť aj orientation jednotlivých links, aby sa mechanizmus geometricky uzavrel.
+
+Z toho vzniknú tri nezávislé podmienky: dve súvisiace s position a jedna s orientation.
+
+Ich konkrétny trigonometrický zápis teraz nie je najdôležitejší. Oveľa dôležitejšie je pochopiť, čo tieto rovnice predstavujú.
+
+**Loop-closure equations** nie sú umelé matematické pravidlá pridané k robotovi zvonka. Sú iba matematickým zápisom fyzickej skutočnosti, že links sú spojené a počas pohybu musia zostať spojené.
 
 ---
 
-## 02. Ako vznikajú loop-closure equations
+## 03. Štyri joint angles neznamenajú štyri DOF
 
-Pri four-bar linkage si môžeme zvoliť jeden bod ako začiatok a matematicky prejsť postupne cez všetky štyri links.
+Four-bar linkage môžeme teda reprezentovať pomocou štyroch hodnôt:
 
-Každý link má určitú dĺžku a určitý smer. Keď prejdeme prvým linkom, posunieme sa o určitú vzdialenosť v smere jeho orientation. Potom pokračujeme druhým, tretím a štvrtým linkom.
+**θ = [θ1, θ2, θ3, θ4]**
 
-Keďže ide o closed chain, po prejdení celej slučky sa musíme dostať presne späť do východiskového bodu.
+Na jeho zápis používame štyri čísla. Ako sme sa však naučili v predchádzajúcej lekcii, počet čísel v reprezentácii nie je automaticky počet degrees of freedom.
 
-To znamená, že celkový posun v smere x musí byť nulový a rovnako musí byť nulový celkový posun v smere y.
+Tieto štyri joint angles totiž musia spĺňať tri nezávislé loop-closure constraints. Preto zostáva iba jedna hodnota, ktorú môžeme meniť nezávisle.
 
-Zároveň musí po prejdení slučky správne sedieť aj výsledná orientation. Pri four-bar linkage tak získame tri nezávislé podmienky: dve pre position a jednu pre orientation.
+Môžeme si to predstaviť veľmi jednoducho:
 
-V knihe sú zapísané pomocou dĺžok links L1 až L4 a joint angles theta1 až theta4. Ich konkrétny trigonometrický tvar teraz nie je najdôležitejší. Podstatné je pochopiť, odkiaľ tieto equations pochádzajú.
+**4 configuration variables - 3 independent constraints = 1 DOF**
 
-Nie sú to umelo pridané matematické pravidlá. Sú matematickým zápisom fyzickej skutočnosti: **„Links sú spojené do uzavretej slučky a táto slučka sa pri pohybe nesmie rozpojiť."**
+Ak teda zvolíme jednu vhodnú nezávislú hodnotu, napríklad uhol jedného linku, ostatné joint angles už nemôžeme zvoliť ľubovoľne. Musia sa prispôsobiť tak, aby mechanizmus zostal uzavretý.
 
----
-
-## 03. Four-bar linkage má štyri joint angles, ale iba jeden DOF
-
-Teraz môžeme lepšie pochopiť aj implicit representation z predchádzajúcej lekcie.
-
-Four-bar linkage môžeme reprezentovať pomocou štyroch joint angles: theta1, theta2, theta3, theta4
-
-To sú štyri čísla. Neznamená to však, že mechanizmus má 4 DOF, pretože tieto štyri hodnoty nemôžeme meniť nezávisle.
-
-Musia spĺňať tri nezávislé loop-closure equations.
-
-Preto dostávame: **4 premenné - 3 nezávislé constraints = 1 DOF**
-
-To znamená, že ak zvolíme jednu vhodnú nezávislú hodnotu, napríklad polohu jedného jointu, pohyb zvyšku mechanizmu je už obmedzený jeho geometriou.
-
-Presne preto sa four-bar linkage dokáže pohybovať, ale má iba jeden degree of freedom.
+Preto má four-bar linkage iba **1 DOF**, hoci pri implicitnej reprezentácii jeho configuration používame štyri joint angles.
 
 ---
 
-## 04. Configuration space ako menšia časť väčšieho priestoru
+## 04. Constraints vyberajú možné konfigurácie z väčšieho priestoru
 
-Tento príklad nám zároveň ukazuje, čo implicit representation znamená geometricky.
+Na four-bar linkage sa môžeme pozrieť ešte jedným spôsobom.
 
-Máme štyri joint angles, takže môžeme uvažovať veľký štvorrozmerný priestor všetkých možných kombinácií theta1, theta2, theta3 a theta4.
+Keď používame štyri joint angles, matematicky si môžeme predstaviť veľký priestor obsahujúci všetky možné kombinácie θ1, θ2, θ3 a θ4. Každá štvorica čísel predstavuje jeden bod v tomto väčšom priestore joint coordinates.
 
-Lenže väčšina bodov v tomto priestore nepredstavuje skutočnú configuration four-bar linkage. Predstavovali by kombinácie uhlov, pri ktorých by sa links už nedokázali spojiť.
+Väčšina týchto bodov však nezodpovedá skutočnému four-bar linkage.
 
-Platné sú iba tie body, ktoré spĺňajú všetky tri loop-closure constraints.
+Predstavovali by konfigurácie, pri ktorých by sa mechanizmus fyzicky nedokázal uzavrieť. Links by sa museli natiahnuť, skrátiť alebo od seba odpojiť.
 
-Preto skutočný configuration space tvorí iba jednorozmernú množinu vo vnútri štvorrozmerného priestoru joint coordinates.
+Platné sú iba tie body, ktoré spĺňajú všetky loop-closure equations.
 
-Nemusíš si vedieť štvorrozmerný priestor predstaviť. Dôležitý je princíp: **Joint coordinates vytvárajú väčší priestor možností. Constraints z neho vyberajú iba fyzicky možné configurations.**
+Skutočný configuration space mechanizmu preto tvorí iba menšiu jednorozmernú množinu vloženú do väčšieho priestoru štyroch joint coordinates.
 
-Toto je presne implicit representation, ktorú sme riešili v Chapter 2.3.2.
+Nemusíme si vedieť štvorrozmerný priestor vizualizovať. Dôležitá je samotná logika:
+
+**Joint coordinates vytvoria väčší priestor možností a constraints z neho vyberú iba fyzicky možné configurations.**
+
+Presne to je princíp implicit representation.
 
 ---
 
 ## 05. Všeobecný zápis configuration constraints
 
-Pri zložitejšom robotovi môže byť joint coordinates oveľa viac. Namiesto toho, aby sme ich zakaždým vypisovali jednotlivo, spojíme ich do jedného vectora:
+Pri komplikovanejšom robotovi môžeme mať desiatky configuration variables. Namiesto ich neustáleho vypisovania ich preto spojíme do jedného vectora.
 
-**theta = [theta1, theta2, ..., thetan]**
+Môžeme napríklad písať:
 
-theta teda jednoducho predstavuje celú sadu joint coordinates robota.
+**θ = [θ1, θ2, ..., θn]**
 
-Ak robot musí spĺňať niekoľko configuration constraints, môžeme ich podobne spojiť do funkcie g. Potom ich zapíšeme veľmi kompaktne:
+Vector θ teda predstavuje celú configuration robota v zvolenej reprezentácii.
 
-**g(theta) = 0**
+Ak musí robot zároveň spĺňať niekoľko constraints, môžeme ich spojiť do jednej vector-valued function, ktorú označíme g. Potom môžeme všetky configuration constraints kompaktne zapísať:
 
-Tento zápis znamená: „Configuration theta je povolená iba vtedy, ak spĺňa všetky constraints obsiahnuté v g."
+**g(θ) = 0**
 
-Ak máme n joint coordinates a k nezávislých configuration constraints, zostáva nám: **n - k degrees of freedom.**
+Tento zápis znamená, že configuration θ je povolená iba vtedy, keď spĺňa všetky podmienky obsiahnuté vo funkcii g.
 
-Configuration space teda môžeme chápať ako priestor s dimenziou n - k vložený do väčšieho n-rozmerného priestoru joint coordinates.
+Ak máme n configuration variables a k nezávislých configuration constraints, potom za bežných podmienok zostáva:
 
----
+**n - k DOF**
 
-## 06. Holonomic constraints
-
-Configuration constraints, ktoré môžeme zapísať priamo vo forme:
-
-**g(theta) = 0**
-
-nazývame **holonomic constraints**.
-
-Najjednoduchšie povedané, holonomic constraint určuje vzťah medzi samotnými configuration variables.
-
-Nehovorí iba, ako rýchlo sa robot smie práve teraz pohybovať. Hovorí, ktoré configurations sú vôbec možné.
-
-Four-bar linkage je typický príklad. Jeho loop-closure equations priamo vylučujú určité kombinácie joint angles. Robot sa do nich nemôže dostať, pretože by to vyžadovalo rozpojenie alebo deformovanie links.
-
-Holonomic constraints preto **zmenšujú dimension configuration space**.
-
-Ak máme napríklad štyri configuration variables a tri nezávislé holonomic constraints, configuration space má iba jeden DOF.
-
-Podobný princíp sme videli aj pri rigid body. Keď sme rigid body opisovali pomocou viacerých bodov, vzdialenosti medzi nimi museli zostať konštantné. Aj tieto distance constraints sú holonomic constraints – priamo určujú, ktoré polohy bodov môžu spolu tvoriť jeden rigid body.
+Configuration space teda môžeme chápať ako priestor s dimenziou n - k vložený do väčšieho n-rozmerného priestoru použitých configuration variables.
 
 ---
 
-## 07. Keď sa configuration mení v čase
+## 06. Holonomic constraints obmedzujú samotnú configuration
 
-Doteraz sme sa pozerali na robot v jednom konkrétnom okamihu. Robot sa však pohybuje, takže jeho configuration sa mení s časom.
+Configuration constraints, ktoré môžeme vyjadriť priamo ako vzťah medzi configuration variables, nazývame **holonomic constraints**.
 
-Môžeme ju preto zapísať ako: **theta(t)**
+Typický zápis je:
 
-To jednoducho znamená, že joint coordinates závisia od času.
+**g(θ) = 0**
 
-Napríklad theta1 môže mať teraz hodnotu 20°, o sekundu 25° a neskôr 30°.
+Holonomic constraint teda priamo hovorí, ktoré configurations sú možné a ktoré nie.
 
-Ak však robot podlieha holonomic constraint, musí ho spĺňať počas celého pohybu, nielen na jeho začiatku alebo konci.
+Four-bar linkage je typickým príkladom. Loop-closure equations hovoria, ktoré kombinácie joint angles dokážu vytvoriť uzavretý mechanizmus. Ostatné kombinácie nie sú súčasťou jeho configuration space.
 
-Preto musí v každom čase platiť: **g(theta(t)) = 0**
+Ďalší príklad už poznáme z rigid body. Ak rigid body reprezentujeme pomocou polôh niekoľkých bodov, vzdialenosti medzi týmito bodmi musia zostať konštantné. Nemôžeme napríklad posunúť jeden bod nezávisle tak, aby sa teleso natiahlo. Distance constraints určujú, ktoré kombinácie polôh bodov skutočne predstavujú jedno rigid body.
 
-Robot sa teda pri pohybe nemôže z configuration space „odtrhnúť". Jeho trajectory musí celý čas zostať medzi configurations, ktoré spĺňajú constraint.
+Holonomic constraint preto nerieši iba to, ako sa systém práve pohybuje. Odstraňuje celé configurations, ktoré systém fyzicky nemôže nadobudnúť.
 
-A práve tu vzniká spojenie medzi configuration constraints a **velocity constraints**.
+A tým **znižuje dimension jeho configuration space**.
 
 ---
 
-## 08. Prečo z configuration constraint vzniká velocity constraint
+## 07. Pohyb znamená, že configuration závisí od času
 
-Toto je miesto, kde je dôležité pochopiť význam derivácie, nie iba vzorec.
+Doteraz sme configuration opisovali ako jeden bod θ. Robot však nezostáva nehybný. Pri pohybe sa jeho configuration postupne mení.
 
-Predstav si jednoduchý príklad bodu, ktorý je mechanicky nútený zostať na kružnici s polomerom r.
+Preto môžeme písať:
 
-Jeho position opisujú x a y, ale musí vždy platiť: **x2 + y2 = r2**
+**θ(t)**
 
-Toto je configuration constraint. Hovorí nám, kde sa bod smie nachádzať.
+Tento zápis jednoducho znamená, že configuration závisí od času.
 
-Teraz sa bod začne pohybovať.
+Ak napríklad θ1 predstavuje joint angle, môže mať v čase t = 0 hodnotu 20°, o sekundu neskôr 25° a potom 30°. Hodnota θ1 sa teda v čase mení.
 
-Ak má stále zostať na kružnici, jeho x a y sa nemôžu meniť úplne ľubovoľne. Napríklad v pravom krajnom bode kružnice sa bod nemôže okamžite rozbehnúť ešte viac doprava, pretože by kružnicu opustil. Môže sa tam pohybovať iba v smere dotyčnice ku kružnici – teda nahor alebo nadol.
+Ak však robot podlieha holonomic constraint, nestačí, aby ho spĺňal iba na začiatku a na konci pohybu. Musí ho spĺňať v každom okamihu.
 
-Configuration constraint teda automaticky vytvára obmedzenie aj na okamžitú velocity.
+Preto musí počas celej trajectory platiť:
 
-A derivácia je presne matematický nástroj, ktorým z podmienky týkajúcej sa position získame podmienku týkajúcu sa jej zmeny v čase.
+**g(θ(t)) = 0**
+
+Robot sa teda môže pohybovať iba po configuration space vytvorenom týmto constraintom. Nemôže z neho počas pohybu „odskočiť" a neskôr sa naň vrátiť.
+
+A práve z tejto požiadavky prirodzene vznikajú **velocity constraints**.
+
+---
+
+## 08. Configuration constraint automaticky obmedzí aj velocity
+
+Najjednoduchšie to uvidíme na bode, ktorý sa môže pohybovať iba po kružnici s polomerom r.
+
+Jeho position môžeme opísať dvoma hodnotami x a y. Ak však musí zostať na kružnici, nemôžu byť x a y ľubovoľné. Musí vždy platiť:
+
+$$x^2 + y^2 = r^2$$
+
+Toto je configuration constraint. Hovorí nám, kde sa bod môže nachádzať.
+
+Teraz si predstav, že sa bod začne pohybovať.
+
+Ak má stále zostať na kružnici, nemôže mať ľubovoľnú velocity. Predstav si napríklad bod úplne na pravej strane kružnice. Ak by sa v tom okamihu začal pohybovať doprava, okamžite by kružnicu opustil.
+
+V tomto bode sa môže pohybovať iba pozdĺž kružnice — teda v smere jej dotyčnice.
+
+To znamená, že constraint na position automaticky vytvoril aj constraint na velocity.
+
+A matematicky sa z jedného k druhému dostaneme pomocou derivácie podľa času.
 
 ---
 
 ## 09. Derivácia constraintu krok za krokom
 
-Máme podmienku kružnice: **x2 + y2 = r2**
+Začíname configuration constraintom:
 
-Keď sa bod pohybuje, x aj y závisia od času. Derivujeme preto obe strany podľa času.
+$$x^2 + y^2 = r^2$$
 
-Dostaneme: **2x*x_dot + 2y*y_dot = 0**
+Keď sa bod pohybuje, x aj y sú funkciami času. Môžeme teda písať x(t) a y(t). Polomer r sa nemení, pretože kružnica má stále rovnakú veľkosť.
 
-Po vydelení dvomi: **x*x_dot + y*y_dot = 0**
+Teraz celú rovnicu derivujeme podľa času.
 
-Čo nám táto equation hovorí?
+Derivácia x2 je 2x*x_dot a derivácia y2 je 2y*y_dot. Pravá strana r2 je konštanta, takže jej derivácia je nula.
 
-x_dot je velocity v smere x a y_dot je velocity v smere y. Rovnica teda určuje, aké kombinácie x-ovej a y-ovej velocity sú v danej position povolené.
+Dostaneme:
 
-Ak sa napríklad bod nachádza úplne napravo na kružnici, máme x = r a y = 0.
+**2x*x_dot + 2y*y_dot = 0**
 
-Constraint sa zjednoduší na: **r*x_dot = 0**, a teda: **x_dot = 0**
+Po vydelení dvomi:
 
-V tomto konkrétnom bode teda bod nemôže mať okamžitú velocity smerujúcu doprava alebo doľava. Jeho okamžitý pohyb musí smerovať pozdĺž kružnice – nahor alebo nadol.
+**x*x_dot + y*y_dot = 0**
 
-Teraz už vidíme, čo derivácia urobila.
+Symbol x_dot znamená velocity v smere x a y_dot velocity v smere y.
 
-Pôvodná equation nám povedala: **„Musíš zostať na kružnici."**
+Nová rovnica už teda nehovorí, kde sa bod nachádza. Hovorí, aké velocities môže mať v konkrétnej position.
 
-Jej derivácia nám povedala: **„Ak si na kružnici, tvoja okamžitá velocity musí smerovať tak, aby si ju neopustila."**
+Predstavme si, že sa nachádza úplne napravo na kružnici. Vtedy platí:
+
+**x = r, y = 0**
+
+Dosadíme:
+
+**r*x_dot + 0*y_dot = 0**
+
+Keďže r nie je nula:
+
+**x_dot = 0**
+
+Bod teda v tejto position nemôže mať okamžitú velocity v smere x. Môže sa pohybovať iba v smere y, teda hore alebo dole pozdĺž dotyčnice ku kružnici.
+
+Pôvodná equation hovorila: **„Zostaň na kružnici."**
+
+Jej derivácia hovorí: **„Pohybuj sa takým smerom, aby si kružnicu neopustil."**
+
+To je najdôležitejšia intuícia za prechodom od configuration constraints k velocity constraints.
 
 ---
 
-## 10. Rovnaký princíp platí pre robota
+## 10. Všeobecný prechod od configuration k velocity
 
-Presne to isté môžeme urobiť s všeobecným holonomic constraint: **g(theta) = 0**
+Rovnaký princíp platí pre všeobecný holonomic constraint:
 
-Keď sa robot pohybuje, máme: **g(theta(t)) = 0**
+**g(θ) = 0**
 
-Derivovaním podľa času dostaneme vzťah medzi joint positions a joint velocities.
+Keď sa robot pohybuje:
 
-Výsledok môžeme zapísať: **dg/dtheta * theta_dot = 0**
+**g(θ(t)) = 0**
 
-Symbol theta_dot znamená vector joint velocities – teda ako rýchlo sa jednotlivé joint coordinates práve menia.
+Túto rovnicu derivujeme podľa času. Pomocou chain rule dostaneme:
 
-Výraz dg/dtheta opisuje, ako sa jednotlivé constraints menia pri malých zmenách jednotlivých joint coordinates. Ide o matrix parciálnych derivácií, ktorú budeme neskôr poznávať ako určitý typ Jacobian matrix.
+**(dg/dθ) * θ_dot = 0**
 
-Celá equation teda hovorí: **Joint velocities nemôžu byť ľubovoľné. Musia byť také, aby robot pri pohybe naďalej spĺňal svoje configuration constraints.**
+Symbol θ_dot označuje vector joint velocities. Ak θ obsahuje napríklad päť joint coordinates, θ_dot obsahuje informáciu o tom, ako rýchlo sa každá z týchto piatich hodnôt práve mení.
+
+Výraz dg/dθ opisuje, ako citlivo sa jednotlivé constraints menia pri malých zmenách jednotlivých configuration variables. Ak máme viac constraints a viac configuration variables, tento výraz je matrix.
+
+Neskôr sa s podobnými matrices budeme veľmi často stretávať pod názvom **Jacobian matrix**.
+
+Celý vzťah:
+
+**(dg/dθ) * θ_dot = 0**
+
+teda znamená, že joint velocities nemôžu byť ľubovoľné. Musia byť zvolené tak, aby sa robot pri svojom pohybe stále nachádzal medzi configurations spĺňajúcimi g(θ) = 0.
 
 ---
 
 ## 11. Pfaffian velocity constraints
 
-Velocity constraints sa v robotike často zapisujú vo všeobecnej forme:
+Velocity constraints sa často zapisujú všeobecnejšie ako:
 
-**A(theta) * theta_dot = 0**
+**A(θ) * θ_dot = 0**
 
-Takýmto constraints hovoríme **Pfaffian constraints**.
+Takémuto tvaru hovoríme **Pfaffian constraint**.
 
-Matrix A závisí od aktuálnej configuration robota a určuje, ktoré velocity sú v tejto configuration povolené.
+Matrix A závisí od aktuálnej configuration systému a určuje, ktoré okamžité velocities sú v tejto configuration povolené.
 
-Dôležité je pochopiť, že tento zápis sám o sebe ešte nehovorí, odkiaľ constraint pochádza.
+Pri holonomic constraint, ktorý sme práve derivovali, by platilo:
 
-Môže vzniknúť derivovaním holonomic configuration constraint. Ale môže existovať aj velocity constraint, ktorý nepochádza zo žiadnej configuration equation.
+**A(θ) = dg/dθ**
 
-A práve medzi týmito dvomi prípadmi je zásadný rozdiel.
+Nie každý Pfaffian velocity constraint však musí vzniknúť týmto spôsobom.
 
----
+A práve toto je kľúčový bod celej lekcie.
 
-## 12. Čo znamená, že constraint je integrable
+Môžeme mať velocity constraint, ktorý vznikol derivovaním configuration constraintu. Ale môžeme mať aj velocity constraint, za ktorým žiadna ekvivalentná configuration equation neexistuje.
 
-Vráťme sa ku kružnici, pretože na nej je tento pojem oveľa jednoduchšie pochopiť.
-
-Velocity constraint sme mali: **x*x_dot + y*y_dot = 0**
-
-Keby sme dostali iba túto equation a nepoznali jej pôvod, mohli by sme sa opýtať: Existuje nejaká podmienka na position x a y, z ktorej tento velocity constraint pochádza?
-
-Áno. Je to: **x2 + y2 = konštanta**
-
-Velocity constraint nám teda v skutočnosti hovorí, že hodnota x2 + y2 sa počas pohybu nemení. Ak bola na začiatku rovná r2, zostane rovná r2 stále.
-
-Preto pohyb zostáva na tej istej kružnici.
-
-Toto je význam slova **integrable**.
-
-Velocity constraint môžeme „poskladať späť" do configuration constraint. Neobmedzuje iba okamžitú velocity – za týmto obmedzením existuje trvalé pravidlo určujúce, na akej množine configurations sa systém nachádza.
+Rozdiel medzi týmito dvoma prípadmi nás vedie k pojmom **integrable** a **nonintegrable** constraints.
 
 ---
 
-## 13. Prečo sa holonomic constraints nazývajú integrable
+## 12. Čo znamená integrable constraint
 
-Teraz môžeme pochopiť všeobecný prípad.
+Vráťme sa ešte raz ku kružnici.
 
-Začali sme configuration constraintom: **g(theta) = 0**
+Po derivovaní sme dostali velocity constraint:
 
-Derivovaním sme získali: **dg/dtheta * theta_dot = 0**
+**x*x_dot + y*y_dot = 0**
 
-Ak si matrix: **A(theta) = dg/dtheta**
+Predstav si teraz, že by sme dostali iba túto rovnicu a nevedeli by sme, odkiaľ pochádza.
 
-môžeme velocity constraint zapísať ako: **A(theta) * theta_dot = 0**
+Mohli by sme sa opýtať:
 
-V tomto prípade presne vieme, že velocity constraint vznikol z funkcie g.
+Existuje nejaká trvalá podmienka na x a y, ktorej derivovaním dostaneme práve tento velocity constraint?
 
-To znamená, že za ním existuje configuration constraint. Keby sme poznali iba velocity equation, za vhodných podmienok ju môžeme integrovať a dostať späť vzťah typu: **g(theta) = konštanta**
+Áno.
 
-Konkrétna konštanta závisí od počiatočnej configuration systému.
+Vieme, že:
 
-Preto sa takýto velocity constraint nazýva **integrable**.
+**d/dt (x2 + y2) = 2x*x_dot + 2y*y_dot**
 
-A preto sú holonomic constraints spojené s integrable velocity constraints.
+Ak teda platí:
 
-Nie je to teda iba matematický názov. Fyzicky to znamená: **Obmedzenie okamžitej velocity vzniká preto, že systém musí zostať na určitej časti configuration space.**
+**x*x_dot + y*y_dot = 0**
 
-Pri bode na kružnici musí velocity smerovať pozdĺž kružnice preto, že bod je viazaný na kružnicu. Pri closed-chain robote musia joint velocities navzájom súvisieť preto, že links musia počas pohybu zostať spojené.
+potom sa hodnota x2 + y2 počas pohybu nemení.
+
+Môžeme preto písať:
+
+**x2 + y2 = konštanta**
+
+Ak bola táto konštanta na začiatku r2, potom zostane r2 počas celého pohybu.
+
+Bod teda zostáva na tej istej kružnici.
+
+Velocity constraint sme tak dokázali „poskladať späť" do constraintu na samotnú configuration.
+
+A práve toto znamená, že je **integrable**.
 
 ---
 
-## 14. Nie každý velocity constraint však môžeme integrovať
+## 13. Holonomic constraints a integrability
 
-Teraz prichádza zásadný rozdiel.
+Teraz môžeme rovnakú myšlienku preniesť na všeobecný robot.
 
-Existujú systémy, pri ktorých máme jasné obmedzenia na okamžitú velocity, ale neexistuje zodpovedajúca configuration constraint, ktorá by vylučovala určitú časť configuration space.
+Začali sme holonomic constraintom:
 
-Najznámejším príkladom je koleso alebo minca kotúľajúca sa po rovine bez šmyku.
+**g(θ) = 0**
+
+Derivovaním sme dostali:
+
+**(dg/dθ) * θ_dot = 0**
+
+Ak označíme:
+
+**A(θ) = dg/dθ**
+
+môžeme písať:
+
+**A(θ) * θ_dot = 0**
+
+V tomto prípade vieme, že velocity constraint pochádza z určitej funkcie g. Za obmedzením velocity teda existuje trvalá podmienka na configuration.
+
+Preto je takýto velocity constraint **integrable**.
+
+Pri integrácii nemusíme vždy dostať presne g(θ) = 0. Všeobecnejšie môžeme dostať:
+
+**g(θ) = konštanta**
+
+Konkrétna hodnota konštanty závisí od počiatočnej configuration.
+
+Fyzický význam je však rovnaký. Systém zostáva počas pohybu na určitej množine configurations a velocity constraint iba zabezpečuje, že z tejto množiny neodíde.
+
+Preto sú holonomic constraints spojené s integrable velocity constraints.
+
+---
+
+## 14. Nie každý velocity constraint pochádza z configuration constraintu
+
+Teraz prichádza druhý prípad.
+
+Existujú systémy, pri ktorých vieme presne povedať, aké okamžité velocities sú povolené, ale tieto obmedzenia nevieme previesť na jednoduchú podmienku typu:
+
+**g(q) = 0**
+
+ktorá by určovala zakázanú časť configuration space.
+
+Typickým príkladom je **rolling without slipping** — kotúľanie bez šmyku.
 
 ![Minca kotúľajúca sa po rovine bez šmyku](/book/ch2/fig2-11.png)
 
-Predstav si mincu stojacu na hrane.
+Predstav si mincu stojacu na hrane a kotúľajúcu sa po rovnej podlahe.
 
-Jej configuration môžeme opísať štyrmi hodnotami:
-- **x** a **y** určujú miesto kontaktu s podložkou
-- **phi** určuje smer, ktorým je minca natočená
-- **theta** určuje, o koľko sa minca otočila okolo svojej osi
+Jej configuration môžeme opísať štyrmi hodnotami. Súradnice x a y určujú jej polohu na podlahe, uhol φ určuje smer, ktorým je minca orientovaná, a uhol θ určuje, o koľko sa minca otočila okolo svojej vlastnej osi.
 
-Configuration space má preto **4 DOF**.
+Configuration môžeme zapísať:
 
-Teraz však pridáme fyzikálnu podmienku: **minca sa kotúľa bez šmyku.**
+**q = (x, y, φ, θ)**
 
-A tá vytvorí velocity constraints.
+Minca má teda štvorrozmerný configuration space a **4 DOF**.
 
----
-
-## 15. Čo znamená rolling without slipping
-
-Ak je minca otočená určitým smerom, nemôže sa v danom okamihu pohybovať ľubovoľným smerom po podlahe.
-
-Musí sa kotúľať v smere svojej roviny.
-
-Ak smer mince určuje angle phi, smer jej pohybu v rovine môžeme vyjadriť pomocou cos phi a sin phi.
-
-Zároveň musí byť translational speed mince spojená s tým, ako rýchlo sa otáča.
-
-Ak má minca radius r a angular velocity theta_dot, jej forward speed je: **r * theta_dot**
-
-To je známy vzťah z kotúľania bez šmyku. Keď sa koleso otočí o určitý uhol, prejde vzdialenosť zodpovedajúcu časti jeho obvodu.
-
-Preto platí:
-- **x_dot = r * theta_dot * cos phi**
-- **y_dot = r * theta_dot * sin phi**
-
-Tieto equations obmedzujú okamžitú velocity mince.
+Ak však požadujeme, aby sa kotúľala bez šmyku, jej okamžitý pohyb už nie je ľubovoľný.
 
 ---
 
-## 16. Minca má 4 DOF, hoci jej okamžitý pohyb je obmedzený
+## 15. Rolling without slipping obmedzuje okamžitý pohyb
 
-Toto je veľmi dôležité.
+Predstav si mincu otočenú určitým smerom φ.
 
-Minca má configuration: x, y, phi, theta a teda **4-dimensional configuration space**: R2 x T2
+Ak sa kotúľa bez šmyku, nemôže sa v tom istom okamihu ľubovoľne posúvať do strán. Jej translational velocity musí smerovať v smere, v ktorom sa kotúľa.
 
-Napriek tomu sa v jednom konkrétnom okamihu nemôže pohybovať všetkými možnými smermi v tomto štvorrozmernom priestore.
+Ak je smer mince daný uhlom φ, jednotkový smer dopredu v rovine môžeme vyjadriť pomocou:
 
-**Rolling without slipping** jej okamžitú velocity obmedzuje.
+**cos φ, sin φ**
+
+Zároveň musí existovať vzťah medzi tým, ako rýchlo sa minca otáča, a tým, ako rýchlo postupuje po podlahe.
+
+Ak má radius r a angular velocity θ_dot, potom pri rolling without slipping je jej forward speed:
+
+**r * θ_dot**
+
+Pre jednotlivé zložky velocity teda dostaneme:
+
+**x_dot = r * θ_dot * cos φ**
+**y_dot = r * θ_dot * sin φ**
+
+Tieto rovnice hovoria, že x-ová a y-ová velocity nemôžu byť vybrané nezávisle od orientation a rotation mince.
+
+Minca teda nemôže mať v každom okamihu ľubovoľnú velocity.
+
+To však ešte neznamená, že má menej configurations.
+
+---
+
+## 16. Obmedzená velocity neznamená automaticky menej DOF
+
+Toto je jedna z najdôležitejších častí celej lekcie.
+
+Minca má configuration:
+
+**q = (x, y, φ, θ)**
+
+a jej configuration space má štyri dimenzie.
+
+Rolling constraint však znamená, že v konkrétnej configuration nie sú všetky možné velocity directions okamžite dostupné.
 
 Mohlo by sa preto zdať, že constraints znižujú počet DOF mince.
 
-Podľa definície používanej v Modern Robotics však **DOF znamená dimension configuration space**, nie počet okamžite dostupných velocity directions.
+Podľa definície používanej v Modern Robotics však **degrees of freedom znamenajú dimension configuration space**, nie počet smerov, ktorými sa systém dokáže pohnúť práve v tomto okamihu.
 
-A minca sa pri vhodnej postupnosti pohybov môže dostať do ľubovoľnej configuration svojho štvorrozmerného C-space.
+A vhodnou postupnosťou povolených pohybov sa minca môže dostať do configurations, ktoré nemôže dosiahnuť jediným okamžitým pohybom.
 
-Preto má stále **4 DOF**.
+Preto rolling constraint nemusí zmenšiť jej configuration space.
+
+Minca môže mať stále **4 DOF**, hoci jej instantaneous velocity je obmedzená.
 
 ---
 
-## 17. Ako môže minca dosiahnuť configuration, do ktorej sa nemôže pohnúť priamo
+## 17. Auto ukazuje rozdiel medzi „teraz" a „nikdy"
 
-Toto je najlepšie pochopiteľné na aute.
+Tento rozdiel je ešte intuitívnejší na aute.
 
-Auto sa pri normálnej jazde nemôže okamžite pohnúť bokom. Jeho wheels sa kotúľajú dopredu a dozadu a no-slip condition zabraňuje bočnému pohybu.
+Predstav si auto stojace na parkovisku. Miesto priamo napravo od auta môže byť úplne platnou configuration. Auto tam fyzicky môže stáť.
 
-Napriek tomu môžeš auto zaparkovať na miesto, ktoré sa nachádza vedľa jeho pôvodnej polohy.
+Napriek tomu sa tam nedokáže dostať tak, že sa jednoducho posunie o dva metre bokom. Bežné kolesá sa pri **rolling without slipping** kotúľajú dopredu a dozadu, ale nedovoľujú okamžitý bočný pohyb.
 
-Ako?
+To však neznamená, že sa auto na miesto napravo nikdy nedostane.
 
-Neposunieš ho priamo bokom. Urobíš sériu povolených pohybov: pohneš sa dopredu, zatočíš, cúvneš, znovu zatočíš a postupne sa dostaneš na požadované miesto.
+Môže sa pohnúť dopredu, zatočiť, cúvnuť, opäť zatočiť a postupne zmeniť svoju position aj orientation. Paralelné parkovanie je praktickým príkladom presne tohto princípu.
 
-Takže: **„Nemôžem sa týmto smerom pohnúť práve teraz"** nie je to isté ako: **„Nemôžem sa do tejto configuration nikdy dostať."**
+Preto musíme rozlišovať dve tvrdenia:
 
-A presne tento rozdiel je základom nonholonomic constraints.
+**„Týmto smerom sa nemôžem pohnúť práve teraz."**
+
+a
+
+**„Do tejto configuration sa vôbec nemôžem dostať."**
+
+Nie sú to rovnaké tvrdenia.
+
+Holonomic constraints súvisia predovšetkým s druhým. Nonholonomic constraints môžu vytvoriť prvý prípad bez toho, aby automaticky vytvorili druhý.
 
 ---
 
 ## 18. Nonholonomic constraints
 
-Velocity constraint, ktorý nie je možné integrovať na ekvivalentný configuration constraint, nazývame:
+Velocity constraint, ktorý nemožno integrovať na ekvivalentný configuration constraint, nazývame **nonholonomic constraint** alebo **nonintegrable constraint**.
 
-**nonholonomic constraint** alebo **nonintegrable constraint**.
+**Rolling without slipping** je klasickým príkladom.
 
-Rolling without slipping je typický príklad.
+Constraint obmedzuje okamžitú velocity mince alebo kolesa. Nehovorí však, že existuje určitá jednoduchá časť configuration space, do ktorej sa systém nikdy nemôže dostať.
 
-Constraint mince obmedzuje, aké velocities môže mať v danom okamihu, ale nevytvára jednoduchú podmienku typu g(q) = 0, ktorá by povedala, že určitá časť jej configuration space je úplne zakázaná.
-
-Preto nonholonomic constraint:
-- **znižuje množstvo okamžite možných velocities**
-- ale **neznižuje dimension reachable configuration space**
+Preto nonholonomic constraint obmedzuje **instantaneous motion**, ale nemusí znižovať **dimension reachable configuration space**.
 
 Toto je zásadný rozdiel oproti holonomic constraint.
 
----
+Pri holonomic constraint sú niektoré configurations priamo vylúčené.
 
-## 19. Prečo rolling constraint nemožno jednoducho previesť na configuration constraint
-
-Pri kružnici sme mali jasnú trvalú väzbu: x2 + y2 = r2
-
-Bez ohľadu na to, ako sa bod po kružnici pohybuje, jeho position musí túto podmienku stále spĺňať.
-
-Pri rolling coin nič podobné medzi x, y, phi a theta vo všeobecnosti neexistuje.
-
-To, kde minca skončí, totiž nezávisí iba od jej počiatočnej a konečnej orientation. Záleží aj na **ceste, ktorou sa tam dostala**.
-
-Môže sa otočiť, kotúľať iným smerom, znovu zmeniť smer a tak postupne dosiahnuť configurations, ktoré by jedným okamžitým pohybom dosiahnuť nemohla.
-
-Preto velocity constraints pri rolling without slipping nemožno jednoducho „zhrnúť" do jednej configuration equation, ktorá by rozdelila C-space na povolenú a zakázanú časť.
-
-Matematicky povedané, pre takýto constraint neexistuje vhodná funkcia g, ktorej derivácie by vytvorili danú matrix A.
-
-Preto je constraint **nonintegrable**, a teda **nonholonomic**.
+Pri nonholonomic constraint môžu byť configurations dosiahnuteľné, ale systém sa medzi nimi musí pohybovať určitým spôsobom.
 
 ---
 
-## 20. Holonomic a nonholonomic constraints teda robia dve rôzne veci
+## 19. Prečo rolling constraint nie je configuration constraint
 
-Teraz môžeme oba prípady postaviť vedľa seba.
+Pri bode na kružnici sme mali jasný vzťah:
 
-Pri **holonomic constraint** existuje podmienka na samotnú configuration. Napríklad bod musí zostať na kružnici alebo links closed-chain robota musia zostať spojené. Niektoré configurations sú preto úplne vylúčené. Holonomic constraints teda **znižujú dimension configuration space**.
+$$x^2 + y^2 = r^2$$
 
-Pri **nonholonomic constraint** nie je určitá časť C-space týmto spôsobom odstránená. Constraint namiesto toho hovorí, aké velocities sú v konkrétnom okamihu povolené. Systém môže mať menej okamžitých možností pohybu, ale kombináciou týchto pohybov môže stále dosiahnuť oveľa väčšiu časť configuration space.
+Nezáleží na tom, akou cestou sa bod po kružnici pohyboval. Jeho position musí vždy spĺňať túto rovnicu.
 
-To je dôvod, prečo je napríklad plánovanie pohybu auta odlišné od plánovania pohybu robota, ktorý sa môže okamžite pohybovať ľubovoľným smerom.
+Pri rolling coin situácia vyzerá inak.
 
----
+To, ako sa zmenia x, y, φ a θ, závisí od celej trajectory, ktorú minca vykoná.
 
-## 21. Rovnaký zápis môže predstavovať dva veľmi odlišné prípady
+Minca môže najskôr zmeniť smer, potom sa kotúľať, opäť zmeniť smer a pokračovať inak. Výsledná configuration teda nevzniká iba z jedného jednoduchého algebraického vzťahu medzi aktuálnymi hodnotami x, y, φ a θ.
 
-Velocity constraints oboch typov môžeme zapísať ako: **A(q) * q_dot = 0**
+Dôležitá je cesta, ktorou sa systém do tejto configuration dostal.
 
-Samotný vzhľad equation nám teda nestačí na určenie, či je constraint holonomic alebo nonholonomic.
+Preto rolling velocity constraints vo všeobecnosti nemožno jednoducho nahradiť ekvivalentnou configuration equation typu g(q) = 0.
 
-Musíme sa pýtať: **Existuje configuration constraint g(q), z ktorého tento velocity constraint vznikne derivovaním?**
-
-Ak áno, constraint je **integrable** a súvisí s holonomic constraint.
-
-Ak nie, ide o **nonintegrable** – nonholonomic constraint.
-
-Toto je hlavný matematický rozdiel medzi nimi.
+Sú **nonintegrable**, a preto ich označujeme ako **nonholonomic**.
 
 ---
 
-## 22. Prečo sú nonholonomic constraints dôležité v robotike
+## 20. Holonomic a nonholonomic constraints robia odlišné veci
 
-Nonholonomic constraints sa veľmi často objavujú pri **wheeled mobile robots**.
+Teraz môžeme oba typy constraints porovnať priamo.
 
-Bežné koleso sa ľahko kotúľa dopredu a dozadu, ale pri ideálnom rolling without slipping sa nemôže okamžite posúvať do strany.
+Pri **holonomic constraint** existuje podmienka na samotnú configuration. Bod musí napríklad zostať na kružnici alebo links closed-chain robota musia zostať spojené. Niektoré configurations sú tým úplne odstránené z configuration space. Holonomic constraints preto **znižujú dimension configuration space**.
 
-Preto majú napríklad car-like robots alebo differential-drive robots obmedzené okamžité directions of motion.
+Pri **nonholonomic constraint** nemusí byť určitá configuration zakázaná. Constraint namiesto toho určuje, akými okamžitými smermi sa systém môže pohybovať. Systém teda môže mať menej instantaneous velocity directions, ale vhodnou kombináciou povolených pohybov môže stále dosiahnuť configurations, ktoré neležia priamo v smere jeho aktuálnej velocity.
 
-To však neznamená, že sa nedokážu dostať na miesto ležiace bokom od nich. Potrebujú iba vhodnú trajectory.
-
-Nonholonomic constraints sa môžu objavovať aj pri ďalších robotických problémoch, napríklad pri grasp contact kinematics alebo pri systémoch, kde hrá úlohu conservation of momentum.
-
-Modern Robotics sa k nim podrobnejšie vráti v Chapter 13 pri wheeled mobile robots.
+Preto napríklad plánovanie pohybu auta vyzerá úplne inak než plánovanie pohybu objektu, ktorý sa môže ľubovoľne posúvať dopredu, dozadu aj do strán.
 
 ---
 
-## 23. Najdôležitejšie je nezamieňať configuration a velocity
+## 21. Rovnaká equation môže skrývať dva rozdielne prípady
 
-Celá lekcia stojí na jednom rozdiele.
+Velocity constraints môžeme všeobecne zapisovať:
 
-**Configuration** hovorí: „Kde sa systém nachádza?"
+**A(q) * q_dot = 0**
 
-**Velocity** hovorí: „Ako sa jeho configuration práve teraz mení?"
+Tento zápis sám osebe ešte nehovorí, či máme holonomic alebo nonholonomic systém.
 
-Constraint môže obmedziť prvú vec, druhú vec alebo oboje.
+Rozhodujúca otázka znie:
 
-Ak constraint priamo určuje, ktoré configurations sú možné, máme **holonomic constraint**. Keď ho derivujeme podľa času, prirodzene získame aj obmedzenie velocity, pretože systém musí počas pohybu zostať medzi povolenými configurations.
+**Existuje configuration constraint g(q), z ktorého môžeme tento velocity constraint získať derivovaním?**
 
-Pri **nonholonomic constraint** je situácia iná. Configuration môže byť dosiahnuteľná, ale systém sa k nej nemusí vedieť pohnúť priamo. Obmedzený je spôsob pohybu, nie samotná existencia cieľovej configuration.
+Ak áno, velocity constraint je **integrable**. Za obmedzením velocity existuje zodpovedajúca podmienka na samotnú configuration a constraint súvisí s holonomic constraintom.
 
-A preto môže mať systém napríklad 4 DOF, hoci má v jednom okamihu menej než štyri nezávislé velocity directions.
+Ak nie, velocity constraint je **nonintegrable** a ide o nonholonomic constraint.
 
----
-
-## 24. Dva príklady, ktoré si stačí zapamätať
-
-Ak sa ti pojmy holonomic a nonholonomic začnú pliesť, pomôžu dva základné príklady.
-
-**Bod na kružnici → holonomic**
-
-Bod je fyzicky obmedzený na kružnicu. Platí configuration constraint: x2 + y2 = r2. Niektoré positions teda vôbec nie sú možné. Derivovaním dostaneme velocity constraint: x*x_dot + y*y_dot = 0. Velocity musí smerovať pozdĺž kružnice. Tento velocity constraint vieme spätne spojiť s configuration constraintom, preto je **integrable**.
-
-**Koleso alebo minca bez šmyku → nonholonomic**
-
-Koleso sa nemôže okamžite pohybovať do strany. Má teda velocity constraint. To však neznamená, že sa nemôže neskôr dostať na miesto ležiace vedľa neho. Môže sa tam dostať kombináciou jazdy a otáčania. Constraint preto neznižuje reachable configuration space rovnakým spôsobom ako kružnica. Je **nonintegrable**, a teda **nonholonomic**.
+Samotný tvar A(q)*q_dot = 0 teda nestačí. Rozhodujúca je jeho **integrability**.
 
 ---
 
-## 25. Zapamätaj si
+## 22. Prečo sú nonholonomic constraints v robotike také dôležité
 
-- **Configuration constraint** obmedzuje configurations, v ktorých sa systém môže nachádzať.
-- **Loop-closure equations** zabezpečujú, že links closed-chain mechanism zostávajú počas pohybu spojené.
-- **Holonomic constraint** môžeme zapísať ako podmienku na samotnú configuration, napríklad g(theta) = 0.
-- Ak máme n configuration variables a k nezávislých holonomic constraints, configuration space má za bežných podmienok dimenziu **n - k**.
-- Keď configuration závisí od času, zapisujeme ju ako **theta(t)** a jej derivative **theta_dot** predstavuje velocity.
-- Derivovaním holonomic constraint získame velocity constraint: **dg/dtheta * theta_dot = 0**
-- Všeobecný zápis **A(theta) * theta_dot = 0** sa nazýva **Pfaffian constraint**.
-- Ak velocity constraint pochádza z configuration constraint a môžeme ho spätne integrovať na podmienku configuration, je **integrable**.
-- Holonomic constraints sú spojené s integrable velocity constraints.
-- Ak velocity constraint nemožno previesť na ekvivalentný configuration constraint, je **nonintegrable**, teda **nonholonomic**.
-- Nonholonomic constraint obmedzuje okamžité velocities, ale nemusí znižovať dimension reachable configuration space.
-- Najdôležitejší príklad je **rolling without slipping**. Koleso alebo minca sa nemôže okamžite pohybovať ľubovoľným smerom, ale vhodnou postupnosťou povolených pohybov môže dosiahnuť configurations, ku ktorým sa nedokáže dostať priamym pohybom.
+**Nonholonomic constraints** sa veľmi často objavujú pri **wheeled mobile robots** — kolesových mobilných robotoch.
 
-A práve toto je najdôležitejšia myšlienka Chapter 2.4:
+Bežné koleso sa môže jednoducho kotúľať dopredu alebo dozadu. Pri ideálnom rolling without slipping však nemôže mať ľubovoľnú bočnú velocity.
 
-**Holonomic constraint obmedzuje, kde systém môže byť. Nonholonomic constraint môže namiesto toho obmedzovať, ako sa tam môže dostať.**`;
+Preto napríklad car-like robot nedokáže okamžite zmeniť svoju position ľubovoľným smerom.
+
+Podobne differential-drive robot s dvoma poháňanými kolesami nedokáže okamžite vykonať čistý bočný posun. Musí svoju position a orientation meniť pomocou pohybov, ktoré jeho kolesá mechanicky umožňujú.
+
+To zásadne ovplyvňuje **motion planning**. Nestačí nájsť geometricky voľnú čiaru medzi počiatočnou a cieľovou configuration. Musíme zároveň nájsť trajectory, ktorú robot vzhľadom na svoje velocity constraints dokáže fyzicky vykonať.
+
+Nonholonomic constraints sa preto stanú veľmi dôležité pri štúdiu wheeled mobile robots.
+
+---
+
+## 23. Configuration a velocity nesmieme zamieňať
+
+Celá lekcia sa v skutočnosti dá postaviť na jednom základnom rozdiele.
+
+**Configuration** odpovedá na otázku: **„V akom stave alebo polohe sa systém nachádza?"**
+
+**Velocity** odpovedá na otázku: **„Ako sa táto configuration práve teraz mení?"**
+
+Holonomic constraint obmedzuje samotné možné configurations. Keď ho derivujeme podľa času, prirodzene dostaneme aj velocity constraint, pretože robot sa musí pohybovať tak, aby medzi povolenými configurations zostal.
+
+Nonholonomic constraint funguje inak. Nemusí vylučovať cieľovú configuration. Môže iba obmedzovať, akým spôsobom sa k nej systém dokáže dostať.
+
+Preto môže mať systém napríklad štvorrozmerný configuration space, ale v jednom konkrétnom bode nemusí mať k dispozícii štyri nezávislé instantaneous velocity directions.
+
+Tento rozdiel je zásadný pre pochopenie mobilnej robotiky.
+
+---
+
+## 24. Dva príklady, podľa ktorých si rozdiel zapamätáš
+
+Ak sa ti niekedy začnú pojmy holonomic a nonholonomic pliesť, stačí sa vrátiť k dvom základným príkladom.
+
+**Bod na kružnici — holonomic constraint**
+
+Bod musí vždy spĺňať: x2 + y2 = r2
+
+Nemôže sa nachádzať mimo kružnice. Configuration space je preto priamo obmedzený.
+
+Keď túto podmienku derivujeme, dostaneme: x*x_dot + y*y_dot = 0
+
+Velocity musí byť taká, aby bod kružnicu neopustil. Tento velocity constraint vieme spätne spojiť s configuration constraintom, preto je **integrable**.
+
+**Koleso alebo minca bez šmyku — nonholonomic constraint**
+
+Koleso sa nemôže okamžite pohybovať ľubovoľným smerom. Rolling without slipping teda vytvára velocity constraint.
+
+To však neznamená, že všetky body ležiace bokom od kolesa sú navždy nedosiahnuteľné. Systém môže pomocou vhodnej postupnosti pohybov zmeniť orientation a postupne sa na také miesto dostať.
+
+Constraint teda obmedzuje **ako** sa systém pohybuje, nie nevyhnutne **kam** sa môže dostať.
+
+Preto je **nonintegrable** a nazývame ho nonholonomic.
+
+---
+
+## Zhrnutie lekcie
+
+Pri robotických systémoch musíme rozlišovať medzi **configuration constraints** a **velocity constraints**. Configuration constraint určuje, ktoré konfigurácie sú fyzicky možné. Velocity constraint určuje, akým spôsobom sa configuration môže v konkrétnom okamihu meniť.
+
+Pri closed-chain mechanisms vznikajú **loop-closure equations**, pretože links musia zostať spojené do uzavretej slučky. Four-bar linkage môžeme napríklad reprezentovať štyrmi joint angles, ale tri nezávislé loop-closure constraints spôsobia, že mechanizmus má iba 1 DOF.
+
+Všeobecný configuration constraint môžeme zapísať:
+
+**g(θ) = 0**
+
+Takýto constraint nazývame **holonomic constraint**. Pri n configuration variables a k nezávislých holonomic constraints má configuration space za bežných podmienok dimenziu:
+
+**n - k**
+
+Keď sa robot pohybuje, jeho configuration zapisujeme ako θ(t). Holonomic constraint musí platiť počas celého pohybu:
+
+**g(θ(t)) = 0**
+
+Derivovaním podľa času dostaneme velocity constraint:
+
+**(dg/dθ) * θ_dot = 0**
+
+Všeobecnejšie môžeme velocity constraints zapisovať v **Pfaffian form**:
+
+**A(θ) * θ_dot = 0**
+
+Ak tento velocity constraint vznikol derivovaním configuration constraintu a môžeme ho spätne integrovať na vzťah typu g(θ) = konštanta, nazývame ho **integrable**. Práve s takýmito velocity constraints sú spojené holonomic constraints.
+
+Nie každý velocity constraint je však integrable. Pri **rolling without slipping** môže byť okamžitý pohyb kolesa alebo mince obmedzený bez toho, aby existovala ekvivalentná configuration equation odstraňujúca časť reachable configuration space. Takýto constraint nazývame **nonholonomic** alebo **nonintegrable**.
+
+Najdôležitejší rozdiel preto môžeme vyjadriť veľmi jednoducho:
+
+**Holonomic constraint obmedzuje, kde systém môže byť.**
+
+**Nonholonomic constraint môže namiesto toho obmedzovať, ako sa systém môže pohybovať a ako sa do určitej configuration dostane.**
+
+Auto je najlepším intuitívnym príkladom. Nemôže sa okamžite posunúť bokom, ale vhodnou kombináciou jazdy a zatáčania sa môže dostať na miesto vedľa svojej pôvodnej polohy. Jeho okamžité velocity directions sú obmedzené, ale z toho automaticky nevyplýva zmenšenie dimension jeho reachable configuration space.
+
+A práve toto rozlíšenie medzi configuration a velocity je základom pre ďalšie štúdium robotického pohybu, motion planningu a kinematiky wheeled mobile robots.`;

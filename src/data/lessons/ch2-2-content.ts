@@ -13,7 +13,9 @@ Práve toto bude hlavnou myšlienkou lekcie. Ak chceme zistiť počet DOF celéh
 
 ---
 
-## 01. Joint pohyb nielen umožňuje, ale aj obmedzuje (opakovanie)
+:::recap
+
+## 01. Joint pohyb nielen umožňuje, ale aj obmedzuje
 
 Začnime obyčajnými dverami. Predstav si, že ešte nie sú namontované a držíš ich voľne vo vzduchu. Z mechanického pohľadu ich môžeme modelovať ako **spatial rigid body**. Môžeš ich posunúť doprava alebo doľava, dopredu alebo dozadu a hore alebo dole. Zároveň ich môžeš rôznymi spôsobmi otáčať. Celkovo teda majú **6 DOF**.
 
@@ -33,7 +35,7 @@ Toto je veľmi dôležitý spôsob uvažovania. Joint môžeme opisovať dvoma r
 
 ---
 
-## 02. Nie každý problém musíme riešiť v plnom 3D (opakovanie)
+## 02. Nie každý problém musíme riešiť v plnom 3D
 
 Dvere sú fyzicky trojrozmerný predmet, ale pri ich bežnom otváraní nás nemusí zaujímať všetkých šesť možných pohybov. Vieme, že zostávajú zvislé, nevyskočia z pántov a pohybujú sa iba okolo jednej osi. Ak sa na ne pozrieme zhora, ich pohyb môžeme analyzovať ako pohyb v jednej rovine.
 
@@ -46,6 +48,8 @@ Dostaneme:
 Výsledok je stále rovnaký — dvere majú jeden nezávislý pohyb. Rozdiel je iba v modeli, ktorý sme si zvolili.
 
 To je v robotike bežné. Ak sa celý mechanizmus pohybuje iba v jednej rovine, často je zbytočné analyzovať ho ako všeobecný 3D systém. Použijeme planar model, v ktorom má každé voľné rigid body 3 DOF. Ak sa mechanizmus skutočne pohybuje v priestore, použijeme spatial model a začíname so 6 DOF na jedno voľné rigid body.
+
+:::
 
 ---
 
@@ -60,10 +64,6 @@ Miesta, v ktorých sú dva links mechanicky spojené a môžu sa voči sebe urč
 Predstav si teraz, že všetky joints robotického ramena rozpojíme a jednotlivé links položíme samostatne na stôl. Každý link by sa mohol pohybovať nezávisle od ostatných. Len čo ich však opäť spojíme joints, ich pohyb sa previaže. Druhý link už nemôžeme umiestniť kamkoľvek — musí zostať pripojený k prvému a môže sa voči nemu pohybovať iba spôsobom, ktorý povoľuje ich joint.
 
 Robot teda môžeme chápať ako sústavu rigid bodies, ktorých pôvodná voľnosť je obmedzená mechanickými spojeniami. Preto počet links ani počet joints sám osebe nehovorí, koľko DOF robot má. Musíme vedieť, aké joints používame a ako sú links navzájom pospájané.
-
----
-
-## Základné typy joints
 
 ---
 
@@ -200,10 +200,6 @@ Tento vzťah je dôležitý preto, že nám umožní prejsť od jedného jointu 
 
 ---
 
-## Od jointov k celému robotovi
-
----
-
 ## 11. Ground sa počíta ako link
 
 Predstav si robotické rameno priskrutkované k stolu. Máme jeho pohyblivé links, ale úplne dole je ešte pevná základňa, ku ktorej je pripojený prvý joint.
@@ -231,10 +227,6 @@ Predstav si jeden fyzický čap, na ktorom sú pripojené tri rôzne links. Keď
 V našom kinematickom modeli však joint chápeme ako spojenie medzi dvojicou telies. Ak sú teda na rovnakom čape spojené tri links, môže byť potrebné toto fyzické spojenie modelovať ako viac než jeden joint.
 
 To je dôležité najmä pri zložitejších linkages. Formula sama nedokáže zistiť, že sme mechanizmus nesprávne nakreslili. Pred výpočtom preto musíme najskôr správne identifikovať links, ground a joints medzi jednotlivými dvojicami links.
-
----
-
-## Grüblerova formula
 
 ---
 
@@ -303,10 +295,6 @@ Vzorec teda nie je žiadne nové magické pravidlo. Je to iba skrátený zápis 
 
 ---
 
-## Open-chain mechanizmy
-
----
-
 ## 15. Open-chain robot
 
 Predstav si klasické robotické rameno. Začíname na pevnej základni, potom nasleduje joint, link, ďalší joint, ďalší link a nakoniec end-effector.
@@ -342,10 +330,6 @@ Ak ide o jednoduchý serial robot a všetky joints sú nezávislé, každý revo
 Napríklad planar 3R rameno potrebuje na opis svojej configuration tri uhly (θ1, θ2, θ3) a má teda **3 DOF**.
 
 To je dobrý jednoduchý prípad, pri ktorom sa intuitívne počítanie zhoduje s Grüblerovou formulou.
-
----
-
-## Closed-chain mechanizmy
 
 ---
 
@@ -429,10 +413,6 @@ Tento príklad opäť ukazuje, že počet joints sám osebe nestačí. Five-bar 
 
 ---
 
-## Kedy samotná formula nestačí
-
----
-
 ## 21. Grüblerova formula predpokladá nezávislé constraints
 
 Grüblerova formula funguje tak, že za každý joint odoberie určitý počet constraints. Tým však implicitne predpokladá, že každý z týchto constraints prináša nové nezávislé obmedzenie.
@@ -472,10 +452,6 @@ Takúto špeciálnu configuration nazývame **singular configuration** a samotn�
 Dôležité zatiaľ nie je vedieť singularities matematicky počítať. Stačí pochopiť, že správanie mechanizmu môže závisieť aj od jeho aktuálnej configuration. Niektoré constraints alebo možné smery pohybu sa môžu v špeciálnych polohách stať závislými.
 
 K singularities sa v robotike ešte vrátime, pretože sú veľmi dôležité pri kinematike, velocities, forces aj riadení robotov.
-
----
-
-## DOF mechanizmu a DOF end-effectora
 
 ---
 
@@ -535,10 +511,6 @@ Opäť vidíme rozdiel medzi zložitosťou mechanizmu a počtom nezávislých po
 
 ---
 
-## Open chain vs. closed chain
-
----
-
 ## 26. Krátke porovnanie
 
 **Open-chain mechanism** (mechanizmus s otvoreným kinematickým reťazcom) nemá uzavretú mechanickú slučku. Od ground vedie cez joints a links otvorená cesta k end-effectoru. Typickým príkladom je klasické serial robotické rameno. Ak sú jeho joints nezávislé, počet DOF sa často jednoducho rovná súčtu ich freedoms.
@@ -546,10 +518,6 @@ Opäť vidíme rozdiel medzi zložitosťou mechanizmu a počtom nezávislých po
 **Closed-chain mechanism** (mechanizmus s uzavretým kinematickým reťazcom) obsahuje aspoň jednu uzavretú mechanickú slučku. Pohyb jednotlivých joints preto býva geometricky previazaný. Four-bar linkage môže mať štyri revolute joints, ale celý mechanizmus má iba 1 DOF, pretože joint angles nemožno voliť nezávisle.
 
 Najjednoduchšie si rozdiel môžeš zapamätať takto: pri open chain môže byť každý joint ďalšou nezávislou možnosťou pohybu; pri closed chain slučka vytvára ďalšie constraints, takže pohyb jedného jointu môže určovať pohyb ostatných.
-
----
-
-## DOF nie je počet motorov
 
 ---
 

@@ -17,59 +17,49 @@ V tejto lekcii sa dostaneme k dvom dôležitým výsledkom. **Tuhé teleso, ktor
 
 ## 01. Čo je rigid body
 
-Skutočné predmety nie sú dokonale pevné. Kovové rameno robota sa môže pri zaťažení nepatrne ohnúť, plast sa môže deformovať a aj oceľ pri pôsobení sily mierne zmení svoj tvar. Ak by sme však pri každom pohybe robota museli počítať aj tieto malé deformácie, už veľmi jednoduchý mechanický model by sa rýchlo stal neprehľadným.
+Skutočné predmety nie sú dokonale pevné. Kovový link robotického ramena sa môže pri veľkom zaťažení nepatrne ohnúť, plast sa môže deformovať a dokonca aj oceľ pri pôsobení sily veľmi mierne zmení svoj tvar. Ak by sme však pri každom pohybe robota museli sledovať aj všetky tieto deformácie, aj jednoduchý výpočet by sa stal zbytočne komplikovaným.
 
-Pri základnej robotike preto používame idealizáciu a pevné časti robota považujeme za **rigid bodies — tuhé telesá**. Rigid body je objekt, ktorého tvar a rozmery sa počas pohybu nemenia. Môže sa presúvať alebo otáčať, ale v našom modeli sa nenaťahuje, neskracuje ani neohýba.
+Pri základnej kinematike preto používame zjednodušenie a pevné časti robota považujeme za **rigid bodies — tuhé telesá**. Rigid body je idealizované teleso, ktorého tvar a rozmery sa počas pohybu nemenia. Môže sa presúvať alebo otáčať, ale v našom modeli sa nenaťahuje, neskracuje ani neohýba.
 
-Predstav si kovový link robotického ramena a vyber na ňom dva body A a B. Keď sa link pohne, oba body sa môžu ocitnúť na úplne inom mieste v priestore. Ich vzájomná vzdialenosť však zostáva rovnaká. Ak sú od seba vzdialené 20 cm, táto vzdialenosť zostane 20 cm pri každej konfigurácii telesa.
+Predstav si napríklad kovový segment robotického ramena a vyber na ňom dva body A a B. Keď sa rameno pohne, oba body môžu skončiť na úplne inom mieste v priestore. Vzdialenosť medzi nimi sa však nezmení. Ak sú od seba vzdialené 20 cm, zostanú od seba 20 cm pri každom pohybe telesa.
 
-Práve táto vlastnosť je kľúčová. Body rigidného telesa sa nepohybujú nezávisle — sú navzájom pevne geometricky previazané. Vďaka tomu nemusíme sledovať polohu každého bodu zvlášť. Ak poznáme polohu a orientáciu celého telesa, vieme z nich odvodiť polohu ktoréhokoľvek bodu na jeho povrchu.
+Práve táto pevná geometria je kľúčová. Jednotlivé body rigid body sa nemôžu pohybovať úplne nezávisle. Ak sa pohne celé teleso, všetky jeho body sa musia pohnúť tak, aby zostali zachované ich vzájomné vzdialenosti. Vďaka tomu nemusíme sledovať každý bod zvlášť. Stačí nám poznať polohu a orientáciu celého telesa a z nich vieme odvodiť polohu ktoréhokoľvek bodu na ňom.
 
 ---
 
 ## 02. Čo presne znamená degree of freedom
 
-**Degree of freedom — stupeň voľnosti** predstavuje jednu nezávislú hodnotu, ktorú potrebujeme na úplné určenie konfigurácie systému.
+**Degree of freedom — stupeň voľnosti** predstavuje jednu nezávislú hodnotu, ktorú potrebujeme na úplné určenie configuration systému. Najdôležitejšie je tu slovo **nezávislú**.
 
-Najjednoduchším príkladom je výťah. Kabína sa môže pohybovať hore alebo dole po jednej zvislej dráhe. Na určenie jej polohy nám stačí jediná hodnota, napríklad výška h. Výťah preto môžeme považovať za systém s **1 DOF**.
+Predstav si kabínu výťahu. Pohybuje sa po jednej zvislej dráhe hore alebo dole. Na určenie jej polohy nám stačí jediná hodnota, napríklad výška h. Výťah preto môžeme považovať za systém s **1 DOF**. Pohyb hore a pohyb dole pritom nepredstavujú dva rôzne stupne voľnosti. Ide iba o dva smery zmeny jednej a tej istej súradnice.
 
-Je dôležité, že pohyb hore a pohyb dole nie sú dva rôzne stupne voľnosti. Ide stále o jednu súradnicu, ktorá sa môže zväčšovať alebo zmenšovať.
+Ak sa naopak bod môže voľne pohybovať po stole, potrebujeme dve hodnoty — napríklad x a y. Hodnotu x môžeme meniť bez toho, aby sme museli meniť y, a naopak. Takýto bod má preto **2 DOF**.
 
-Ak sa naopak geometrický bod môže voľne pohybovať po stole, na určenie jeho polohy potrebujeme dve nezávislé súradnice, napríklad x a y. Bod preto má **2 DOF**. Hodnotu x môžeme meniť bez toho, aby sme museli meniť y, a naopak.
-
-Presnejšie teda môžeme povedať, že počet DOF je **najmenší počet nezávislých reálnych hodnôt potrebných na úplné určenie konfigurácie systému**.
-
-Slovo **nezávislých** je zásadné. Ak je jedna hodnota automaticky určená ostatnými, nepridáva systému nový stupeň voľnosti.
+Počet stupňov voľnosti môžeme teda presnejšie definovať ako **najmenší počet nezávislých reálnych hodnôt potrebných na jednoznačné určenie konfigurácie systému**. Ak je jedna hodnota automaticky určená ostatnými, nepridáva ďalší DOF.
 
 ---
 
-## 03. Pri telese potrebujeme polohu aj orientáciu
+## 03. Pri tuhom telese potrebujeme position aj orientation
 
-Pri samotnom bode nám stačí vedieť, kde sa nachádza. Pri tuhom telese to už nestačí.
+Pri samotnom geometrickom bode nám stačí vedieť, kde sa nachádza. Pri tuhom telese je to iné, pretože má tvar a môže byť rôzne natočené.
 
-Predstav si telefón položený v strede stola. Jeho stred môže zostať na rovnakom mieste, ale telefón môže byť otočený smerom k tebe, otočený o 90° alebo položený šikmo. Poloha jeho stredu sa nemení, no konfigurácia telefónu áno.
+Predstav si telefón položený v strede stola. Jeho stred môže zostať na rovnakom mieste, ale telefón môže byť otočený smerom k tebe, otočený o 90° alebo položený šikmo. Position jeho stredu sa nezmenila, ale configuration telefónu áno.
 
-Preto v robotike rozlišujeme **position — polohu** a **orientation — orientáciu**. Position odpovedá na otázku, kde sa teleso nachádza. Orientation opisuje, ako je natočené.
+Preto v robotike rozlišujeme **position — polohu** a **orientation — orientáciu**. Position opisuje, kde sa teleso nachádza. Orientation opisuje, ako je natočené.
 
-Pri rigid body tvorí úplnú konfiguráciu kombinácia oboch informácií. To je dôležité aj prakticky. Robotický gripper môže byť presne na správnom mieste, ale ak je nesprávne orientovaný, nemusí vedieť predmet uchopiť. Pri skrutkovaní musí byť nástroj správne zarovnaný s osou skrutky a pri zváraní musí byť vhodne natočený voči povrchu.
-
-Poloha a orientácia teda opisujú dve rôzne, ale rovnako dôležité časti konfigurácie tuhého telesa.
+Pri rigid body tvoria tieto dve informácie jeden celok. Ak chceme vedieť úplnú configuration telesa, musíme poznať obe. To je dôležité aj pri robotoch. Gripper môže byť presne na správnom mieste, ale ak je nesprávne natočený, nemusí vedieť predmet uchopiť. Pri skrutkovaní musí byť nástroj správne zarovnaný s osou skrutky a pri zváraní musí byť vhodne orientovaný voči povrchu.
 
 ## 04. Planar rigid body má 3 DOF
 
-Najskôr si pohyb telesa zjednodušíme a obmedzíme ho na jednu rovinu.
+Najskôr si pohyb telesa zjednodušíme a obmedzíme ho na jednu rovinu. Predstav si mincu položenú naplocho na stole. Môže sa po stole posúvať a otáčať, ale nesmie sa zdvihnúť, prevrátiť ani nakloniť mimo roviny.
 
-Predstav si mincu položenú naplocho na stole. Môže sa po stole voľne posúvať a otáčať, ale nesmie sa zdvihnúť, prevrátiť ani nakloniť mimo roviny.
+Na určenie jej position potrebujeme dve hodnoty, napríklad x a y. Tie určujú polohu jej stredu na stole. Samotné x a y však ešte nehovoria, ako je minca natočená. Preto potrebujeme ešte uhol θ, ktorý opisuje orientation.
 
-Na určenie jej polohy potrebujeme dve hodnoty — napríklad x a y, ktoré určujú polohu jej stredu na stole. Tieto dve súradnice však ešte neurčujú, ako je minca natočená. Preto potrebujeme ešte uhol θ.
-
-Konfiguráciu môžeme zapísať ako:
+Configuration môžeme zapísať ako:
 
 **q = (x, y, θ)**
 
-Minca sa teda môže nezávisle posúvať v dvoch smeroch roviny a zároveň sa môže otáčať.
-
-Má preto:
+Minca teda môže nezávisle meniť svoju polohu v dvoch smeroch a zároveň sa môže otáčať. Má preto:
 
 **2 translačné DOF + 1 rotačný DOF = 3 DOF**
 

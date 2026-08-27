@@ -289,11 +289,12 @@ export default function TopicLessonPage() {
                 }}
                 style={{
                   width: '100%', padding: '16px', borderRadius: 14, border: 'none', cursor: 'pointer',
-                  background: '#4f2a85', color: '#fff', fontWeight: 700, fontSize: 15,
+                  background: '#4f2a85', fontWeight: 700, fontSize: 15,
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                 }}
+                className="purple-btn"
               >
-                <RotateCcw size={16} />
+                <RotateCcw size={16} color="#fff" />
                 {locale === 'sk' ? `Skúsiť znova (Pokus ${attempts.length + 1})` : `Try again (Attempt ${attempts.length + 1})`}
               </button>
             </motion.div>
@@ -611,7 +612,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
                   {locale === 'sk' ? 'Skúsiť znova' : 'Try again'}
                 </button>
               )}
-              <button onClick={handleNext} style={{
+              <button onClick={handleNext} className={isLast ? 'purple-btn' : ''} style={{
                 width: '100%', padding: '14px', borderRadius: 12,
                 background: isLast ? '#4f2a85' : 'var(--btn-primary)', color: isLast ? '#fff' : 'var(--btn-primary-text)', fontWeight: 700, fontSize: 14,
                 border: 'none', cursor: 'pointer',
@@ -760,7 +761,7 @@ function ExerciseView({ exercise, topicId, locale, onComplete, onNext, isLast, i
               {locale === 'sk' ? 'Správne!' : 'Correct!'} +{exercise.xp} XP
             </span>
           </div>
-          <button onClick={handleNext} style={{
+          <button onClick={handleNext} className={isLast ? 'purple-btn' : ''} style={{
             width: '100%', padding: '14px', borderRadius: 12,
             background: isLast ? '#4f2a85' : 'var(--btn-primary)', color: isLast ? '#fff' : 'var(--btn-primary-text)', fontWeight: 700, fontSize: 15,
             border: 'none', cursor: 'pointer',

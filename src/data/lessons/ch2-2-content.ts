@@ -49,10 +49,6 @@ Výsledok je stále rovnaký — dvere majú jeden nezávislý pohyb. Rozdiel je
 
 To je v robotike bežné. Ak sa celý mechanizmus pohybuje iba v jednej rovine, často je zbytočné analyzovať ho ako všeobecný 3D systém. Použijeme planar model, v ktorom má každé voľné rigid body 3 DOF. Ak sa mechanizmus skutočne pohybuje v priestore, použijeme spatial model a začíname so 6 DOF na jedno voľné rigid body.
 
-:::
-
----
-
 ## 03. Robot ako systém links a joints
 
 Predstav si jednoduché robotické rameno. Dole má pevnú základňu. K nej je jointom pripojený prvý pohyblivý segment, za ním nasleduje ďalší joint a ďalší segment a na konci môže byť napríklad gripper.
@@ -64,6 +60,8 @@ Miesta, v ktorých sú dva links mechanicky spojené a môžu sa voči sebe urč
 Predstav si teraz, že všetky joints robotického ramena rozpojíme a jednotlivé links položíme samostatne na stôl. Každý link by sa mohol pohybovať nezávisle od ostatných. Len čo ich však opäť spojíme joints, ich pohyb sa previaže. Druhý link už nemôžeme umiestniť kamkoľvek — musí zostať pripojený k prvému a môže sa voči nemu pohybovať iba spôsobom, ktorý povoľuje ich joint.
 
 Robot teda môžeme chápať ako sústavu rigid bodies, ktorých pôvodná voľnosť je obmedzená mechanickými spojeniami. Preto počet links ani počet joints sám osebe nehovorí, koľko DOF robot má. Musíme vedieť, aké joints používame a ako sú links navzájom pospájané.
+
+:::
 
 ---
 

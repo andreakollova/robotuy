@@ -19,6 +19,8 @@ Táto myšlienka bude neskôr veľmi dôležitá. Ovplyvní spôsob, akým budem
 
 ---
 
+:::recap
+
 ## 01. Rovnaký počet DOF ešte neznamená rovnaký configuration space
 
 Predstav si bod, ktorý sa môže voľne pohybovať po nekonečnej rovnej ploche. Na úplné určenie jeho position potrebujeme dve nezávislé hodnoty, napríklad x a y. Bod preto má 2 DOF a jeho configuration space je dvojrozmerný.
@@ -38,6 +40,8 @@ Oba priestory sú dvojrozmerné, ale majú **odlišnú topológiu**.
 To je hlavná myšlienka celej lekcie:
 
 **DOF nám hovorí, koľko nezávislých hodnôt potrebujeme. Topológia nám hovorí, ako je priestor všetkých týchto možností usporiadaný.**
+
+:::
 
 ---
 

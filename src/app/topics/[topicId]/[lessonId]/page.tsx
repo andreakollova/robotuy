@@ -130,8 +130,17 @@ export default function TopicLessonPage() {
               let inRecap = false;
               return lesson.content!.split('\n').map((line, i) => {
               const trimmed = line.trim();
-              if (trimmed === ':::recap') { inRecap = true; return <div key={i} style={{ margin: '12px 0 6px', padding: '10px 14px', background: 'rgba(34,197,94,0.06)', borderRadius: 12, border: '1px solid rgba(34,197,94,0.15)' }}><div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}><RotateCcw size={13} color="var(--green)" /><span style={{ fontSize: 11, fontWeight: 700, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Opakovanie z predchádzajúcej lekcie</span></div></div>; }
-              if (trimmed === ':::') { inRecap = false; return <div key={i} style={{ height: 2 }} />; }
+              if (trimmed === ':::recap') { inRecap = true; return <div key={i} style={{ margin: '14px 0 0', padding: '12px 16px 4px', background: 'rgba(34,197,94,0.05)', borderRadius: '14px 14px 0 0', borderTop: '2px solid rgba(34,197,94,0.3)', borderLeft: '1px solid rgba(34,197,94,0.12)', borderRight: '1px solid rgba(34,197,94,0.12)' }}><div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><RotateCcw size={13} color="var(--green)" /><span style={{ fontSize: 11, fontWeight: 700, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Opakovanie z predchádzajúcej lekcie</span></div></div>; }
+              if (trimmed === ':::') { inRecap = false; return <div key={i} style={{ height: 0, marginBottom: 14, borderBottom: '2px solid rgba(34,197,94,0.3)', borderRadius: '0 0 14px 14px' }} />; }
+              if (inRecap && trimmed.startsWith('## ')) return <div key={i} style={{ padding: '0 16px', background: 'rgba(34,197,94,0.05)', borderLeft: '1px solid rgba(34,197,94,0.12)', borderRight: '1px solid rgba(34,197,94,0.12)' }}><h2 style={{ fontSize: 16, fontWeight: 700, color: '#4f2a85', margin: '10px 0 4px', lineHeight: 1.3, paddingLeft: 10, borderLeft: '3px solid #22c55e', opacity: 0.8 }}>{trimmed.slice(3)}</h2></div>;
+              if (inRecap) {
+                if (!trimmed) return <div key={i} style={{ height: 3, background: 'rgba(34,197,94,0.05)', borderLeft: '1px solid rgba(34,197,94,0.12)', borderRight: '1px solid rgba(34,197,94,0.12)' }} />;
+                const recapFormatted = trimmed.split(/(\*\*[^*]+\*\*)/).map((part, j) => {
+                  if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: 'var(--text-secondary)' }}>{part.slice(2, -2)}</strong>;
+                  return part;
+                });
+                return <div key={i} style={{ padding: '0 16px', background: 'rgba(34,197,94,0.05)', borderLeft: '1px solid rgba(34,197,94,0.12)', borderRight: '1px solid rgba(34,197,94,0.12)' }}><p style={{ margin: '3px 0', fontSize: 13.5, color: 'var(--text-hint)', lineHeight: 1.7 }}>{recapFormatted}</p></div>;
+              }
               if (!trimmed) return <div key={i} style={{ height: inRecap ? 4 : 6 }} />;
               if (trimmed.startsWith('# ')) return <h1 key={i} style={{ fontSize: 22, fontWeight: 800, color: '#4f2a85', margin: '10px 0 8px', lineHeight: 1.3 }}>{trimmed.slice(2)}</h1>;
               if (trimmed.startsWith('## ')) return <h2 key={i} style={{ fontSize: 17, fontWeight: 700, color: '#4f2a85', margin: '12px 0 6px', lineHeight: 1.3, paddingLeft: 10, borderLeft: '3px solid #22c55e' }}>{trimmed.slice(3)}</h2>;

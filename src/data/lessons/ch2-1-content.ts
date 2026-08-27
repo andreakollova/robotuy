@@ -43,8 +43,6 @@ Slovo **nezávislých** je zásadné. Ak je jedna hodnota automaticky určená o
 
 ---
 
-:::
-
 ## 03. Pri telese potrebujeme polohu aj orientáciu
 
 Pri samotnom bode nám stačí vedieť, kde sa nachádza. Pri tuhom telese to už nestačí.
@@ -56,8 +54,6 @@ Preto v robotike rozlišujeme **position — polohu** a **orientation — orient
 Pri rigid body tvorí úplnú konfiguráciu kombinácia oboch informácií. To je dôležité aj prakticky. Robotický gripper môže byť presne na správnom mieste, ale ak je nesprávne orientovaný, nemusí vedieť predmet uchopiť. Pri skrutkovaní musí byť nástroj správne zarovnaný s osou skrutky a pri zváraní musí byť vhodne natočený voči povrchu.
 
 Poloha a orientácia teda opisujú dve rôzne, ale rovnako dôležité časti konfigurácie tuhého telesa.
-
----
 
 ## 04. Planar rigid body má 3 DOF
 
@@ -80,6 +76,8 @@ Má preto:
 Takéto teleso nazývame **planar rigid body**.
 
 Slovo planar pritom neznamená, že teleso je fyzicky dvojrozmerné. Telefón, mobilný robot alebo kovová súčiastka sú stále trojrozmerné objekty. Planar znamená iba to, že ich povolený pohyb je obmedzený na jednu rovinu.
+
+:::
 
 ---
 

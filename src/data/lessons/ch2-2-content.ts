@@ -224,76 +224,149 @@ Predstav si jeden fyzický čap, na ktorom sú pripojené tri rôzne links. Keď
 
 V našom kinematickom modeli však joint chápeme ako spojenie medzi dvojicou telies. Ak sú teda na rovnakom čape spojené tri links, môže byť potrebné toto fyzické spojenie modelovať ako viac než jeden joint.
 
-To je dôležité najmä pri zložitejších linkages. Formula sama nedokáže zistiť, že sme mechanizmus nesprávne nakreslili. Pred výpočtom preto musíme najskôr správne identifikovať links, ground a joints medzi jednotlivými dvojicami links.
+To je dôležité najmä pri zložitejších mechanizmoch, kde nemusí byť na prvý pohľad jasné, koľko links a joints systém skutočne obsahuje. Grüblerova formula pracuje iba s modelom, ktorý jej zadáme, preto ešte pred výpočtom musíme správne určiť ground, jednotlivé links a joints, ktoré ich navzájom spájajú.
 
 ---
 
-## 13. Prečo vôbec potrebujeme formulu
+## 13. Prečo vôbec potrebujeme Grüblerovu formulu
 
-Pri jednoduchom serial robotickom ramene môže byť počítanie veľmi ľahké. Ak máme tri nezávislé revolute joints a každý má 1 DOF, celý mechanizmus má často jednoducho:
+Pri jednoduchom robotickom ramene sa počet degrees of freedom často určuje veľmi ľahko. Predstav si napríklad planar rameno s tromi revolute joints. Každý revolute joint sa môže nezávisle otáčať a na opis jeho stavu potrebujeme jeden uhol.
+
+Configuration takéhoto robota môžeme zapísať napríklad ako:
+
+**q = (θ1, θ2, θ3)**
+
+Ak zmeníme θ1, nemusíme automaticky meniť θ2 ani θ3. Každý z troch uhlov predstavuje jednu nezávislú hodnotu, takže jednoducho dostaneme:
 
 **1 + 1 + 1 = 3 DOF**
 
-Lenže toto prestane fungovať pri mechanizmoch, ktoré vytvárajú uzavreté slučky. Môžeme mať napríklad štyri pohyblivé joints, ale ich pohyby nemusia byť nezávislé. Pohyb jedného môže automaticky určovať pohyb ostatných.
+Pri takomto open-chain mechanism teda často naozaj stačí spočítať DOF jednotlivých joints.
 
-Potrebujeme preto systematickejší spôsob, ktorý zohľadní nielen freedoms jednotlivých joints, ale aj constraints, ktoré ich spojenie vytvára.
+Problém vznikne, keď links spojíme tak, že vytvoria uzavretú slučku.
 
-Na to používame **Grüblerovu formulu**.
+Predstav si napríklad four-bar linkage — štyri pevné links spojené štyrmi revolute joints do uzavretého tvaru. Keď sa na mechanizmus pozrieš, vidíš štyri revolute joints a každý z nich má samostatne 1 DOF. Mohlo by teda vyzerať logicky povedať:
 
-Označme:
+4 joints x 1 DOF = 4 DOF
 
-- **N** — počet links vrátane ground
-- **J** — počet joints
-- **m** — počet DOF voľného rigid body v našom modeli
-- **fi** — počet DOF konkrétneho jointu
+Lenže to by bolo nesprávne.
 
-Pre planar mechanizmus: **m = 3**
+Prečo? Pretože pri uzavretom mechanizme sa uhly jednotlivých joints už nemôžu meniť ľubovoľne. Keď otočíš jeden link, ostatné sa musia automaticky prispôsobiť tak, aby sa celý mechanizmus nerozpojil. Posledný link musí stále dosiahnuť späť k prvému a uzavretá slučka musí zostať zachovaná.
 
-Pre spatial mechanizmus: **m = 6**
+Predstav si to ako rám zo štyroch pevných tyčiek spojených v rohoch. Ak chytíš jeden roh a začneš mechanizmus meniť, nemôžeš potom ostatné tri rohy premiestniť kamkoľvek chceš. Ich polohy sú navzájom previazané pevnými dĺžkami tyčiek.
 
-Potom:
+Práve tieto väzby sú **constraints**.
 
-**DOF = m(N - 1 - J) + suma fi**
+To znamená, že samotný počet joints nám ešte nepovie, koľko nezávislého pohybu celý mechanizmus skutočne má.
 
-Samotný vzorec však dáva oveľa väčší zmysel, keď si ho odvodíme.
+Grüblerova formula nám preto pomáha odpovedať na presnejšiu otázku:
 
----
-
-## 14. Odkiaľ Grüblerova formula pochádza
-
-Predstav si mechanizmus s N links vrátane ground. Ground je pevný, takže máme N - 1 pohyblivých links.
-
-Teraz si predstav, že sme všetky joints rozpojili. Každý pohyblivý link je samostatný a môže sa voľne pohybovať. Ak ide o planar mechanizmus, každý má 3 DOF. Ak ide o spatial mechanizmus, každý má 6 DOF.
-
-Počiatočná voľnosť všetkých pohyblivých links je preto:
-
-**m(N - 1)**
-
-Až potom začneme links spájať joints.
-
-Predstav si spatial mechanizmus a revolute joint. Dve telesá by bez spojenia mohli mať voči sebe šesť relatívnych možností pohybu. Revolute joint ponechá iba jednu. Znamená to, že odstránil päť možností — vytvoril päť constraints.
-
-Vo všeobecnosti joint s fi DOF odstráni:
-
-**m - fi**
-
-stupňov voľnosti.
-
-Ak máme viac joints, od pôvodnej voľnosti links odpočítame constraints vytvorené všetkými joints. Dostávame:
-
-**DOF = pôvodná voľnosť links - constraints joints**
-
-Po matematickej úprave vznikne Grüblerova formula:
-
-**DOF = m(N - 1 - J) + suma fi**
-
-Vzorec teda nie je žiadne nové magické pravidlo. Je to iba skrátený zápis myšlienky, ktorú už poznáme:
-
-**najskôr dáme telesám všetku voľnosť, ktorú by mali samostatne, a potom odoberieme pohyby, ktoré im joints zakážu.**
+**Koľko voľnosti by mali všetky links samostatne a koľko z tejto voľnosti im joints odoberú?**
 
 ---
 
-## 15. Open-chain robot
+## 14. Čo do Grüblerovej formule potrebujeme
+
+Najskôr si označíme niekoľko hodnôt.
+
+**N** je počet všetkých links vrátane ground. Ak má napríklad mechanizmus jednu pevnú základňu a tri pohyblivé links, potom N = 4.
+
+**J** je počet joints, teda mechanických spojení medzi jednotlivými links.
+
+**m** hovorí, koľko DOF by malo jedno úplne voľné rigid body v priestore, v ktorom mechanizmus analyzujeme.
+
+Ak ide o planar mechanism, jedno voľné rigid body má 3 DOF, preto: **m = 3**
+
+Ak ide o spatial mechanism, jedno voľné rigid body má 6 DOF, preto: **m = 6**
+
+Napokon **fi** označuje počet DOF konkrétneho jointu i. Revolute joint má napríklad fi = 1, prismatic joint tiež fi = 1 a spherical joint má fi = 3.
+
+Grüblerovu formulu potom zapisujeme:
+
+**DOF = m(N - 1 - J) + suma fi**
+
+Symbol suma fi jednoducho znamená: spočítaj DOF všetkých joints.
+
+---
+
+## 15. Čo Grüblerova formula vlastne robí
+
+Samotný zápis môže pôsobiť abstraktne, ale myšlienka za ním je jednoduchá.
+
+Predstav si najskôr, že sú všetky pohyblivé links od seba odpojené. Každý z nich sa môže pohybovať úplne voľne. Ak ide o planar mechanism, každý takýto link má 3 DOF. Ak ide o spatial mechanism, každý má 6 DOF.
+
+Potom ich začneme spájať joints.
+
+Každý joint povie približne toto:
+
+**„Tieto dva links už nemôžete voči sebe pohybovať úplne ľubovoľne. Dovolím vám iba určitý typ pohybu."**
+
+Napríklad planar revolute joint dovolí dvom links relatívne sa otáčať, ale nedovolí im voči sebe ľubovoľne sa posúvať. Joint teda časť pôvodnej voľnosti odstráni.
+
+Grüblerova formula presne toto počíta: začne voľnosťou samostatných links a potom zohľadní obmedzenia vytvorené joints.
+
+---
+
+## 16. Jednoduchý príklad: planar 3R rameno
+
+Predstav si planar robotické rameno s tromi revolute joints.
+
+Máme jeden ground a tri pohyblivé links: **N = 4**
+
+Máme tri joints: **J = 3**
+
+Ide o planar mechanism: **m = 3**
+
+Každý revolute joint má 1 DOF, takže: **suma fi = 1 + 1 + 1 = 3**
+
+Dosadíme:
+
+**DOF = 3(4 - 1 - 3) + 3**
+
+Najskôr zátvorka: 4 - 1 - 3 = 0
+
+Takže:
+
+**DOF = 3 x 0 + 3 = 3**
+
+Dostaneme presne to, čo sme očakávali: robot má **3 DOF**.
+
+Pri tomto jednoduchom open-chain robotovi nám teda formula iba potvrdila výsledok, ktorý sme vedeli získať aj obyčajným sčítaním jointov.
+
+---
+
+## 17. Prečo je formula užitočná pri closed chain
+
+Teraz vezmime four-bar linkage.
+
+Má štyri links vrátane ground: **N = 4**
+
+Má štyri revolute joints: **J = 4**
+
+Mechanizmus je planar: **m = 3**
+
+Každý joint má 1 DOF: **suma fi = 4**
+
+Dosadíme:
+
+**DOF = 3(4 - 1 - 4) + 4**
+
+Teda:
+
+**DOF = 3(-1) + 4 = 1**
+
+A tu vidíme, prečo formulu potrebujeme.
+
+Na obrázku síce vidíme štyri joints, ale celý mechanizmus má iba **1 DOF**. Keď zvolíme jednu nezávislú hodnotu — napríklad uhol jedného linku — ostatné uhly už musia byť také, aby zostala slučka uzavretá.
+
+Formulka teda zachytí niečo, čo jednoduché sčítanie joints nezachytí: **geometrické constraints vznikajúce spojením links do mechanizmu**.
+
+Najjednoduchšie si preto Grüblerovu formulu predstav takto:
+
+**najskôr všetkým links dovolíme pohybovať sa voľne → potom ich spojíme joints → joints odoberú časť voľnosti → to, čo zostane, je DOF mechanizmu.**
+
+---
+
+## 18. Open-chain robot
 
 Predstav si klasické robotické rameno. Začíname na pevnej základni, potom nasleduje joint, link, ďalší joint, ďalší link a nakoniec end-effector.
 
@@ -313,7 +386,7 @@ Tu preto jednoduché sčítanie joint freedoms funguje.
 
 ---
 
-## 16. kR serial robot
+## 19. kR serial robot
 
 V robotike sa môžeme stretnúť so zápisom **kR robot**. Písmeno R znamená revolute joint a k hovorí, koľko takýchto joints robot obsahuje.
 
@@ -331,7 +404,7 @@ To je dobrý jednoduchý prípad, pri ktorom sa intuitívne počítanie zhoduje 
 
 ---
 
-## 17. Čo sa zmení, keď vytvoríme uzavretú slučku
+## 20. Čo sa zmení, keď vytvoríme uzavretú slučku
 
 Teraz si predstav, že links nepospájame iba do jedného otvoreného reťazca. Pridáme ďalšie spojenie tak, že sa mechanická cesta nakoniec uzavrie.
 
@@ -347,7 +420,7 @@ A práve preto pri closed chains neplatí: **počet joints = počet DOF**
 
 ---
 
-## 18. Four-bar linkage: 4 joints, ale iba 1 DOF
+## 21. Four-bar linkage: 4 joints, ale iba 1 DOF
 
 Klasickým príkladom je **four-bar linkage** (štvorčlánkový mechanizmus).
 
@@ -375,7 +448,7 @@ Toto je presne dôvod, prečo štyri joints neznamenajú štyri DOF.
 
 ---
 
-## 19. Slider-crank: dva rôzne pohyby, ale iba 1 DOF
+## 22. Slider-crank: dva rôzne pohyby, ale iba 1 DOF
 
 Ďalším výborným príkladom je **slider-crank mechanism** (kľukový mechanizmus s posúvačom), ktorý poznáme napríklad z piestového motora.
 
@@ -393,7 +466,7 @@ Je to podobná myšlienka ako pri helical jointe. To, že mechanizmus obsahuje v
 
 ---
 
-## 20. Five-bar linkage
+## 23. Five-bar linkage
 
 Pri **five-bar linkage** (päťčlánkovom mechanizme) máme päť links vrátane ground a päť revolute joints usporiadaných do uzavretej slučky.
 
@@ -411,7 +484,7 @@ Tento príklad opäť ukazuje, že počet joints sám osebe nestačí. Five-bar 
 
 ---
 
-## 21. Grüblerova formula predpokladá nezávislé constraints
+## 24. Grüblerova formula predpokladá nezávislé constraints
 
 Grüblerova formula funguje tak, že za každý joint odoberie určitý počet constraints. Tým však implicitne predpokladá, že každý z týchto constraints prináša nové nezávislé obmedzenie.
 
@@ -439,7 +512,7 @@ Preto Grüblerova formula nie je náhradou za pochopenie mechanizmu. Je to veľm
 
 ---
 
-## 22. Singular configuration
+## 25. Singular configuration
 
 Aj mechanizmus, ktorý sa väčšinou správa normálne, sa môže dostať do špeciálnej geometrickej polohy, v ktorej sa vzťahy medzi jeho constraints zmenia.
 
@@ -453,7 +526,7 @@ K singularities sa v robotike ešte vrátime, pretože sú veľmi dôležité pr
 
 ---
 
-## 23. Nie každý DOF musí pohybovať end-effectorom
+## 26. Nie každý DOF musí pohybovať end-effectorom
 
 Doteraz by mohlo vyzerať, že každý DOF robota automaticky znamená ďalšiu možnosť pohybu jeho end-effectora. Pri jednoduchom serial robotovi to často približne platí, ale pri komplikovanejších mechanizmoch už nie.
 
@@ -475,7 +548,7 @@ Tieto dve čísla nemusia byť rovnaké.
 
 ---
 
-## 24. Delta robot
+## 27. Delta robot
 
 ![Delta robot](/book/ch2/fig2-8.png)
 
@@ -491,7 +564,7 @@ Práve preto pri zložitejších robotoch nestačí povedať iba „robot má X 
 
 ---
 
-## 25. Stewart-Gough platform
+## 28. Stewart-Gough platform
 
 Ďalším známym parallel robotom je **Stewart-Gough platform**. Má pevnú spodnú platformu a pohyblivú hornú platformu, ktoré sú prepojené šiestimi nastaviteľnými nohami.
 
@@ -509,7 +582,7 @@ Opäť vidíme rozdiel medzi zložitosťou mechanizmu a počtom nezávislých po
 
 ---
 
-## 26. Krátke porovnanie
+## 29. Krátke porovnanie
 
 **Open-chain mechanism** (mechanizmus s otvoreným kinematickým reťazcom) nemá uzavretú mechanickú slučku. Od ground vedie cez joints a links otvorená cesta k end-effectoru. Typickým príkladom je klasické serial robotické rameno. Ak sú jeho joints nezávislé, počet DOF sa často jednoducho rovná súčtu ich freedoms.
 
@@ -519,7 +592,7 @@ Najjednoduchšie si rozdiel môžeš zapamätať takto: pri open chain môže by
 
 ---
 
-## 27. Mechanická voľnosť a actuation sú dve rôzne veci
+## 30. Mechanická voľnosť a actuation sú dve rôzne veci
 
 Na záver je dôležité oddeliť **degrees of freedom** od počtu motorov.
 
@@ -541,7 +614,7 @@ Pýtame sa: **Koľko nezávislých hodnôt potrebujeme na úplné určenie jeho 
 
 ---
 
-## 28. Ako postupovať pri počítaní DOF
+## 31. Ako postupovať pri počítaní DOF
 
 Keď dostaneš nový mechanizmus, nesnaž sa okamžite dosadzovať čísla do Grüblerovej formule. Najskôr si mechanizmus predstav fyzicky.
 
@@ -555,7 +628,7 @@ Ak ti výsledok nedáva fyzický zmysel, nemala by byť prvá reakcia „asi som
 
 ---
 
-## 29. Hlavná myšlienka lekcie
+## 32. Hlavná myšlienka lekcie
 
 Najdôležitejšie nie je naučiť sa naspamäť tabuľku joints alebo Grüblerovu formulu. Dôležité je pochopiť mechanickú logiku, ktorá sa za nimi skrýva.
 

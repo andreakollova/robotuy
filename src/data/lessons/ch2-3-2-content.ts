@@ -427,7 +427,7 @@ A práve druhý prístup bude v robotike mimoriadne dôležitý.
 
 ---
 
-## Zhrnutie lekcie
+:::summary
 
 **Configuration space** je množina všetkých možných configurations systému. **Representation** je iba spôsob, akým konkrétnu configuration zapíšeme pomocou čísel. Rovnaký configuration space môžeme reprezentovať rôznymi spôsobmi bez toho, aby sa fyzický systém zmenil.
 
@@ -449,4 +449,6 @@ Najdôležitejšia myšlienka celej lekcie je preto jednoduchá:
 
 A ešte praktickejšie:
 
-**Minimum parametrov nemusí znamenať najlepšiu reprezentáciu. Niekedy je výhodnejšie použiť viac čísel, ak tým získame stabilnejšiu a jednoduchšiu matematiku.**`;
+**Minimum parametrov nemusí znamenať najlepšiu reprezentáciu. Niekedy je výhodnejšie použiť viac čísel, ak tým získame stabilnejšiu a jednoduchšiu matematiku.**
+
+:::`;

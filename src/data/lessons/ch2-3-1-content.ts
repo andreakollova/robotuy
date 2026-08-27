@@ -659,7 +659,7 @@ Práve tým sa budeme zaoberať v ďalšej lekcii o **Configuration Space Repres
 
 ---
 
-## Zhrnutie lekcie
+:::summary
 
 Configuration space predstavuje množinu všetkých možných configurations systému a jeho dimension sa rovná počtu degrees of freedom. Samotný počet DOF však nestačí na úplné pochopenie C-space, pretože priestory s rovnakou dimenziou môžu mať úplne rozdielnu štruktúru.
 
@@ -679,4 +679,6 @@ Najdôležitejšia myšlienka celej lekcie je preto veľmi jednoduchá:
 
 **DOF nám hovorí, koľko dimenzií configuration space má. Topológia nám hovorí, akú štruktúru tento priestor má.**
 
-Dva roboty preto môžu mať rovnaký počet DOF a pritom úplne odlišný configuration space. A práve táto štruktúra neskôr ovplyvní spôsob, akým budeme robotické configurations reprezentovať, porovnávať a používať pri plánovaní pohybu.`;
+Dva roboty preto môžu mať rovnaký počet DOF a pritom úplne odlišný configuration space. A práve táto štruktúra neskôr ovplyvní spôsob, akým budeme robotické configurations reprezentovať, porovnávať a používať pri plánovaní pohybu.
+
+:::`;

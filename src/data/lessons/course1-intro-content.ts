@@ -398,7 +398,7 @@ Toto je základný mentálny model, na ktorom bude stáť veľká časť ďalše
 
 ---
 
-## Zhrnutie lekcie
+:::summary
 
 Robot môžeme pri mechanickej analýze zjednodušiť na systém **rigidných linkov spojených joints**. Link predstavuje pevnú časť mechanizmu, zatiaľ čo joint určuje, aký relatívny pohyb je medzi jednotlivými linkmi dovolený. Actuator vytvára silu alebo krútiaci moment potrebný na uskutočnenie pohybu a end-effector je časť robota, ktorá priamo vykonáva požadovanú úlohu.
 
@@ -414,4 +414,6 @@ $$DOF = dim(C)$$
 
 Keď sa robot pohybuje, jeho konfigurácia q(t) sa mení a v configuration space tak vzniká trajektória. Táto abstrakcia nám neskôr umožní riešiť komplikované robotické problémy oveľa jednoduchšie — namiesto sledovania každého linku samostatne môžeme pracovať s pohybom jedného bodu v konfiguračnom priestore.
 
-V ďalšej lekcii môžeme na tomto základe presne odvodiť, **prečo má planar rigid body 3 DOF a spatial rigid body 6 DOF**. Práve tam sa naplno ukáže význam constraints a vzťahu medzi počtom použitých premenných a skutočným počtom nezávislých stupňov voľnosti.`;
+V ďalšej lekcii môžeme na tomto základe presne odvodiť, **prečo má planar rigid body 3 DOF a spatial rigid body 6 DOF**. Práve tam sa naplno ukáže význam constraints a vzťahu medzi počtom použitých premenných a skutočným počtom nezávislých stupňov voľnosti.
+
+:::`;

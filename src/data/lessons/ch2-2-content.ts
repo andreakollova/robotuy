@@ -646,7 +646,7 @@ Grüblerova formula je iba matematický nástroj, ktorý túto myšlienku zapisu
 
 ---
 
-## Zhrnutie lekcie
+:::summary
 
 Robot môžeme z pohľadu kinematiky chápať ako sústavu **rigid links** spojených **joints**. Joint nie je iba miesto, ktoré pohyb umožňuje. Zároveň zakazuje ostatné relatívne pohyby medzi dvoma links, a tým vytvára constraints.
 
@@ -668,4 +668,6 @@ A napokon musíme rozlišovať medzi DOF mechanizmu, DOF end-effectora a počtom
 
 Ak si z lekcie zapamätáš jednu vetu, nech je to táto:
 
-**Počet DOF robota neurčuje počet jeho pohyblivých častí ani počet motorov. Určuje ho počet nezávislých možností pohybu, ktoré zostanú po zohľadnení všetkých mechanických constraints.**`;
+**Počet DOF robota neurčuje počet jeho pohyblivých častí ani počet motorov. Určuje ho počet nezávislých možností pohybu, ktoré zostanú po zohľadnení všetkých mechanických constraints.**
+
+:::`;

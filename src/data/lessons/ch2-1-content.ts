@@ -81,191 +81,295 @@ Slovo planar pritom neznamená, že teleso je fyzicky dvojrozmerné. Telefón, m
 
 ---
 
-## 05. Prečo rigid body nepotrebuje samostatné súradnice pre každý bod
+## 05. Prečo nemusíme sledovať každý bod tuhého telesa zvlášť
 
-K rovnakému výsledku sa môžeme dostať aj iným spôsobom. Ten nám zároveň lepšie ukáže, prečo je rigidita taká dôležitá.
+Na prvý pohľad môže pôsobiť zvláštne, že celé tuhé teleso dokážeme opísať iba niekoľkými číslami. Veď napríklad telefón alebo robotický link obsahuje obrovské množstvo bodov a každý z nich má vlastnú polohu v priestore. Mohlo by sa teda zdať, že na presný opis telesa musíme poznať súradnice každého jedného bodu.
 
-Predstav si, že na minci označíme tri body A, B a C. Keby tieto tri body neboli spojené a mohli sa po stole pohybovať nezávisle, každý by potreboval dve súradnice.
+Pri **rigid body** — tuhom telese to však nie je potrebné. Dôvodom je jeho rigidita. Jednotlivé body telesa sa síce pri pohybe presúvajú, ale ich vzájomné vzdialenosti zostávajú rovnaké. Body sa teda nemôžu pohybovať nezávisle od seba.
+
+Predstav si pevný trojuholníkový kus kartónu a na jeho rohoch označ body A, B a C. Keby A, B a C boli tri samostatné bodky nakreslené na stole, každú z nich by sme mohli premiestniť kamkoľvek bez ohľadu na ostatné. Každý bod v rovine potrebuje dve súradnice, takže tri nezávislé body by spolu potrebovali šesť hodnôt:
+
+A = (xa, ya), B = (xb, yb), C = (xc, yc)
 
 ![Tri body na minci a ich constraints](/book/ch2/fig2-2.png)
 
-Tri nezávislé body by teda mali:
+Tri úplne nezávislé body by teda mali spolu **6 DOF**.
 
-**2 + 2 + 2 = 6 DOF**
+Lenže ak sú tieto tri body rohmi jedného pevného kusu kartónu, situácia sa zmení. Keď posunieš A, nemôžeš nechať B a C ľubovoľne na pôvodnom mieste. Kartón by sa musel natiahnuť alebo roztrhnúť. Vzdialenosti A–B, A–C a B–C musia zostať rovnaké.
 
-Naše body však patria k jednému rigidnému telesu. Nemôžeme posunúť A doprava a nechať B na pôvodnom mieste, pretože by sa zmenila vzdialenosť A–B. To by znamenalo, že sa teleso natiahlo alebo zdeformovalo, čo pri rigid body nepripúšťame.
+Práve tieto pevné geometrické vzťahy nazývame **constraints — obmedzenia**. Constraints spôsobujú, že pohyb jedného bodu ovplyvňuje, kde sa môžu nachádzať ostatné body.
 
-Vzdialenosti A–B, A–C a B–C preto zostávajú pevné. Tieto pevné geometrické vzťahy predstavujú **constraints — obmedzenia**.
+To je základná myšlienka rigid body: jeho body nemajú vlastnú nezávislú voľnosť pohybu. Pohybujú sa spolu ako jeden celok.
 
-Práve constraints spôsobujú, že jednotlivé body tuhého telesa nemajú vlastnú nezávislú voľnosť pohybu. Keď sa pohne teleso, pohyb všetkých jeho bodov je navzájom previazaný.
+Preto nepotrebujeme poznať súradnice každého bodu zvlášť. Stačí nám dostatok informácií na určenie polohy a natočenia celého telesa a z toho už vieme odvodiť polohu všetkých jeho ostatných bodov.
 
 ---
 
-## 06. Ako body A a B určia planar rigid body
+## 06. Ako jeden bod určí polohu a druhý natočenie
 
-Začnime bodom A. V rovine ho môžeme umiestniť kamkoľvek, takže na jeho polohu potrebujeme dve nezávislé súradnice. Bod A nám teda poskytuje **2 DOF**.
+Pozrime sa teraz na rovnaké teleso krok za krokom.
 
-Keď už poznáme A, bod B nemôžeme umiestniť ľubovoľne. Jeho vzdialenosť od A je pevná. Ak je napríklad A–B = 3 cm, všetky možné polohy B ležia na kružnici s polomerom 3 cm a stredom v A.
+Začneme bodom A. Teleso sa nachádza v rovine, takže bod A môžeme položiť kdekoľvek na stole. Na určenie jeho polohy potrebujeme dve súradnice, napríklad x a y.
 
-Na výber konkrétneho bodu na tejto kružnici nám stačí jeden parameter — napríklad uhol okolo A. Bod B preto pridáva už iba **1 DOF**.
+Bod A nám teda pridá:
 
-Spolu dostaneme:
+**2 DOF**
+
+Teraz však ešte stále nevieme, ako je teleso natočené. Predstav si napríklad pravítko. Ak poznáme iba polohu jedného jeho konca, druhý koniec môže smerovať doprava, nahor, šikmo alebo ľubovoľným iným smerom. Jeden bod teda určí, kde teleso je, ale neurčí jeho orientation.
+
+Preto pridáme bod B.
+
+B však už nemôžeme položiť kdekoľvek. Keďže A a B patria k tomu istému tuhému telesu, ich vzdialenosť je pevná. Ak je A–B = 10 cm, B musí zostať presne 10 cm od A.
+
+Predstav si, že bod A zapichneme špendlíkom do papiera a k nemu priviažeme 10 cm dlhú šnúrku. Druhý koniec šnúrky sa môže pohybovať po kružnici okolo A. Presne tak vyzerajú možné polohy bodu B.
+
+B už preto nepotrebuje dve nezávislé súradnice. Keď poznáme A a pevnú vzdialenosť A–B, stačí nám povedať, v akom smere od A bod B leží. Na to potrebujeme iba jeden uhol.
+
+Bod B teda pridá:
+
+**1 DOF**
+
+Spolu máme:
 
 **2 + 1 = 3 DOF**
 
-A to stačí na určenie polohy aj orientácie telesa v rovine. Bod A nám hovorí, kde sa teleso nachádza, a smer od A k B určuje jeho natočenie.
+A to už stačí na úplný opis tuhého telesa v rovine. Poloha A nám určila position a smer od A k B nám určil orientation.
 
----
-
-## 07. Prečo bod C nepridáva nový spojitý DOF
-
-Bod C musí zostať v pevnej vzdialenosti od A aj od B. Ak si nakreslíme kružnicu so stredom v A a ďalšiu so stredom v B, bod C musí ležať na oboch súčasne.
-
-V bežnom prípade sa tieto dve kružnice pretínajú v dvoch bodoch. Dostaneme teda dve zrkadlové možnosti usporiadania A, B a C.
-
-To však neznamená, že C pridáva ďalší spojitý stupeň voľnosti. Nemôžeme ho plynulo posúvať po novej osi alebo krivke bez toho, aby sme porušili jednu z pevných vzdialeností.
-
-Po určení A a B je poloha C daná až na diskrétnu voľbu medzi dvoma zrkadlovými konfiguráciami.
-
-Preto bod C nepridáva nový spojitý DOF a **planar rigid body** zostáva systémom s **3 DOF**.
-
----
-
-## 08. Diskrétna voľba nie je stupeň voľnosti
-
-Dve možné polohy bodu C nám ukazujú ďalší dôležitý rozdiel — rozdiel medzi **continuous** a **discrete** premennou.
-
-Súradnicu x môžeme meniť plynulo. Môže mať hodnotu 1, potom 1,1, 1,11 a medzi týmito hodnotami existuje nekonečne veľa ďalších možností. To isté platí pre y alebo uhol θ.
-
-Diskrétna voľba funguje inak. Máme napríklad jednu alebo druhú zrkadlovú konfiguráciu. Neexistuje plynulý parameter, ktorým by sme medzi nimi mohli prechádzať pri zachovaní všetkých constraints.
-
-Podobne si môžeme predstaviť mincu ležiacu jednou alebo druhou stranou nahor. Heads a tails predstavujú dva stavy, ale samotná voľba medzi nimi nepridáva ďalší spojitý DOF.
-
-Degrees of freedom teda v tomto kontexte počítajú **nezávislé spojité reálne parametre**, nie počet všetkých možných stavov systému.
-
----
-
-## 09. Nie všetky constraints sú nezávislé
-
-Predstav si, že na rovnaké rigid body pridáme ešte bod D. Jeho poloha voči A, B a C je pevná, takže keď už poznáme konfiguráciu telesa, poloha D je automaticky určená.
-
-Mohli by sme zapísať constraint na vzdialenosť D od A, ďalší na vzdialenosť D od B a ďalší na vzdialenosť D od C. To však neznamená, že každý z nich odoberá nový stupeň voľnosti.
-
-Ak už dve podmienky jednoznačne určujú polohu D, tretia môže byť iba dôsledkom tých predchádzajúcich. Takéto obmedzenie nazývame **redundant constraint — redundantné obmedzenie**.
-
-Pri počítaní DOF preto nemôžeme jednoducho spočítať všetky rovnice, ktoré vieme zapísať. Zaujíma nás počet **independent constraints — nezávislých obmedzení**, teda takých, ktoré systému prinášajú skutočne nové obmedzenie.
-
-Táto myšlienka bude neskôr veľmi dôležitá pri zložitejších mechanizmoch.
-
----
-
-## 10. Ako nad DOF premýšľať
-
-Z predchádzajúcich príkladov vyplýva jednoduchý spôsob uvažovania. Najskôr si predstavíme, koľko nezávislej voľnosti by systém mal bez určitých väzieb. Potom zohľadníme constraints, ktoré časť tejto voľnosti odstránia.
-
-Pri jednoduchých prípadoch môžeme túto myšlienku zapísať ako:
-
-**DOF = počet nezávislých premenných - počet nezávislých constraints**
-
-Samotný vzorec však nie je to najdôležitejšie. Dôležitá je predstava, že **constraints prepájajú pôvodne nezávislé možnosti pohybu**.
-
-Pri rigid body sú takýmito constraints pevné vzdialenosti medzi jeho bodmi. Pri robotických mechanizmoch budú podobnú úlohu zohrávať joints. Tie určité relatívne pohyby medzi links dovolia a iné zakážu.
-
-Práve preto bude pri ďalšej analýze užitočné pýtať sa nielen „Aký pohyb tento joint umožňuje?", ale aj **„Ktoré pohyby týmto spojením prestávajú byť možné?"**
-
----
-
-## 11. Spatial rigid body má tri translačné DOF
-
-Teraz odstránime obmedzenie pohybu na rovinu a necháme teleso voľne sa pohybovať v trojrozmernom priestore.
-
-Predstav si telefón, ktorý držíš vo vzduchu.
-
-Najskôr riešme iba jeho **position**. V priestore sa môže nezávisle presúvať v troch smeroch. Na jeho polohu preto potrebujeme tri súradnice:
-
-**x, y, z**
-
-To znamená, že position voľného telesa v 3D priestore má **3 translačné DOF**.
-
-Tieto tri hodnoty nám však stále nepovedia, ako je teleso natočené. Telefón môže zostať na rovnakom mieste a pritom meniť orientation.
-
-Pre úplnú konfiguráciu preto potrebujeme pridať ešte rotačné stupne voľnosti.
-
----
-
-## 12. Orientation v 3D pridáva ďalšie tri DOF
-
-Ak telefón držíš približne na rovnakom mieste vo vzduchu, stále ho môžeš rôzne natáčať. Môžeš ho nakloniť dopredu alebo dozadu, nakloniť doľava alebo doprava a otočiť okolo tretej osi.
-
-Na úplné určenie orientation rigid body v 3D priestore preto potrebujeme **tri nezávislé rotačné parametre**.
-
-K trom translačným DOF pridáme tri rotačné:
-
-**3 translácie + 3 rotácie = 6 DOF**
-
-Voľné tuhé teleso v trojrozmernom priestore, teda **spatial rigid body**, má preto **6 DOF**.
-
-Veľmi intuitívne si to môžeme zapamätať takto: **tri hodnoty hovoria, kde teleso je, a ďalšie tri hovoria, ako je natočené**.
-
-Spolu opisujú jeho úplnú **pose — polohu a orientáciu**.
-
----
-
-## 13. Šesť DOF môžeme odvodiť aj pomocou bodov
-
-Rovnaký výsledok môžeme získať pomocou troch bodov A, B a C pevne spojených s telesom.
-
-Bod A môžeme v 3D priestore umiestniť kamkoľvek. Na jeho polohu potrebujeme tri súradnice, takže A pridáva **3 DOF**.
-
-Bod B musí zostať v pevnej vzdialenosti od A. Ak je vzdialenosť A–B napríklad 10 cm, všetky možné polohy B ležia na povrchu gule s polomerom 10 cm a stredom v A.
-
-Povrch gule je dvojrozmerný, takže na určenie konkrétnej polohy B potrebujeme dve nezávislé hodnoty. Bod B preto pridáva ďalšie **2 DOF**.
-
-Máme spolu:
-
-**3 + 2 = 5 DOF**
-
-Bod C musí mať pevnú vzdialenosť od A aj od B. Jedna podmienka ho obmedzí na povrch jednej gule a druhá na povrch druhej. Prienikom týchto dvoch povrchov je za bežných podmienok kružnica.
-
-Na výber bodu na kružnici nám stačí jedna hodnota, takže C pridáva ešte **1 DOF**.
-
-Výsledok je:
-
-**3 + 2 + 1 = 6 DOF**
-
-Rovnakých šesť stupňov voľnosti sme teda dostali druhým, geometrickým spôsobom.
-
----
-
-## 14. Prečo musia byť body nekolineárne
-
-Pri tomto odvodení je dôležité, aby body A, B a C neležali na jednej priamke.
-
-Ak by všetky tri body ležali na tej istej osi, teleso by sa mohlo otáčať okolo tejto osi a polohy všetkých troch bodov by pritom zostali rovnaké.
-
-Z ich polôh by sme preto nedokázali jednoznačne určiť orientation celého telesa.
-
-Tri **non-collinear points — nekolineárne body** však jednoznačne určia jeho polohu aj orientáciu.
-
-To je dôvod, prečo pri geometrickom opise rigid body používame vhodne zvolené body, ktoré neležia na jednej priamke.
-
----
-
-## 15. Planar rigid body verzus spatial rigid body
-
-Teraz už môžeme oba prípady postaviť vedľa seba.
-
-**Planar rigid body** sa môže pohybovať iba v jednej rovine. Jeho konfiguráciu môžeme zapísať ako:
+Inými slovami, pri **planar rigid body** potrebujeme vedieť iba: **kde sa teleso nachádza + ako je natočené**, čo môžeme zapísať napríklad ako:
 
 **q = (x, y, θ)**
 
-Dve hodnoty určujú position a jedna orientation. Má teda **3 DOF**.
+Preto má planar rigid body **3 DOF**.
 
-**Spatial rigid body** sa môže voľne pohybovať v trojrozmernom priestore. Potrebuje tri hodnoty pre position a tri pre orientation, takže má **6 DOF**.
+---
 
-Rozdiel nespočíva v tom, že planar body by bolo fyzicky dvojrozmerné. Rozdiel je v povolenom pohybe. Ak trojrozmernému telesu constraints zabránia zdvihnúť sa z roviny alebo sa nakláňať mimo nej, z pôvodných šiestich DOF mu zostanú tri.
+## 07. Na čo potom potrebujeme tretí bod C?
 
-Tento spôsob uvažovania bude veľmi dôležitý pri joints. Joint totiž môžeme chápať práve ako mechanické spojenie, ktoré niektoré relatívne pohyby medzi rigid bodies povoľuje a ostatné odoberá.
+Možno sa teraz natíska otázka: Ak body A a B už určujú polohu aj natočenie telesa, prečo vôbec pridávame bod C?
+
+Bod C nám pomáha ukázať, ako silno rigidita obmedzuje ďalšie body telesa.
+
+Predstav si pevný trojuholník A–B–C. Polohu A už poznáme a poznáme aj polohu B. Zároveň vieme, že vzdialenosť A–C aj vzdialenosť B–C sú pevné.
+
+Kde teda môže byť C?
+
+Najskôr sa pozrime iba na podmienku vzdialenosti od A. Ak musí byť C napríklad 5 cm od A, všetky možné polohy C ležia na kružnici okolo A.
+
+Potom pridáme druhú podmienku. C musí byť zároveň napríklad 4 cm od B. To vytvorí druhú kružnicu, tentoraz okolo B.
+
+Bod C musí ležať na oboch kružniciach súčasne.
+
+Kružnice sa za bežných podmienok pretínajú iba v dvoch bodoch. To znamená, že po určení A a B už C nemá voľnosť pohybovať sa plynulo niekam ďalej. Zostanú iba dve možné zrkadlové polohy.
+
+Preto C nepridáva ďalší spojitý DOF.
+
+Toto je podstata celej myšlienky. Prvý bod sme mohli umiestniť kdekoľvek. Druhý už bol obmedzený na kružnicu. Tretí je obmedzený ešte viac — už zostáva iba niekoľko konkrétnych možností.
+
+**Rigidita teda postupne „odoberá" voľnosť jednotlivým bodom.**
+
+---
+
+## 08. Prečo dve možné polohy neznamenajú ďalší DOF
+
+Pri bode C nám zostali dve zrkadlové možnosti. Mohlo by sa zdať, že keď máme na výber z dvoch možností, mali by sme pridať ďalší degree of freedom.
+
+Nie je to tak, pretože degrees of freedom v tomto kontexte opisujú **spojité nezávislé parametre**.
+
+Predstav si súradnicu x. Môže mať hodnotu 1, potom 1,1, potom 1,11 a medzi ktorýmikoľvek dvoma hodnotami existuje nekonečne veľa ďalších možností. Rovnako môžeme plynulo meniť uhol θ.
+
+Takáto veličina je **continuous — spojitá**.
+
+Pri bode C však máme iba dve oddelené možnosti. Nemôžeme ho pri zachovaní všetkých pevných vzdialeností plynulo presúvať z jednej zrkadlovej polohy do druhej. Museli by sme porušiť geometriu telesa alebo ho „preklopiť" mimo nášho planar modelu.
+
+Takáto voľba je **discrete — diskrétna**.
+
+Dobrým príkladom je vypínač. Môže byť zapnutý alebo vypnutý. Má dva možné stavy, ale nie je to spojitý degree of freedom v rovnakom zmysle ako poloha alebo uhol.
+
+Podobne minca môže byť heads up alebo tails up. Sú to dve možnosti, ale samotná táto voľba nepridáva ďalší spojitý DOF.
+
+Preto **planar rigid body** zostáva systémom s **3 DOF**.
+
+---
+
+## 09. Čo sú independent a redundant constraints
+
+Teraz si predstav, že na rigid body označíme ešte ďalší bod D.
+
+Keď už poznáme position a orientation celého telesa, D je automaticky na konkrétnom mieste. Nemá žiadnu vlastnú nezávislú voľnosť.
+
+Jeho polohu môžeme opísať viacerými pravidlami. Môžeme napríklad povedať, že D musí byť 5 cm od A, 7 cm od B a 4 cm od C.
+
+Na prvý pohľad máme tri constraints. To však ešte neznamená, že každý z nich odoberá nový DOF.
+
+Predstav si jednoduchší príklad. Poviem ti:
+
+„Číslo x sa musí rovnať 5."
+
+A potom pridám:
+
+„Číslo x musí byť zároveň väčšie ako 4."
+
+Druhá informácia už v podstate neprináša nič nové. Ak vieme, že x = 5, automaticky vieme, že x > 4.
+
+Podobná vec môže nastať pri geometrických constraints.
+
+Ak už dve nezávislé podmienky jednoznačne určia polohu bodu D, tretia môže iba potvrdzovať to, čo už z prvých dvoch vyplýva. Takému constraintu hovoríme **redundant constraint**.
+
+Naopak **independent constraint — nezávislé obmedzenie** prináša novú informáciu a skutočne odoberá systému ďalšiu možnosť pohybu.
+
+Preto pri počítaní DOF nestačí povedať: „Napísala som päť rovníc, takže som odobrala päť DOF." Musíme zistiť, koľko z týchto rovníc prináša skutočne nezávislé obmedzenia.
+
+---
+
+## 10. Najjednoduchší spôsob, ako nad DOF rozmýšľať
+
+Celú predchádzajúcu časť môžeme zhrnúť jednoduchou otázkou:
+
+**Koľko vecí môžem zmeniť nezávisle bez toho, aby som porušila pravidlá systému?**
+
+To je v praxi často najlepší spôsob, ako nad DOF premýšľať.
+
+Tri samostatné body v rovine majú veľa voľnosti, pretože každý môže ísť vlastným smerom. Ak ich však spojíme do pevného trojuholníka, už ich nemôžeme posúvať nezávisle. Pevné vzdialenosti medzi nimi vytvoria constraints a z troch samostatných bodov vznikne jeden rigidný objekt.
+
+Pri jednoduchých prípadoch preto môžeme myslieť na vzťah:
+
+**DOF = pôvodná voľnosť - nezávislé constraints**
+
+Dôležité však nie je mechanicky odčítavať čísla. Dôležité je vždy pochopiť, ktorá možnosť pohybu je skutočne nezávislá a ktorá už vyplýva z ostatných.
+
+Presne túto logiku neskôr použijeme pri robotických joints. Joint môžeme totiž chápať ako mechanické pravidlo medzi dvoma links. Určitý pohyb dovolí, ale ostatné možnosti pohybu odstráni.
+
+---
+
+## 11. Čo sa zmení, keď teleso pustíme do 3D priestoru
+
+Doteraz sme teleso držali na stole. Mohlo sa teda pohybovať iba v jednej rovine. Teraz si predstav, že ho zo stola zdvihneme a necháme ho voľne pohybovať v priestore.
+
+Použime opäť telefón.
+
+Ak nás zatiaľ zaujíma iba jeho **position — poloha**, potrebujeme tri súradnice. Telefón môžeme posúvať doľava a doprava, dopredu a dozadu a hore a dole.
+
+Jeho position môžeme preto zapísať pomocou:
+
+**x, y, z**
+
+Tieto tri hodnoty sa môžu meniť nezávisle, takže position v 3D priestore má:
+
+**3 translačné DOF**
+
+Predstav si to ako bod označujúci stred telefónu. Tri čísla x, y a z nám presne povedia, kde sa tento bod nachádza.
+
+Stále však nevieme, ako je telefón natočený.
+
+---
+
+## 12. Prečo orientation potrebuje ďalšie tri DOF
+
+Teraz nechaj stred telefónu približne na rovnakom mieste vo vzduchu a začni meniť iba jeho orientation.
+
+Môžeš ho napríklad otočiť ako volant. Potom ho môžeš nakloniť dopredu a dozadu. A môžeš ho nakloniť aj do strán.
+
+Ide o tri nezávislé rotačné možnosti.
+
+Na úplné určenie orientation voľného rigid body v 3D priestore preto potrebujeme ďalšie:
+
+**3 rotačné DOF**
+
+Spolu dostávame:
+
+**3 translačné DOF + 3 rotačné DOF = 6 DOF**
+
+Voľné **spatial rigid body** má teda **6 degrees of freedom**.
+
+Veľmi užitočná pomôcka je:
+
+**3 DOF určujú kde teleso je.**
+
+**3 DOF určujú ako je natočené.**
+
+Spolu tvoria jeho úplnú **pose — polohu a orientáciu**.
+
+---
+
+## 13. Prečo vyjde 6 DOF aj pomocou troch bodov
+
+Rovnaký výsledok si môžeme overiť pomocou bodov A, B a C. Tentoraz však body nie sú na stole, ale v trojrozmernom priestore.
+
+Začneme bodom A. Ten môžeme položiť kamkoľvek v priestore, preto potrebujeme tri súradnice (x, y, z).
+
+A nám teda dá: **3 DOF**
+
+Teraz pridáme bod B. Jeho vzdialenosť od A musí zostať pevná. Predstav si, že medzi A a B máme neviditeľnú pevnú tyčku dlhú 10 cm.
+
+Ak držíme A na mieste, kde všade môže byť B? Nie na kružnici ako v 2D, ale kdekoľvek na povrchu gule s polomerom 10 cm okolo A.
+
+Aby sme vybrali jeden konkrétny bod na povrchu gule, potrebujeme dve nezávislé hodnoty. Podobne ako na Zemi potrebujeme latitude a longitude.
+
+B preto pridáva: **2 DOF**
+
+Zatiaľ máme: **3 + 2 = 5 DOF**
+
+Teraz pridáme C. Jeho vzdialenosť od A je pevná a zároveň jeho vzdialenosť od B je pevná.
+
+Prvá podmienka hovorí, že C musí ležať na povrchu jednej gule. Druhá hovorí, že musí zároveň ležať na povrchu druhej gule.
+
+Prienik dvoch povrchov gulí je za bežných podmienok kružnica.
+
+C sa teda môže pohybovať už iba po tejto kružnici. Na výber konkrétneho bodu na nej potrebujeme jedinú hodnotu.
+
+C preto pridáva: **1 DOF**
+
+A dostaneme:
+
+**3 + 2 + 1 = 6 DOF**
+
+To je rovnaký výsledok ako pri rozdelení na tri translácie a tri rotácie.
+
+---
+
+## 14. Prečo body A, B a C nesmú ležať na jednej priamke
+
+Pri tomto geometrickom vysvetlení je dôležitý jeden detail. Body A, B a C musia byť **non-collinear — nekolineárne**, teda nesmú všetky ležať na jednej priamke.
+
+Predstav si dlhú ceruzku a označ na jej stredovej osi tri body. Ak ceruzku otočíš okolo jej vlastnej pozdĺžnej osi, polohy všetkých troch označených bodov zostanú rovnaké.
+
+To znamená, že z ich polohy nedokážeme zistiť, či bola ceruzka okolo tejto osi otočená.
+
+Tri body na jednej priamke teda nestačia na úplné určenie orientation telesa.
+
+Ak však vyberieme tri body, ktoré vytvárajú trojuholník, ich poloha už určí orientation telesa jednoznačne.
+
+Preto sa pri tomto odvodení používajú tri **nekolineárne body**.
+
+---
+
+## 15. Čo si z planar a spatial rigid body zapamätať
+
+Teraz už môžeme oba prípady porovnať veľmi jednoducho.
+
+Pri **planar rigid body** je pohyb obmedzený na jednu rovinu. Potrebujeme dve hodnoty na position a jednu na orientation:
+
+**q = (x, y, θ)**
+
+Preto:
+
+**planar rigid body = 3 DOF**
+
+Pri **spatial rigid body** sa teleso môže voľne pohybovať v 3D priestore. Potrebujeme tri hodnoty na position a tri na orientation:
+
+**spatial rigid body = 6 DOF**
+
+Planar body pritom nie je „plochý 2D objekt". Môže ísť o normálny trojrozmerný robot alebo telefón. Rozdiel je iba v tom, že jeho pohyb je obmedzený.
+
+Napríklad mobilný robot jazdiaci po podlahe je fyzicky trojrozmerný, ale ak predpokladáme, že sa nemôže zdvihnúť ani prevrátiť, jeho pohyb môžeme modelovať ako planar.
+
+Ak chceš túto časť pochopiť úplne intuitívne, najlepšie je držať v hlave tieto dva obrazy:
+
+**Planar rigid body**: predstav si telefón položený na stole. Môžeš ho posunúť do dvoch smerov a otočiť. To sú 3 DOF.
+
+**Spatial rigid body**: zdvihni ten istý telefón zo stola. K trom pôvodným možnostiam pribudne pohyb hore/dole a ďalšie dva spôsoby nakláňania. Spolu dostaneš 6 DOF.
+
+A celý argument s bodmi A, B a C je v podstate iba matematický spôsob, ako dokázať to isté: keď body spojíme do jedného rigidného telesa, ich pohyby už nie sú nezávislé. Pevné vzdialenosti medzi nimi postupne odoberajú voľnosť, až zostane presne toľko nezávislých hodnôt, koľko potrebujeme na polohu a orientáciu celého telesa.
 
 ---
 

@@ -3,644 +3,630 @@
 
 export const ch22Content = `# Lekcia 4: Stupne voľnosti robota
 
-V predchádzajúcej lekcii sme sa pozerali na jedno samostatné **rigid body — tuhé teleso**. Zistili sme, že voľné rigidné teleso pohybujúce sa v rovine má **3 degrees of freedom (DOF)**: dve nezávislé translácie a jednu rotáciu. Ak sa môže voľne pohybovať v trojrozmernom priestore, má **6 DOF**: tri translácie určujú jeho polohu a tri rotácie jeho orientáciu.
+V predchádzajúcej lekcii sme sa pozerali na jedno samostatné **rigid body** — tuhé teleso. Zistili sme, že ak je jeho pohyb obmedzený na rovinu, ide o **planar rigid body** (tuhé teleso pohybujúce sa v rovine) a na opis jeho configuration potrebujeme tri nezávislé hodnoty. Dve určujú jeho position a jedna orientation, takže má **3 degrees of freedom (DOF)**. Ak sa rovnaké teleso môže voľne pohybovať v trojrozmernom priestore, ide o **spatial rigid body** (tuhé teleso pohybujúce sa v priestore). Vtedy potrebuje tri hodnoty na position a ďalšie tri na orientation, takže má **6 DOF**.
 
-Robot sa však väčšinou neskladá z jedného telesa. Je vytvorený z viacerých pevných častí, ktoré nazývame **links — články**, a tie sú navzájom spojené pomocou **joints — kĺbov**. Práve joints rozhodujú o tom, ako sa jednotlivé links môžu voči sebe pohybovať. Zároveň však veľkú časť pohybu zakazujú.
+Robot je však zaujímavejší systém. Väčšinou sa neskladá z jedného rigid body, ale z viacerých pevných častí, ktoré nazývame **links — články**. Tie sú navzájom spojené pomocou **joints — kĺbov**. A práve joints určujú, ako sa jednotlivé links môžu voči sebe pohybovať.
 
-To je pri počítaní stupňov voľnosti veľmi dôležitý pohľad. Joint nie je iba miesto, ktoré robotu „umožňuje pohyb". Mechanicky vytvára aj **constraints — obmedzenia**, ktoré určujú, aké relatívne pohyby medzi dvoma telesami možné nie sú.
+Na prvý pohľad môže joint pôsobiť ako niečo, čo robotu pohyb pridáva. Napríklad lakeť robotického ramena umožní ďalšiemu linku otáčať sa. Z mechanického pohľadu je však rovnako dôležitá opačná stránka: joint zároveň množstvo iných pohybov zakazuje. Rotačný joint dovolí linku otáčať sa okolo jednej osi, ale nedovolí mu jednoducho odletieť od predchádzajúceho linku, posunúť sa do strany alebo sa ľubovoľne nakláňať.
 
-Hlavná otázka tejto lekcie preto znie: **Ako zistíme, koľko nezávislých stupňov voľnosti má celý robotický mechanizmus?**
-
-Základná myšlienka je podobná tej z predchádzajúcej lekcie. Najskôr si predstavíme, koľko voľnosti by mali jednotlivé links, keby neboli navzájom spojené. Potom zohľadníme joints a constraints, ktoré vytvárajú. To, čo po odobratí všetkých nezávislých obmedzení zostane, predstavuje **degrees of freedom celého mechanizmu**.
+Práve toto bude hlavnou myšlienkou lekcie. Ak chceme zistiť počet DOF celého robota, musíme pochopiť, koľko voľnosti by mali jeho links samostatne a ako túto voľnosť obmedzia joints, ktorými ich spojíme.
 
 ---
 
-## 01. Joint pohyb umožňuje, ale zároveň ho obmedzuje
+## 01. Joint pohyb nielen umožňuje, ale aj obmedzuje (opakovanie)
 
-Najjednoduchším príkladom sú obyčajné dvere. Predstav si, že ešte nie sú namontované a voľne ich držíš vo vzduchu. Z mechanického pohľadu ich môžeme považovať za **spatial rigid body**, teda tuhé teleso voľne sa pohybujúce v trojrozmernom priestore.
+Začnime obyčajnými dverami. Predstav si, že ešte nie sú namontované a držíš ich voľne vo vzduchu. Z mechanického pohľadu ich môžeme modelovať ako **spatial rigid body**. Môžeš ich posunúť doprava alebo doľava, dopredu alebo dozadu a hore alebo dole. Zároveň ich môžeš rôznymi spôsobmi otáčať. Celkovo teda majú **6 DOF**.
 
-Takéto voľné teleso má 6 DOF. Môžeme ho presúvať v troch nezávislých smeroch a zároveň ho môžeme tromi nezávislými spôsobmi otáčať. Keby teda dvere neboli k ničomu pripevnené, mohli by sme ich ľubovoľne premiestňovať aj orientovať.
+Teraz tie isté dvere pripevníme pomocou pántov k pevnej stene. Dvere sa nezmenili, ale dramaticky sa zmenili ich možnosti pohybu. Už ich nemôžeš odniesť doprava, zdvihnúť nahor ani odsunúť od steny. Nemôžeš ich ani ľubovoľne nakláňať. Pánt ich drží na konkrétnom mieste a povoľuje iba jeden relatívny pohyb — otáčanie okolo osi pántu.
 
-Teraz ich však pomocou pántu pripevníme k stene. Ich pohyb sa dramaticky zmení. Už ich nemôžeme zdvihnúť, odsunúť od steny ani ľubovoľne nakláňať. Z pôvodných šiestich možností zostane jediná: **rotácia okolo osi pántu**.
+Po pripevnení preto dvere majú iba:
 
-Dvere teda po pripevnení majú **1 DOF**.
+**1 DOF**
 
-Môžeme sa na to pozrieť aj opačne. Pred pripevnením mali 6 DOF a pánt päť z nich odstránil. Mechanicky teda vytvoril **5 constraints**:
+Môžeme povedať, že pánt ponechal jednu možnosť pohybu a päť ostatných odstránil. Týchto päť zakázaných nezávislých pohybov predstavuje **constraints — obmedzenia**.
+
+Pre spatial model teda môžeme napísať:
 
 **6 pôvodných DOF - 5 constraints = 1 DOF**
 
-Toto je jeden z najdôležitejších mentálnych modelov celej lekcie. Na joint sa môžeme pozerať z dvoch strán. Buď sa pýtame, **koľko relatívnych pohybov povoľuje**, alebo koľko z pôvodnej voľnosti **zakazuje**. Pri pánte môžeme povedať, že povoľuje 1 DOF, alebo že vytvára 5 constraints. Obe tvrdenia opisujú presne ten istý mechanický vzťah.
+Toto je veľmi dôležitý spôsob uvažovania. Joint môžeme opisovať dvoma rovnocennými spôsobmi. Môžeme sa pýtať, koľko pohybu povoľuje, alebo koľko pohybu zakazuje. Pánt povoľuje 1 DOF a zároveň vytvára 5 constraints. Ide o dve strany toho istého mechanického vzťahu.
 
 ---
 
-## 02. Nie každý mechanizmus musíme analyzovať v plnom 3D priestore
+## 02. Nie každý problém musíme riešiť v plnom 3D (opakovanie)
 
-Dvere sú fyzicky trojrozmerný objekt, ale pri ich bežnom otváraní nemusíme analyzovať všetkých šesť možností pohybu. Ak sa na ne pozrieme zhora, ich pohyb môžeme modelovať ako pohyb v jednej rovine.
+Dvere sú fyzicky trojrozmerný predmet, ale pri ich bežnom otváraní nás nemusí zaujímať všetkých šesť možných pohybov. Vieme, že zostávajú zvislé, nevyskočia z pántov a pohybujú sa iba okolo jednej osi. Ak sa na ne pozrieme zhora, ich pohyb môžeme analyzovať ako pohyb v jednej rovine.
 
-V takom prípade používame **planar model**. Voľné planar rigid body má 3 DOF: dve translácie a jednu rotáciu. Keď ho pripevníme pántom, obe translácie sa stanú nemožnými a zostane iba rotácia.
+Vtedy používame **planar model**. Samostatné planar rigid body má 3 DOF: môže sa posúvať v dvoch smeroch a otáčať v rovine. Keď ho pripevníme rotačným jointom, dve translácie sa stanú nemožnými a zostane iba rotácia.
 
-Dostaneme teda:
+Dostaneme:
 
 **3 pôvodné DOF - 2 constraints = 1 DOF**
 
-Výsledok je rovnaký ako pri spatial modeli, len sme si problém zjednodušili tým, že sme od začiatku uvažovali iba pohyb relevantný pre daný mechanizmus.
+Výsledok je stále rovnaký — dvere majú jeden nezávislý pohyb. Rozdiel je iba v modeli, ktorý sme si zvolili.
 
-To je v robotike veľmi užitočné. Ak sa všetky links a joints pohybujú v jednej rovine, nemusíme systém automaticky opisovať ako všeobecný 3D mechanizmus. Môžeme použiť planar model, pri ktorom má každé voľné rigid body 3 DOF. Pri všeobecnom pohybe v priestore používame spatial model, kde má voľné rigid body 6 DOF.
-
-Výber správneho modelu je preto prvým krokom pred samotným počítaním.
+To je v robotike bežné. Ak sa celý mechanizmus pohybuje iba v jednej rovine, často je zbytočné analyzovať ho ako všeobecný 3D systém. Použijeme planar model, v ktorom má každé voľné rigid body 3 DOF. Ak sa mechanizmus skutočne pohybuje v priestore, použijeme spatial model a začíname so 6 DOF na jedno voľné rigid body.
 
 ---
 
-## 03. Robot je systém links a joints
+## 03. Robot ako systém links a joints
 
-Predstav si jednoduché robotické rameno. Začína pevnou základňou, na ktorú je pripojený prvý pohyblivý segment. Za ním nasleduje ďalší joint, ďalší link a na konci môže byť napríklad gripper.
+Predstav si jednoduché robotické rameno. Dole má pevnú základňu. K nej je jointom pripojený prvý pohyblivý segment, za ním nasleduje ďalší joint a ďalší segment a na konci môže byť napríklad gripper.
 
-Pevné časti mechanizmu nazývame **links**. Každý link modelujeme ako rigid body. Nemusí pritom vyzerať ako jednoduchá tyč. Môže mať zložitý tvar, môže obsahovať motor, prevodovku, senzory alebo vnútornú elektroniku. Z pohľadu kinematiky je podstatné iba to, že sa jeho geometria pri pohybe nemení.
+Pevné časti mechanizmu nazývame **links**. Link nemusí vyzerať ako jednoduchá tyč. Môže mať komplikovaný tvar, obsahovať motor, prevodovku, senzory alebo elektroniku. Z pohľadu základnej kinematiky nás zaujíma najmä to, že ho môžeme aproximovať ako rigid body — pri pohybe nemení svoj tvar.
 
-Miesta, ktoré spájajú dva links a povoľujú medzi nimi určitý relatívny pohyb, nazývame **joints**.
+Miesta, v ktorých sú dva links mechanicky spojené a môžu sa voči sebe určitým spôsobom pohybovať, nazývame **joints**.
 
-Ak by sme links robota od seba oddelili, každý by mal vlastnú voľnosť pohybu. Keď ich však spojíme pomocou joints, ich configurations už nemôžeme voliť nezávisle. Jeden link sa môže voči druhému pohybovať iba spôsobom, ktorý daný joint mechanicky povoľuje.
+Predstav si teraz, že všetky joints robotického ramena rozpojíme a jednotlivé links položíme samostatne na stôl. Každý link by sa mohol pohybovať nezávisle od ostatných. Len čo ich však opäť spojíme joints, ich pohyb sa previaže. Druhý link už nemôžeme umiestniť kamkoľvek — musí zostať pripojený k prvému a môže sa voči nemu pohybovať iba spôsobom, ktorý povoľuje ich joint.
 
-Robot preto nie je iba zbierka tuhých telies. Je to **systém rigid bodies, ktorých pohyb je navzájom previazaný pomocou joints a constraints**.
-
-A práve preto počet links sám osebe nestačí na určenie DOF. Rovnako nestačí iba počet joints. Musíme poznať typ jednotlivých joints aj spôsob, akým je celý mechanizmus poskladaný.
+Robot teda môžeme chápať ako sústavu rigid bodies, ktorých pôvodná voľnosť je obmedzená mechanickými spojeniami. Preto počet links ani počet joints sám osebe nehovorí, koľko DOF robot má. Musíme vedieť, aké joints používame a ako sú links navzájom pospájané.
 
 ---
 
-## 04. Jeden joint spája dve telesá
-
-Pri matematickom modelovaní budeme používať dôležitú konvenciu: **jeden joint spája presne dva links**.
-
-Pri jednoduchom robotickom ramene je to prirodzené. Jeden link je rotačným alebo posuvným jointom pripojený k druhému.
-
-Pri zložitejšom mechanizme však môže byť fyzická situácia menej jednoznačná. Predstav si napríklad jeden čap, na ktorom sú súčasne uložené tri links. Na fotografii alebo technickom výkrese môže celé spojenie vyzerať ako jeden joint.
-
-Pri mechanickom modeli ho však musíme rozložiť na spojenia medzi dvojicami telies. Môže teda ísť napríklad o **dva revolute joints umiestnené na rovnakom fyzickom mieste**.
-
-Prečo na tom záleží? Pretože neskôr budeme pri Grüblerovej formule explicitne počítať links aj joints. Ak fyzickú konštrukciu nesprávne preložíme do mechanického modelu, dostaneme nesprávny výsledok bez ohľadu na to, či samotnú formulu použijeme správne.
-
-Pred akýmkoľvek výpočtom DOF si preto najskôr musíme správne odpovedať na dve otázky: **Koľko rigid links mechanizmus obsahuje a ktoré dvojice links spájajú jednotlivé joints?**
+## Základné typy joints
 
 ---
 
-## 05. Revolute joint – rotačný kĺb
+## 04. Revolute joint (rotačný kĺb)
 
-Jedným z najbežnejších jointov v robotike je **revolute joint**, označovaný písmenom **R**.
+**Revolute joint**, označovaný písmenom **R**, povoľuje rotáciu okolo jednej určenej osi. Najjednoduchším príkladom je pánt dverí.
 
-Najjednoduchším príkladom je opäť pánt dverí. Dve telesá sú spojené tak, že sa môžu voči sebe otáčať okolo jednej určenej osi. Ich vzájomná configuration sa preto dá opísať jediným uhlom.
-
-Revolute joint má teda:
-
-**1 DOF**
+Predstav si dva links spojené takýmto jointom. Druhý link sa môže voči prvému otáčať, ale nemôže sa od neho oddeliť, posunúť do strany ani sa začať ľubovoľne nakláňať. Na opis ich vzájomnej configuration nám stačí jediná hodnota — uhol jointu.
 
 ![Základné typy robotických kĺbov](/book/ch2/fig2-3.png)
 
-Dôležité je, že rotácia v jednom a opačnom smere nie sú dva rôzne DOF. Uhol sa môže zväčšovať alebo zmenšovať, ale stále ide o jednu nezávislú configuration variable.
+Ak je napríklad uhol 0°, link môže smerovať rovno. Pri 45° bude otočený o 45° a pri 90° o pravý uhol. Na úplné určenie jeho polohy voči predchádzajúcemu linku nepotrebujeme ďalšiu nezávislú joint variable.
 
-Pri spatial mechanisme by dve úplne voľné telesá mohli mať voči sebe 6 relatívnych DOF. Revolute joint z tejto voľnosti ponechá iba jednu rotáciu a päť ostatných možností pohybu zakáže.
+Revolute joint má preto:
 
-Preto má:
+**1 DOF**
+
+Otáčanie v jednom a opačnom smere pritom nepredstavuje dva DOF. Je to podobné ako pohyb výťahu hore a dole. Meníme jednu hodnotu — v tomto prípade uhol — iba ju môžeme zväčšovať alebo zmenšovať.
+
+V spatial modeli revolute joint ponechá z pôvodných šiestich relatívnych možností pohybu jednu a päť zakáže. Preto môžeme povedať, že má:
 
 **1 freedom + 5 constraints**
 
-Revolute joint je typický pre ramená priemyselných robotov, rotačné mechanizmy alebo humanoidné joints, kde chceme pohyb približne podobný pántu.
-
 ---
 
-## 06. Prismatic joint – posuvný kĺb
+## 05. Prismatic joint (posuvný kĺb)
 
-Druhým základným typom je **prismatic joint**, označovaný písmenom **P**.
+**Prismatic joint**, označovaný písmenom **P**, namiesto rotácie povoľuje posun pozdĺž jednej určenej osi.
 
-Dobrou predstavou je zásuvka. Môžeme ju vysúvať a zasúvať po vodiacej koľajnici, ale nemôžeme ju pritom ľubovoľne otáčať alebo posúvať do strán.
+Predstav si zásuvku zasunutú vo vodiacej koľajnici. Zásuvku môžeš vysunúť alebo zasunúť, ale nemôžeš ju počas toho ľubovoľne otočiť, zdvihnúť ani posunúť nabok. Koľajnica presne určuje, kadiaľ sa môže pohybovať.
 
-Prismatic joint povoľuje presne tento typ pohybu: **transláciu pozdĺž jednej určenej osi**.
+Na opis configuration takéhoto jointu stačí jedna hodnota — napríklad vzdialenosť, o ktorú je vysunutý. Ak je q = 0 cm, môže byť úplne zasunutý. Pri q = 10 cm je vysunutý o desať centimetrov.
 
-Jeho configuration môžeme opísať jednou vzdialenosťou, napríklad tým, o koľko je mechanizmus vysunutý.
-
-Preto má:
+Prismatic joint preto tiež má:
 
 **1 DOF**
 
-Rovnako ako pri revolute jointe ani pohyb dopredu a dozadu nepredstavuje dva DOF. Obe možnosti sú iba dva smery zmeny jednej a tej istej hodnoty.
-
-V spatial mechanisme prismatic joint ponecháva zo šiestich možných relatívnych pohybov jednu transláciu a zvyšných päť zakazuje. Aj on preto vytvára **5 constraints**.
-
-Revolute a prismatic joint majú rovnaký počet DOF. Rozdiel je v tom, **aký druh pohybu povoľujú**.
+Rozdiel oproti revolute jointu teda nie je v počte DOF. Oba majú jeden stupeň voľnosti. Rozdiel je v type povoleného pohybu: **revolute joint** povoľuje jednu rotáciu, zatiaľ čo **prismatic joint** jednu transláciu.
 
 ---
 
-## 07. Helical joint – rotácia aj translácia, ale stále iba 1 DOF
+## 06. Helical joint (skrutkový kĺb)
 
-**Helical joint**, označovaný **H**, je veľmi dobrým príkladom toho, prečo DOF nemôžeme určovať iba podľa počtu pohybov, ktoré na mechanizme vizuálne vidíme.
+**Helical joint**, označovaný **H**, je veľmi dobrým príkladom toho, prečo DOF nemôžeme počítať podľa toho, koľko rôznych pohybov vidíme.
 
-Predstav si obyčajnú skrutku pohybujúcu sa v závite. Keď ju otáčame, zároveň sa posúva pozdĺž svojej osi. Vidíme teda rotáciu aj transláciu.
+Predstav si skrutku v závite. Keď skrutku otáčaš, zároveň sa posúva dopredu alebo dozadu. Vidíme teda rotáciu aj transláciu. Mohlo by preto vyzerať, že máme dva DOF.
 
-Mohli by sme preto intuitívne povedať, že má 2 DOF.
+Nemáme.
 
-To by však nebolo správne.
+Tieto dva pohyby totiž nie sú nezávislé. Závit medzi nimi vytvára presný vzťah. Ak má skrutka stúpanie 2 mm na jednu otáčku, potom jedna celá otáčka spôsobí posun o 2 mm, polovica otáčky o 1 mm a dve otáčky o 4 mm.
 
-Rotácia a translácia totiž nie sú nezávislé. Ak poznáme stúpanie závitu a vieme, o koľko sme skrutku otočili, jej posun je automaticky určený.
+Nemôžeme si teda povedať: „Otočím skrutku o jednu otáčku, ale jej posun si potom zvolím ľubovoľne." Posun už vyplýva z rotácie.
 
-Ak napríklad jedna celá otáčka posunie skrutku o 2 mm, polovica otáčky ju posunie o 1 mm. Nemôžeme ľubovoľne zvoliť uhol otočenia a potom úplne nezávisle určiť posun.
+Na úplné určenie configuration preto stále potrebujeme iba jednu nezávislú hodnotu.
 
-Na configuration helical jointu preto stačí jedna nezávislá hodnota.
-
-Má:
+Helical joint má:
 
 **1 DOF**
 
-Helical joint nám veľmi pekne pripomína presnú definíciu DOF: **nezaujíma nás počet typov pohybu, ale počet nezávislých parametrov potrebných na opis configuration**.
+Tento príklad veľmi dobre vystihuje význam DOF. **Nezaujíma nás počet pohybov, ktoré vidíme. Zaujíma nás počet pohybov, ktoré môžeme meniť nezávisle.**
 
 ---
 
-## 08. Cylindrical joint – podobný pohyb, ale tentoraz 2 DOF
+## 07. Cylindrical joint (valcový kĺb)
 
-**Cylindrical joint**, označovaný **C**, na prvý pohľad pripomína helical joint. Aj on umožňuje rotáciu okolo osi a transláciu pozdĺž tej istej osi.
+**Cylindrical joint**, označovaný **C**, na prvý pohľad vyzerá podobne ako helical joint. Aj tu môže jedno teleso rotovať okolo osi a zároveň sa pozdĺž tej istej osi posúvať.
 
-Rozdiel spočíva v nezávislosti pohybov.
+Rozdiel je však zásadný: tieto dva pohyby tentoraz **nie sú mechanicky previazané**.
 
-Pri cylindrical jointe môžeme teleso posunúť bez toho, aby sme ho otočili. Môžeme ho otočiť bez toho, aby sme ho posunuli. A môžeme samozrejme vykonať aj obe zmeny naraz.
+Predstav si tyč zasunutú do vhodného valcového puzdra. Tyč môžeš zasunúť hlbšie bez toho, aby si ju otočila. Potom ju môžeš nechať na rovnakom mieste a iba ju otočiť. Môžeš samozrejme vykonať aj oba pohyby súčasne, ale jeden neurčuje druhý.
 
-Potrebujeme preto dve configuration variables: jednu pre transláciu a jednu pre rotáciu.
+Na opis configuration preto potrebujeme dve nezávislé hodnoty: jednu pre posun a druhú pre uhol otočenia.
 
 Cylindrical joint má:
 
 **2 DOF**
 
-V spatial mechanisme zo šiestich možných relatívnych freedoms ponechá dva a štyri odstráni. Preto vytvára **4 constraints**.
+Porovnanie s helical jointom je dôležité:
 
-Porovnanie helical a cylindrical jointu je veľmi dôležité. Oba dokážu vykonávať rotáciu aj transláciu, ale pri helical jointe sú tieto pohyby mechanicky previazané, zatiaľ čo pri cylindrical jointe sú nezávislé.
+- **Helical joint**: rotácia určuje transláciu → 1 DOF
+- **Cylindrical joint**: rotáciu a transláciu volíme nezávisle → 2 DOF
 
-Preto:
-
-**helical → 1 DOF**
-
-**cylindrical → 2 DOF**
+To je presne rozdiel medzi „mechanizmus vykonáva dva pohyby" a „mechanizmus má dva nezávislé stupne voľnosti".
 
 ---
 
-## 09. Universal joint – dve nezávislé rotácie
+## 08. Universal joint (univerzálny kĺb)
 
-**Universal joint**, označovaný písmenom **U**, povoľuje dve nezávislé rotácie.
+**Universal joint**, označovaný **U**, povoľuje dve nezávislé rotácie, zvyčajne okolo dvoch navzájom kolmých osí.
 
-Môžeme si ho predstaviť ako dve rotačné osi usporiadané tak, že sú typicky navzájom kolmé. Jedno teleso sa teda môže voči druhému natáčať v dvoch nezávislých smeroch.
+Predstav si napríklad teleso, ktoré môžeš nakloniť dopredu a dozadu a zároveň doľava a doprava. Uhol prvého pohybu môžeš zmeniť bez toho, aby si musela meniť druhý. Preto na opis configuration potrebuješ dva nezávislé uhly.
 
-Na úplné určenie configuration potrebujeme dva uhly.
-
-Universal joint preto má:
+Universal joint má:
 
 **2 DOF**
 
-Je zaujímavé porovnať ho s cylindrical jointom. Oba majú dva stupne voľnosti, ale ich pohyb je úplne odlišný. Cylindrical joint povoľuje jednu transláciu a jednu rotáciu, zatiaľ čo universal joint povoľuje dve rotácie.
+Je užitočné porovnať ho s cylindrical jointom. Oba majú 2 DOF, ale správajú sa úplne inak. Cylindrical joint povoľuje jednu transláciu a jednu rotáciu, zatiaľ čo universal joint povoľuje dve rotácie.
 
-Rovnaký počet DOF teda vôbec neznamená rovnaké mechanické správanie.
-
-V spatial mechanisme universal joint ponecháva dva relatívne DOF a štyri zakazuje, takže vytvára **4 constraints**.
+Počet DOF nám teda hovorí, koľko nezávislých configuration variables existuje. Sám osebe nám však nehovorí, akého typu tieto pohyby sú.
 
 ---
 
-## 10. Spherical joint – tri rotačné DOF
+## 09. Spherical joint (guľový kĺb)
 
-**Spherical joint**, označovaný písmenom **S**, poznáme aj ako **ball-and-socket joint**.
+**Spherical joint**, označovaný **S**, si môžeme predstaviť podobne ako guľový kĺb v mechanike. Jeden spoločný bod zostáva pevne spojený, ale telesá môžu meniť svoju vzájomnú orientation.
 
-Intuitívne si ho môžeme predstaviť ako guľový kĺb. Jeden bod dvoch telies zostáva spojený, ale ich vzájomná orientation sa môže meniť v troch nezávislých rotačných smeroch.
+Nemôžu sa od seba odsunúť, pretože spoločný bod musí zostať na rovnakom mieste. Môžu sa však okolo neho otáčať tromi nezávislými spôsobmi.
 
-Spherical joint preto povoľuje tri rotácie, ale žiadnu nezávislú transláciu.
+Na úplné určenie ich vzájomnej orientation preto potrebujeme tri nezávislé rotačné parametre.
 
-Má:
+Spherical joint má:
 
 **3 DOF**
 
-Keďže v spatial mechanisme existuje medzi dvoma voľnými rigid bodies maximálne šesť relatívnych DOF, spherical joint ponechá tri a ďalšie tri zakáže.
-
-Vytvára teda:
-
-**3 constraints**
-
-Aj tu je dôležité nečítať „3 DOF" iba ako „joint sa môže veľa otáčať". Znamená to presne to, že na úplný opis jeho relatívnej orientation potrebujeme tri nezávislé rotačné parametre.
+V spatial modeli sme začínali so šiestimi možnými relatívnymi DOF. Spherical joint ponechal tri rotačné a tri translačné odstránil. Vytvára teda **3 constraints**.
 
 ---
 
-## 11. Freedoms a constraints opisujú ten istý joint z dvoch strán
+## 10. Freedoms a constraints sú dve strany toho istého jointu
 
-Teraz už môžeme jednotlivé joints spojiť do jedného všeobecného pravidla.
+Teraz môžeme jednotlivé príklady spojiť do jedného pravidla.
 
-Pri spatial mechanisme existuje medzi dvoma úplne voľnými rigid bodies 6 relatívnych DOF. Joint určitú časť tejto voľnosti ponechá a zvyšok odstráni.
+V spatial modeli majú dve úplne voľné rigid bodies voči sebe maximálne **6 relatívnych DOF**. Joint časť tejto voľnosti ponechá a zvyšok zakáže.
 
-Preto pre spatial joint platí:
+Preto platí:
 
 **freedoms jointu + constraints jointu = 6**
 
-Revolute, prismatic aj helical joint majú po 1 DOF, takže každý vytvára 5 constraints. Cylindrical a universal joint majú 2 DOF a vytvárajú 4 constraints. Spherical joint má 3 DOF a vytvára 3 constraints.
+Revolute joint má 1 DOF, takže vytvára 5 constraints. Prismatic a helical joint sú na tom rovnako. Cylindrical a universal joint majú 2 DOF, takže vytvárajú 4 constraints. Spherical joint má 3 DOF a vytvára 3 constraints.
 
-Pri planar mechanisme používame rovnakú logiku, iba základným číslom nie je 6, ale **3**, pretože voľné planar rigid body má tri stupne voľnosti.
+Pri planar mechanizme je princíp rovnaký, iba nezačíname so šiestimi možnosťami, ale s tromi. Voľné planar rigid body má totiž iba 3 DOF.
 
-Toto pravidlo nás pripravuje na systematické počítanie stupňov voľnosti celého robota.
+Tento vzťah je dôležitý preto, že nám umožní prejsť od jedného jointu k celému mechanizmu.
 
 ---
 
-## 12. Ground sa pri počítaní považuje za link
+## Od jointov k celému robotovi
 
-Pred samotným výpočtom potrebujeme ešte jednu konvenciu: **ground sa počíta ako jeden z links**.
+---
 
-Ground nemusí byť doslova zem. Znamená pevné teleso, voči ktorému opisujeme pohyb mechanizmu.
+## 11. Ground sa počíta ako link
 
-Ak je robotické rameno pripevnené k pevnej základni, základňa je ground. Prvý pohyblivý link je s ňou spojený jointom, ďalší link s predchádzajúcim a podobne.
+Predstav si robotické rameno priskrutkované k stolu. Máme jeho pohyblivé links, ale úplne dole je ešte pevná základňa, ku ktorej je pripojený prvý joint.
 
-Dôvod, prečo ground počítame ako link, vyplýva z našej definície jointu. Joint vždy spája dve telesá. Aj prvý pohyblivý link teda musí byť pripojený k druhému telesu — a tým je ground.
+Túto pevnú časť nazývame **ground**.
 
-Ground však sám mechanizmu nepridáva žiadnu voľnosť, pretože ho definujeme ako pevný.
+Ground nemusí byť doslova zem. Môže to byť stôl, rám stroja, základňa robota alebo akékoľvek iné teleso, ktoré v našom modeli považujeme za nepohyblivé.
 
-Ak má preto mechanizmus celkovo N links vrátane ground, pohyblivých links je:
+Pri počítaní links sa ground počíta ako jeden link. Dôvod je jednoduchý: joint vždy spája dve telesá. Prvý joint robotického ramena teda nespája „link s ničím". Spája prvý pohyblivý link s ground.
+
+Ak má mechanizmus celkovo N links vrátane ground, počet pohyblivých links je:
 
 **N - 1**
 
-Práve tento výraz sa objaví v Grüblerovej formule.
+Ground sám nepridáva DOF, pretože jeho configuration považujeme za pevnú.
 
 ---
 
-## 13. Grüblerova formula
+## 12. Jeden joint v modeli spája dve telesá
 
-Pri jednoduchom serial robotovi často stačí spočítať jednotlivé joint freedoms. Pri komplikovanejších mechanizmoch, najmä pri uzavretých slučkách, to však už nemusí fungovať.
+Pri jednoduchom robotickom ramene je väčšinou jasné, ktoré dva links joint spája. Pri komplikovanejších mechanizmoch to však nemusí byť na prvý pohľad také zrejmé.
 
-Na systematické počítanie používame **Grüblerovu formulu**.
+Predstav si jeden fyzický čap, na ktorom sú pripojené tri rôzne links. Keď sa na mechanizmus pozrieš, môže to vyzerať ako „jeden veľký joint".
 
-Označme si:
+V našom kinematickom modeli však joint chápeme ako spojenie medzi dvojicou telies. Ak sú teda na rovnakom čape spojené tri links, môže byť potrebné toto fyzické spojenie modelovať ako viac než jeden joint.
 
-**N** — počet links vrátane ground,
-
-**J** — počet joints,
-
-**m** — počet DOF jedného voľného rigid body v danom modeli,
-
-**fi** — počet freedoms konkrétneho jointu i.
-
-Pre planar mechanism používame:
-
-**m = 3**
-
-Pre spatial mechanism:
-
-**m = 6**
-
-Grüblerova formula má tvar:
-
-**DOF = m(N - 1 - J) + suma fi**
-
-Symbol suma znamená, že spočítame freedoms všetkých joints.
-
-Formula môže na prvý pohľad pôsobiť komplikovane, ale jej logika je v skutočnosti veľmi jednoduchá. Je iba matematickým zápisom myšlienky, ktorú používame od začiatku tejto lekcie: **najskôr spočítame všetku možnú voľnosť a potom odoberieme constraints vytvorené joints**.
+To je dôležité najmä pri zložitejších linkages. Formula sama nedokáže zistiť, že sme mechanizmus nesprávne nakreslili. Pred výpočtom preto musíme najskôr správne identifikovať links, ground a joints medzi jednotlivými dvojicami links.
 
 ---
 
-## 14. Odkiaľ Grüblerova formula vzniká
-
-Predstav si mechanizmus s N links vrátane ground. Keďže ground sa nepohybuje, zostáva N - 1 pohyblivých links.
-
-Ak by neboli nijako spojené, každý z nich by sa mohol pohybovať ako samostatné voľné rigid body a mal by m DOF. Celková počiatočná voľnosť by teda bola:
-
-**m(N - 1)**
-
-Teraz medzi links pridáme joints.
-
-Každý joint určitú časť relatívnej voľnosti ponechá. Ak má joint fi DOF, potom zo všetkých m relatívnych možností pohybu zakazuje:
-
-**m - fi**
-
-To je počet constraints vytvorených daným jointom.
-
-Od celkovej počiatočnej voľnosti všetkých links teda odpočítame constraints všetkých joints. Po algebraickej úprave dostaneme:
-
-**DOF = m(N - 1 - J) + suma fi**
-
-Grüblerovu formulu preto nemusíme chápať ako vzorec, ktorý sa treba naspamäť naučiť bez súvislostí. Je to iba kompaktný zápis princípu:
-
-**voľnosť samostatných telies - obmedzenia vytvorené joints = voľnosť mechanizmu**
+## Grüblerova formula
 
 ---
 
-## 15. Open-chain robot – jednoduchý prípad
+## 13. Prečo vôbec potrebujeme formulu
 
-Jedným zo základných typov robotov je **open-chain mechanism**, často nazývaný aj **serial mechanism**.
-
-Predstav si klasické priemyselné robotické rameno. Začína na ground. Nasleduje joint, link, ďalší joint, ďalší link a tak ďalej až po end-effector. Nikde sa nevytvorí uzavretá mechanická slučka.
-
-Ak sú joints nezávislé, počet DOF takéhoto mechanizmu býva jednoducho súčtom ich jednotlivých freedoms.
-
-Planar robotické rameno s tromi revolute joints má:
+Pri jednoduchom serial robotickom ramene môže byť počítanie veľmi ľahké. Ak máme tri nezávislé revolute joints a každý má 1 DOF, celý mechanizmus má často jednoducho:
 
 **1 + 1 + 1 = 3 DOF**
 
-Serial robot so šiestimi nezávislými jedno-DOF joints má typicky:
+Lenže toto prestane fungovať pri mechanizmoch, ktoré vytvárajú uzavreté slučky. Môžeme mať napríklad štyri pohyblivé joints, ale ich pohyby nemusia byť nezávislé. Pohyb jedného môže automaticky určovať pohyb ostatných.
 
-**6 DOF**
+Potrebujeme preto systematickejší spôsob, ktorý zohľadní nielen freedoms jednotlivých joints, ale aj constraints, ktoré ich spojenie vytvára.
 
-Práve preto je šesť jointov veľmi časté pri priemyselných manipulátoroch. Šesť vhodne usporiadaných nezávislých freedoms môže umožniť end-effectoru kontrolovať všeobecnú position aj orientation v 3D priestore.
+Na to používame **Grüblerovu formulu**.
+
+Označme:
+
+- **N** — počet links vrátane ground
+- **J** — počet joints
+- **m** — počet DOF voľného rigid body v našom modeli
+- **fi** — počet DOF konkrétneho jointu
+
+Pre planar mechanizmus: **m = 3**
+
+Pre spatial mechanizmus: **m = 6**
+
+Potom:
+
+**DOF = m(N - 1 - J) + suma fi**
+
+Samotný vzorec však dáva oveľa väčší zmysel, keď si ho odvodíme.
+
+---
+
+## 14. Odkiaľ Grüblerova formula pochádza
+
+Predstav si mechanizmus s N links vrátane ground. Ground je pevný, takže máme N - 1 pohyblivých links.
+
+Teraz si predstav, že sme všetky joints rozpojili. Každý pohyblivý link je samostatný a môže sa voľne pohybovať. Ak ide o planar mechanizmus, každý má 3 DOF. Ak ide o spatial mechanizmus, každý má 6 DOF.
+
+Počiatočná voľnosť všetkých pohyblivých links je preto:
+
+**m(N - 1)**
+
+Až potom začneme links spájať joints.
+
+Predstav si spatial mechanizmus a revolute joint. Dve telesá by bez spojenia mohli mať voči sebe šesť relatívnych možností pohybu. Revolute joint ponechá iba jednu. Znamená to, že odstránil päť možností — vytvoril päť constraints.
+
+Vo všeobecnosti joint s fi DOF odstráni:
+
+**m - fi**
+
+stupňov voľnosti.
+
+Ak máme viac joints, od pôvodnej voľnosti links odpočítame constraints vytvorené všetkými joints. Dostávame:
+
+**DOF = pôvodná voľnosť links - constraints joints**
+
+Po matematickej úprave vznikne Grüblerova formula:
+
+**DOF = m(N - 1 - J) + suma fi**
+
+Vzorec teda nie je žiadne nové magické pravidlo. Je to iba skrátený zápis myšlienky, ktorú už poznáme:
+
+**najskôr dáme telesám všetku voľnosť, ktorú by mali samostatne, a potom odoberieme pohyby, ktoré im joints zakážu.**
+
+---
+
+## Open-chain mechanizmy
+
+---
+
+## 15. Open-chain robot
+
+Predstav si klasické robotické rameno. Začíname na pevnej základni, potom nasleduje joint, link, ďalší joint, ďalší link a nakoniec end-effector.
+
+Ak sa z ground vydáme cez links a joints smerom k end-effectoru, nikde sa nevrátime späť k linku, cez ktorý sme už prešli. Nevytvorí sa žiadna uzavretá slučka.
+
+Takýto systém nazývame **open-chain mechanism** (mechanizmus s otvoreným kinematickým reťazcom) alebo **serial mechanism**.
+
+Pri jednoduchom open chain sú jednotlivé joint variables často nezávislé. Ak má planar rameno tri revolute joints, môžeme meniť uhol prvého, druhého aj tretieho jointu. Na opis configuration preto potrebujeme tri uhly:
+
+**q = (θ1, θ2, θ3)**
+
+Robot má: **3 DOF**
+
+Podobne robot so šiestimi nezávislými 1-DOF joints má typicky **6 DOF**.
+
+Tu preto jednoduché sčítanie joint freedoms funguje.
 
 ---
 
 ## 16. kR serial robot
 
-Všeobecným príkladom je **kR robot**. Písmeno R znamená revolute joint a k označuje počet takýchto joints.
+V robotike sa môžeme stretnúť so zápisom **kR robot**. Písmeno R znamená revolute joint a k hovorí, koľko takýchto joints robot obsahuje.
 
 ![Sériový reťazec, päťkĺbový a šesťkĺbové mechanizmy](/book/ch2/fig2-5.png)
 
-Ak má robot k nezávislých revolute joints a každý z nich má 1 DOF, intuitívne očakávame:
+Napríklad 3R robot má tri revolute joints. 6R robot ich má šesť.
+
+Ak ide o jednoduchý serial robot a všetky joints sú nezávislé, každý revolute joint pridáva jednu joint variable. Preto kR robot má:
 
 **DOF = k**
 
-Rovnaký výsledok môžeme overiť Grüblerovou formulou. Robot má k pohyblivých links a jeden ground, takže N = k + 1. Počet joints je J = k. Pri planar modeli je m = 3 a každý joint má f = 1.
+Napríklad planar 3R rameno potrebuje na opis svojej configuration tri uhly (θ1, θ2, θ3) a má teda **3 DOF**.
 
-Po dosadení dostaneme opäť:
-
-**DOF = k**
-
-Tento príklad je dobrým testom, že formula sa pri jednoduchom open-chain robotovi správa presne tak, ako očakávame.
+To je dobrý jednoduchý prípad, pri ktorom sa intuitívne počítanie zhoduje s Grüblerovou formulou.
 
 ---
 
-## 17. Closed-chain mechanism
-
-Pri **closed-chain mechanism** vzniká aspoň jedna uzavretá mechanická slučka.
-
-Predstav si, že začneš na ground, prejdeš cez sériu links a joints a inou cestou sa nakoniec vrátiš späť na ground. Takéto uzavretie vytvára ďalšie geometrické constraints.
-
-Pri open chain môžeme jednotlivé joint coordinates často meniť nezávisle. Pri closed chain to už nemusí platiť. Keď sa zmení jeden joint, ostatné sa musia prispôsobiť tak, aby mechanická slučka zostala uzavretá.
-
-Dobrým intuitívnym príkladom je človek stojaci oboma nohami na zemi. Môžeme sledovať cestu od ground cez jednu nohu, panvu a druhú nohu späť na ground. Vznikne closed chain. Keď jednu nohu zdvihneme, slučka sa otvorí.
-
-Práve pri closed-chain mechanisms je veľmi dobre vidieť, prečo **počet joints nie je to isté ako počet DOF**.
+## Closed-chain mechanizmy
 
 ---
 
-## 18. Four-bar linkage – štyri joints a jeden DOF
+## 17. Čo sa zmení, keď vytvoríme uzavretú slučku
 
-Klasickým príkladom je **four-bar linkage**.
+Teraz si predstav, že links nepospájame iba do jedného otvoreného reťazca. Pridáme ďalšie spojenie tak, že sa mechanická cesta nakoniec uzavrie.
+
+Vznikne **closed-chain mechanism** (mechanizmus s uzavretým kinematickým reťazcom).
+
+Práve uzavretie slučky mení situáciu. Jednotlivé joint variables už nemusia byť nezávislé.
+
+Predstav si napríklad pevný rám zo štyroch tyčiek spojených rotačnými joints. Ak pohneš jednou tyčkou, ostatné sa musia prispôsobiť tak, aby sa rám nerozpojil. Nemôžeš každému jointu jednoducho zvoliť ľubovoľný uhol.
+
+Uzavretá slučka teda vytvára ďalšie geometrické **constraints**.
+
+A práve preto pri closed chains neplatí: **počet joints = počet DOF**
+
+---
+
+## 18. Four-bar linkage: 4 joints, ale iba 1 DOF
+
+Klasickým príkladom je **four-bar linkage** (štvorčlánkový mechanizmus).
 
 ![Four-bar linkage a slider-crank mechanism](/book/ch2/fig2-4.png)
 
-Ide o planar mechanism so štyrmi links vrátane ground a štyrmi revolute joints, ktoré vytvárajú uzavretú slučku.
+Predstav si štyri pevné links spojené štyrmi revolute joints do uzavretého štvoruholníka. Jeden link je ground a ostatné tri sa môžu pohybovať.
 
-Máme teda N = 4, J = 4, m = 3 a každý joint má f = 1.
+Na prvý pohľad vidíme štyri revolute joints. Každý revolute joint má samostatne 1 DOF. Mohli by sme preto nesprávne usúdiť:
 
-Po použití Grüblerovej formule dostaneme:
+4 joints x 1 DOF = 4 DOF
 
-**DOF = 1**
+Lenže mechanizmus je uzavretý.
 
-Mechanizmus teda obsahuje štyri jedno-DOF joints, ale celý systém má iba jeden nezávislý stupeň voľnosti.
+Ak otočíš jeden link, nemôžeš potom ostatným trom joints nastaviť ľubovoľné uhly. Musia sa automaticky prispôsobiť tak, aby posledný link stále dosiahol k poslednému jointu a slučka zostala uzavretá.
 
-Dôvodom je closed loop. Joint angles sa nemôžu meniť nezávisle. Keď zmeníme jeden z nich, ostatné sa musia geometricky prispôsobiť tak, aby všetky links zostali spojené.
+Pre planar four-bar máme: N = 4, J = 4, m = 3, suma fi = 4
 
-Jedna nezávislá hodnota preto za bežných podmienok stačí na určenie configuration celého four-bar linkage.
+Dosadíme:
 
----
+**DOF = 3(4 - 1 - 4) + 4 = 1**
 
-## 19. Slider-crank mechanism
+Celý mechanizmus teda potrebuje iba jednu nezávislú hodnotu na určenie svojej configuration.
 
-Ďalším klasickým closed-chain mechanizmom je **slider-crank**.
-
-Tento mechanizmus premieňa rotačný pohyb na lineárny alebo naopak. Jeho princíp poznáme napríklad z piestového mechanizmu spaľovacieho motora.
-
-V typickom planar modeli máme štyri links vrátane ground a štyri jedno-DOF joints: tri revolute a jeden prismatic.
-
-Grüblerova formula dá:
-
-**DOF = 1**
-
-Ak poznáme napríklad uhol cranku, poloha slidera už nie je ďalšou nezávislou hodnotou. Je určená geometriou mechanizmu.
-
-Slider sa teda fyzicky pohybuje, ale tento pohyb nepridáva ďalší DOF, pretože je previazaný s pohybom ostatných links.
+Toto je presne dôvod, prečo štyri joints neznamenajú štyri DOF.
 
 ---
 
-## 20. Five-bar linkage a zložitejšie planar mechanisms
+## 19. Slider-crank: dva rôzne pohyby, ale iba 1 DOF
 
-Pri **five-bar linkage** máme päť links vrátane ground a päť revolute joints. Grüblerova formula v bežnom prípade dá:
+Ďalším výborným príkladom je **slider-crank mechanism** (kľukový mechanizmus s posúvačom), ktorý poznáme napríklad z piestového motora.
 
-**DOF = 2**
+Crank sa otáča a slider sa pritom pohybuje dopredu a dozadu. Na prvý pohľad teda vidíme rotáciu aj lineárny pohyb.
 
-Configuration takéhoto mechanizmu potrebuje dve nezávislé hodnoty.
-
-Pri mechanizmoch ako **Stephenson six-bar linkage** alebo **Watt six-bar linkage** môžeme mať ešte viac links a joints, ale výsledný počet DOF môže zostať iba jeden.
-
-To je veľmi dôležitá lekcia. Zložitosť mechanizmu sa nedá odhadovať podľa toho, koľko pohyblivých častí vidíme. Veľké množstvo links môže byť pomocou constraints previazané tak silno, že celý systém má iba jeden nezávislý pohyb.
-
----
-
-## 21. Viac joints môže byť na jednom fyzickom mieste
-
-![Mechanizmus s prekrývajúcimi sa kĺbmi](/book/ch2/fig2-6.png)
-
-Pri komplikovanejších linkages je dôležité správne počítať joints.
-
-Ak sa na jednom čape stretávajú napríklad tri links, vizuálne môžu pôsobiť ako jeden spoločný joint. V mechanickom modeli však jeden joint spája iba dve telesá.
-
-Takéto spojenie preto môže predstavovať dva samostatné revolute joints uložené na rovnakom fyzickom mieste.
-
-Táto konvencia je pri Grüblerovej formule zásadná. Formula pracuje iba s modelom, ktorý jej zadáme. Ak nesprávne rozdelíme mechanizmus na links a joints, výsledok nebude opisovať skutočný systém.
-
-Pred samotným počítaním teda vždy najskôr musíme správne vytvoriť **kinematic model**.
-
----
-
-## 22. Grüblerova formula má svoje predpoklady
-
-Mohlo by sa zdať, že Grüblerova formula vyriešila celý problém. Spočítame links, joints, ich freedoms a výsledok máme.
-
-V skutočnosti má však formula dôležitý predpoklad: **constraints vytvorené joints musia byť nezávislé**.
-
-Ak dva rôzne constraints v skutočnosti zakazujú tú istú možnosť pohybu, druhý už systému neodoberá ďalší DOF. Hovoríme, že je **redundantný**.
-
-Ak by sme ho napriek tomu pri výpočte odpočítali ako úplne nové obmedzenie, odobrali by sme príliš veľa voľnosti a formula by dala príliš nízky počet DOF.
-
-Preto Grüblerova formula nie je náhradou za pochopenie geometrie mechanizmu. Je veľmi užitočná, ale jej výsledok treba interpretovať v kontexte jej predpokladov.
-
----
-
-## 23. Parallelogram linkage a redundant constraints
-
-![Paralelogramový mechanizmus a singulárna konfigurácia](/book/ch2/fig2-7.png)
-
-Príkladom je **parallelogram linkage**.
-
-Pri určitom mechanickom modeli môže jednoduché použitie Grüblerovej formule viesť k výsledku:
-
-**DOF = 0**
-
-Nula by znamenala, že mechanizmus je rigidná konštrukcia a nedokáže sa pohybovať.
-
-V skutočnosti však vidíme, že parallelogram mechanism sa pohybovať môže a má:
+Napriek tomu má celý mechanizmus iba:
 
 **1 DOF**
 
-Problémom nie je samotná matematika formule, ale to, že niektoré constraints nie sú nezávislé. Časť obmedzení iba opakuje informáciu, ktorá už vyplýva z ostatných väzieb.
+Prečo?
 
-Pri mechanickom počítaní sme ich teda odpočítali viackrát.
+Pretože tieto pohyby nie sú nezávislé. Keď poznáme uhol cranku a rozmery links, poloha slidera je už určená geometriou mechanizmu. Nemôžeme nastaviť crank na konkrétny uhol a potom si úplne nezávisle vybrať, kde bude slider.
 
-Tento príklad ukazuje, prečo musíme pri DOF rozumieť nielen formule, ale aj samotnému mechanizmu.
-
----
-
-## 24. Singular configuration
-
-S nezávislosťou constraints súvisí ďalší dôležitý pojem: **singular configuration**.
-
-Mechanizmus môže mať vo väčšine configurations určitý počet DOF a constraints môžu byť normálne nezávislé. V jednej špeciálnej geometrickej polohe sa však niektoré links môžu zarovnať alebo prekryť.
-
-Vtedy môžu constraints dočasne stratiť nezávislosť.
-
-Mechanizmus sa tak môže v tejto konkrétnej configuration správať inak než vo väčšine svojho configuration space. Môže napríklad dočasne získať pohyb, ktorý inde nemá, alebo naopak stratiť schopnosť vytvárať určitý pohyb alebo silu.
-
-Takéto configurations nazývame **singularities**.
-
-Singularity budú neskôr v robotike veľmi dôležité, pretože ovplyvňujú kinematiku, velocities, forces aj riadenie robota.
+Je to podobná myšlienka ako pri helical jointe. To, že mechanizmus obsahuje viac viditeľných pohybov, ešte neznamená, že každý z nich predstavuje samostatný DOF.
 
 ---
 
-## 25. Delta robot a internal degrees of freedom
+## 20. Five-bar linkage
+
+Pri **five-bar linkage** (päťčlánkovom mechanizme) máme päť links vrátane ground a päť revolute joints usporiadaných do uzavretej slučky.
+
+Pre planar model: N = 5, J = 5, m = 3, suma fi = 5
+
+Dostaneme:
+
+**DOF = 3(5 - 1 - 5) + 5 = 2**
+
+Mechanizmus má teda **2 DOF**.
+
+Na úplné určenie jeho configuration potrebujeme dve nezávislé hodnoty. Ostatné joint angles už musia byť také, aby zostala zachovaná geometria uzavretej slučky.
+
+Tento príklad opäť ukazuje, že počet joints sám osebe nestačí. Five-bar má päť revolute joints, ale iba dva nezávislé stupne voľnosti.
+
+---
+
+## Kedy samotná formula nestačí
+
+---
+
+## 21. Grüblerova formula predpokladá nezávislé constraints
+
+Grüblerova formula funguje tak, že za každý joint odoberie určitý počet constraints. Tým však implicitne predpokladá, že každý z týchto constraints prináša nové nezávislé obmedzenie.
+
+To nemusí byť vždy pravda.
+
+Predstav si, že ti niekto povie:
+
+**x = 5**
+
+Tým je x úplne určené. Potom pridá:
+
+**x < 10**
+
+Dostali sme druhé pravidlo, ale ono už x nijako ďalej neobmedzilo. Keď x = 5, automaticky platí aj x < 10.
+
+Druhý constraint teda nepriniesol novú nezávislú informáciu.
+
+V mechanických systémoch sa môže stať niečo podobné. Dve rôzne mechanické väzby môžu v určitej geometrii obmedzovať tú istú možnosť pohybu. Ak ich obe odpočítame ako úplne nové constraints, odoberieme systému príliš veľa voľnosti.
+
+Takéto obmedzenie nazývame **redundant constraint — nadbytočné obmedzenie**.
+
+![Paralelogramový mechanizmus a singulárna konfigurácia](/book/ch2/fig2-7.png)
+
+Preto Grüblerova formula nie je náhradou za pochopenie mechanizmu. Je to veľmi užitočný nástroj, ale musíme vedieť, za akých predpokladov ju používame.
+
+---
+
+## 22. Singular configuration
+
+Aj mechanizmus, ktorý sa väčšinou správa normálne, sa môže dostať do špeciálnej geometrickej polohy, v ktorej sa vzťahy medzi jeho constraints zmenia.
+
+Predstav si napríklad dve links robotického ramena, ktoré sa dostanú presne do jednej priamky. V tejto configuration môže mechanizmus stratiť schopnosť vytvoriť určitý pohyb alebo silu rovnakým spôsobom ako v okolí tejto polohy.
+
+Takúto špeciálnu configuration nazývame **singular configuration** a samotný jav **singularity**.
+
+Dôležité zatiaľ nie je vedieť singularities matematicky počítať. Stačí pochopiť, že správanie mechanizmu môže závisieť aj od jeho aktuálnej configuration. Niektoré constraints alebo možné smery pohybu sa môžu v špeciálnych polohách stať závislými.
+
+K singularities sa v robotike ešte vrátime, pretože sú veľmi dôležité pri kinematike, velocities, forces aj riadení robotov.
+
+---
+
+## DOF mechanizmu a DOF end-effectora
+
+---
+
+## 23. Nie každý DOF musí pohybovať end-effectorom
+
+Doteraz by mohlo vyzerať, že každý DOF robota automaticky znamená ďalšiu možnosť pohybu jeho end-effectora. Pri jednoduchom serial robotovi to často približne platí, ale pri komplikovanejších mechanizmoch už nie.
+
+Predstav si tyč, ktorá sa môže voľne otáčať okolo vlastnej pozdĺžnej osi. Z pohľadu mechanizmu sa jej configuration mení — uhol otočenia môže mať rôzne hodnoty. Máme teda skutočný DOF.
+
+Ak však táto rotácia nijako nezmení position ani orientation pracovnej platformy, end-effector tento pohyb „nevidí".
+
+Takýto pohyb môže predstavovať **internal degree of freedom — vnútorný stupeň voľnosti**.
+
+Preto musíme rozlišovať:
+
+**DOF celého mechanizmu** — koľko nezávislých hodnôt potrebujeme na opis configuration všetkých jeho častí
+
+a
+
+**DOF end-effectora** — koľko nezávislých možností pohybu má pracovný bod alebo platforma, ktorá nás zaujíma.
+
+Tieto dve čísla nemusia byť rovnaké.
+
+---
+
+## 24. Delta robot
 
 ![Delta robot](/book/ch2/fig2-8.png)
 
-Zaujímavým príkladom zložitého closed-chain mechanizmu je **Delta robot**.
+Dobrým príkladom je **Delta robot**, ktorý používa niekoľko paralelných ramien spájajúcich pevnú základňu s pohyblivou platformou.
 
-Má pevnú hornú základňu a pohyblivú pracovnú platformu, ktoré sú prepojené tromi ramenami. Súčasťou jednotlivých ramien bývajú parallelogram mechanisms.
+Na rozdiel od klasického serial ramena nejde od základne k end-effectoru iba jedna cesta. Platforma je spojená so základňou viacerými mechanickými vetvami naraz. Ide teda o **parallel closed-chain mechanism**.
 
-Keď analyzujeme celý mechanický model vrátane všetkých links a joints, môžu sa objaviť **internal degrees of freedom — vnútorné stupne voľnosti**.
+Niektoré links v jeho detailnom mechanickom modeli môžu mať vnútorné pohyby, ktoré priamo nemenia požadovaný pohyb platformy. Napríklad určitá tyč sa môže v konkrétnom modeli otáčať okolo vlastnej osi bez toho, aby sa tým zmenila position end-effectora.
 
-To znamená, že niektoré links sa môžu určitým spôsobom pohybovať bez toho, aby tým menili požadovanú position end-effectora.
+Mechanizmus teda môže obsahovať DOF, ktorý je reálny z pohľadu configuration jednotlivých links, ale nepridáva ďalší nezávislý pohyb pracovnej platformy.
 
-Napríklad určitá tyč sa môže voľne otáčať okolo vlastnej pozdĺžnej osi. Z pohľadu celého mechanického modelu ide o skutočný DOF, ale pracovná platforma sa vďaka nemu nemusí posunúť ani otočiť.
-
-Tento príklad nás učí veľmi dôležité rozlíšenie:
-
-**DOF celého mechanizmu nemusí byť rovnaký ako DOF end-effectora.**
-
-Robot môže obsahovať vnútorné pohyby, ktoré sa na výslednom task-space pohybe priamo neprejavia.
+Práve preto pri zložitejších robotoch nestačí povedať iba „robot má X DOF". Musíme vedieť, čo presne počítame.
 
 ---
 
-## 26. Stewart-Gough platform
+## 25. Stewart-Gough platform
 
-Ďalším známym parallel closed-chain robotom je **Stewart-Gough platform**.
+Ďalším známym parallel robotom je **Stewart-Gough platform**. Má pevnú spodnú platformu a pohyblivú hornú platformu, ktoré sú prepojené šiestimi nastaviteľnými nohami.
 
-Pozostáva z pevnej spodnej platformy a pohyblivej hornej platformy, ktoré sú spojené šiestimi nastaviteľnými nohami.
+Pri vhodnom mechanickom usporiadaní môže horná platforma meniť svoju position v troch smeroch a zároveň orientation tromi nezávislými spôsobmi.
 
-Jedna bežná konštrukcia používa v každej nohe kombináciu:
+Má teda:
 
-**universal joint → prismatic joint → spherical joint**
+**3 translačné DOF + 3 rotačné DOF = 6 DOF**
 
-skrátene **UPS**.
+To je dôvod, prečo sa podobné platformy používajú napríklad v **motion simulators**. Platforma sa môže zdvihnúť, posunúť dopredu alebo do strany a zároveň sa nakláňať a otáčať.
 
-Pri vhodnom usporiadaní má pohyblivá platforma:
+Zaujímavé je, že celý vnútorný mechanizmus môže obsahovať množstvo links a joints. Napriek tomu nás pri pohybe hornej platformy môže zaujímať iba jej šesť nezávislých DOF.
 
-**6 DOF**
-
-To znamená, že môže meniť všetky tri zložky position a všetky tri zložky orientation.
-
-Stewart-Gough platform je preto vhodná napríklad pre motion simulators. Horná platforma sa môže zdvíhať, posúvať aj nakláňať a vytvárať tak pohyb podobný jazde autom alebo letu lietadla.
-
-Parallel structure má zároveň mechanickú výhodu v tom, že zaťaženie platformy môže byť rozdelené medzi viacero nôh. Nevýhodou býva komplikovanejšia kinematika a často menší workspace než pri serial manipulátore.
+Opäť vidíme rozdiel medzi zložitosťou mechanizmu a počtom nezávislých pohybov jeho end-effectora.
 
 ---
 
-## 27. Viac DOF v mechanizme neznamená viac DOF platformy
-
-Ak pri Stewart-Gough platforme zmeníme typ niektorých joints, môžeme pridať ďalšie vnútorné freedoms.
-
-To však automaticky neznamená, že horná platforma získala nové možnosti pohybu. Dodatočný DOF môže napríklad umožniť nohe rotovať okolo vlastnej osi bez toho, aby sa zmenila pose platformy.
-
-Opäť teda platí:
-
-**DOF mechanizmu ≠ automaticky DOF end-effectora**
-
-Pri jednoduchom serial robotovi sa tieto čísla často zhodujú. Pri parallel alebo closed-chain mechanisms však môžu byť veľmi rozdielne.
-
-To je jeden z dôvodov, prečo neskôr budeme rozlišovať medzi **configuration space** a **task space**.
+## Open chain vs. closed chain
 
 ---
 
-## 28. Open chain a closed chain
+## 26. Krátke porovnanie
 
-Teraz môžeme oba základné typy mechanizmov postaviť vedľa seba.
+**Open-chain mechanism** (mechanizmus s otvoreným kinematickým reťazcom) nemá uzavretú mechanickú slučku. Od ground vedie cez joints a links otvorená cesta k end-effectoru. Typickým príkladom je klasické serial robotické rameno. Ak sú jeho joints nezávislé, počet DOF sa často jednoducho rovná súčtu ich freedoms.
 
-Pri **open-chain robotovi** nevzniká uzavretá mechanická slučka. Ak sú joints nezávislé, počet DOF sa často rovná jednoduchému súčtu freedoms jednotlivých joints. Robot so šiestimi jedno-DOF joints tak môže mať 6 DOF.
+**Closed-chain mechanism** (mechanizmus s uzavretým kinematickým reťazcom) obsahuje aspoň jednu uzavretú mechanickú slučku. Pohyb jednotlivých joints preto býva geometricky previazaný. Four-bar linkage môže mať štyri revolute joints, ale celý mechanizmus má iba 1 DOF, pretože joint angles nemožno voliť nezávisle.
 
-Pri **closed-chain mechanism** slučky vytvárajú ďalšie geometrické constraints. Jednotlivé joint coordinates preto už nemusia byť nezávislé.
-
-Four-bar linkage môže mať štyri jedno-DOF joints, ale iba 1 DOF mechanizmu. Five-bar linkage môže mať päť jedno-DOF joints, ale len 2 DOF.
-
-Closed-chain analysis je preto náročnejšia. Nestačí iba spočítať joints. Musíme chápať constraints vytvorené ich vzájomným prepojením.
+Najjednoduchšie si rozdiel môžeš zapamätať takto: pri open chain môže byť každý joint ďalšou nezávislou možnosťou pohybu; pri closed chain slučka vytvára ďalšie constraints, takže pohyb jedného jointu môže určovať pohyb ostatných.
 
 ---
 
-## 29. DOF nie je počet motorov
-
-Nakoniec je veľmi dôležité oddeliť **degrees of freedom** od **actuation**.
-
-DOF je mechanická vlastnosť systému. Hovorí, koľko nezávislých configuration variables potrebujeme na úplné určenie jeho configuration.
-
-Actuator je zariadenie, ktoré mechanizmus poháňa — napríklad elektromotor alebo hydraulický valec.
-
-Pri jednoduchom serial robotovi môže mať každý joint vlastný motor. Šesť jedno-DOF joints tak môže znamenať 6 DOF a zároveň šesť motorov.
-
-Nie je to však všeobecné pravidlo.
-
-Pri closed-chain mechanism môžu byť niektoré joints **passive**. Nemajú vlastný actuator a pohybujú sa iba preto, že ich k pohybu prinúti zvyšok mechanizmu.
-
-Preto sa pri počítaní DOF nepýtame, koľko motorov robot má. Pýtame sa:
-
-**Koľko nezávislých hodnôt potrebujem na úplné určenie configuration mechanizmu?**
+## DOF nie je počet motorov
 
 ---
 
-## 30. Najdôležitejší spôsob uvažovania
+## 27. Mechanická voľnosť a actuation sú dve rôzne veci
 
-Celá táto lekcia sa dá zhrnúť do jedného spôsobu premýšľania.
+Na záver je dôležité oddeliť **degrees of freedom** od počtu motorov.
 
-Najskôr si predstavíme všetky links ako úplne samostatné rigid bodies. Každé by malo určitú voľnosť — 3 DOF pri planar modeli alebo 6 DOF pri spatial modeli.
+DOF je mechanická vlastnosť systému. Hovorí nám, koľko nezávislých configuration variables potrebujeme na úplné určenie jeho configuration.
 
-Potom medzi ne pridáme joints. Každý joint určité relatívne pohyby ponechá, ale iné odstráni. Vzniknú constraints, ktoré pohyb jednotlivých links navzájom previažu.
+**Actuator** je zariadenie, ktoré vytvára pohyb — napríklad elektromotor, servo alebo hydraulický valec.
 
-Po odpočítaní všetkých **nezávislých** constraints zostane skutočný počet nezávislých configuration variables.
+Pri jednoduchom serial robotovi môže mať každý joint vlastný motor. Robot so šiestimi revolute joints môže mať 6 DOF a zároveň šesť motorov. Preto sa môže zdať, že tieto dve čísla sú vždy rovnaké.
 
-To je **degree of freedom mechanizmu**.
+Nie sú.
 
-Grüblerova formula je iba matematickým spôsobom, ako tento proces systematicky vykonať.
+Predstav si four-bar linkage s jedným motorom na vstupnom jointe. Mechanizmus má štyri revolute joints, ale iba 1 DOF. Keď motor otočí prvým linkom, ostatné links a joints sa musia pohybovať spolu s ním, pretože ich pohyb určuje geometria uzavretej slučky. Ostatné joints preto nemusia mať vlastný motor.
 
-Najdôležitejší mentálny model teda je:
+Takéto nepoháňané joints nazývame **passive joints**.
 
-**voľné rigid bodies → pridáme joints → joints vytvoria constraints → zostanú DOF mechanizmu**
+Pri určovaní DOF sa preto nepýtame: **Koľko motorov robot má?**
+
+Pýtame sa: **Koľko nezávislých hodnôt potrebujeme na úplné určenie jeho configuration?**
+
+---
+
+## 28. Ako postupovať pri počítaní DOF
+
+Keď dostaneš nový mechanizmus, nesnaž sa okamžite dosadzovať čísla do Grüblerovej formule. Najskôr si mechanizmus predstav fyzicky.
+
+Najprv urči, či ho budeš modelovať ako planar alebo spatial. Potom identifikuj jednotlivé rigid links a nezabudni započítať ground. Následne si prejdi joints a pri každom si polož otázku: **Aký relatívny pohyb tento joint povoľuje?**
+
+Až potom má zmysel začať počítať.
+
+Pri jednoduchom open-chain robotovi často stačí spočítať nezávislé joint freedoms. Pri closed-chain mechanizme musíš navyše myslieť na geometrické constraints vytvorené uzavretými slučkami a v prípade potreby použiť Grüblerovu formulu.
+
+Ak ti výsledok nedáva fyzický zmysel, nemala by byť prvá reakcia „asi som zle počítala". Najskôr sa vráť k samotnému modelu. Skontroluj, či si správne identifikovala links, joints, ground a typy jednotlivých spojení a či constraints, ktoré počítaš, skutočne predstavujú nezávislé obmedzenia.
+
+---
+
+## 29. Hlavná myšlienka lekcie
+
+Najdôležitejšie nie je naučiť sa naspamäť tabuľku joints alebo Grüblerovu formulu. Dôležité je pochopiť mechanickú logiku, ktorá sa za nimi skrýva.
+
+Predstav si najskôr všetky pohyblivé links robota ako samostatné rigid bodies. Bez spojení by mal každý z nich vlastnú voľnosť. V planar modeli by každý začínal s 3 DOF, v spatial modeli so 6 DOF.
+
+Potom ich začneme spájať joints. Každý joint povie: tento pohyb medzi dvoma links je dovolený, ale tieto ostatné už nie. Tým vytvára constraints a pôvodnú voľnosť systému zmenšuje.
+
+To, čo po zohľadnení všetkých nezávislých constraints zostane, je skutočný počet degrees of freedom mechanizmu.
+
+Preto si môžeš celý proces predstaviť ako:
+
+**voľné rigid bodies → pridáme joints → vzniknú constraints → zostanú DOF mechanizmu**
+
+Grüblerova formula je iba matematický nástroj, ktorý túto myšlienku zapisuje kompaktnejšie.
 
 ---
 
 ## Zhrnutie lekcie
 
-Robot môžeme mechanicky modelovať ako systém **rigid links spojených joints**. Každý joint určitý relatívny pohyb povoľuje a zároveň ostatné možnosti pohybu zakazuje. Pri počítaní DOF preto môžeme pracovať buď s freedoms, ktoré joint ponecháva, alebo s constraints, ktoré vytvára.
+Robot môžeme z pohľadu kinematiky chápať ako sústavu **rigid links** spojených **joints**. Joint nie je iba miesto, ktoré pohyb umožňuje. Zároveň zakazuje ostatné relatívne pohyby medzi dvoma links, a tým vytvára constraints.
 
-Medzi základné joints patrí **revolute joint (R)** s 1 DOF, **prismatic joint (P)** s 1 DOF a **helical joint (H)** s 1 DOF. Helical joint síce vykonáva rotáciu aj transláciu, ale tieto pohyby sú mechanicky previazané a nie sú nezávislé.
+Základné typy joints sa líšia tým, aké nezávislé pohyby povoľujú. **Revolute joint** (rotačný kĺb) povoľuje jednu rotáciu a má 1 DOF. **Prismatic joint** (posuvný kĺb) povoľuje jednu transláciu a má tiež 1 DOF. **Helical joint** (skrutkový kĺb) kombinuje rotáciu s transláciou, ale pretože sú mechanicky previazané, stále má iba 1 DOF. **Cylindrical joint** (valcový kĺb) umožňuje nezávislú transláciu a rotáciu, preto má 2 DOF. **Universal joint** (univerzálny kĺb) má dve nezávislé rotácie a 2 DOF. **Spherical joint** (guľový kĺb) povoľuje tri nezávislé rotácie a má 3 DOF.
 
-**Cylindrical joint (C)** má 2 DOF, pretože jeho rotáciu a transláciu môžeme meniť nezávisle. **Universal joint (U)** má tiež 2 DOF, ale ide o dve nezávislé rotácie. **Spherical joint (S)** má 3 rotačné DOF.
+Pri spatial modeli začíname so šiestimi možnými relatívnymi DOF medzi dvoma voľnými rigid bodies. Joint časť z nich ponechá a zvyšok odstráni. Pri planar modeli používame rovnakú logiku, iba začíname s tromi DOF.
 
-Pri spatial mechanisme môže medzi dvoma voľnými rigid bodies existovať 6 relatívnych DOF. Ak joint ponechá f freedoms, zvyšných 6 - f predstavuje jeho constraints. Pri planar mechanisme používame rovnakú logiku so základnými 3 DOF.
-
-Pri počítaní links zároveň nezabúdame, že **ground sa počíta ako link**, hoci sa nepohybuje. Ak máme N links vrátane ground, pohyblivých je N - 1.
-
-Na systematické určenie DOF môžeme použiť **Grüblerovu formulu**:
+Pri celom mechanizme musíme správne identifikovať links, joints a ground. Ground sa počíta ako link, hoci sa nepohybuje. Na systematické počítanie môžeme použiť **Grüblerovu formulu**:
 
 **DOF = m(N - 1 - J) + suma fi**
 
-Hodnota m je 3 pre planar mechanism a 6 pre spatial mechanism. N je počet links vrátane ground, J počet joints a fi počet freedoms jednotlivých joints.
+kde m = 3 pre planar mechanizmus a m = 6 pre spatial mechanizmus.
 
-Formula vychádza z jednoduchého princípu: najskôr spočítame voľnosť všetkých samostatných links a potom odpočítame constraints vytvorené joints.
+Pri jednoduchých **open-chain mechanisms** sa DOF často rovná súčtu nezávislých joint freedoms. Pri **closed-chain mechanisms** však uzavreté slučky vytvárajú ďalšie constraints. Preto môže mať four-bar linkage štyri revolute joints, ale iba 1 DOF.
 
-Pri **open-chain mechanisms** sa počet DOF pri nezávislých joints často rovná súčtu ich freedoms. Pri **closed-chain mechanisms** však uzavreté slučky vytvárajú ďalšie geometrické väzby. Preto four-bar linkage môže mať štyri revolute joints, ale iba 1 DOF, a five-bar linkage môže mať päť jedno-DOF joints, ale iba 2 DOF.
+Formulu zároveň nemôžeme používať úplne mechanicky. Musíme dávať pozor na **redundant constraints** a na špeciálne **singular configurations**, pri ktorých sa môže geometrické správanie mechanizmu zmeniť.
 
-Grüblerovu formulu však nemožno používať úplne mechanicky. Predpokladá, že constraints sú nezávislé. Pri **redundant constraints** môže formula odpočítať príliš veľa voľnosti. V špeciálnych **singular configurations** sa môže nezávislosť constraints meniť a mechanizmus sa môže lokálne správať inak než v bežných configurations.
+A napokon musíme rozlišovať medzi DOF mechanizmu, DOF end-effectora a počtom actuatorov. Sú to tri rôzne veci. Mechanizmus môže obsahovať **internal DOF**, ktoré nemenia pose end-effectora, a môže obsahovať **passive joints**, ktoré sa pohybujú bez vlastného motora.
 
-Pri zložitejších robots zároveň rozlišujeme **DOF celého mechanizmu** a **DOF end-effectora**. Robot môže obsahovať internal degrees of freedom, ktoré nemenia výslednú pose pracovnej platformy.
+Ak si z lekcie zapamätáš jednu vetu, nech je to táto:
 
-Napokon, DOF nesmieme zamieňať s počtom actuatorov. **DOF opisuje mechanickú voľnosť. Actuator mechanizmus poháňa.** Passive joints sa môžu pohybovať aj bez vlastného motora.
-
-Ak si z tejto lekcie odnesieš jednu hlavnú myšlienku, nech je to táto:
-
-**Počet stupňov voľnosti robota nevzniká jednoduchým spočítaním jeho kĺbov. Vzniká z toho, koľko voľnosti majú jeho telesá a koľko z tejto voľnosti im vzájomné mechanické constraints odoberú.**`;
+**Počet DOF robota neurčuje počet jeho pohyblivých častí ani počet motorov. Určuje ho počet nezávislých možností pohybu, ktoré zostanú po zohľadnení všetkých mechanických constraints.**`;

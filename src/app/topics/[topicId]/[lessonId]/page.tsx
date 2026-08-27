@@ -135,6 +135,8 @@ export default function TopicLessonPage() {
               if (inRecap && trimmed.startsWith('## ')) return <div key={i} style={{ padding: '4px 16px 0', background: 'rgba(34,197,94,0.04)', borderLeft: '1px solid rgba(34,197,94,0.1)', borderRight: '1px solid rgba(34,197,94,0.1)' }}><h2 style={{ fontSize: 15, fontWeight: 700, color: '#4f2a85', margin: '6px 0 2px', lineHeight: 1.3, paddingLeft: 10, borderLeft: '3px solid #22c55e', opacity: 0.75 }}>{trimmed.slice(3)}</h2></div>;
               if (inRecap && trimmed === '---') return <div key={i} style={{ padding: '0 16px', background: 'rgba(34,197,94,0.04)', borderLeft: '1px solid rgba(34,197,94,0.1)', borderRight: '1px solid rgba(34,197,94,0.1)' }}><hr style={{ border: 'none', borderTop: '1px solid rgba(34,197,94,0.12)', margin: '6px 0' }} /></div>;
               if (inRecap) {
+                const recapImgMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+                if (recapImgMatch) return <div key={i} style={{ padding: '4px 16px', background: 'rgba(34,197,94,0.04)', borderLeft: '1px solid rgba(34,197,94,0.1)', borderRight: '1px solid rgba(34,197,94,0.1)' }}><img src={recapImgMatch[2]} alt={recapImgMatch[1]} style={{ width: '100%', borderRadius: 8, opacity: 0.85 }} /></div>;
                 if (!trimmed) return <div key={i} style={{ height: 2, background: 'rgba(34,197,94,0.04)', borderLeft: '1px solid rgba(34,197,94,0.1)', borderRight: '1px solid rgba(34,197,94,0.1)' }} />;
                 const recapFormatted = trimmed.split(/(\*\*[^*]+\*\*)/).map((part, j) => {
                   if (part.startsWith('**') && part.endsWith('**')) return <strong key={j} style={{ color: 'var(--text-secondary)' }}>{part.slice(2, -2)}</strong>;

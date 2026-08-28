@@ -12,6 +12,8 @@ import { ch232Content } from './lessons/ch2-3-2-content';
 import { ch232Exercises } from './lessons/ch2-3-2-exercises';
 import { ch24Content } from './lessons/ch2-4-content';
 import { ch24Exercises } from './lessons/ch2-4-exercises';
+import { ch25Content } from './lessons/ch2-5-content';
+import { ch25Exercises } from './lessons/ch2-5-exercises';
 import { ch231Exercises } from './lessons/ch2-3-1-exercises';
 
 export const projectTopics: ProjectTopic[] = [
@@ -83,6 +85,15 @@ export const projectTopics: ProjectTopic[] = [
         videoUrl: 'https://www.youtube.com/watch?v=A14ArEZ47LE',
         bookPage: 36,
         exercises: ch24Exercises,
+      },
+      {
+        id: 'ch2-5',
+        unitId: 'modern-robotics',
+        title: 'Chapter 2.5: Task Space and Workspace',
+        content: ch25Content,
+        videoUrl: 'https://www.youtube.com/watch?v=cOE18sRmfKA',
+        bookPage: 38,
+        exercises: ch25Exercises,
       },
     ],
   },

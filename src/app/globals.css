@@ -913,5 +913,7 @@ a { color: inherit; text-decoration: none; }
 /* Settings gear icon top right */
 [data-theme="light"] [style*="background: #0c255a"] svg { color: #333 !important; }
 
-/* Purple buttons - force white text in all modes */
+/* Purple buttons - force white text in all modes (must override light mode white→dark rule) */
 .purple-btn, .purple-btn * { color: #fff !important; }
+[data-theme="light"] .purple-btn,
+[data-theme="light"] .purple-btn * { color: #fff !important; }

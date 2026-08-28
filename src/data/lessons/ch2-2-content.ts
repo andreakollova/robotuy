@@ -218,6 +218,8 @@ Ground sám nepridáva DOF, pretože jeho configuration považujeme za pevnú.
 
 ## 12. Jeden joint v modeli spája dve telesá
 
+![Planar mechanizmus s prekrývajúcimi sa joints](/book/ch2/fig2-6.png)
+
 Pri jednoduchom robotickom ramene je väčšinou jasné, ktoré dva links joint spája. Pri komplikovanejších mechanizmoch to však nemusí byť na prvý pohľad také zrejmé.
 
 Predstav si jeden fyzický čap, na ktorom sú pripojené tri rôzne links. Keď sa na mechanizmus pozrieš, môže to vyzerať ako „jeden veľký joint".

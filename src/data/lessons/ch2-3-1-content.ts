@@ -219,6 +219,8 @@ Všetky zodpovedajú 1 DOF, ale ich topológia je odlišná.
 
 ## 09. Open interval a closed interval
 
+![Otvorený interval a topologická ekvivalencia s priamkou](/book/ch2/fig2-9.png)
+
 Pri intervaloch ešte rozlišujeme **open interval — otvorený interval** a **closed interval — uzavretý interval**.
 
 Closed interval zapisujeme:
@@ -332,6 +334,8 @@ Tento rozdiel bude veľmi dôležitý v ďalšej lekcii o **Configuration Space 
 ---
 
 ## 13. Cartesian product — skladanie väčšieho configuration space
+
+![Štyri topologicky rozdielne 2D configuration spaces a ich reprezentácie](/book/ch2/table2-2.png)
 
 Configuration space robota často pozostáva z viacerých nezávislých častí.
 

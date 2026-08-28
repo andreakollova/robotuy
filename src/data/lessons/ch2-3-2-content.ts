@@ -77,6 +77,8 @@ Také jednoduché to však nie je.
 
 ## 03. Problém sa ukáže na povrchu Zeme
 
+![Štyri topologicky rozdielne 2D configuration spaces a ich reprezentácie](/book/ch2/table2-2.png)
+
 Predstav si, že nechceme opisovať bod vo voľnom 3D priestore, ale iba miesto na povrchu Zeme.
 
 Na určenie polohy nám stačia dve hodnoty:
@@ -255,6 +257,8 @@ Preto **minimum čísel nemusí znamenať najlepšiu reprezentáciu**.
 ---
 
 ## 10. Embedded configuration space
+
+![Konfigurácia dverí, bodu v rovine a mince](/book/ch2/fig2-1.png)
 
 Na implicitnú reprezentáciu sa môžeme pozrieť ešte jedným veľmi užitočným spôsobom.
 

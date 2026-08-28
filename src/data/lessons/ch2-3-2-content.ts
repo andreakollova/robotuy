@@ -3,452 +3,499 @@
 
 export const ch232Content = `# Lekcia 6: Reprezentácia konfiguračného priestoru
 
-V predchádzajúcej lekcii sme sa venovali **topology — topológii configuration space**. Zistili sme, že samotný počet degrees of freedom nám hovorí iba to, koľko dimenzií konfiguračný priestor má. Nehovorí nám však, akú má tento priestor štruktúru ani ako sú jeho jednotlivé configurations navzájom usporiadané.
+V predchádzajúcej lekcii sme sa venovali topológii konfiguračného priestoru (configuration space). Už vieme, že počet stupňov voľnosti, teda degrees of freedom (DOF), nám hovorí, koľko nezávislých hodnôt potrebujeme na určenie konfigurácie systému.
 
-Napríklad rovina R2 a povrch gule S2 sú oba dvojrozmerné priestory. Na určenie jedného bodu v oboch prípadoch potrebujeme dve nezávislé hodnoty. Napriek tomu sa správajú úplne inak. Rovina pokračuje do nekonečna, zatiaľ čo povrch gule sa uzatvára sám do seba.
+Samotný počet DOF nám však ešte nepovie, ako máme konkrétnu konfiguráciu zapísať do počítača.
 
-Teraz však potrebujeme urobiť ďalší krok. V robotike nestačí vedieť, aký configuration space systém má. Ak chceme configuration robota uložiť do počítača, vypočítať jeho pohyb, sledovať jeho velocity alebo riadiť end-effector, každú konkrétnu configuration musíme vedieť zapísať pomocou čísel.
+Predstav si napríklad robota pohybujúceho sa po rovnej podlahe. Jeho polohu môžeme jednoducho zapísať pomocou dvoch čísel:
 
-Spôsob, akým tieto čísla zvolíme, nazývame **representation — reprezentácia** configuration space.
+**x = 2 m, y = 3 m**
 
-Pri jednoduchých Euclidean spaces je to prirodzené. Bod na priamke opíšeme jedným číslom, bod v rovine dvomi a bod v trojrozmernom priestore tromi. Pri zakrivených alebo cyklických spaces však vzniká problém: najmenší počet čísel nemusí byť zároveň najpraktickejší spôsob, ako configuration reprezentovať.
+To znamená, že robot sa nachádza 2 metre v jednom smere a 3 metre v druhom. Pri jednoduchom priestore, akým je rovina, je takýto zápis prirodzený.
 
-Práve preto sa v robotike používajú dva hlavné prístupy — **explicit parametrization** a **implicit representation**.
+Lenže nie každý konfiguračný priestor je rovina. Môže mať tvar kružnice, gule, torusu alebo ešte komplikovanejšieho priestoru. A práve vtedy vzniká zaujímavá otázka:
+
+**Ako bod z takéhoto priestoru čo najlepšie zapíšeme pomocou čísel?**
+
+Spôsob, akým konfiguráciu systému zapisujeme pomocou čísel, nazývame **representation — reprezentácia**.
+
+A tu sa dostávame k hlavnej myšlienke tejto lekcie: **počet čísel, ktoré používame na zápis konfigurácie, nemusí byť rovnaký ako počet DOF systému.**
 
 ---
 
 ## 01. Configuration space a representation nie sú to isté
 
-Najskôr musíme veľmi presne oddeliť dve veci.
+Najskôr je dôležité oddeliť dva pojmy, ktoré sa ľahko zamieňajú.
 
-**Configuration space** je množina všetkých configurations, ktoré systém môže nadobudnúť. **Representation** je spôsob, akým jednu konkrétnu configuration zapíšeme pomocou čísel.
+**Configuration space** je množina všetkých konfigurácií, ktoré môže systém fyzicky nadobudnúť.
 
-Rovnaký fyzický stav preto môžeme reprezentovať rôznymi spôsobmi.
+**Representation** je iba spôsob, akým jednu konkrétnu konfiguráciu zapíšeme pomocou čísel.
 
-Predstav si mobilného robota v miestnosti. Ak si coordinate frame zvolíme v ľavom dolnom rohu, robot môže mať súradnice napríklad x = 2 m a y = 3 m. Ak však coordinate frame presunieme do stredu miestnosti, jeho číselné súradnice sa zmenia, hoci sa robot fyzicky vôbec nepohol.
+Predstav si mobilného robota stojaceho v miestnosti. Ak umiestnime začiatok súradnicovej sústavy do ľavého dolného rohu miestnosti, jeho poloha môže byť:
 
-Podobne môžeme rovnakú vzdialenosť zapísať ako 1 meter alebo 1000 milimetrov. Čísla vyzerajú inak, ale fyzická realita je rovnaká.
+**(2, 3)**
 
-To znamená, že representation závisí od našej voľby, ale configuration space samotný nie.
+Ak však začiatok súradnicovej sústavy presunieme do stredu miestnosti, ten istý robot môže mať napríklad súradnice:
 
-Topológia opisuje samotný priestor. Representation je iba matematický jazyk, ktorý používame na jeho zápis.
+**(-1, 0.5)**
 
----
+Robot sa pritom vôbec nepohol. Zmenil sa iba spôsob, akým jeho polohu zapisujeme.
 
-## 02. Prečo vôbec potrebujeme číselnú reprezentáciu
+Podobne môžeme tú istú vzdialenosť zapísať ako 1 meter, 100 centimetrov alebo 1000 milimetrov. Fyzická realita zostáva rovnaká, menia sa iba čísla, ktoré používame na jej opis.
 
-Robotický systém musí pracovať numericky. Riadiaci program potrebuje poznať aktuálne joint positions, porovnávať configurations, počítať ich zmenu v čase a určovať position alebo orientation end-effectora.
+Preto je dobré si zapamätať:
 
-Preto každému bodu configuration space musíme priradiť určité čísla.
-
-Pri Euclidean spaces je to jednoduché. Bod v R môžeme zapísať jedným číslom x. Bod v R2 dvojicou (x, y) a bod v R3 trojicou (x, y, z).
-
-Dôležité je, že v R3 môžeme x, y aj z meniť nezávisle a každá trojica reálnych čísel predstavuje platný bod priestoru.
-
-Pri zakrivených spaces to už nemusí fungovať rovnako jednoducho. Tam sa ukáže, že počet DOF a počet čísel použitých v reprezentácii nemusia byť totožné.
+**Configuration je fyzický stav systému. Representation je jeho matematický zápis.**
 
 ---
 
-## 03. Dva DOF ešte neznamenajú dve bezproblémové súradnice
+## 02. Prečo robot vôbec potrebuje reprezentáciu?
 
-Predstav si povrch Zeme. Na určenie miesta na jej povrchu nám stačia dve hodnoty — napríklad **latitude** a **longitude**.
+Robotický program nedokáže pracovať s myšlienkou „rameno je trochu otočené doprava". Potrebuje konkrétne čísla.
 
-Povrch gule má preto 2 DOF.
+Musí vedieť napríklad, že prvý kĺb má uhol 30°, druhý 45° a tretí -10°. Z týchto hodnôt potom môže vypočítať polohu end-effectora, rýchlosť pohybu alebo ďalší príkaz pre motory.
 
-Rovnako má 2 DOF aj bod pohybujúci sa po rovine. Tam používame x a y.
+Pri jednoduchých euklidovských priestoroch je reprezentácia veľmi prirodzená.
 
-Na rovine fungujú x a y bez problémov všade. Neexistuje miesto, kde by jedna z týchto súradníc prestala dávať zmysel.
+Bod na priamke: **x**
 
-Pri latitude a longitude je situácia iná. Najvýraznejšie to vidíme na póloch.
+Bod v rovine: **(x, y)**
 
-Na severnom póle sa všetky poludníky stretávajú v jednom bode. Longitude preto prestáva byť jednoznačná. Hodnoty 0°, 30°, 90° alebo 180° môžu na póle označovať presne ten istý fyzický bod.
+Bod v trojrozmernom priestore: **(x, y, z)**
 
-Samotný povrch Zeme nemá žiadny problém. Problém vznikol iba v súradniciach, ktoré sme si zvolili.
+Pri bode v R3 máme tri DOF a zároveň používame tri čísla. Navyše môžeme x, y a z meniť nezávisle. Prakticky každá trojica reálnych čísel predstavuje nejaký bod v priestore.
 
----
+Mohlo by sa preto zdať, že všeobecne platí:
 
-## 04. Singularity of representation
+**3 DOF = 3 čísla**
 
-Miesto, kde sa zvolená reprezentácia prestane správať jednoznačne alebo stabilne, nazývame **singularity of the representation — singularita reprezentácie**.
+**2 DOF = 2 čísla**
 
-Pri latitude a longitude je typickým príkladom pól.
-
-Je veľmi dôležité pochopiť, že singularita reprezentácie nie je automaticky singularitou samotného configuration space.
-
-Robot sa môže po povrchu gule cez severný pól pohybovať úplne plynulo. Fyzicky sa nemusí diať nič zvláštne.
-
-Problém nastáva iba v číslach, ktoré používame na opis jeho position.
-
-To je zásadné rozlíšenie, pretože neskôr sa v robotike stretneme aj s inými typmi singularities. Nie každá singularita znamená, že sa robot mechanicky dostal do „pokazeného" stavu. Niekedy zlyháva iba zvolený spôsob reprezentácie.
+Také jednoduché to však nie je.
 
 ---
 
-## 05. Prečo singularita komplikuje velocity
+## 03. Problém sa ukáže na povrchu Zeme
 
-Problém sa ešte viac zvýrazní pri velocity.
+Predstav si, že nechceme opisovať bod vo voľnom 3D priestore, ale iba miesto na povrchu Zeme.
 
-Predstav si bod, ktorý sa po povrchu Zeme pohybuje rovnomernou rýchlosťou veľmi blízko severného pólu. Fyzicky sa pohybuje plynulo. Jeho skutočná speed nemusí byť vôbec veľká.
+Na určenie polohy nám stačia dve hodnoty:
 
-Longitude sa však môže meniť veľmi rýchlo, pretože poludníky sú v blízkosti pólu veľmi blízko pri sebe.
+- zemepisná šírka (latitude)
+- zemepisná dĺžka (longitude)
 
-Bod sa teda môže fyzicky posunúť iba o malú vzdialenosť, ale číselná hodnota longitude môže urobiť veľký skok.
+Povrch gule má teda 2 DOF. Nemôžeme sa pohybovať smerom dovnútra alebo von z gule, iba po jej povrchu.
 
-Ak velocity počítame ako zmenu súradníc v čase, môžeme tak dostať veľké hodnoty, hoci skutočný pohyb je pokojný.
+Na prvý pohľad je všetko perfektné:
 
-Pre riadenie a výpočty je to nepríjemné. Ak chceme representation, ktorá sa dobre správa v celom configuration space, musíme problém vyriešiť.
+**2 DOF → 2 čísla**
 
-A práve tu vstupujú do hry **explicit** a **implicit** representation.
+Problém sa objaví na póloch.
 
----
+Predstav si severný pól. Všetky poludníky sa tam stretávajú. To znamená, že longitude 0°, 30°, 90° aj 180° môžu označovať presne ten istý fyzický bod.
 
-## 06. Explicit parametrization
+Samotný povrch Zeme pritom nie je nijako poškodený alebo zvláštny. Cez severný pól sa môžeš normálne prejsť.
 
-Pri **explicit parametrization** sa snažíme používať presne toľko nezávislých parametrov, koľko má systém DOF.
+Problém je iba v súradniciach, ktoré sme si zvolili.
 
-Ak má configuration space n DOF, použijeme n čísel.
-
-Povrch gule má 2 DOF, takže môžeme použiť latitude a longitude. Planar rigid body má 3 DOF, preto ho môžeme reprezentovať ako q = (x, y, θ).
-
-Výhodou explicit parametrization je úspornosť. Nepoužívame viac čísel, než potrebujeme, a každý parameter predstavuje jednu nezávislú zložku configuration.
-
-Nevýhodou je, že pri zakrivených spaces nemusí existovať jedna jediná minimálna parametrizácia, ktorá sa dobre správa všade.
-
-Pri guli sa napríklad objaví singularita na póloch. Pri rotačných reprezentáciách sa podobné problémy objavia pri určitých orientations.
-
-Explicit parametrization teda používa minimum čísel, ale môže za to zaplatiť singularitami.
+Takéto problematické miesto nazývame **singularity of representation — singularita reprezentácie**.
 
 ---
 
-## 07. Coordinate chart
+## 04. Singularita nie je chyba fyzického priestoru
 
-Jedným riešením je nepokúšať sa celý configuration space pokryť jedinou parametrizáciou.
+Toto rozlíšenie je v robotike veľmi dôležité.
 
-Namiesto toho môžeme použiť viac lokálnych reprezentácií. Každá z nich dobre funguje iba v určitej časti priestoru.
+Ak má reprezentácia singularitu, neznamená to automaticky, že samotný robot alebo jeho configuration space má problém.
 
-Takúto lokálnu reprezentáciu nazývame **coordinate chart**.
+Predstav si lietadlo letiace cez severný pól. Lietadlo sa môže pohybovať úplne plynulo a konštantnou rýchlosťou.
 
-Chart teda nemusí opisovať celý configuration space. Stačí, ak v určitej oblasti poskytuje dobré a jednoznačné súradnice.
+Jeho longitude sa však môže začať meniť veľmi rýchlo. Dôvodom nie je zrýchlenie lietadla. Dôvodom je to, že poludníky sú pri póle stále bližšie pri sebe.
 
-Pri povrchu gule by sme napríklad mohli používať jednu sústavu súradníc v oblasti, kde funguje dobre. Keď sa dostaneme do blízkosti jej singularity, prejdeme na inú sústavu.
+Môže sa teda stať, že fyzický pohyb je veľmi malý, ale hodnota jednej zo súradníc urobí obrovský skok.
 
-Fyzický bod zostáva rovnaký. Mení sa iba jeho číselný zápis.
+A to je pri robotických výpočtoch nepríjemné. Ak zmenu súradnice používame na výpočet velocity, môžeme dostať veľmi veľké číslo napriek tomu, že skutočný pohyb robota je pokojný.
 
-Je to podobné ako pri coordinate frames. Jeden fyzický bod môže mať v jednom frame úplne iné coordinates než v inom frame.
-
----
-
-## 08. Atlas
-
-Ak viac coordinate charts spolu pokrýva celý configuration space, nazývame ich **atlas**.
-
-Názov je veľmi výstižný. Geografický atlas tiež nepoužíva jednu jedinú mapu na všetko. Má viac máp jednotlivých oblastí.
-
-Matematický atlas funguje podobne. Každý chart pokrýva určitú časť priestoru a jednotlivé charts sa prekrývajú, aby sme medzi nimi vedeli prechádzať.
-
-Výhodou je, že v každom charte stále používame minimálny počet parametrov.
-
-Nevýhodou je väčšia zložitosť. Program musí vedieť, ktorý chart práve používa, kedy sa blíži k jeho problematickej oblasti a ako prejsť na inú reprezentáciu.
-
-Pri R3 nič také nepotrebujeme. Jedna trojica x, y, z funguje všade.
-
-Pri zakrivených spaces však môže atlas predstavovať cenu za používanie minimálneho počtu parametrov.
+Potrebujeme preto lepší spôsob reprezentácie.
 
 ---
 
-## 09. Implicit representation
+## 05. Prvý prístup: explicit parametrization
 
-Druhým prístupom je **implicit representation**.
+Jednou možnosťou je používať presne toľko parametrov, koľko má systém stupňov voľnosti.
 
-Tu sa vzdáme požiadavky používať minimum čísel. Namiesto toho použijeme viac premenných, ale pridáme constraints, ktoré určia, ktoré kombinácie hodnôt sú platné.
+Tomuto prístupu hovoríme **explicit parametrization — explicitná parametrizácia**.
 
-Predstav si povrch jednotkovej gule.
+Ak má systém 2 DOF, používame dve nezávislé čísla. Ak má 3 DOF, používame tri.
 
-Vieme, že má 2 DOF.
+Napríklad rigid body pohybujúce sa v rovine môžeme zapísať ako:
 
-Namiesto latitude a longitude môžeme bod opísať trojicou:
+**q = (x, y, θ)**
+
+kde:
+
+- x určuje polohu v jednom smere,
+- y určuje polohu v druhom smere,
+- θ určuje natočenie.
+
+Takéto teleso má 3 DOF a používame presne tri parametre.
+
+Výhodou explicitnej parametrizácie je, že je úsporná. Nepoužívame žiadne zbytočné čísla.
+
+Nevýhodou je, že pri zakrivených priestoroch nemusí existovať jedna minimálna reprezentácia, ktorá bude dobre fungovať všade.
+
+Presne to sme videli pri latitude a longitude.
+
+---
+
+## 06. Coordinate charts: keď jedna mapa nestačí
+
+Jedným riešením problému je prestať sa snažiť opísať celý configuration space jedinou sústavou súradníc.
+
+Namiesto toho ho môžeme rozdeliť na oblasti a pre každú používať súradnice, ktoré v nej fungujú dobre.
+
+Takejto lokálnej reprezentácii hovoríme **coordinate chart**.
+
+Veľmi dobrá analógia je obyčajná mapa Zeme. Nesnažíme sa celý guľatý povrch planéty dokonale preniesť na jeden plochý papier. Namiesto toho môžeme mať mapu Európy, mapu Ázie, mapu Ameriky a ďalšie mapy.
+
+Každá funguje dobre vo svojej oblasti.
+
+Keď viac takýchto charts spolu pokrýva celý priestor, nazývame ich **atlas**.
+
+Matematický atlas teda funguje podobne ako geografický atlas: namiesto jednej dokonalej mapy máme viac lokálnych máp.
+
+Stále môžeme používať minimálny počet súradníc, ale za cenu toho, že program musí vedieť, ktorý chart práve používa a kedy má prejsť na iný.
+
+Existuje však aj druhá cesta.
+
+---
+
+## 07. Druhý prístup: použime viac čísel
+
+Vráťme sa k povrchu gule.
+
+Vieme, že má 2 DOF. Namiesto latitude a longitude však môžeme bod na guli opísať úplne obyčajnými 3D súradnicami:
 
 **(x, y, z)**
 
-Používame tri čísla, ale x, y a z nemôžu byť ľubovoľné. Musia spĺňať:
+Používame teda tri čísla.
 
-**x2 + y2 + z2 = 1**
+Na prvý pohľad to vyzerá nesprávne. Veď povrch gule má iba 2 DOF.
 
-Táto equation zabezpečí, že bod zostane na povrchu jednotkovej gule.
+Rozdiel je v tom, že x, y a z nemôžeme voliť ľubovoľne.
 
-Máme teda tri variables a jeden independent constraint. Zostávajú dve nezávislé možnosti.
+Ak ide o jednotkovú guľu, musia vždy spĺňať:
 
-Preto:
+**x² + y² + z² = 1**
+
+Toto je **constraint — obmedzenie**.
+
+Napríklad bod:
+
+**(1, 0, 0)**
+
+je platný, pretože: 1² + 0² + 0² = 1
+
+Ale bod:
+
+**(1, 1, 1)**
+
+na povrchu jednotkovej gule neleží, pretože: 1² + 1² + 1² = 3
+
+Máme teda tri čísla, ale nemôžeme ich meniť úplne nezávisle.
+
+Práve preto zostávajú iba **2 DOF**.
+
+---
+
+## 08. Implicit representation
+
+Tento druhý spôsob nazývame **implicit representation — implicitná reprezentácia**.
+
+Myšlienka je jednoduchá:
+
+**Namiesto toho, aby sme hľadali minimálny počet súradníc, použijeme viac čísel, ale pridáme matematické podmienky, ktoré určujú, ktoré kombinácie sú platné.**
+
+Pri povrchu jednotkovej gule máme:
+
+- 3 čísla: x, y, z
+- 1 constraint: x² + y² + z² = 1
+
+Výsledkom sú:
 
 **3 premenné - 1 nezávislé obmedzenie = 2 DOF**
 
-Presne toľko, koľko povrch gule skutočne má.
+A to presne zodpovedá povrchu gule.
+
+Toto je jedna z najdôležitejších myšlienok celej lekcie:
+
+**Počet čísel v reprezentácii nie je automaticky počet DOF. DOF hovoria o tom, koľko hodnôt môžeme meniť nezávisle.**
 
 ---
 
-## 10. Počet čísel nie je počet DOF
+## 09. Prečo by sme dobrovoľne používali viac čísel?
 
-Toto je jedna z najdôležitejších myšlienok celej lekcie.
+Mohlo by sa zdať, že používať tri čísla namiesto dvoch je zbytočné.
 
-**Počet čísel použitých v representation nemusí byť rovnaký ako počet DOF.**
+Lenže porovnajme oba zápisy.
 
-Pri guli používame tri čísla x, y a z, ale stále máme iba 2 DOF.
+Pri latitude a longitude používame iba dve čísla, ale na póloch máme problém.
 
-Dôvod je jednoduchý: tieto tri hodnoty nie sú nezávislé.
+Pri x, y, z používame tri čísla, no bod môže plynulo prejsť cez severný pól a nič zvláštne sa nestane. Hodnoty x, y a z sa jednoducho ďalej plynulo menia.
 
-Ak zvolíme x a y, z už nemôžeme nastaviť ľubovoľne. Musí spĺňať equation x2 + y2 + z2 = 1.
+Za jedno číslo navyše sme teda získali reprezentáciu, ktorá sa môže správať oveľa príjemnejšie.
 
-Všeobecne platí, že ak máme systém s n DOF a reprezentujeme ho pomocou m čísel, kde m je väčšie než n, musia medzi týmito číslami existovať constraints, ktoré zredukujú počet nezávislých hodnôt späť na n.
+To je v robotike veľmi častý trade-off:
 
-Pri 2 DOF môžeme použiť tri čísla a jeden constraint. Pri 3 DOF môžeme použiť štyri čísla a jeden constraint alebo napríklad viac hodnôt a viac independent constraints.
+- **menej parametrov** → úspornejší zápis, ale potenciálne komplikovanejšie správanie
+- **viac parametrov + constraints** → redundantnejší zápis, ale často jednoduchšie a stabilnejšie výpočty
 
-Rozhodujúca otázka preto nie je „koľko čísel zapisujeme", ale **koľko z nich môžeme meniť nezávisle**.
+Preto **minimum čísel nemusí znamenať najlepšiu reprezentáciu**.
 
 ---
 
-## 11. Embedded configuration space
+## 10. Embedded configuration space
 
-Implicit representation môžeme chápať aj geometricky.
+Na implicitnú reprezentáciu sa môžeme pozrieť ešte jedným veľmi užitočným spôsobom.
 
-Povrch gule je dvojrozmerný, ale nachádza sa v R3. Je teda **embedded — vložený** do trojrozmerného priestoru.
+Povrch gule je dvojrozmerný, ale nachádza sa v trojrozmernom priestore R3.
 
-Používame jednoduché coordinates x, y a z väčšieho priestoru a constraint nám určuje, ktoré body patria na samotný surface.
+Hovoríme preto, že je do R3 **embedded — vložený**.
 
-Rovnaký princíp sa používa aj pri robotoch.
+Predstav si jednoducho nafúknutý balón v miestnosti. Miestnosť je trojrozmerná. Samotný povrch balóna je však dvojrozmerný, pretože ak sa pohybuješ iba po jeho povrchu, máš dve nezávislé možnosti pohybu.
 
-Configuration space môže byť komplikovaný zakrivený priestor, ale môžeme ho reprezentovať vo väčšom Euclidean space. Potom použijeme jednoduché číselné coordinates a constraints vyberú iba fyzicky platné configurations.
+Súradnice x, y, z opisujú celý priestor okolo balóna.
 
-Veľmi užitočná intuícia preto je:
+Constraint: **x² + y² + z² = 1**
+
+z tohto veľkého priestoru vyberie iba body, ktoré ležia na povrchu gule.
+
+Pre implicitnú reprezentáciu si preto môžeš zapamätať veľmi jednoduchú predstavu:
 
 **väčší jednoduchý priestor + constraints = skutočný configuration space**
 
-Nemusíme vždy hľadať minimálne súradnice priamo na komplikovanom priestore. Niekedy je praktickejšie vložiť ho do väčšieho priestoru.
+Tento princíp sa neskôr objaví aj pri oveľa komplikovanejších robotoch.
 
 ---
 
-## 12. Prečo používať viac čísel
+## 11. Najdôležitejší robotický príklad: orientation
 
-Na prvý pohľad môže implicit representation pôsobiť neefektívne.
+Teraz sa dostávame k dôvodu, prečo je táto téma pre robotiku taká dôležitá.
 
-Ak má povrch gule 2 DOF, prečo používať tri numbers?
+Voľné rigid body v 3D priestore má 6 DOF:
 
-Pretože minimum čísel nemusí znamenať maximum praktickosti.
+- 3 DOF pre position
+- 3 DOF pre orientation
 
-Latitude a longitude používajú iba dve hodnoty, ale majú singularity.
+Samotná orientácia telesa má teda tri stupne voľnosti.
 
-Cartesian coordinates x, y, z používajú tri hodnoty, ale fungujú plynulo na celom povrchu gule. Bod môže prejsť cez severný pól a jeho x, y a z sa stále menia plynulo.
+Mohli by sme ju preto reprezentovať tromi uhlami, napríklad:
 
-Nemusíme prepínať charts a nemusíme riešiť zlyhanie longitude.
+**roll, pitch, yaw**
 
-Za jedno redundantné číslo teda získame veľmi užitočnú vlastnosť — **representation, ktorá funguje globálne bez coordinate singularity tohto typu**.
+To je explicitná parametrizácia: **3 DOF → 3 čísla**
 
-V robotike je to často výhodnejšie než striktne minimalizovať počet parametrov.
+Je úsporná a intuitívna.
 
----
+Má však podobný problém ako latitude a longitude. Pri určitých orientáciách sa táto reprezentácia dostane do singularity.
 
-## 13. Explicit a implicit representation
+Teleso pritom nemusí byť v žiadnej fyzicky zvláštnej polohe. Problém je opäť iba v spôsobe, akým sme jeho orientáciu zapísali.
 
-Oba prístupy riešia rovnaký problém: ako previesť bod configuration space na čísla.
+Pre robotiku, kde orientácie neustále skladáme, meníme a používame vo výpočtoch, to môže byť nepraktické.
 
-Pri **explicit parametrization** používame presne toľko independent parameters, koľko má priestor DOF.
-
-Pri guli napríklad latitude a longitude.
-
-Pri **implicit representation** používame viac čísel a pridáme constraints.
-
-Pri guli napríklad x, y, z s podmienkou x2 + y2 + z2 = 1.
-
-Oba zápisy opisujú ten istý configuration space. Rozdiel je iba v stratégii.
-
-Explicit parametrization je úspornejšia, ale môže vyžadovať viac coordinate charts alebo môže obsahovať singularities.
-
-Implicit representation obsahuje redundanciu, ale často dáva jednoduchšiu a globálnejšiu formu vhodnú na výpočty.
-
-Nie je teda správne pýtať sa, ktorý prístup je vždy lepší. Ide o **trade-off**.
+A preto Modern Robotics používa predovšetkým inú reprezentáciu.
 
 ---
 
-## 14. Orientation rigid body
+## 12. Rotation matrix
 
-Celá táto téma sa stane veľmi praktickou pri reprezentácii **orientation rigid body** v 3D priestore.
+Orientáciu rigid body môžeme reprezentovať pomocou **rotation matrix — rotačnej matice**.
 
-Voľné rigid body má 6 DOF. Tri patria position a tri orientation.
+Tá má veľkosť 3 x 3:
 
-Samotná orientation má teda **3 rotational DOF**.
+**R =**
+**r11  r12  r13**
+**r21  r22  r23**
+**r31  r32  r33**
 
-Mohli by sme očakávať, že najlepšia representation bude používať tri numbers.
+Má teda spolu **9 čísel**.
 
-Takéto reprezentácie existujú. Príkladom sú **roll, pitch, yaw angles** alebo rôzne **Euler angles**.
+Tu by sa mala okamžite rozsvietiť kontrolka:
 
-Používajú presne tri parametre, takže sú minimálne.
+**Ako môže orientation s 3 DOF potrebovať 9 čísel?**
 
-Majú však problém podobný latitude a longitude: pri určitých orientations vznikajú **singularities**.
+Odpoveď už poznáme.
 
-Samotné teleso pritom môže byť vo fyzicky úplne normálnej orientation. Problém opäť vzniká iba v zvolenom číselnom zápise.
+Tých deväť čísel nie je nezávislých.
 
-Pri robotike je to nepríjemné, pretože orientation často neustále meníme a používame v ďalších výpočtoch.
+Stĺpce rotation matrix reprezentujú osi jedného coordinate frame vyjadrené v inom frame. Tieto osi musia mať jednotkovú dĺžku a musia byť navzájom kolmé. Matica navyše musí reprezentovať skutočnú rotáciu, nie napríklad zrkadlenie.
 
----
+Máme teda veľa čísel, ale zároveň constraints.
 
-## 15. Rotation matrix
+Po zohľadnení všetkých týchto obmedzení zostávajú iba:
 
-Modern Robotics preto používa na orientation najmä **rotation matrix**.
+**3 nezávislé rotational DOF**
 
-Rotation matrix má rozmer 3 × 3 a obsahuje deväť čísel.
-
-To môže pôsobiť zvláštne. Orientation má iba 3 DOF, ale zapisujeme deväť values.
-
-Týchto deväť hodnôt však nie je nezávislých.
-
-Stĺpce rotation matrix predstavujú osi jedného coordinate frame vyjadrené v inom frame. Musia mať jednotkovú dĺžku a musia byť navzájom kolmé. Zároveň musí matrix predstavovať správnu orientation, nie zrkadlenie.
-
-Tieto podmienky vytvárajú constraints.
-
-Výsledkom je, že z deviatich numbers zostávajú iba **3 independent rotational DOF**.
-
-Rotation matrix je teda typický príklad **implicit representation**.
-
-Podobne ako pri guli používame viac čísel, ale constraints zabezpečujú správny počet nezávislých možností.
+Rotation matrix je preto krásnym príkladom **implicit representation**.
 
 ---
 
-## 16. Prečo deväť čísel môže byť lepších než tri
+## 13. Prečo používať 9 čísel, keď by mohli stačiť 3?
 
-Použiť deväť hodnôt namiesto troch môže vyzerať neefektívne, ale rotation matrix má veľké praktické výhody.
+Pretože rotation matrices majú obrovskú praktickú výhodu: veľmi prirodzene zapadajú do lineárnej algebry.
 
-Predovšetkým sa vyhýba **coordinate singularities** typickým pre trojparametrové angle representations.
+Pomocou matíc môžeme jednoducho otáčať vektory, skladať viac rotácií za sebou a meniť vyjadrenie veličín medzi rôznymi coordinate frames.
 
-Zároveň veľmi dobre zapadá do **linear algebra**.
+Ak máme dve rotácie:
 
-Rotation matrices môžeme jednoducho násobiť, skladať, používať na transformáciu vectorov a meniť pomocou nich vyjadrenie medzi coordinate frames.
+**R1 a R2**
 
-A presne tieto operácie budeme v robotike robiť neustále.
+môžeme ich kombinovať násobením matíc.
 
-Preto platí veľmi praktické pravidlo:
+A presne takéto operácie budeme v robotike robiť neustále.
+
+Preto je často výhodnejšie uložiť deväť navzájom previazaných čísel než tri minimálne parametre, s ktorými by boli výpočty problematickejšie.
+
+Opäť sa vraciame k rovnakému pravidlu:
 
 **Najmenší počet parametrov nemusí znamenať najjednoduchšiu matematiku.**
 
-Niekedy je redundantná representation lepšia práve preto, že s ňou dokážeme pracovať čistejšie a stabilnejšie.
+---
+
+## 14. Unit quaternion: ešte jedna možnosť
+
+Rotation matrix nie je jediný spôsob reprezentácie orientácie.
+
+Veľmi často sa používa aj **unit quaternion**.
+
+Quaternion reprezentuje orientáciu pomocou **4 čísel**.
+
+Orientácia má však stále iba 3 DOF. Preto ani tieto štyri čísla nemôžu byť úplne nezávislé. Musia spĺňať podmienku jednotkovej dĺžky.
+
+Zjednodušene:
+
+**4 čísla - 1 constraint = 3 DOF**
+
+Aj quaternion je teda **implicitná reprezentácia**.
+
+Oproti rotation matrix používa menej čísel a zároveň sa vyhýba singularitám typickým pre Euler angles.
+
+Má však jednu zaujímavú vlastnosť: quaternion q a quaternion -q predstavujú rovnakú fyzickú orientáciu.
+
+V Modern Robotics sa však budeme sústreďovať najmä na rotation matrices, pretože veľmi prirodzene nadväzujú na transformácie rigid bodies.
 
 ---
 
-## 17. Unit quaternion
+## 15. Rovnaká myšlienka pri closed-chain robotoch
 
-Rotation matrix nie je jediná možnosť.
+Implicitná reprezentácia nie je užitočná iba pri orientácii.
 
-Ďalšou známou reprezentáciou orientation je **unit quaternion**.
+Predstav si closed-chain mechanism, teda mechanizmus, v ktorom kĺby a články vytvárajú uzavretú slučku.
 
-Quaternion používa štyri numbers.
+Pri obyčajnom otvorenom robotickom ramene môžeme jednotlivé joint angles často meniť nezávisle.
 
-Orientation však má stále 3 DOF, takže tieto štyri hodnoty nemôžu byť všetky nezávislé. Unit quaternion musí mať jednotkovú dĺžku.
+V uzavretom mechanizme to tak byť nemusí. Keď pohneš jedným kĺbom, ostatné sa musia prispôsobiť tak, aby sa mechanická slučka neroztrhla.
 
-Máme teda:
+Mohli by sme sa snažiť nájsť iba minimálny počet nezávislých joint coordinates.
 
-**4 čísla + 1 constraint → 3 DOF**
+Často je však jednoduchšie urobiť niečo iné:
 
-Aj quaternion je implicitná representation.
+**zapíšeme všetky joint coordinates a pridáme constraints, ktoré zabezpečia uzavretie mechanizmu.**
 
-V porovnaní s rotation matrix používa menej hodnôt a zároveň sa vyhýba singularitám typickým pre Euler-angle representations.
+Tým dostaneme rovnakú myšlienku ako pri guli.
 
-Má však jednu zaujímavú vlastnosť: quaternion q a quaternion -q reprezentujú tú istú fyzickú orientation.
+Pri guli sme mali: **x, y, z + constraint**
 
-Preto hovoríme, že quaternion representation poskytuje **double cover** priestoru orientations.
+Pri closed-chain robotovi máme: **všetky joint coordinates + loop-closure constraints**
 
-Modern Robotics bude však hlavne používať rotation matrices, pretože prirodzene zapadajú do ďalšieho výkladu rigid-body motions.
-
----
-
-## 18. Closed-chain robots
-
-Implicit representation je veľmi užitočná aj pri **closed-chain mechanisms**.
-
-Pri closed chain sa jednotlivé joint coordinates nemôžu meniť nezávisle. Ak zmeníme jeden joint, ostatné sa musia prispôsobiť tak, aby mechanická slučka zostala uzavretá.
-
-Môžeme sa pokúsiť nájsť minimálny počet independent coordinates, ale pri komplikovanom mechanizme to môže byť veľmi nepraktické.
-
-Jednoduchší prístup je použiť všetky joint coordinates.
-
-Týchto čísel bude viac než skutočný počet DOF.
-
-Potom však pridáme **loop-closure constraints**, ktoré určia, ktoré combinations joint positions sú fyzicky možné.
-
-Skutočný configuration space closed-chain robota tak môžeme chápať ako priestor s menšou dimenziou vložený do väčšieho priestoru všetkých joint coordinates.
-
-Je to presne rovnaký princíp ako pri povrchu gule vloženom do R3.
+V oboch prípadoch používame väčší priestor a constraints z neho vyberajú iba fyzicky možné konfigurácie.
 
 ---
 
-## 19. Explicit vs. implicit — čo je skutočný rozdiel
+## 16. Explicit vs. implicit — aký je teda skutočný rozdiel?
 
-Teraz už môžeme oba prístupy porovnať bez zbytočných definícií.
+Teraz už môžeme oba prístupy porovnať veľmi jednoducho.
 
-Pri **explicit parametrization** používame minimum čísel. Každé zodpovedá jednej nezávislej freedom.
+Pri **explicit parametrization** používame minimálny počet nezávislých parametrov.
 
-Výhodou je úspornosť.
+Napríklad povrch Zeme: **latitude + longitude**
 
-Nevýhodou je, že pri zakrivených spaces môže vzniknúť singularita alebo potreba používať viac coordinate charts.
+Máme 2 DOF a používame 2 čísla.
 
-Pri **implicit representation** používame viac čísel, než je počet DOF, ale tieto numbers spájajú constraints.
+Výhodou je úspornosť. Nevýhodou môže byť singularita alebo potreba používať viac coordinate charts.
 
-Výhodou môže byť jedna globálna, plynulá representation vhodná na výpočty.
+Pri **implicit representation** použijeme viac čísel, ale spojíme ich constraints.
 
-Nevýhodou je redundancia a potreba udržiavať constraints splnené.
+Napríklad povrch jednotkovej gule: **x, y, z**
 
-Najjednoduchší príklad ostáva povrch gule:
+s podmienkou: **x² + y² + z² = 1**
 
-**latitude, longitude → explicit**
+Používame tri čísla, ale stále máme iba 2 DOF.
 
-**x, y, z + x2 + y2 + z2 = 1 → implicit**
-
-Configuration space je v oboch prípadoch rovnaký. Mení sa iba spôsob, akým ho zapisujeme.
+Ani jeden prístup nemení samotný configuration space. Mení sa iba spôsob, akým jeho body zapisujeme.
 
 ---
 
-## 20. Prečo je táto lekcia dôležitá
+## 17. Ako si to celé predstaviť
 
-Táto lekcia nie je iba matematická odbočka. Pripravuje základ pre ďalšiu časť robotiky.
+Ak si máš z tejto lekcie odniesť jednu mentálnu predstavu, nech je to povrch Zeme.
 
-Pri rigid-body motions budeme potrebovať presne reprezentovať position a orientation. Pri orientation použijeme **rotation matrices**, teda implicit representation.
+Miesto na Zemi môžeš opísať dvoma spôsobmi.
 
-Neskôr ich budeme používať pri transformáciách medzi coordinate frames, forward kinematics, velocities aj pri práci s end-effectorom.
+**Možnosť A — minimum čísel**
 
-Pri closed-chain robots sa implicit representation zasa objaví cez joint coordinates a **loop-closure constraints**.
+Použiješ: **latitude, longitude**
 
-Najdôležitejšia pointa preto nie je zapamätať si definície explicit a implicit.
+To je explicit parametrization.
 
-Dôležité je pochopiť problém, ktorý riešia.
+Potrebuješ iba dve čísla pre 2 DOF, ale na póloch sa súradnice správajú problematicky.
 
-Configuration space je geometrický priestor všetkých možných configurations. Počítač však potrebuje čísla.
+**Možnosť B — viac čísel**
 
-Pri jednoduchých Euclidean spaces ich môžeme zvoliť priamo. Pri zakrivených spaces môže minimálny počet coordinates vytvárať singularities.
+Použiješ: **x, y, z**
 
-Máme preto dve možnosti: buď používame minimum parametrov a podľa potreby viac lokálnych charts, alebo použijeme viac čísel spojených constraints.
+a pridáš: **x² + y² + z² = 1**
 
-A práve druhý prístup bude v robotike mimoriadne dôležitý.
+To je implicit representation.
+
+Potrebuješ síce tri čísla, ale reprezentácia sa môže správať plynulo po celom povrchu.
+
+Presne rovnaké rozhodnutie budeme neskôr robiť pri orientácii robotov.
+
+Môžeme použiť minimálne tri uhly, napríklad roll, pitch a yaw, alebo redundantnejšiu rotation matrix s deviatimi hodnotami a constraints.
+
+A práve rotation matrices budú pre ďalšie kapitoly Modern Robotics mimoriadne dôležité.
 
 ---
 
 :::summary
 
-**Configuration space** je množina všetkých možných configurations systému. **Representation** je iba spôsob, akým konkrétnu configuration zapíšeme pomocou čísel. Rovnaký configuration space môžeme reprezentovať rôznymi spôsobmi bez toho, aby sa fyzický systém zmenil.
+**Configuration space** opisuje všetky možné konfigurácie systému. **Representation** hovorí, akými číslami konkrétnu konfiguráciu zapíšeme.
 
-Pri jednoduchých Euclidean spaces je reprezentácia priamočiara. Bod v R3 zapíšeme pomocou x, y a z a všetky tri hodnoty sú nezávislé.
+Tieto dve veci preto nesmieme zamieňať. Fyzický configuration space sa nemení podľa toho, aké súradnice si vyberieme.
 
-Pri zakrivených spaces môže minimálna representation vytvárať singularities. Povrch gule má 2 DOF a môžeme ho reprezentovať latitude a longitude. Ide o **explicit parametrization**, pretože používame presne dve independent values. Na póloch však longitude prestáva byť jednoznačná.
+Pri jednoduchých priestoroch je reprezentácia priamočiara. Bod v R3 zapíšeme ako (x, y, z) a všetky tri hodnoty môžeme meniť nezávisle.
 
-Jedným riešením sú **coordinate charts**. Viac charts, ktoré spolu pokrývajú celý priestor, tvorí **atlas**.
+Pri zakrivených priestoroch môže byť situácia komplikovanejšia. Povrch gule má 2 DOF, takže ho môžeme explicitne reprezentovať pomocou latitude a longitude. Takáto minimálna reprezentácia však obsahuje singularity na póloch.
 
-Druhým riešením je **implicit representation**. Pri nej používame viac numbers než je počet DOF, ale pridáme constraints. Povrch jednotkovej gule môžeme napríklad reprezentovať ako x, y, z s podmienkou x2 + y2 + z2 = 1. Máme tri numbers, ale stále iba 2 DOF.
+Jedným riešením je používať viac lokálnych coordinate charts. Súbor charts pokrývajúcich celý priestor nazývame **atlas**.
 
-Dôležitým robotickým príkladom je orientation rigid body. Má 3 rotational DOF, ale **rotation matrix** používa deväť numbers spojených constraints. **Unit quaternion** používa štyri numbers a jeden constraint.
+Druhou možnosťou je **implicit representation**. Použijeme viac čísel, ale pridáme constraints. Povrch jednotkovej gule môžeme napríklad zapísať pomocou x, y, z, pričom musí platiť:
 
-Implicit representation sa veľmi prirodzene používa aj pri **closed-chain robots**, kde môžeme použiť všetky joint coordinates a constraints určia, ktoré combinations predstavujú fyzicky možné configurations.
+**x² + y² + z² = 1**
 
-Najdôležitejšia myšlienka celej lekcie je preto jednoduchá:
+Máme tri čísla, ale stále iba 2 DOF, pretože tieto tri hodnoty nie sú nezávislé.
 
-**Počet čísel použitých v representation nemusí byť rovnaký ako počet DOF. Rozhoduje počet nezávislých hodnôt.**
+Rovnaký princíp sa objavuje pri orientácii rigid body. Orientácia má 3 DOF, ale **rotation matrix** používa 9 čísel, ktoré sú navzájom previazané constraints. **Unit quaternion** používa 4 čísla a tiež obsahuje constraint.
 
-A ešte praktickejšie:
+A rovnakú logiku môžeme použiť pri closed-chain mechanizmoch: namiesto hľadania minimálneho počtu súradníc môžeme použiť všetky joint coordinates a pomocou loop-closure constraints určiť, ktoré kombinácie sú fyzicky možné.
 
-**Minimum parametrov nemusí znamenať najlepšiu reprezentáciu. Niekedy je výhodnejšie použiť viac čísel, ak tým získame stabilnejšiu a jednoduchšiu matematiku.**
+Najdôležitejšie pravidlo celej lekcie je preto:
+
+**Počet čísel v reprezentácii nemusí byť rovnaký ako počet DOF. DOF určuje počet hodnôt, ktoré môžeme meniť nezávisle.**
+
+A z praktického pohľadu ešte dôležitejšie:
+
+**Minimum parametrov nemusí znamenať najlepšiu reprezentáciu. Niekedy sa oplatí použiť viac čísel, ak tým získame jednoduchšie, plynulejšie a stabilnejšie výpočty.**
 
 :::`;

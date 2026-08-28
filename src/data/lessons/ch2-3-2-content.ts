@@ -258,8 +258,6 @@ Preto **minimum čísel nemusí znamenať najlepšiu reprezentáciu**.
 
 ## 10. Embedded configuration space
 
-![Konfigurácia dverí, bodu v rovine a mince](/book/ch2/fig2-1.png)
-
 Na implicitnú reprezentáciu sa môžeme pozrieť ešte jedným veľmi užitočným spôsobom.
 
 Povrch gule je dvojrozmerný, ale nachádza sa v trojrozmernom priestore R3.

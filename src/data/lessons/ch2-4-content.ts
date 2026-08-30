@@ -1311,33 +1311,17 @@ Najjednoduchšie si to môžeš zapamätať takto: **holonomic constraint určuj
 
 ## 29. Prečo sú nonholonomic constraints dôležité v motion planning?
 
-Predstav si dve bodky na mape:
+Motion planning znamená plánovanie pohybu robota z počiatočnej configuration do cieľovej configuration. Nestačí pritom nájsť iba geometrickú cestu, ktorá neprechádza cez prekážky. Robot musí byť zároveň fyzicky schopný túto cestu vykonať. A práve tu sú veľmi dôležité nonholonomic constraints.
 
-štart A,
+Predstavme si mobilného robota s klasickými kolesami alebo obyčajné auto. Robot sa nachádza na parkovisku a chceme ho dostať na voľné miesto napravo. Ak by motion planner ignoroval nonholonomic constraints, mohol by vytvoriť veľmi jednoduchý plán: „posuň sa priamo doprava o dva metre." Z geometrického pohľadu je táto cesta úplne v poriadku. Nie je tam žiadna prekážka a cieľová configuration je dostupná. Problém je, že klasické kolesá sa nemôžu pohybovať priamo bokom bez šmýkania.
 
-cieľ B.
+Motion planner preto musí vedieť, že robot nemôže vykonať ľubovoľný pohyb v ľubovoľnom smere. Pri rolling without slipping má v každom okamihu povolené iba určité velocities. Ak sa chce dostať doprava, musí napríklad zatočiť, ísť dopredu, zmeniť smer, cúvnuť a následne sa vyrovnať. Výsledkom môže byť presne tá istá cieľová configuration, ale cesta k nej musí rešpektovať možnosti pohybu robota.
 
-Ak máme robot, ktorý sa dokáže ľubovoľne posúvať v x aj y, môžeme nájsť collision-free path a robot ju môže približne sledovať.
+Najjednoduchšie si to môžeš zapamätať takto:
 
-Pri aute to nestačí.
+**Motion planning sa nepýta iba „Kadial vedie voľná cesta do cieľa?", ale aj „Dokáže sa môj konkrétny robot po tejto ceste skutočne pohybovať?"**
 
-Môže existovať nádherná krátka geometrická cesta, ktorá vedie priamo bokom.
-
-Lenže auto ju fyzicky nedokáže vykonať.
-
-Motion planner preto nemôže riešiť iba:
-
-**„Kde nie sú prekážky?"**
-
-Musí riešiť aj:
-
-**„Aké trajectories dokáže tento konkrétny systém vykonať vzhľadom na svoje kinematické constraints?"**
-
-Preto je plánovanie pohybu auta zásadne iné než plánovanie pohybu všesmerového robota.
-
-Nonholonomic constraints teda nie sú iba teoretická matematická zaujímavosť.
-
-Pri mobilnej robotike priamo určujú, aké trajectories sú realizovateľné.
+A pri autách, wheeled robots a ďalších nonholonomic systémoch je práve druhá otázka rozhodujúca.
 
 ---
 

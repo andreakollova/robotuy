@@ -1239,43 +1239,25 @@ A to je typický **nonholonomic velocity constraint**.
 
 ---
 
-## 26. Prečo rolling constraint neznižuje automaticky DOF?
+## 26. Prečo rolling constraint automaticky neznižuje DOF?
 
-Tu vzniká jedna z najčastejších nejasností.
+Pri rolling without slipping je veľmi dôležité rozlišovať medzi tým, aké configurations môže systém mať, a tým, akým spôsobom sa medzi nimi môže pohybovať. Práve preto rolling constraint automaticky neznamená, že systém má menej degrees of freedom (DOF).
 
-Povieš si:
+Predstavme si obyčajné auto pohybujúce sa po rovnom parkovisku. Jeho configuration môžeme opísať tromi hodnotami **q = (x, y, θ)**. Hodnota x určuje, kde sa auto nachádza v jednom smere, y určuje jeho polohu v druhom smere a θ určuje jeho orientáciu, teda kam je auto natočené. Na opis ľubovoľnej configuration auta teda potrebujeme tri nezávislé hodnoty, a preto hovoríme, že jeho configuration space má **3 DOF**.
 
-„Ak minca nemôže mať ľubovoľnú velocity, tak jej constraints predsa museli znížiť DOF."
+Teraz však pridajme podmienku rolling without slipping, teda kotúľanie kolies bez šmýkania. Normálne koleso sa môže ľahko kotúľať dopredu alebo dozadu, ale nemôže sa jednoducho posúvať do boku. Ak auto smeruje dopredu, nemôžeme ho v jednom okamihu posunúť priamo doprava bez toho, aby sa pneumatiky začali šmýkať po ceste. Rolling without slipping teda vytvára velocity constraint — obmedzuje, akú okamžitú velocity môže auto mať.
 
-Nie nevyhnutne.
+Na prvý pohľad by sa preto mohlo zdať, že ak sa auto nemôže pohybovať priamo do boku, stratilo jeden DOF. To však nie je správne. Auto sa síce nemôže v jednom okamihu pohybovať priamo bokom, ale stále sa môže dostať na miesto, ktoré leží vedľa neho. Stačí zatočiť, pohnúť sa dopredu alebo dozadu, zmeniť orientáciu a postupne vykonať sériu manévrov. Presne to robíme napríklad pri paralelnom parkovaní. Auto sa nakoniec môže nachádzať o niekoľko metrov viac vpravo alebo vľavo, hoci nikdy neurobilo čistý okamžitý pohyb bokom.
 
-V Modern Robotics definujeme **degrees of freedom ako dimension configuration space**.
+To znamená, že hodnota y stále zostáva súčasťou možných configurations auta. Auto môže skončiť na rôznych hodnotách x, rôznych hodnotách y a s rôznymi hodnotami θ. Rolling constraint teda nehovorí, že určitá configuration je zakázaná. Hovorí iba, že niektoré okamžité smery pohybu sú zakázané.
 
-Teda sa pýtame:
+To je zásadný rozdiel oproti holonomic constraint. Predstavme si napríklad vozík upevnený na rovnej koľajnici. Ak koľajnica leží na y = 0, vozík musí počas celého pohybu spĺňať podmienku y = 0. Nemôžeme žiadnym manévrovaním dosiahnuť configuration, v ktorej bude vozík na y = 5 m. Takýto constraint skutočne odstránil časť možných configurations, a preto môže znížiť počet DOF.
 
-**Koľko nezávislých parameters potrebujeme na určenie configuration systému?**
+Pri aute s rolling constraintom je situácia iná. Constraint nehovorí „na tomto y nesmieš byť", ale skôr „pri tomto natočení sa týmto smerom nesmieš práve teraz pohybovať". Keď auto zmení svoju orientáciu θ, zmení sa zároveň smer, ktorým sa môže kotúľať. Kombináciou týchto povolených pohybov sa preto dokáže dostať aj do configurations, ktoré nedokáže dosiahnuť jedným priamym pohybom.
 
-Nie:
+Práve preto je rolling constraint typickým príkladom **nonholonomic constraint**. Je to obmedzenie velocity, ktoré vo všeobecnosti nemožno jednoducho integrovať na configuration constraint typu f(q) = 0. Neodstraňuje teda automaticky jednu súradnicu z configuration space.
 
-**Koľkými nezávislými smermi sa systém dokáže pohnúť práve teraz?**
-
-To sú dve rozdielne otázky.
-
-Pri minci môže byť configuration space štvorrozmerný:
-
-**(x, y, φ, θ)**
-
-ale v jednom konkrétnom stave nemusia byť všetky štyri velocity directions nezávisle dostupné.
-
-Prečo napriek tomu môžeme časom dosiahnuť veľa configurations?
-
-Pretože dostupné velocity directions sa **menia spolu s configuration**.
-
-Keď minca zmení orientation, zmení sa aj smer, ktorým sa môže následne kotúľať.
-
-Sériou takýchto povolených pohybov dokáže vytvoriť celkovú zmenu, ktorú nedokázala vykonať ako jeden okamžitý pohyb.
-
-Presne ako auto pri parkovaní.
+Najjednoduchšie si rozdiel môžeme zapamätať takto: **holonomic constraint obmedzuje, kde systém môže byť**, zatiaľ čo **nonholonomic rolling constraint obmedzuje, ako sa systém môže pohybovať**. Preto môže mať auto stále 3 DOF — x, y a θ, aj keď v jednom konkrétnom okamihu nemôže mať ľubovoľnú velocity vo všetkých troch smeroch.
 
 ---
 

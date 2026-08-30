@@ -1293,37 +1293,19 @@ nemusí znamenať:
 
 ## 28. Prečo rolling constraint závisí od cesty?
 
-Toto je ďalší spôsob, ako pochopiť nonholonomic správanie.
+Pri rolling constraint je dôležité pochopiť, že výsledná configuration systému nezávisí iba od toho, kde sa systém práve nachádza, ale aj od toho, akú trajectory — cestu pohybu — vykonal. Toto je jedna z hlavných vlastností nonholonomic constraints.
 
-Pri bode na kružnici sa na jeho aktuálne x a y pozrieme a okamžite vieme, či constraint spĺňa:
+Najskôr si to porovnajme s jednoduchým holonomic constraintom. Predstavme si bod, ktorý sa môže pohybovať iba po kružnici s polomerom r. Jeho poloha musí vždy spĺňať rovnicu **x² + y² = r²**. Ak nám niekto ukáže aktuálne hodnoty x a y, okamžite vieme skontrolovať, či je bod na kružnici. Vôbec nás nemusí zaujímať, ako sa na dané miesto dostal. Mohol sa pohybovať po kružnici zľava, sprava alebo ju obísť desaťkrát. Constraint závisí iba od aktuálnej configuration q.
 
-**x² + y² = r²**
+Pri aute s rolling without slipping je situácia iná. Rolling constraint neurčuje jednoduchú geometrickú plochu, na ktorej auto musí zostať. Namiesto toho určuje, aké pohyby sú povolené v každom okamihu. Auto sa napríklad nemôže pohybovať priamo bokom, pretože by sa jeho kolesá museli šmýkať. Môže však ísť dopredu alebo dozadu a zároveň meniť svoju orientáciu.
 
-Nezaujíma nás, ako sa tam dostal.
+Preto veľmi záleží na tom, v akom poradí jednotlivé pohyby vykonáme. Predstav si auto na parkovisku. Najskôr zatočíš doľava a ideš dopredu, potom zatočíš doprava a cúvneš. Auto skončí na určitom mieste a s určitou orientáciou. Ak však tie isté typy pohybov vykonáš v inom poradí — napríklad najskôr cúvneš so zatočením a až potom ideš dopredu — môžeš skončiť na úplne inom mieste. Každý jednotlivý pohyb pritom stále rešpektuje rolling without slipping.
 
-Pri aute alebo rolling coin však výsledný pohyb veľmi závisí od **trajectory**.
+To je dôležité, pretože pri nonholonomic systéme sa môžu malé povolené pohyby postupne skombinovať do výsledného pohybu, ktorý priamo vykonať nevieme. Auto sa napríklad nevie jednoducho posunúť o meter doprava ako figúrka na šachovnici. Sériou pohybov dopredu, dozadu a zatáčania sa však nakoniec môže dostať na miesto napravo. Typickým príkladom je paralelné parkovanie — auto sa do parkovacieho miesta dostane konkrétnou trajectory, nie priamym bočným pohybom.
 
-Auto môže:
+Preto hovoríme, že rolling constraint je **path-dependent**, teda závisí od cesty. Nejde iba o otázku „kde som?", ale aj o to, akú postupnosť povolených pohybov vykonávam. Takýto velocity constraint vo všeobecnosti nedokážeme integrovať na jednu jednoduchú configuration rovnicu **g(q) = konštanta**. Preto je **non-integrable**, a teda **nonholonomic**.
 
-najskôr zatočiť doľava,
-
-potom ísť dopredu,
-
-potom zatočiť doprava,
-
-potom cúvnuť.
-
-Iná postupnosť rovnakých typov pohybov môže viesť do úplne inej konečnej configuration.
-
-To je veľmi odlišné od situácie:
-
-**g(q) = konštanta**
-
-kde máme jednu trvalú geometrickú podmienku platnú vo všetkých okamihoch.
-
-Nonholonomic constraint preto nemôžeme jednoducho nahradiť rovnicou, ktorá by iba rozdelila configuration space na „povolenú plochu" a zvyšok.
-
-Sú nonintegrable, a preto ich označujeme ako nonholonomic.
+Najjednoduchšie si to môžeš zapamätať takto: **holonomic constraint určuje, KDE môže systém byť; nonholonomic rolling constraint určuje, AKO sa môže pohybovať.** Pri rolling constrainte preto cesta a poradie pohybov skutočne záležia.
 
 ---
 

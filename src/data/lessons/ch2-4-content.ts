@@ -735,23 +735,69 @@ hovoríme:
 
 ## 17. Čo je Pfaffian velocity constraint?
 
-Velocity constraints sa často zapisujú všeobecne ako:
+Aby sme velocity constraints lepšie pochopili, predstav si výťah v 100-poschodovom mrakodrape.
 
-**A(q)·q̇ = 0**
+Kabína výťahu sa nachádza napríklad na 50. poschodí. Je mechanicky vedená v pevných vertikálnych koľajniciach. Jej aktuálna configuration q nám hovorí, kde sa práve nachádza.
+
+Teraz sa však nepýtame, kam sa má dostať. Pýtame sa:
+
+**„Akú velocity môže mať práve TERAZ?"**
+
+Výťah môže mať velocity 3 m/s nahor — v poriadku. Môže mať 2 m/s nadol — v poriadku. Môže mať 0 m/s, teda stojí — tiež v poriadku.
+
+Ale teraz mu dajme absurdný príkaz:
+
+**„Maj práve teraz velocity 5 m/s smerom doprava."**
+
+Nie „choď na miesto napravo". Doslova požadujeme, aby vektor jeho okamžitej velocity smeroval cez stenu výťahovej šachty.
+
+A tu nastáva problém. Kabína je stále na úplne normálnom, povolenom mieste. Jej configuration nie je problém. Problémom je jej požadovaná velocity.
+
+Koľajnice jej hovoria:
+
+**„V tejto configuration sa môžeš pohybovať hore alebo dole. Nemôžeš mať velocity smerujúcu bokom."**
+
+Ak by sme bočný velocity constraint ignorovali a fyzicky sa pokúsili vytvoriť takú velocity, výťah sa zázračne nezačne pohybovať cez betónovú stenu. Mechanické vedenie mu v tom zabráni. Namiesto požadovaného pohybu by vznikli obrovské sily medzi kabínou a koľajnicami, konštrukcia by sa namáhala a pri dostatočne extrémnom pôsobení by sa niečo deformovalo alebo poškodilo.
+
+Toto je význam velocity constraintu. Neurčuje primárne:
+
+**„Kde môžeš byť?"**
+
+Určuje:
+
+**„Keď si práve TU, akú okamžitú velocity môžeš fyzicky mať?"**
+
+Teraz z toho spravme matematický zápis. Predstav si, že systém má viac možných smerov pohybu a jeho velocity zapíšeme do vectora:
+
+**q̇**
+
+Potrebujeme matematický spôsob, ktorý povie:
+
+**„Z množstva všetkých velocity vectorov povoľ iba tie, ktoré rešpektujú mechanické obmedzenia systému."**
+
+Na to môžeme použiť:
+
+**A(q) · q̇ = 0**
 
 Takémuto zápisu hovoríme **Pfaffian form**.
 
-Najskôr si vysvetlime jednotlivé časti.
-
 **q** je aktuálna configuration.
 
-**q̇** je aktuálna velocity configuration variables.
+**q̇** je velocity, ktorú chceme systému dať.
 
-**A(q)** je matrix, ktorá závisí od toho, kde sa systém práve nachádza, a určuje, ktoré velocity combinations sú povolené.
+**A(q)** obsahuje informáciu o tom, ktoré zložky velocity sú pri aktuálnej configuration zakázané alebo musia byť navzájom previazané.
 
-Celý vzťah teda hovorí:
+Ak:
 
-**„Pri tejto konkrétnej configuration nemôže byť velocity ľubovoľná; musí spĺňať tieto rovnice."**
+**A(q) · q̇ = 0,**
+
+velocity constraint rešpektujeme.
+
+Ak:
+
+**A(q) · q̇ ≠ 0,**
+
+požadujeme velocity, ktorá constraint porušuje.
 
 Napríklad pri bode na kružnici sme mali:
 

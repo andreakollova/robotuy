@@ -15,6 +15,8 @@ Rozdiel medzi nimi patrí medzi základné myšlienky robotickej kinematiky.
 
 ---
 
+:::recap
+
 ## 01. Closed-chain robot nemôže mať ľubovoľné joint coordinates
 
 Začnime známym **four-bar linkage** — štvorčlánkovým mechanizmom. Tvoria ho štyri links spojené revolute joints do uzavretej mechanickej slučky. Jeden link predstavuje ground a zostáva pevný, zatiaľ čo ostatné sa voči nemu pohybujú.
@@ -32,6 +34,8 @@ Closed-chain mechanism preto potrebuje matematické podmienky, ktoré hovoria:
 Tieto podmienky nazývame **loop-closure equations**.
 
 ![Štvorkĺbový mechanizmus](/book/ch2/fig2-10.png)
+
+:::
 
 ---
 

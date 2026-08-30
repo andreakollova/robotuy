@@ -91,7 +91,7 @@ export const projectTopics: ProjectTopic[] = [
         unitId: 'modern-robotics',
         title: 'Chapter 2.5: Task Space and Workspace',
         content: ch25Content,
-        videoUrl: 'https://www.youtube.com/watch?v=cOE18sRmfKA',
+        videoUrl: 'https://www.youtube.com/watch?v=hTuW51CpUg4',
         bookPage: 38,
         exercises: ch25Exercises,
       },

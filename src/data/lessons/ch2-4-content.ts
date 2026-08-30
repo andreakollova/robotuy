@@ -1309,95 +1309,7 @@ Najjednoduchšie si to môžeš zapamätať takto: **holonomic constraint určuj
 
 ---
 
-## 29. Holonomic a nonholonomic constraints vedľa seba
-
-Teraz ich môžeme porovnať naozaj presne.
-
-### Holonomic constraint
-
-Existuje constraint na samotnú configuration:
-
-**g(q) = 0**
-
-Stačí sa pozrieť na aktuálne q a vieme, či je configuration povolená.
-
-Constraint odstráni určité configurations z C-space.
-
-Príklady:
-
-bod pripútaný ku kružnici,
-
-closed-chain linkage,
-
-konštantná vzdialenosť medzi bodmi rigid body.
-
-Jeho časovou deriváciou vznikne velocity constraint.
-
-Tento velocity constraint je spätne spojený s configuration constraintom, preto je integrable.
-
----
-
-### Nonholonomic constraint
-
-Máme obmedzenie velocity:
-
-**A(q)·q̇ = 0**
-
-ale nemožno ho vo všeobecnosti nahradiť ekvivalentným constraintom:
-
-**g(q) = 0**
-
-na samotnú configuration.
-
-Constraint teda predovšetkým obmedzuje, aké instantaneous motions môže systém vykonať.
-
-Príklady:
-
-rolling without slipping,
-
-car-like robot,
-
-mnohé wheeled mobile robots.
-
-Systém môže vhodnou sekvenciou povolených pohybov dosiahnuť configurations, ku ktorým nemá priamu instantaneous velocity.
-
----
-
-## 30. Prečo samotné A(q)·q̇ = 0 nestačí na rozhodnutie?
-
-Predstav si, že ti niekto ukáže iba:
-
-**A(q)·q̇ = 0**
-
-A opýta sa:
-
-„Je to holonomic alebo nonholonomic?"
-
-Z tvaru samotného to nevieme.
-
-Prečo?
-
-Pretože rovnaký typ velocity equation môžeme dostať v oboch prípadoch.
-
-Pri kružnici je velocity constraint dôsledkom configuration constraintu.
-
-Pri rolling wheel môže byť velocity constraint nonintegrable.
-
-Musíme teda skúmať jeho pôvod alebo integrability.
-
-Pýtame sa:
-
-**Existuje taká funkcia g(q), že tento velocity constraint vyjadruje zachovanie g(q) = konštanta?**
-
-Ak áno, je integrable.
-
-Ak nie, je nonintegrable.
-
-Toto je matematická podstata rozdielu.
-
----
-
-## 31. Prečo sú nonholonomic constraints dôležité v motion planning?
+## 29. Prečo sú nonholonomic constraints dôležité v motion planning?
 
 Predstav si dve bodky na mape:
 
@@ -1429,7 +1341,7 @@ Pri mobilnej robotike priamo určujú, aké trajectories sú realizovateľné.
 
 ---
 
-## 32. Configuration a velocity nesmieme zamieňať
+## 30. Configuration a velocity nesmieme zamieňať
 
 Ak sa v celej lekcii stratíš, vráť sa k týmto dvom otázkam.
 
@@ -1473,7 +1385,7 @@ A to nie je to isté.
 
 ---
 
-## 33. Najlepší mentálny obraz: kružnica vs. auto
+## 31. Najlepší mentálny obraz: kružnica vs. auto
 
 Ak si máš zapamätať iba dva príklady, použi tieto.
 
@@ -1523,7 +1435,7 @@ Toto je typický **nonholonomic** prípad.
 
 ---
 
-## 34. Celá logika lekcie bez preskakovania krokov
+## 32. Celá logika lekcie bez preskakovania krokov
 
 Začneme configuration variables:
 
@@ -1581,7 +1493,7 @@ Taký constraint je **nonintegrable**, teda **nonholonomic**.
 
 ---
 
-## 35. Rekapitulácia pojmov
+## 33. Rekapitulácia pojmov
 
 - **Configuration** — Aktuálny stav alebo poloha systému.
 - **Configuration space (C-space)** — Množina všetkých možných configurations systému.
@@ -1600,7 +1512,7 @@ Taký constraint je **nonintegrable**, teda **nonholonomic**.
 
 ---
 
-## 36. Úplne posledná intuícia
+## 34. Úplne posledná intuícia
 
 Najväčšia chyba by bola zapamätať si iba:
 

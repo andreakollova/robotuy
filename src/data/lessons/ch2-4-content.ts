@@ -1177,59 +1177,65 @@ A práve toto je podstata nonholonomic constraintu.
 
 ---
 
-## 25. Rolling without slipping
+## 25. Čo znamená „rolling without slipping"?
 
 ![Minca kotúľajúca sa po rovine bez šmyku](/book/ch2/fig2-11.png)
 
-Veľmi typický zdroj nonholonomic constraints je:
+Doslova:
 
-**rolling without slipping — kotúľanie bez šmyku.**
+**rolling** = kotúľanie
 
-Predstav si vertikálne stojacu mincu kotúľajúcu sa po podlahe.
+**without slipping** = bez šmýkania
 
-Jej configuration môžeme v modeli opísať napríklad:
+Predstav si pneumatiku auta na suchej ceste. Koleso sa otáča a zároveň posúva dopredu.
 
-**q = (x, y, φ, θ)**
+Keď sa koleso otočí o určitý kus, musí sa zároveň o presne zodpovedajúci kus posunúť dopredu.
 
-kde:
+Napríklad máš koleso s obvodom 2 metre.
 
-**x, y** určujú position kontaktu alebo mince v rovine,
+Ak spraví presne jednu celú otočku:
 
-**φ** určuje smer, ktorým je minca orientovaná,
+**1 otočka → auto sa posunie 2 metre**
 
-**θ** opisuje jej rotáciu pri kotúľaní.
+To je rolling without slipping.
 
-Teraz máme fyzikálnu podmienku:
+Teraz si predstav ľad.
 
-Minca sa **kotúľa**, ale **nešmýka**.
+Dupneš na plyn, koleso sa točí, ale auto stojí skoro na mieste.
 
-To znamená, že jej translational motion musí byť konzistentný s tým, ako sa otáča.
+Koleso teda urobilo napríklad jednu otočku, ale auto sa neposunulo o jeden obvod kolesa.
 
-Ak má radius r a angular velocity θ̇, prejdená vzdialenosť súvisí s rotáciou.
+To je **slipping**.
 
-Pre forward velocity preto dostávame vzťah typu:
+Opačný príklad je prudké brzdenie. Koleso sa prestane otáčať, ale auto sa stále šmýka po ceste.
 
-**speed = r·θ̇**
+Aj to je **slipping**.
 
-Ak je minca otočená smerom φ, forward direction má zložky:
+**A teraz prečo nás to zaujíma v robotike**
 
-**cos φ**
+Pri rolling without slipping existuje spojenie medzi rýchlosťou otáčania kolesa a rýchlosťou pohybu robota.
 
-a
+Ak má koleso polomer r a otáča sa angular velocity θ̇, potom:
 
-**sin φ**
+**v = r · θ̇**
 
-Preto dostaneme napríklad:
+Čiže nemôžeš ľubovoľne povedať:
+
+„Koleso sa bude točiť takto rýchlo, ale robot sa bude pohybovať úplne inou rýchlosťou."
+
+Nie. Ak sa koleso nešmýka, tieto dve velocity musia spolu sedieť.
+
+Ak je koleso alebo minca otočená smerom φ, jej pohyb rozdelíme na x-ovú a y-ovú zložku:
 
 **ẋ = r·θ̇·cos φ**
 
 **ẏ = r·θ̇·sin φ**
 
-Tieto rovnice nám hovoria:
+Tieto rovnice hovoria, že x-ová a y-ová velocity nie sú ľubovoľné.
 
-x-ová a y-ová velocity nie sú ľubovoľné.
+Závisia od orientation kolesa aj od jeho rotational velocity.
 
-Závisia od orientation mince aj od jej rotational velocity.
+A to je typický **nonholonomic velocity constraint**.
 
 ---
 

@@ -228,6 +228,8 @@ Preto sa v Modern Robotics zdôrazňuje, že task space je **driven by the task*
 
 ---
 
+:::recap
+
 ## 06. Manipulácia s rigid body v 3D priestore
 
 Veľmi častou úlohou robota je manipulácia s predmetom.
@@ -271,6 +273,8 @@ Môžeme si predstaviť, že na gripper robota pripevníme malý coordinate fram
 **„Dostaň tento frame na požadované miesto a natoč ho požadovaným spôsobom."**
 
 Toto je veľmi bežný pohľad na task space pri robotických manipulátoroch.
+
+:::
 
 ---
 

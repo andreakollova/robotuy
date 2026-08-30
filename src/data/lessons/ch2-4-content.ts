@@ -377,7 +377,7 @@ Preto constraint derivujeme podľa času.
 
 Chceme totiž zistiť:
 
-**Aké x_dot a y_dot môžeme mať, aby sa hodnota x² + y² nemenila?**
+**Aké ẋ a ẏ môžeme mať, aby sa hodnota x² + y² nemenila?**
 
 ---
 
@@ -391,17 +391,17 @@ Derivujeme obe strany podľa času.
 
 Keďže x závisí od času:
 
-**d(x²)/dt = 2x * x_dot**
+**d(x²)/dt = 2x * ẋ**
 
 kde:
 
-**x_dot = dx/dt**
+**ẋ = dx/dt**
 
 je rýchlosť zmeny x.
 
 Podobne:
 
-**d(y²)/dt = 2y * y_dot**
+**d(y²)/dt = 2y * ẏ**
 
 Polomer r sa nemení, takže r² je konštanta.
 
@@ -411,11 +411,11 @@ Derivácia konštanty je nula:
 
 Dostaneme:
 
-**2x * x_dot + 2y * y_dot = 0**
+**2x * ẋ + 2y * ẏ = 0**
 
 Celú rovnicu môžeme vydeliť dvomi:
 
-**x * x_dot + y * y_dot = 0**
+**x * ẋ + y * ẏ = 0**
 
 A práve sme z configuration constraintu získali **velocity constraint**.
 
@@ -437,9 +437,9 @@ Velocity opisuje okamžitú zmenu configuration.
 
 Pri našej korálke máme:
 
-**x * x_dot + y * y_dot = 0**
+**x * ẋ + y * ẏ = 0**
 
-Táto rovnica nehovorí, že určité x alebo y sú zakázané. Hovorí, ktoré kombinácie x_dot a y_dot sú povolené pri konkrétnych hodnotách x a y.
+Táto rovnica nehovorí, že určité x alebo y sú zakázané. Hovorí, ktoré kombinácie ẋ a ẏ sú povolené pri konkrétnych hodnotách x a y.
 
 Pozrime sa znovu na pravý bod kružnice:
 
@@ -447,17 +447,17 @@ Pozrime sa znovu na pravý bod kružnice:
 
 Dosadíme:
 
-**r * x_dot + 0 * y_dot = 0**
+**r * ẋ + 0 * ẏ = 0**
 
 takže:
 
-**x_dot = 0**
+**ẋ = 0**
 
 V tomto bode teda korálka nesmie mať velocity smerujúcu doľava alebo doprava.
 
 Môže však mať:
 
-**y_dot ≠ 0**
+**ẏ ≠ 0**
 
 čiže sa môže pohybovať hore alebo dole po kružnici.
 
@@ -467,7 +467,7 @@ V hornom bode:
 
 dostaneme:
 
-**y_dot = 0**
+**ẏ = 0**
 
 a povolený je naopak pohyb v smere x.
 
@@ -513,7 +513,7 @@ Pre viac variables pokračujeme rovnakým spôsobom.
 
 Kompaktne môžeme výsledok zapísať:
 
-**(dg/dq) * q_dot = 0**
+**(dg/dq) * q̇ = 0**
 
 Tento zápis teda nie je nový constraint, ktorý by sa objavil odnikiaľ.
 
@@ -559,7 +559,7 @@ Povolená velocity preto musí smerovať kolmo na tento radiálny smer — po do
 
 Matematicky to vyjadruje:
 
-**[2x, 2y] * [x_dot, y_dot] = 0**
+**[2x, 2y] * [ẋ, ẏ] = 0**
 
 Skalárny súčin dvoch kolmých vectorov je nula.
 
@@ -585,7 +585,7 @@ V tomto kontexte si Jacobian môžeš predstaviť ako tabuľku, ktorá hovorí:
 
 **„Ak trochu zmením jednotlivé configuration variables, ako tým ovplyvním jednotlivé constraints?"**
 
-Keď potom Jacobian vynásobíme velocity vectorom q_dot, zistíme, ako sa constraints menia pri konkrétnom pohybe.
+Keď potom Jacobian vynásobíme velocity vectorom q̇, zistíme, ako sa constraints menia pri konkrétnom pohybe.
 
 Ak dostaneme nulu, daná velocity ich v tomto okamihu neporušuje.
 
@@ -595,7 +595,7 @@ Ak dostaneme nulu, daná velocity ich v tomto okamihu neporušuje.
 
 Velocity constraints sa často zapisujú všeobecne ako:
 
-**A(q) * q_dot = 0**
+**A(q) * q̇ = 0**
 
 Tomuto tvaru hovoríme **Pfaffian form**.
 
@@ -603,31 +603,31 @@ Rozoberme si ho.
 
 **q** je configuration systému.
 
-**q_dot** opisuje, ako rýchlo sa jednotlivé configuration variables práve menia.
+**q̇** opisuje, ako rýchlo sa jednotlivé configuration variables práve menia.
 
 **A(q)** obsahuje vzťahy, ktoré určujú, ktoré kombinácie týchto velocities sú pri configuration q dovolené.
 
 Celá equation teda znamená:
 
-**„Pri aktuálnej configuration q nemôže mať systém ľubovoľnú velocity q_dot. Povolené sú iba také velocities, ktoré spĺňajú túto podmienku."**
+**„Pri aktuálnej configuration q nemôže mať systém ľubovoľnú velocity q̇. Povolené sú iba také velocities, ktoré spĺňajú túto podmienku."**
 
 Pri kružnici máme napríklad:
 
-**x * x_dot + y * y_dot = 0**
+**x * ẋ + y * ẏ = 0**
 
 čo môžeme zapísať:
 
-**[x, y] * [x_dot, y_dot] = 0**
+**[x, y] * [ẋ, ẏ] = 0**
 
 To je tiež Pfaffian form.
 
 A tu prichádza veľmi dôležitá vec:
 
-**To, že constraint obsahuje velocities a má tvar A(q) * q_dot = 0, ešte neznamená, že je nonholonomic.**
+**To, že constraint obsahuje velocities a má tvar A(q) * q̇ = 0, ešte neznamená, že je nonholonomic.**
 
 Kružnica je toho dôkazom.
 
-Jej velocity constraint obsahuje x_dot a y_dot, ale vieme, že vznikol z holonomic configuration constraintu:
+Jej velocity constraint obsahuje ẋ a ẏ, ale vieme, že vznikol z holonomic configuration constraintu:
 
 **x² + y² = r²**
 
@@ -641,7 +641,7 @@ Predstav si, že ti niekto nedá pôvodnú rovnicu kružnice.
 
 Dá ti iba:
 
-**x * x_dot + y * y_dot = 0**
+**x * ẋ + y * ẏ = 0**
 
 Ty teda poznáš iba pravidlo pre velocity.
 
@@ -657,15 +657,15 @@ Pri tomto príklade áno.
 
 Všimneme si:
 
-**d/dt(x² + y²) = 2x * x_dot + 2y * y_dot**
+**d/dt(x² + y²) = 2x * ẋ + 2y * ẏ**
 
 Náš velocity constraint je:
 
-**x * x_dot + y * y_dot = 0**
+**x * ẋ + y * ẏ = 0**
 
 Vynásobíme ho dvomi:
 
-**2x * x_dot + 2y * y_dot = 0**
+**2x * ẋ + 2y * ẏ = 0**
 
 Teda:
 
@@ -755,7 +755,7 @@ Preto sa jeho hodnota nesmie meniť:
 
 Pomocou chain rule dostaneme:
 
-**(dg/dq) * q_dot = 0**
+**(dg/dq) * q̇ = 0**
 
 To je velocity constraint.
 
@@ -872,7 +872,7 @@ Teraz môžeme pojem definovať presnejšie.
 
 Predstavme si velocity constraint:
 
-**A(q) * q_dot = 0**
+**A(q) * q̇ = 0**
 
 Tento constraint určuje, ktoré instantaneous velocities sú pri danej configuration povolené.
 
@@ -932,17 +932,17 @@ Nemôžeme napríklad otočiť koleso, ale nechať jeho contact point kĺzať po
 
 Ak má koleso radius r, jeho forward speed súvisí s angular velocity:
 
-**v = r * θ_dot**
+**v = r * θ̇**
 
 Ak je koleso natočené smerom φ, jeho forward motion rozdelíme na x-ovú a y-ovú zložku:
 
-**x_dot = r * θ_dot * cos φ**
+**ẋ = r * θ̇ * cos φ**
 
-**y_dot = r * θ_dot * sin φ**
+**ẏ = r * θ̇ * sin φ**
 
 Tieto equations hovoria, že translational velocity kolesa nie je nezávislá od jeho orientation a rotation.
 
-Ak poznáme φ a θ_dot, nemôžeme si x_dot a y_dot zvoliť úplne ľubovoľne.
+Ak poznáme φ a θ̇, nemôžeme si ẋ a ẏ zvoliť úplne ľubovoľne.
 
 To je velocity constraint.
 
@@ -1056,7 +1056,7 @@ Keď holonomic constraint derivujeme, dostaneme velocity constraint. Ten je inte
 
 Máme obmedzenie velocity, napríklad:
 
-**A(q) * q_dot = 0**
+**A(q) * q̇ = 0**
 
 ale nedokážeme ho nahradiť ekvivalentným configuration constraintom:
 
@@ -1074,11 +1074,11 @@ Typickým príkladom je auto alebo koleso kotúľajúce sa bez šmyku.
 
 ---
 
-## 27. Prečo samotný zápis A(q) * q_dot = 0 nestačí
+## 27. Prečo samotný zápis A(q) * q̇ = 0 nestačí
 
 Keď uvidíš rovnicu:
 
-**A(q) * q_dot = 0**
+**A(q) * q̇ = 0**
 
 nemôžeš iba podľa jej vzhľadu povedať:
 
@@ -1180,7 +1180,7 @@ Configuration teda opisuje stav systému v jednom okamihu.
 
 **Ako sa tento stav práve teraz mení?**
 
-Pri bode: **(x_dot, y_dot)**
+Pri bode: **(ẋ, ẏ)**
 
 Pri aute: ako sa mení x, ako sa mení y, ako sa mení orientation φ.
 
@@ -1210,7 +1210,7 @@ Ide teda o **holonomic configuration constraint**.
 
 Keď ho derivujeme:
 
-**x * x_dot + y * y_dot = 0**
+**x * ẋ + y * ẏ = 0**
 
 dostaneme velocity constraint, ktorý hovorí:
 
@@ -1274,7 +1274,7 @@ Preto:
 
 a pomocou chain rule:
 
-**(dg/dq) * q_dot = 0**
+**(dg/dq) * q̇ = 0**
 
 Dostaneme **velocity constraint**.
 
@@ -1288,7 +1288,7 @@ Holonomic configuration constraints teda po derivovaní vedú k integrable veloc
 
 Môžeme však mať velocity constraint:
 
-**A(q) * q_dot = 0**
+**A(q) * q̇ = 0**
 
 ktorý sa nedá previesť na ekvivalentnú podmienku iba medzi configuration variables.
 
@@ -1310,7 +1310,7 @@ Takýto constraint nemusí odstraňovať configurations zo samotného C-space. N
 - **Velocity** — Rýchlosť zmeny configuration.
 - **Velocity constraint** — Podmienka určujúca, ktoré instantaneous velocities sú pri danej configuration povolené.
 - **Jacobian constraintov** — Matrix derivatives, ktorá opisuje, ako malé zmeny configuration variables ovplyvňujú jednotlivé constraints.
-- **Pfaffian form** — Všeobecný zápis velocity constraintu: A(q) * q_dot = 0
+- **Pfaffian form** — Všeobecný zápis velocity constraintu: A(q) * q̇ = 0
 - **Integrable velocity constraint** — Velocity constraint, ktorý môžeme spätne previesť na podmienku medzi configuration variables: g(q) = C
 - **Nonintegrable velocity constraint** — Velocity constraint, ktorý takto na configuration constraint previesť nemožno.
 - **Nonholonomic constraint** — V tejto lekcii velocity constraint, ktorý je nonintegrable. Nezakazuje jednoducho určitú množinu configurations, ale obmedzuje okamžité smery pohybu systému.
@@ -1326,9 +1326,9 @@ Najdôležitejšie nie je zapamätať si, že:
 
 a:
 
-**nonholonomic = A(q) * q_dot = 0**
+**nonholonomic = A(q) * q̇ = 0**
 
-Takéto zapamätanie by bolo dokonca zavádzajúce, pretože aj holonomic constraint môže po derivovaní viesť k velocity equation tvaru A(q) * q_dot = 0.
+Takéto zapamätanie by bolo dokonca zavádzajúce, pretože aj holonomic constraint môže po derivovaní viesť k velocity equation tvaru A(q) * q̇ = 0.
 
 Dôležité je pochopiť, **čo constraint v skutočnosti obmedzuje**.
 
@@ -1370,11 +1370,11 @@ Takýto constraint nazývame **holonomic constraint**. Pri n configuration varia
 
 Keď sa robot pohybuje, jeho configuration zapisujeme ako θ(t). Holonomic constraint musí platiť počas celého pohybu. Derivovaním podľa času dostaneme velocity constraint:
 
-**(dg/dθ) * θ_dot = 0**
+**(dg/dθ) * θ̇ = 0**
 
 Všeobecnejšie môžeme velocity constraints zapisovať v Pfaffian form:
 
-**A(θ) * θ_dot = 0**
+**A(θ) * θ̇ = 0**
 
 Ak tento velocity constraint vznikol derivovaním configuration constraintu a môžeme ho spätne integrovať na vzťah typu g(θ) = konštanta, nazývame ho **integrable**. Práve s takýmito velocity constraints sú spojené holonomic constraints.
 

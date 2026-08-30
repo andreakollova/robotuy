@@ -917,3 +917,7 @@ a { color: inherit; text-decoration: none; }
 .purple-btn, .purple-btn * { color: #fff !important; }
 [data-theme="light"] .purple-btn,
 [data-theme="light"] .purple-btn * { color: #fff !important; }
+
+/* Correct/wrong answer icons - keep white check/X on colored background */
+[data-theme="light"] [style*="background: var(--green)"] svg,
+[data-theme="light"] [style*="background:#dc2626"] svg { color: #fff !important; }

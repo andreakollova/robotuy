@@ -385,7 +385,7 @@ Nezaujíma nás ani to, ako je laser otočený okolo vlastnej osi.
 
 Jediné, čo potrebujeme vedieť, je:
 
-**direction lúča.**
+**smer lúča.**
 
 Ako sme si vysvetlili, všetky možné directions v 3D priestore môžeme reprezentovať bodmi na povrchu jednotkovej gule.
 
@@ -1118,7 +1118,7 @@ Potrebujeme:
 
 a
 
-**direction striekania**
+**smer trysky**
 
 ktorý má 2 DOF.
 
@@ -1136,7 +1136,7 @@ a task space môžeme zapísať:
 
 Predstav si jednoduchú symetrickú trysku smerujúcu kolmo na povrch auta.
 
-Ak ju otočíme o 30° okolo osi, pozdĺž ktorej strieka farba, ale direction samotného prúdu sa nezmení, výsledok môže zostať rovnaký.
+Ak ju otočíme o 30° okolo osi, pozdĺž ktorej strieka farba, ale smer samotného prúdu sa nezmení, výsledok môže zostať rovnaký.
 
 Takáto rotation teda nemá význam pre daný task.
 

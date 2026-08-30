@@ -865,6 +865,8 @@ Pri inom systéme môže vyzerať velocity equation veľmi podobne, ale žiadny 
 
 A práve tu sa objavuje **integrability**.
 
+> **DOF hovorí, aké nezávislé configurations môže systém mať. Velocity constraint hovorí, akými okamžitými smermi sa môže configuration práve teraz meniť.**
+
 ---
 
 ## 19. Čo slovo integrable skutočne znamená?

@@ -1327,45 +1327,17 @@ A pri autách, wheeled robots a ďalších nonholonomic systémoch je práve dru
 
 ## 30. Configuration a velocity nesmieme zamieňať
 
-Ak sa v celej lekcii stratíš, vráť sa k týmto dvom otázkam.
+Pri holonomic a nonholonomic constraints je veľmi dôležité nezamieňať si configuration a velocity. Sú to dve rozdielne veci. Configuration q hovorí, v akom stave alebo polohe sa systém práve nachádza, zatiaľ čo velocity q̇ hovorí, ako sa táto configuration práve mení.
 
-### Configuration
+Predstavme si auto pohybujúce sa po rovine. Jeho configuration môžeme zapísať ako **q = (x, y, θ)**. Hodnoty x a y hovoria, kde sa auto nachádza, a θ hovorí, kam je natočené. Jedna konkrétna configuration teda môže byť napríklad: „auto stojí na tomto mieste a je otočené smerom na sever." Configuration sama osebe nehovorí nič o tom, či sa auto práve pohybuje ani akým smerom.
 
-**„Kde alebo v akom stave sa systém nachádza?"**
+Velocity opisuje niečo iné. Pre rovnaké auto môžeme uvažovať **q̇ = (ẋ, ẏ, θ̇)**. Hodnoty ẋ a ẏ hovoria, ako rýchlo sa mení poloha auta, a θ̇ hovorí, ako rýchlo sa mení jeho orientácia. Dve autá teda môžu mať presne rovnakú configuration (x, y, θ), ale úplne inú velocity. Jedno môže stáť, druhé môže ísť dopredu a tretie môže práve zatáčať.
 
-Pri aute napríklad:
+Tento rozdiel je zásadný pri constraints. Configuration constraint obmedzuje, aké configurations sú vôbec dovolené. Predstav si napríklad bod, ktorý musí zostať na kružnici. Jeho poloha musí vždy spĺňať **x² + y² = r²**. Bod sa teda nemôže nachádzať hocikde v rovine. Constraint priamo odstránil časť možných configurations.
 
-**x, y, orientation**
+Velocity constraint naopak nemusí zakazovať samotnú configuration. Zakazuje iba určitý okamžitý spôsob pohybu z tejto configuration. Typickým príkladom je opäť auto s podmienkou rolling without slipping. Auto sa môže nachádzať na rôznych miestach x, y a môže mať rôznu orientáciu θ, ale keď je v konkrétnej configuration, jeho kolesá mu nedovoľujú mať ľubovoľnú velocity. Nemôže sa napríklad jednoducho začať šmýkať priamo do boku.
 
-Pri robotickom ramene:
-
-**joint angles**
-
----
-
-### Velocity
-
-**„Ako sa táto configuration práve teraz mení?"**
-
-Pri aute:
-
-ako rýchlo sa mení x,
-
-ako rýchlo y,
-
-ako rýchlo orientation.
-
-Pri ramene:
-
-ako rýchlo sa jednotlivé joints otáčajú.
-
----
-
-Constraint môže obmedzovať configuration.
-
-Alebo môže obmedzovať velocity.
-
-A to nie je to isté.
+Tu vzniká častý omyl. Ak povieme, že auto nemôže mať velocity doprava, neznamená to, že nemôže byť napravo. To sú dve úplne rozdielne tvrdenia. Auto sa na miesto napravo môže dostať tak, že zatočí, pohne sa dopredu alebo dozadu a vykoná sériu ďalších pohybov. Zakázaná je určitá okamžitá velocity, nie výsledná configuration.
 
 ---
 

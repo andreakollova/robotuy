@@ -867,6 +867,14 @@ A práve tu sa objavuje **integrability**.
 
 > **DOF hovorí, aké nezávislé configurations môže systém mať. Velocity constraint hovorí, akými okamžitými smermi sa môže configuration práve teraz meniť.**
 
+**INTEGRABLE — výťah**
+
+Nemôže ísť doprava. A zároveň: nikdy sa ani nemôže dostať doprava. Velocity zákaz teda vytvára skutočný zákaz určitých configurations.
+
+**NON-INTEGRABLE — auto**
+
+Nemôže sa práve teraz pohnúť bokom. Ale: manévrovaním sa môže dostať bokom. Velocity zákaz teda neznamená zákaz danej configuration.
+
 ---
 
 ## 19. Čo slovo integrable skutočne znamená?

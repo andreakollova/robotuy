@@ -1243,35 +1243,7 @@ ale:
 
 ---
 
-## 38. Ako spolu C-space a task space súvisia
-
-Medzi C-space a task space existuje mapping.
-
-Každá configuration robota:
-
-**q**
-
-vytvorí určitý task-space state:
-
-**x**
-
-Napríklad:
-
-joint angles robota → určia → position grippera.
-
-Tento vzťah môžeme symbolicky chápať ako:
-
-**q → x**
-
-Neskôr ho budeme formalizovať pomocou **forward kinematics**.
-
-Dôležité je, že rôzne q môžu viesť k rovnakému x.
-
-Preto mapping nemusí byť one-to-one.
-
----
-
-## 39. Prečo task-space point nemusí mať riešenie v C-space
+## 38. Prečo task-space point nemusí mať riešenie v C-space
 
 Predstav si požadovanú position grippera:
 
@@ -1295,7 +1267,7 @@ Ale pre malé robotické rameno nie je reachable.
 
 ---
 
-## 40. Prečo môže mať task-space point viac riešení
+## 39. Prečo môže mať task-space point viac riešení
 
 Ak požadovaný point vo workspace je, stále nemusíme dostať jednoznačnú robot configuration.
 
@@ -1315,7 +1287,7 @@ Musíme niekedy vybrať jedno riešenie z viacerých možností.
 
 ---
 
-## 41. Typická chyba: „Task space je workspace"
+## 40. Typická chyba: „Task space je workspace"
 
 Nie.
 
@@ -1337,7 +1309,7 @@ To, že vieme určitý cieľ zapísať, ešte neznamená, že ho robot dokáže 
 
 ---
 
-## 42. Typická chyba: „Workspace je vždy menší task space"
+## 41. Typická chyba: „Workspace je vždy menší task space"
 
 Ako mentálna predstava to často funguje, ale treba byť opatrný.
 
@@ -1363,7 +1335,7 @@ a
 
 ---
 
-## 43. Typická chyba: „Viac DOF robota znamená väčší workspace"
+## 42. Typická chyba: „Viac DOF robota znamená väčší workspace"
 
 Ani toto nemusí platiť.
 
@@ -1381,7 +1353,7 @@ Počet DOF a fyzická veľkosť workspace preto nie sú to isté.
 
 ---
 
-## 44. Typická chyba: „Ak poznám workspace point, poznám configuration robota"
+## 43. Typická chyba: „Ak poznám workspace point, poznám configuration robota"
 
 Opäť nie.
 
@@ -1399,7 +1371,7 @@ Toto je jedna z hlavných myšlienok, ktoré si treba odniesť do inverse kinema
 
 ---
 
-## 45. Prečo je task space užitočný pri programovaní robota
+## 44. Prečo je task space užitočný pri programovaní robota
 
 Predstav si, že by operátor pri každej úlohe musel ručne zadávať všetky joint angles.
 
@@ -1429,7 +1401,7 @@ a
 
 ---
 
-## 46. Súvis s forward kinematics
+## 45. Súvis s forward kinematics
 
 **Forward kinematics** rieši otázku:
 
@@ -1449,7 +1421,7 @@ Forward kinematics nám teda vytvára matematické spojenie medzi internal joint
 
 ---
 
-## 47. Súvis s inverse kinematics
+## 46. Súvis s inverse kinematics
 
 **Inverse kinematics** ide opačným smerom.
 
@@ -1479,7 +1451,7 @@ môže existovať jedno alebo viac riešení.
 
 ---
 
-## 48. Súvis s motion planning
+## 47. Súvis s motion planning
 
 Pri **motion planning** nestačí vedieť iba to, že cieľový end-effector state je reachable.
 
@@ -1499,7 +1471,7 @@ Takže pojmy z tejto lekcie tvoria základ pre ďalšie časti robotiky.
 
 ---
 
-## 49. Rekapitulácia najdôležitejších pojmov
+## 48. Rekapitulácia najdôležitejších pojmov
 
 - **Configuration** — Opisuje aktuálny stav celého robota alebo mechanizmu. Pri robotickom ramene ju často tvoria hodnoty jednotlivých joint variables.
 - **Configuration space (C-space)** — Priestor všetkých možných configurations celého robota. Jeden bod C-space predstavuje jednu kompletnú configuration mechanizmu.
@@ -1518,7 +1490,7 @@ Takže pojmy z tejto lekcie tvoria základ pre ďalšie časti robotiky.
 
 ---
 
-## 50. Čo si z tejto lekcie odniesť
+## 49. Čo si z tejto lekcie odniesť
 
 Najdôležitejšie je nezamieňať tri rôzne pohľady na ten istý robot.
 

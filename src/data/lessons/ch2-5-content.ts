@@ -926,17 +926,9 @@ ale
 
 **orientation sa meniť môže.**
 
-Ak by sme workspace definovali iba pomocou Cartesian position:
+Predstav si to ako kameru na statíve. Stred kamery zostáva stále na rovnakom mieste, takže jeho position (x, y, z) sa nemení. Kamera sa však môže otáčať doľava a doprava, nakláňať hore a dole alebo sa pretočiť okolo svojej osi. Mení sa teda jej orientation, nie position.
 
-**x, y, z**
-
-dostali by sme prakticky jediný bod.
-
-Taká definícia workspace by nám o schopnostiach mechanizmu povedala veľmi málo.
-
-Skutočnou schopnosťou tohto wristu je meniť orientation.
-
-Preto je oveľa prirodzenejšie sledovať jeho **orientation workspace**.
+Preto keby sme workspace 3R wristu opisovali iba pomocou Cartesian position (x, y, z), dostali by sme prakticky jediný bod a vyzeralo by to, že mechanizmus skoro nič nedokáže. Jeho hlavnou schopnosťou je však natáčanie end-effectora, preto je pri ňom dôležitejší **orientation workspace** — množina všetkých orientácií, do ktorých dokáže end-effector natočiť.
 
 ---
 

@@ -3,8 +3,6 @@
 
 export const ch24Content = `# Lekcia 7: Configuration and Velocity Constraints
 
-## Obmedzenia konfigurácie a pohybu robota
-
 Keď sme doteraz hovorili o **configuration space (C-space)**, zaujímalo nás predovšetkým to, aké rôzne configurations môže robot alebo mechanizmus nadobudnúť. Configuration môžeme chápať ako úplný opis toho, **v akom stave sa systém práve nachádza**. Pri robotickom ramene ju môžu určovať uhly jednotlivých joints, pri mobilnom robotovi jeho poloha a natočenie a pri jednoduchom bode v rovine napríklad súradnice x a y.
 
 Pri skutočných mechanizmoch však configuration variables väčšinou nemôžeme meniť úplne nezávisle. Jednotlivé časti robota sú fyzicky spojené, links majú pevnú dĺžku, niektoré body musia zostať v kontakte a pri kolesových robotoch môže napríklad platiť podmienka, že sa kolesá kotúľajú bez bočného šmyku.

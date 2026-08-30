@@ -819,15 +819,39 @@ Tu teda:
 
 Toto je veľmi dôležitý detail.
 
-Keď uvidíš:
+Pfaffian neznamená „nonholonomic".
+
+Pfaffian znamená iba:
+
+**„Velocity constraint som zapísala týmto matematickým spôsobom: A(q)·q̇ = 0."**
+
+A potom ešte musíme zistiť, aký constraint sa za tým skrýva.
+
+Výťah: Nemôžeš mať velocity doprava, pretože tam vôbec nemôžeš byť. → **holonomic**
+
+Auto: Nemôžeš mať velocity priamo doprava, ale doprava sa nakoniec dostať môžeš. → **nonholonomic**
+
+Takže si to skús zapamätať cez jednu otázku:
+
+**„Je zakázané MIESTO, alebo iba SPÔSOB POHYBU?"**
+
+Zakázané miesto/configuration → holonomic.
+
+Miesto je možné, ale určitý okamžitý spôsob pohybu nie → nonholonomic.
+
+A oba tieto prípady môžu mať velocity constraint zapísaný ako:
+
+**A(q)·q̇ = 0**
+
+Preto samotné slovo Pfaffian ešte nehovorí, či je constraint holonomic alebo nonholonomic.
+
+Keď teda uvidíš:
 
 **A(q)·q̇ = 0**
 
 ešte nemôžeš povedať:
 
 **„Aha, nonholonomic constraint."**
-
-Prečo?
 
 Pretože aj náš úplne obyčajný bod na kružnici má velocity constraint tohto tvaru.
 

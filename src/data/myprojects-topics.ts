@@ -21,6 +21,8 @@ import { ch321p1Content } from './lessons/ch3-2-1-p1-content';
 import { ch321p1Exercises } from './lessons/ch3-2-1-p1-exercises';
 import { ch321p2Content } from './lessons/ch3-2-1-p2-content';
 import { ch321p2Exercises } from './lessons/ch3-2-1-p2-exercises';
+import { ch322Content } from './lessons/ch3-2-2-content';
+import { ch322Exercises } from './lessons/ch3-2-2-exercises';
 
 export const projectTopics: ProjectTopic[] = [
   {
@@ -127,6 +129,15 @@ export const projectTopics: ProjectTopic[] = [
         videoUrl: 'https://www.youtube.com/watch?v=6KIPusOv5fA',
         bookPage: 75,
         exercises: ch321p2Exercises,
+      },
+      {
+        id: 'ch3-2-2',
+        unitId: 'modern-robotics',
+        title: 'Chapter 3.2.2: Angular Velocities',
+        content: ch322Content,
+        videoUrl: 'https://www.youtube.com/watch?v=zJJldJYMxVU',
+        bookPage: 83,
+        exercises: ch322Exercises,
       },
     ],
   },

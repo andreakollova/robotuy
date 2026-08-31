@@ -633,35 +633,23 @@ A preto má twist 6 components: **3 pre rotation + 3 pre translation**.
 
 ---
 
-## 20. Ako môže byť velocity vector space, keď C-space nie je flat
+## 20. Ako môže byť velocity vector space, keď C-space nie je flat?
 
-Na prvý pohľad to môže vyzerať zvláštne. Ak C-space nie je vector space, prečo velocity môže byť?
+Predstav si **guľu** a malú mravčiu bodku, ktorá sa môže pohybovať iba po jej povrchu. Celý jej C-space je povrch gule **S²**. Ten je zakrivený, takže ho nemôžeme považovať za obyčajnú rovnú 2D plochu.
 
-Pomôže sphere.
+Teraz sa však nezaujímaj o celú guľu, ale iba o **jeden konkrétny bod**, kde sa mravec práve nachádza. V tom okamihu sa môže rozbehnúť dopredu, dozadu, doľava, doprava alebo šikmo, ale vždy **po povrchu gule**. Nemôže sa rozbehnúť priamo von z gule, pretože by jej povrch opustil.
 
-Predstav si point, ktorý sa musí pohybovať po povrchu sphere. Jeho C-space je:
+Ak si v tomto bode predstavíš malú rovnú plochu, ktorá sa gule iba dotýka, dostaneš **tangent plane**. Táto rovina predstavuje všetky možné smery instantaneous velocity v danom bode. A hoci je celá guľa zakrivená, táto lokálna tangent plane je obyčajný **vector space**.
 
-**S2.**
+Rovnaká myšlienka platí pri robotovi. Jeho celý C-space môže mať komplikovanú, zakrivenú geometriu. Keď sa však pozrieme na **jednu konkrétnu configuration**, jeho možné instantaneous velocities môžeme opísať pomocou vectors.
 
-Sphere nie je flat plane. Nemožno ju ako celok považovať za obyčajný 2D vector space.
+Jednoducho teda:
 
-Teraz však vyber jeden konkrétny point na povrchu.
+**C-space hovorí: „Kde všade sa systém môže nachádzať?"**
 
-Ak sa point začne pohybovať bez toho, aby opustil sphere, jeho instantaneous velocity musí smerovať **tangentne k surface**. Nemôže smerovať priamo von zo sphere.
+**Velocity space hovorí: „Keď som práve TU, akými smermi sa môžem v tomto okamihu pohnúť?"**
 
-V tomto jednom point môžeme všetky možné instantaneous velocities predstaviť ako tangent plane dotýkajúcu sa sphere.
-
-Táto tangent plane už je vector space.
-
-To je všeobecný princíp, ktorý sme začali vidieť už pri velocity constraints v Chapter 2. Configuration odpovedá na otázku:
-
-**„Kde systém môže byť?"**
-
-Velocity odpovedá na inú otázku:
-
-**„Ako sa môže z tejto konkrétnej configuration práve teraz pohybovať?"**
-
-Aj keď je celý C-space geometricky komplikovaný, lokálny priestor možných velocities má jednoduchšiu vector-space štruktúru.
+Preto môže byť celý C-space zakrivený, zatiaľ čo pri jednej konkrétnej configuration môžeme velocities opisovať pomocou jednoduchého vector space.
 
 ---
 

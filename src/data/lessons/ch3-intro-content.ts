@@ -199,23 +199,53 @@ Intuitívne teda stále môžeme hovoriť „frame pripevnený k robotu", ale pr
 
 ## 10. Right-handed reference frames a smer rotation
 
-Všetky reference frames v Modern Robotics sú **right-handed**.
+V Modern Robotics sa používa **right-handed coordinate system**, teda pravotočivý súradnicový systém. Znie to odborne, ale v skutočnosti ide iba o pravidlo, ktoré nám hovorí, **ako majú byť osi x, y a z navzájom orientované**.
 
-Predstav si pravú ruku. V Modern Robotics môžeme osi priradiť tak, že index finger predstavuje x-axis, middle finger y-axis a thumb z-axis. Matematicky to vyjadruje vzťah:
+Najjednoduchšie si to predstav pomocou pravej ruky. Roztiahni **palec, ukazovák a prostredník** tak, aby každý smeroval iným smerom. Predstav si, že **ukazovák ukazuje kladný smer osi x** a **prostredník kladný smer osi y**. Keď ich takto nastavíš, **palec ti ukáže kladný smer osi z**.
 
-**x̂ x ŷ = ẑ**
+Pointa je teda veľmi jednoduchá: keď už vieme, kam smeruje +x a +y, smer +z si nemôžeme vybrať ľubovoľne. Pri right-handed coordinate system je jeho smer určený práve týmto pravidlom pravej ruky.
 
-Symbol **x** znamená cross product.
+Matematicky sa tento vzťah zapisuje:
 
-Táto dohoda je dôležitá, pretože potrebujeme jednoznačne určiť aj kladný smer rotation.
+**x̂ × ŷ = ẑ**
 
-Na to používame **right-hand rule**. Palec pravej ruky nasmerujeme pozdĺž kladného smeru osi rotation. Smer, ktorým sa prirodzene stáčajú ostatné prsty, predstavuje positive rotation okolo tejto osi.
+Symbol **×** znamená cross product. V tomto prípade si z neho stačí predstaviť: **ak vezmeme smer +x a smer +y, pravidlo cross productu nám ukáže smer +z.**
 
-Ak teda povieme:
+Toto pravidlo však neurčuje iba rozloženie osí. Pravú ruku používame aj na určenie toho, **ktorým smerom je kladná rotation okolo určitej osi**.
 
-**„otoč teleso o +30° okolo z-axis",**
+Tu už nepotrebuješ tri prsty. Predstav si napríklad rotation okolo z-axis. **Palec pravej ruky nasmeruj v kladnom smere osi z.** Ostatné prsty prirodzene zohni okolo tejto osi. **Smer, ktorým sa tvoje prsty stáčajú, je kladný smer rotation.**
 
-right-hand rule presne určuje, ktorým smerom sa má teleso otočiť.
+Predstav si napríklad ceruzku postavenú kolmo na stôl. Ceruzka predstavuje z-axis a jej špička smeruje do +z. Pravý palec nasmeruješ hore pozdĺž ceruzky. Ostatné prsty sa okolo nej zatočia určitým smerom. Práve tento smer nazývame **kladná rotation okolo z-axis**.
+
+Preto keď v robotike dostaneš:
+
+**theta = +30° okolo z-axis**
+
+znamienko **+** neznamená iba „30 je kladné číslo". Hovorí nám, **ktorým smerom sa má teleso otočiť**. Nasmeruješ pravý palec do +z a zahnuté prsty ti ukážu smer rotation.
+
+Ak by sme mali:
+
+**theta = -30° okolo z-axis**
+
+rotation by prebehla **opačným smerom**.
+
+Dobrý konkrétny príklad je rotation z x-axis smerom k y-axis. Pri bežnom right-handed coordinate system platí, že kladná rotation okolo +z-axis otáča +x smerom k +y:
+
+**+x - +y**
+
+Ak by sme rotation vykonali záporným smerom, išli by sme opačne:
+
+**+y - +x**
+
+Right-handed coordinate system a right-hand rule teda riešia dve súvisiace veci. **Prvé pravidlo nám pomáha určiť, ako sú orientované osi x, y a z. Druhé nám podľa zvolenej osi ukazuje, ktorým smerom považujeme rotation za kladnú.**
+
+Najjednoduchšia pomôcka je preto:
+
+**Tri prsty - pomáhajú určiť smery osí x, y, z.**
+
+**Palec + zahnuté prsty - palec ukazuje kladný smer rotation axis a zahnuté prsty ukazujú kladný smer rotation okolo nej.**
+
+Takže ak uvidíš napríklad **+90° okolo z-axis**, predstav si pravý palec smerujúci do +z. Smer zahnutých prstov ti okamžite povie, ktorým smerom sa má teleso otočiť.
 
 ![Right-handed reference frame and right-hand rule for positive rotation](/book/ch3/fig3-2.png)
 

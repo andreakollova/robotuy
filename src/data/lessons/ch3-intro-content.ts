@@ -653,41 +653,77 @@ Preto môže byť celý C-space zakrivený, zatiaľ čo pri jednej konkrétnej c
 
 ---
 
-## 21. Screw motion ako prirodzený pohyb rigid body
+## Screw motion - prečo ho vôbec potrebujeme?
 
-Ďalšou veľkou myšlienkou Chapter 3 je **screw motion**.
+Predstav si, že máš v ruke **knihu**. Kniha je najskôr pred tebou. Potom ju presunieš doprava a zároveň ju trochu otočíš. Na začiatku teda mala jednu **configuration** a na konci má inú configuration - zmenila sa jej **position aj orientation**.
 
-Najjednoduchšie si ho predstavíš na obyčajnej skrutke. Keď skrutku zaskrutkuješ, súčasne sa:
+Takýto pohyb môžeme opisovať oddelene: povedať, **o koľko sa kniha posunula** a potom **o koľko sa otočila**. V robotike však chceme mať spôsob, ktorým dokážeme tieto dve zmeny opísať **spoločne ako jeden 3D pohyb**.
 
-**otáča okolo svojej osi**
+Práve tu prichádza **screw motion**.
 
-a
+### Čo je screw motion?
 
-**posúva pozdĺž tej istej osi.**
+Predstav si obyčajnú skrutku. Keď ju zaskrutkuješ, skrutka sa **otáča okolo svojej osi** a zároveň sa **po tej istej osi posúva dopredu**.
 
-To je screw motion.
+To je základná myšlienka screw motion:
 
-Na prvý pohľad by sa mohlo zdať, že ide iba o jeden špecifický druh pohybu. V skutočnosti má screw motion v robotike oveľa hlbší význam.
+**rotation okolo osi + translation pozdĺž tej istej osi.**
 
-**Chasles-Mozzi theorem** hovorí, že každý rigid-body displacement v 3D možno reprezentovať ako vhodnú rotation okolo určitej fixed axis spolu s translation pozdĺž tej istej axis.
+Dôležité však je, že robot nemusí v skutočnosti vyzerať ani sa pohybovať ako skrutka. Skrutka je iba jednoduchý príklad, podľa ktorého tento spôsob opisu dostal názov.
 
-To znamená, že aj keď sa výsledný pohyb rigid body javí veľmi komplikovane, vždy existuje vhodná screw axis, pomocou ktorej môžeme celý displacement opísať.
+### Prečo je to užitočné?
 
----
+Vráťme sa ku knihe. Presunula si ju doprava a zároveň otočila. Výsledok vyzerá ako kombinácia dvoch rôznych pohybov.
 
-## 22. Ako si screw motion predstaviť prakticky
+Ukazuje sa však, že môžeme nájsť **jednu vhodne umiestnenú a nasmerovanú os**, okolo ktorej by sa kniha mohla otočiť a zároveň sa pozdĺž nej posunúť tak, aby skončila **presne v rovnakej konečnej configuration**.
 
-Predstav si knihu položenú na stole. Chceš ju dostať z jednej configuration do druhej - na iné miesto a zároveň ju otočiť.
+Táto špeciálna os sa nazýva **screw axis**.
 
-Mohol by si tento motion opísať ako sériu krokov: trochu ju otočiť, potom posunúť, znova otočiť a ešte trochu posunúť.
+Nejde teda o tvrdenie:
 
-Screw theory sa na problém pozerá inak.
+**„Kniha sa v skutočnosti pohybovala po tejto osi."**
 
-Hovorí, že pre výsledný rigid-body displacement existuje určitá axis v priestore, okolo ktorej môžeme knihu otočiť a zároveň ju pozdĺž tejto axis posúvať tak, aby sme dostali presne rovnakú konečnú configuration.
+Ide o tvrdenie:
 
-Čistá rotation je špeciálny prípad screw motion, pri ktorom translation pozdĺž osi nie je prítomná. Čistá translation sa tiež dá interpretovať ako limitný prípad screw motion.
+**„Celú zmenu zo začiatočnej configuration do konečnej configuration dokážeme opísať pomocou jednej vhodnej osi."**
 
-Tak získavame veľmi jednotný spôsob, ako rozmýšľať o rigid-body motions.
+To je podstatný rozdiel.
+
+### Chasles-Mozzi theorem
+
+A práve toto nám hovorí **Chasles-Mozzi theorem**:
+
+**Každý displacement rigid body v 3D sa dá opísať ako screw motion okolo vhodnej screw axis.**
+
+Predstav si teda robotický gripper, ktorý bol najskôr tu:
+
+**configuration A**
+
+a po pohybe skončil posunutý a otočený:
+
+**configuration B**
+
+Aj keď sa medzi A a B zmenila position aj orientation, existuje vhodná **screw axis**, pomocou ktorej môžeme túto celú zmenu opísať ako:
+
+**otočenie okolo osi + posunutie pozdĺž osi.**
+
+### Načo je to v robotike?
+
+Pretože nám to dáva **jeden spoločný spôsob, ako opisovať rotation aj translation rigid body**.
+
+Pri samotnej orientation sme mali axis-angle representation:
+
+**rotation axis + rotation angle**
+
+Teraz túto myšlienku rozšírime na celý rigid-body motion:
+
+**screw axis + množstvo pohybu pozdĺž tejto screw motion.**
+
+A práve z tejto myšlienky neskôr vznikajú **screw axes, twists a exponential coordinates pre rigid-body motion**.
+
+Najdôležitejšia myšlienka je teda veľmi jednoduchá:
+
+**Screw motion je spôsob, ako rotation a translation telesa spojiť do jedného opisu pohybu.**
 
 ---
 

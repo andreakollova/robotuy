@@ -753,67 +753,71 @@ Exponential coordinates nám teda umožňujú opísať **rotation aj translation
 
 ## 24. Ako spolu súvisia twist a screw motion
 
-Twist môžeme chápať ako **instantaneous version of screw motion**.
+**Screw motion** a **twist** opisujú v podstate ten istý druh pohybu, ale pozeráme sa naň z dvoch rôznych pohľadov.
 
-Predstav si rigid body, ktorý sa práve teraz otáča okolo určitej axis a zároveň sa pozdĺž nej pohybuje.
+**Screw motion** opisuje celý pohyb telesa - napríklad robotický gripper sa **otočí a zároveň posunie**. **Twist** nám namiesto toho hovorí, **ako rýchlo a akým spôsobom sa gripper pohybuje práve teraz, v tomto okamihu**. Preto môžeme twist chápať ako **okamžitú rýchlosť screw motion**.
 
-Jeho angular a linear velocity spojíme do twistu.
+Predstav si opäť skrutku. **Screw axis S** určuje, okolo akej osi sa skrutka otáča a pozdĺž akej osi sa posúva. **θ̇ (theta-dot)** potom hovorí, **ako rýchlo tento pohyb práve vykonáva**. Spolu dostaneme twist:
 
-Ak je screw axis označená **S** a rýchlosť pohybu po nej označíme **theta-dot**, potom twist môžeme vyjadriť ako:
+**V = Sθ̇**
 
-**V = S theta-dot.**
+Čiže veľmi jednoducho:
 
-To je veľmi podobné rotation:
+**S = akým spôsobom sa pohybujem**
 
-**omega = omega-hat theta-dot.**
+**θ̇ = ako rýchlo sa takto pohybujem**
 
-V oboch prípadoch máme geometric direction pohybu a scalar, ktorý určuje jeho rýchlosť.
+**V = moja aktuálna velocity, teda twist**
 
-Ak potom určitý constant twist „vykonávame" určitý čas, dostaneme konečný rigid-body displacement.
-
-Tým sa začne prepájať velocity s configuration.
+Ak tento pohyb vykonávame určitý čas, teleso sa postupne dostane z jednej **configuration** do druhej. Twist teda opisuje **okamžitú velocity**, zatiaľ čo screw motion môžeme použiť na opis **celkového displacementu**.
 
 ---
 
-## 25. Matrix exponential: z motion k výslednej configuration
+## 25. Matrix exponential: z pohybu k výslednej configuration
 
-Práve na spojenie velocity a konečnej configuration budeme používať **matrix exponential**.
+**Matrix exponential** môžeme jednoducho chápať ako nástroj, ktorý nám povie: **„Ak sa teleso pohybuje týmto spôsobom, kde a ako bude nakoniec natočené?"**
 
-Predstav si, že poznáš axis rotation a constant angular velocity. Chceš vedieť, akú orientation bude mať rigid body po určitom čase.
+Predstav si robotický gripper. Vieš, že sa má **otáčať okolo určitej osi o 90°**. Samotná axis a angle opisujú pohyb, ale my chceme vypočítať **výslednú orientation grippera**. Matrix exponential vezme tento opis pohybu a vytvorí z neho **rotation matrix R**, ktorá už opisuje výslednú orientation.
 
-Alebo poznáš screw axis a constant twist a chceš vedieť, kde rigid body skončí.
+Podobne pri celom rigid-body motion môžeme mať **screw axis S** a množstvo pohybu **θ**. Matrix exponential z nich vytvorí **homogeneous transformation matrix T**, ktorá nám povie výslednú **position aj orientation** telesa.
 
-Matrix exponential rieši presne tento smer problému:
+Môžeme si to teda predstaviť ako prevod:
 
-**instantaneous motion - finite motion - final configuration.**
+**opis pohybu - matrix exponential - výsledná configuration**
 
-Pri rotations bude premieňať vhodnú reprezentáciu angular motion na rotation matrix.
+Pri rotation:
 
-Pri rigid-body motions bude premieňať screw motion na homogeneous transformation matrix.
+**axis + angle - matrix exponential - rotation matrix R**
+
+Pri celom rigid-body motion:
+
+**screw axis + množstvo pohybu - matrix exponential - transformation matrix T**
+
+Matrix exponential je teda jednoducho **most medzi tým, ako sa teleso pohne, a tým, v akej configuration po tomto pohybe skončí**.
 
 ---
 
 ## 26. Matrix logarithm rieši opačný problém
 
-Matrix logarithm robí opačný krok.
+**Matrix logarithm** robí presný opak toho, čo matrix exponential.
 
-Predstav si robotické rameno, ktoré je v jednej configuration, a poznáš požadovanú final configuration.
+Predstav si robotický gripper. Poznáš jeho **začiatočnú configuration** a vieš, **kde a ako natočený má skončiť**. Teraz potrebuješ zistiť: **„Aký pohyb ho tam dostane?"**
 
-Teraz sa pýtaš:
+Matrix logarithm vezme požadovanú výslednú configuration a nájde jej **motion description** - teda napríklad **okolo akej axis sa má teleso otočiť a o koľko**.
 
-**„Aká axis a aké množstvo motion by ma z počiatočnej configuration dostali do tejto konečnej?"**
+Preto si rozdiel môžeš pamätať takto:
 
-Matrix logarithm vezme výslednú rotation matrix alebo transformation matrix a nájde zodpovedajúce exponential coordinates.
+**Matrix exponential:**
+**poznám pohyb - hľadám výslednú configuration**
 
-Schematicky:
+**Matrix logarithm:**
+**poznám výslednú configuration - hľadám pohyb**
 
-**matrix exponential:**
-motion - configuration
+Napríklad ak rotation matrix hovorí, že gripper je vo výsledku otočený o 90° okolo z-axis, matrix logarithm nám z tejto matrix pomôže dostať späť informáciu:
 
-**matrix logarithm:**
-configuration - motion description
+**z-axis + 90°**
 
-Toto bude neskôr veľmi užitočné pri kinematics a motion planning.
+Preto je matrix logarithm užitočný napríklad v **motion planning** - vieme, kam sa robot potrebuje dostať, a chceme zistiť pohyb medzi configurations.
 
 ---
 

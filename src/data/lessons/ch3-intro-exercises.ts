@@ -78,7 +78,7 @@ export const ch3IntroExercises: Exercise[] = [
   // 38
   { id: 'ch3i-q38', type: 'mcq', conceptId: 'exp-coords', prompt: 'Čo predstavuje θ v zápise ω̂θ?', options: ['Translation direction', 'Wrench magnitude', 'Rotation angle', 'Number of DOF'], correctAnswer: 'Rotation angle', explanation: 'ω̂ určuje axis a θ množstvo rotation okolo nej.', xp: 10 },
   // 39
-  { id: 'ch3i-q39', type: 'mcq', conceptId: 'exp-coords', prompt: 'Čo predstavuje S theta pri exponential coordinates rigid-body motion?', options: ['Iba orientation rigid body', 'Screw axis spolu s množstvom motion pozdĺž nej', 'Force aplikovanú na screw joint', 'Difference medzi dvoma velocities'], correctAnswer: 'Screw axis spolu s množstvom motion pozdĺž nej', explanation: 'S opisuje screw axis a theta určuje, ako ďaleko sa po zodpovedajúcom screw motion pohybujeme.', xp: 10 },
+  { id: 'ch3i-q39', type: 'mcq', conceptId: 'exp-coords', prompt: 'Čo predstavuje Sθ pri exponential coordinates rigid-body motion?', options: ['Iba orientation rigid body', 'Screw axis spolu s množstvom motion pozdĺž nej', 'Force aplikovanú na screw joint', 'Difference medzi dvoma velocities'], correctAnswer: 'Screw axis spolu s množstvom motion pozdĺž nej', explanation: 'S opisuje screw axis a θ určuje, ako ďaleko sa po zodpovedajúcom screw motion pohybujeme.', xp: 10 },
   // 40
   { id: 'ch3i-q40', type: 'mcq', conceptId: 'exp-coords', prompt: 'Ak screw motion predstavuje pure translation, čo theta fyzicky reprezentuje?', options: ['Angular acceleration', 'Pitch nulovej hodnoty', 'Rotation angle', 'Linear distance'], correctAnswer: 'Linear distance', explanation: 'Pri čistej translation nie je rotation, preto theta predstavuje prejdenú vzdialenosť.', xp: 10 },
   // 41

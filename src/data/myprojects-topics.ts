@@ -23,6 +23,8 @@ import { ch321p2Content } from './lessons/ch3-2-1-p2-content';
 import { ch321p2Exercises } from './lessons/ch3-2-1-p2-exercises';
 import { ch322Content } from './lessons/ch3-2-2-content';
 import { ch322Exercises } from './lessons/ch3-2-2-exercises';
+import { ch323p2Content } from './lessons/ch3-2-3-p2-content';
+import { ch323p2Exercises } from './lessons/ch3-2-3-p2-exercises';
 
 export const projectTopics: ProjectTopic[] = [
   {
@@ -138,6 +140,15 @@ export const projectTopics: ProjectTopic[] = [
         videoUrl: 'https://www.youtube.com/watch?v=zJJldJYMxVU',
         bookPage: 83,
         exercises: ch322Exercises,
+      },
+      {
+        id: 'ch3-2-3-p2',
+        unitId: 'modern-robotics',
+        title: 'Chapter 3.2.3: Exponential Coordinates of Rotation (Part 2 of 2)',
+        content: ch323p2Content,
+        videoUrl: 'https://www.youtube.com/watch?v=WHn9xJl43nY',
+        bookPage: 93,
+        exercises: ch323p2Exercises,
       },
     ],
   },

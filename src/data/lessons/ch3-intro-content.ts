@@ -823,73 +823,49 @@ Preto je matrix logarithm užitočný napríklad v **motion planning** - vieme, 
 
 ## 27. SO(3), SE(3), so(3) a se(3)
 
-V ďalších lessons sa budú veľmi často objavovať štyri podobné označenia.
+Tieto štyri názvy vyzerajú podobne, ale najdôležitejšie je zatiaľ rozlišovať **veľké a malé písmená**.
 
-**SO(3)** je množina všetkých platných 3 x 3 rotation matrices. Reprezentuje spatial orientations.
+**SO(3)** opisuje možné **orientations v 3D**. Patria sem všetky platné **3 × 3 rotation matrices R**. Keď teda rotation matrix hovorí, ako je robot natočený, patrí do **SO(3)**.
 
-**SE(3)** je množina všetkých platných 4 x 4 homogeneous transformation matrices. Reprezentuje celé spatial rigid-body configurations, teda position aj orientation.
+**SE(3)** opisuje celú **configuration rigid body v 3D** - teda **kde sa nachádza aj ako je natočené**. Patria sem **4 × 4 transformation matrices T**, ktoré obsahujú position aj orientation.
 
-Potom sa stretneme s označeniami:
+Malé **so(3)** a **se(3)** súvisia skôr s tým, **ako sa teleso pohybuje práve teraz**. **so(3)** súvisí s **angular velocity** a **se(3)** s **twistom**, teda s rotation a translation velocity dohromady.
 
-**so(3)**
+Najjednoduchšie si to môžeš rozdeliť takto:
 
-a
+**SO(3) - orientation**
 
-**se(3).**
+**SE(3) - position + orientation**
 
-Malé písmená majú iný význam než veľké.
+**so(3) - angular motion / velocity**
 
-Zatiaľ si ich môžeme predstaviť ako matrix spaces spojené s **instantaneous angular velocities a twists**.
+**se(3) - rigid-body motion / twist**
 
-Presný význam sa ukáže prirodzene, keď budeme derivovať rotation matrices a transformation matrices podľa času.
-
-Veľké:
-
-**SO(3), SE(3)**
-
-budú opisovať configurations.
-
-Malé:
-
-**so(3), se(3)**
-
-budú úzko súvisieť s velocities.
+Čiže veľké písmená si spájaj hlavne s **configuration**, malé písmená s **motion a velocity**. Presnejší matematický význam malých so(3) a se(3) príde neskôr.
 
 ---
 
 ## 28. Wrench: spoločný opis force a momentu
 
-Poslednou veľkou témou kapitoly sú **forces**.
+Pri rigid body často nestačí povedať iba **aká force na teleso pôsobí**. Dôležité je aj to, **kde táto force pôsobí**, pretože môže teleso zároveň otáčať.
 
-Predstav si robotické rameno, ktoré drží ťažký predmet.
+Predstav si **dvere**. Keď zatlačíš na kľučku, pôsobíš na dvere force. Keďže však tlačíš ďaleko od pántov, táto force zároveň vytvára **moment (torque)**, ktorý dvere otáča.
 
-Gravity na predmet pôsobí force smerom nadol. Táto force však nemusí iba „ťahať dole". Ak pôsobí v určitej vzdialenosti od reference pointu, vytvára zároveň **moment alebo torque**.
+Pri rigid body preto často potrebujeme poznať naraz:
 
-Pri rigid body preto často potrebujeme opisovať force a moment naraz.
+**force - ako teleso tlačíme alebo ťaháme**
 
-Modern Robotics ich spojí do jedného 6-dimensional vectora:
+**moment - ako sa ho tým snažíme otáčať**
 
-**wrench.**
+Tieto dve informácie spojíme do jedného 6-dimensional vectora, ktorý sa nazýva **wrench**. Obsahuje **3 components momentu + 3 components force**.
 
-Wrench obsahuje:
+Je to podobné ako pri **twiste**:
 
-**3 moment components**
+**Twist = angular velocity + linear velocity - ako sa teleso pohybuje**
 
-a
+**Wrench = moment + force - čo na teleso silovo pôsobí**
 
-**3 force components.**
-
-Je to veľmi podobná myšlienka ako pri twiste.
-
-Twist spája:
-
-**angular velocity + linear velocity.**
-
-Wrench spája:
-
-**moment + force.**
-
-Tak získavame paralelný matematický jazyk pre motion aj forces.
+Twist teda opisuje **motion**, zatiaľ čo wrench opisuje **forces a moments pôsobiace na rigid body**.
 
 ---
 

@@ -82,7 +82,7 @@ export const ch3IntroExercises: Exercise[] = [
   // 40
   { id: 'ch3i-q40', type: 'mcq', conceptId: 'exp-coords', prompt: 'Ak screw motion predstavuje pure translation, čo θ fyzicky reprezentuje?', options: ['Angular acceleration', 'Pitch nulovej hodnoty', 'Rotation angle', 'Linear distance'], correctAnswer: 'Linear distance', explanation: 'Pri čistej translation nie je rotation, preto θ predstavuje prejdenú vzdialenosť.', xp: 10 },
   // 41
-  { id: 'ch3i-q41', type: 'mcq', conceptId: 'twist', prompt: 'Ktorý vzťah intuitívne vyjadruje twist ako motion po screw axis?', options: ['T = R + p', 'F = m + f', 'V = S theta-dot', 'p = R theta'], correctAnswer: 'V = S theta-dot', explanation: 'S určuje screw axis a theta-dot určuje rýchlosť pohybu po tejto axis.', xp: 10 },
+  { id: 'ch3i-q41', type: 'mcq', conceptId: 'twist', prompt: 'Ktorý vzťah intuitívne vyjadruje twist ako motion po screw axis?', options: ['T = R + p', 'F = m + f', 'V = Sθ̇', 'p = Rθ'], correctAnswer: 'V = Sθ̇', explanation: 'S určuje screw axis a θ̇ určuje rýchlosť pohybu po tejto axis.', xp: 10 },
   // 42
   { id: 'ch3i-q42', type: 'mcq', conceptId: 'mat-exp', prompt: 'Ak poznáme constant motion description a chceme zistiť výslednú configuration po určitom pohybe, ktorý koncept budeme používať?', options: ['Matrix exponential', 'Matrix logarithm', 'Wrench transformation', 'C-space constraint'], correctAnswer: 'Matrix exponential', explanation: 'Matrix exponential vedie z opisov angular alebo screw motion k výslednej rotation alebo rigid-body configuration.', xp: 10 },
   // 43

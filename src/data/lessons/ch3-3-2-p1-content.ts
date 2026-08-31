@@ -55,11 +55,9 @@ Máme pevný space frame {s} a body frame {b} spojený s rigid body.
 
 Configuration body frame vzhľadom na space frame zapisujeme:
 
-\`\`\`
-Tsb(t) =
-| R(t)  | p(t) |
-| 0 0 0 | 1    |
-\`\`\`
+$$Tsb(t) =$$
+$$[ R(t)  p(t) ]$$
+$$[ 0 0 0  1 ]$$
 
 Symbol t znamená čas. Keď sa teleso pohybuje, jeho configuration sa mení, takže sa mení aj R(t) a p(t).
 
@@ -71,11 +69,9 @@ Ak chceme vedieť, ako rýchlo sa T mení, vezmeme jej časovú deriváciu.
 
 Dostaneme:
 
-\`\`\`
-Tdot =
-| Rdot  | pdot |
-| 0 0 0 | 0    |
-\`\`\`
+$$Tdot =$$
+$$[ Rdot  pdot ]$$
+$$[ 0 0 0  0 ]$$
 
 Tu už vidíme dve rôzne časti. Derivácia pdot je intuitívna: opisuje velocity originu body frame vyjadrenú v space coordinates.
 
@@ -141,37 +137,29 @@ Zatiaľ si tento vzorec nemusíme pamätať. Oveľa dôležitejšie je pochopiť
 
 Vieme, že:
 
-\`\`\`
-Tsb-1 =
-| RT    | -RT p |
-| 0 0 0 | 1     |
-\`\`\`
+$$Tsb-1 =$$
+$$[ RT  -RT p ]$$
+$$[ 0 0 0  1 ]$$
 
 a:
 
-\`\`\`
-Tdot =
-| Rdot  | pdot |
-| 0 0 0 | 0    |
-\`\`\`
+$$Tdot =$$
+$$[ Rdot  pdot ]$$
+$$[ 0 0 0  0 ]$$
 
 Keď tieto dve matrices vynásobíme, dostaneme:
 
-\`\`\`
-Tsb-1 Tdot =
-| RT Rdot | RT pdot |
-| 0 0 0   | 0       |
-\`\`\`
+$$Tsb-1 Tdot =$$
+$$[ RT Rdot  RT pdot ]$$
+$$[ 0 0 0  0 ]$$
 
 Všimni si, že člen -RT p z inverse transformation sa v hornej pravej časti výsledku neobjaví. Je to preto, že sa násobí nulou z posledného riadku Tdot.
 
 Výsledná matrix má preto veľmi čistú formu:
 
-\`\`\`
-[Vb] =
-| [omega-b] | vb  |
-| 0 0 0     | 0   |
-\`\`\`
+$$[Vb] =$$
+$$[ [omega-b]  vb ]$$
+$$[ 0 0 0  0 ]$$
 
 kde:
 
@@ -291,11 +279,9 @@ Ak:
 
 potom definujeme:
 
-\`\`\`
-[V] =
-| [omega] | v   |
-| 0 0 0   | 0   |
-\`\`\`
+$$[V] =$$
+$$[ [omega]  v ]$$
+$$[ 0 0 0  0 ]$$
 
 Táto 4 x 4 matrix sa niekedy nazýva matrix representation twistu.
 
@@ -331,11 +317,9 @@ Zodpovedajúci priestor instantaneous motions sa nazýva:
 
 Jeho prvky majú tvar:
 
-\`\`\`
-[V] =
-| [omega] | v   |
-| 0 0 0   | 0   |
-\`\`\`
+$$[V] =$$
+$$[ [omega]  v ]$$
+$$[ 0 0 0  0 ]$$
 
 Môžeme si teda vytvoriť paralelu:
 
@@ -389,19 +373,15 @@ Rozdiel teda vychádza z toho, v ktorom frame chceme motion vyjadriť.
 
 Máme:
 
-\`\`\`
-Tdot =
-| Rdot | pdot |
-| 0    | 0    |
-\`\`\`
+$$Tdot =$$
+$$[ Rdot  pdot ]$$
+$$[ 0  0 ]$$
 
 a:
 
-\`\`\`
-T-1 =
-| RT | -RT p |
-| 0  | 1     |
-\`\`\`
+$$T-1 =$$
+$$[ RT  -RT p ]$$
+$$[ 0  1 ]$$
 
 Teraz vypočítame:
 

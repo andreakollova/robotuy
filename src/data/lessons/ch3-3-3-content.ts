@@ -123,11 +123,9 @@ a výsledkom bude homogeneous transformation opisujúca čistú translation.
 
 Rovnako ako sme z omega vectora vytvárali skew-symmetric matrix [omega], aj z twistu S vytvoríme 4 x 4 matrix:
 
-\`\`\`
-[S] =
-| [omega] | v   |
-| 0 0 0   | 0   |
-\`\`\`
+$$[S] =$$
+$$[ [omega]  v ]$$
+$$[ 0 0 0  0 ]$$
 
 Táto matrix patrí do se(3).
 
@@ -175,11 +173,9 @@ Matematicky je táto series vždy konvergentná. V praxi ju však nepočítame n
 
 Ak ||omega|| = 1 (twist obsahuje rotation), matrix exponential má uzavretú formu:
 
-\`\`\`
-e^[S]theta =
-| e^[omega-hat]theta | G(theta) v |
-| 0 0 0               | 1          |
-\`\`\`
+$$e^[S]theta =$$
+$$[ e^[omega-hat]theta  G(theta) v ]$$
+$$[ 0 0 0  1 ]$$
 
 Rozbalíme si, čo to znamená.
 
@@ -281,11 +277,9 @@ a translation v výslednej T je zero:
 
 Výsledok:
 
-\`\`\`
-T =
-| R | 0 |
-| 0 | 1 |
-\`\`\`
+$$T =$$
+$$[ R  0 ]$$
+$$[ 0  1 ]$$
 
 To dáva zmysel. Ak teleso iba rotuje okolo osi prechádzajúcej originom, jeho configuration po rotation je iba nová orientation bez translation.
 
@@ -321,11 +315,9 @@ kde ||v-hat|| = 1.
 
 Matrix [S]theta je:
 
-\`\`\`
-[S]theta =
-| 0   | v-hat theta |
-| 0 0 0 | 0           |
-\`\`\`
+$$[S]theta =$$
+$$[ 0  v-hat theta ]$$
+$$[ 0 0 0  0 ]$$
 
 kde horná ľavá 3 x 3 časť je nulová matrix.
 
@@ -337,11 +329,9 @@ pretože ([S]theta)^2 = 0 v tomto prípade.
 
 Preto:
 
-\`\`\`
-e^[S]theta =
-| I         | v-hat theta |
-| 0 0 0     | 1           |
-\`\`\`
+$$e^[S]theta =$$
+$$[ I  v-hat theta ]$$
+$$[ 0 0 0  1 ]$$
 
 To je jednoducho homogeneous transformation matrix pre čistú translation o vector v-hat theta.
 
@@ -371,11 +361,9 @@ Zhrnieme oba prípady.
 
 Ak ||omega|| = 1 (rotation case):
 
-\`\`\`
-e^[S]theta =
-| e^[omega-hat]theta | G(theta) v |
-| 0 0 0               | 1          |
-\`\`\`
+$$e^[S]theta =$$
+$$[ e^[omega-hat]theta  G(theta) v ]$$
+$$[ 0 0 0  1 ]$$
 
 kde:
 
@@ -385,11 +373,9 @@ kde:
 
 Ak omega = 0 a ||v|| = 1 (pure translation case):
 
-\`\`\`
-e^[S]theta =
-| I         | v theta |
-| 0 0 0     | 1       |
-\`\`\`
+$$e^[S]theta =$$
+$$[ I  v theta ]$$
+$$[ 0 0 0  1 ]$$
 
 Tieto dve formuly nám umožňujú pre ľubovoľný unit twist S a parameter theta vypočítať výslednú homogeneous transformation T.
 
@@ -467,11 +453,9 @@ Theta je translation distance.
 
 Matrix exponential:
 
-\`\`\`
-e^[S]theta =
-| I       | v-hat theta |
-| 0 0 0   | 1           |
-\`\`\`
+$$e^[S]theta =$$
+$$[ I  v-hat theta ]$$
+$$[ 0 0 0  1 ]$$
 
 To je jednoducho translation o v-hat theta.
 
@@ -501,11 +485,9 @@ Výsledkom je 4 x 4 matrix patriaca do se(3), z ktorej môžeme extrahovať S a 
 
 Najjednoduchší prípad nastane, keď T nemá rotation:
 
-\`\`\`
-T =
-| I | p |
-| 0 | 1 |
-\`\`\`
+$$T =$$
+$$[ I  p ]$$
+$$[ 0  1 ]$$
 
 Rotation matrix je identity, takže omega = 0. Ide o čistú translation.
 
@@ -521,11 +503,9 @@ a unit twist je:
 
 Matrix logarithm je:
 
-\`\`\`
-[S]theta =
-| 0     | p |
-| 0 0 0 | 0 |
-\`\`\`
+$$[S]theta =$$
+$$[ 0  p ]$$
+$$[ 0 0 0  0 ]$$
 
 To dáva intuitívny zmysel. Ak configuration je čistá translation o vector p, príslušný motion je translation v smere p o vzdialenosť ||p||.
 
@@ -581,11 +561,9 @@ Krok 1: Extrahuj R a p z T.
 
 Krok 2: Ak R = I, potom omega = 0, theta = ||p||, v = p/||p|| a:
 
-\`\`\`
-[S]theta =
-| 0     | p |
-| 0 0 0 | 0 |
-\`\`\`
+$$[S]theta =$$
+$$[ 0  p ]$$
+$$[ 0 0 0  0 ]$$
 
 Krok 3: Ak R ≠ I, použij matrix logarithm pre SO(3) na R a získaj [omega-hat] a theta.
 
@@ -593,11 +571,9 @@ Krok 4: Vypočítaj v = G(theta)^-1 p.
 
 Krok 5: Zostav:
 
-\`\`\`
-[S]theta =
-| [omega-hat]theta | v theta |
-| 0 0 0             | 0       |
-\`\`\`
+$$[S]theta =$$
+$$[ [omega-hat]theta  v theta ]$$
+$$[ 0 0 0  0 ]$$
 
 Výstup: [S]theta ∈ se(3)
 
@@ -607,13 +583,11 @@ Výstup: [S]theta ∈ se(3)
 
 Majme:
 
-\`\`\`
-T =
-| 1 0 0 | 3 |
-| 0 1 0 | 0 |
-| 0 0 1 | 4 |
-| 0 0 0 | 1 |
-\`\`\`
+$$T =$$
+$$[ 1 0 0  3 ]$$
+$$[ 0 1 0  0 ]$$
+$$[ 0 0 1  4 ]$$
+$$[ 0 0 0  1 ]$$
 
 R = I, takže omega = 0.
 
@@ -727,11 +701,9 @@ Musíme byť opatrní s notáciou.
 
 V praxi:
 
-\`\`\`
-[S]theta = [S theta] =
-| [omega-hat]theta | v theta |
-| 0 0 0             | 0       |
-\`\`\`
+$$[S]theta = [S theta] =$$
+$$[ [omega-hat]theta  v theta ]$$
+$$[ 0 0 0  0 ]$$
 
 Matrix exponential berieme z tejto 4 x 4 matrix.
 

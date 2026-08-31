@@ -45,19 +45,15 @@ Adjoint transformation nie je iba jednoduchá rotation. Obsahuje v sebe rotation
 
 Ak máme transformation:
 
-\`\`\`
-T =
-| R | p |
-| 0 | 1 |
-\`\`\`
+$$T =$$
+$$[ R  p ]$$
+$$[ 0  1 ]$$
 
 potom Adjoint matrix je:
 
-\`\`\`
-[AdT] =
-| R      | 0   |
-| [p]R   | R   |
-\`\`\`
+$$[AdT] =$$
+$$[ R  0 ]$$
+$$[ [p]R  R ]$$
 
 kde [p] je skew-symmetric matrix vectora p.
 
@@ -85,10 +81,8 @@ To je presne to, čo robí dolný riadok [AdT]: [p]R vľavo a R vpravo.
 
 Celkovo teda:
 
-\`\`\`
-| omega-s |   | R    | 0 | | omega-b |
-| vs      | = | [p]R | R | | vb      |
-\`\`\`
+$$[ omega-s  R  0  omega-b ]$$
+$$[ vs  =  [p]R  R  vb ]$$
 
 ---
 
@@ -156,11 +150,9 @@ Predstav si robotické rameno. Body frame {b} je na gripperi a space frame {s} j
 
 Nech:
 
-\`\`\`
-Tsb =
-| I | p |
-| 0 | 1 |
-\`\`\`
+$$Tsb =$$
+$$[ I  p ]$$
+$$[ 0  1 ]$$
 
 kde R = I (orientation je rovnaká) a p = (1, 0, 0).
 
@@ -168,19 +160,15 @@ Teda gripper je posunutý o 1 m pozdĺž x-axis, ale má rovnakú orientation ak
 
 Adjoint matrix je:
 
-\`\`\`
-[AdTsb] =
-| I    | 0 |
-| [p]I | I |
-\`\`\`
+$$[AdTsb] =$$
+$$[ I  0 ]$$
+$$[ [p]I  I ]$$
 
 Keďže R = I, dostávame:
 
-\`\`\`
-[AdTsb] =
-| I   | 0 |
-| [p] | I |
-\`\`\`
+$$[AdTsb] =$$
+$$[ I  0 ]$$
+$$[ [p]  I ]$$
 
 Ak body twist je:
 
@@ -268,10 +256,8 @@ Predstav si rôzne typy skrutiek. Jemná skrutka má malý pitch: veľa otáčan
 
 Pre konečný pitch (omega ≠ 0) môžeme twist zapísať:
 
-\`\`\`
-omega = s-hat
-v = -s-hat x q + h s-hat
-\`\`\`
+$$omega = s-hat$$
+$$v = -s-hat x q + h s-hat$$
 
 kde s-hat je unit direction vector osi, q je point na osi a h je pitch.
 
@@ -289,10 +275,8 @@ Celý twist teda obsahuje informáciu o osi rotation, o jej vzdialenosti od orig
 
 Ak pitch h = 0, twist má tvar:
 
-\`\`\`
-omega = s-hat
-v = -s-hat x q
-\`\`\`
+$$omega = s-hat$$
+$$v = -s-hat x q$$
 
 Linear časť twistu nie je zero (pokiaľ os neprechádza originom), ale celý motion je čistá rotation.
 
@@ -388,17 +372,13 @@ Zhrňme si: screw axis S je normalizovaný twist.
 
 Pre omega ≠ 0:
 
-\`\`\`
-S = (s-hat, -s-hat x q + h s-hat)
-\`\`\`
+$$S = (s-hat, -s-hat x q + h s-hat)$$
 
 kde ||s-hat|| = 1.
 
 Pre omega = 0:
 
-\`\`\`
-S = (0, v-hat)
-\`\`\`
+$$S = (0, v-hat)$$
 
 kde ||v-hat|| = 1.
 
@@ -464,11 +444,9 @@ Pre SE(3) existuje analogická formula.
 
 Ak omega ≠ 0:
 
-\`\`\`
-e^([S] theta) =
-| e^([omega-hat] theta) | G(theta) v |
-| 0                     | 1          |
-\`\`\`
+$$e^([S] theta) =$$
+$$[ e^([omega-hat] theta)  G(theta) v ]$$
+$$[ 0  1 ]$$
 
 kde:
 
@@ -600,10 +578,8 @@ kde q je point na osi, s-hat je smer osi, h je pitch a theta-dot je speed.
 
 Oba opisy nesú rovnakú informáciu. Z jedného vieme vypočítať druhý:
 
-\`\`\`
-omega = s-hat theta-dot
-v = (-s-hat x q + h s-hat) theta-dot
-\`\`\`
+$$omega = s-hat theta-dot$$
+$$v = (-s-hat x q + h s-hat) theta-dot$$
 
 Twist coordinates sú kompaktnejšie pre výpočty. Screw parameters sú lepšie pre geometrickú intuíciu.
 

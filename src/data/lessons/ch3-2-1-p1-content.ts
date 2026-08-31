@@ -143,10 +143,8 @@ Dostaneme:
 
 a po rozpísaní:
 
-\`\`\`
-| cos theta | -sin theta |
-| sin theta |  cos theta |
-\`\`\`
+$$[ cos theta  -sin theta ]$$
+$$[ sin theta  cos theta ]$$
 
 Toto je **2 x 2 rotation matrix**.
 
@@ -184,10 +182,8 @@ a približne:
 
 Rotation matrix teda bude približne:
 
-\`\`\`
-| 0,5   | -0,866 |
-| 0,866 |  0,5   |
-\`\`\`
+$$[ 0,5  -0,866 ]$$
+$$[ 0,866  0,5 ]$$
 
 Čo z nej vieme vyčítať?
 
@@ -287,11 +283,9 @@ Preto:
 
 alebo rozpísane:
 
-\`\`\`
-| r11 | r12 | r13 |
-| r21 | r22 | r23 |
-| r31 | r32 | r33 |
-\`\`\`
+$$[ r11  r12  r13 ]$$
+$$[ r21  r22  r23 ]$$
+$$[ r31  r32  r33 ]$$
 
 Rotation matrix R teda obsahuje deväť numbers, ale ich geometrický význam je veľmi konkrétny.
 
@@ -487,11 +481,9 @@ a
 
 Identity matrix v 3D je:
 
-\`\`\`
-| 1 | 0 | 0 |
-| 0 | 1 | 0 |
-| 0 | 0 | 1 |
-\`\`\`
+$$[ 1  0  0 ]$$
+$$[ 0  1  0 ]$$
+$$[ 0  0  1 ]$$
 
 Táto jediná matrix equation v sebe obsahuje všetky unit-length aj orthogonality conditions.
 
@@ -521,11 +513,9 @@ a tak ďalej.
 
 Výsledok vyzerá schematicky takto:
 
-\`\`\`
-| r1.r1 | r1.r2 | r1.r3 |
-| r2.r1 | r2.r2 | r2.r3 |
-| r3.r1 | r3.r2 | r3.r3 |
-\`\`\`
+$$[ r1.r1  r1.r2  r1.r3 ]$$
+$$[ r2.r1  r2.r2  r2.r3 ]$$
+$$[ r3.r1  r3.r2  r3.r3 ]$$
 
 Teraz použijeme vlastnosti správneho reference frame.
 
@@ -547,11 +537,9 @@ Rôzne axes sú perpendicular, takže:
 
 Výsledkom je:
 
-\`\`\`
-| 1 | 0 | 0 |
-| 0 | 1 | 0 |
-| 0 | 0 | 1 |
-\`\`\`
+$$[ 1  0  0 ]$$
+$$[ 0  1  0 ]$$
+$$[ 0  0  1 ]$$
 
 čiže:
 
@@ -725,10 +713,8 @@ a
 
 Každú matrix v SO(2) môžeme zapísať ako:
 
-\`\`\`
-| cos theta | -sin theta |
-| sin theta |  cos theta |
-\`\`\`
+$$[ cos theta  -sin theta ]$$
+$$[ sin theta  cos theta ]$$
 
 kde theta môže reprezentovať ľubovoľnú planar orientation.
 
@@ -816,12 +802,10 @@ Každá group musí obsahovať **identity element**.
 
 Pri rotation matrices je to identity matrix:
 
-\`\`\`
-I =
-| 1 | 0 | 0 |
-| 0 | 1 | 0 |
-| 0 | 0 | 1 |
-\`\`\`
+$$I =$$
+$$[ 1  0  0 ]$$
+$$[ 0  1  0 ]$$
+$$[ 0  0  1 ]$$
 
 Čo táto matrix fyzicky znamená?
 

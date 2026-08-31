@@ -71,12 +71,10 @@ Trace matrix je jednoduchá operácia. Vezmeme entries ležiace na hlavnej diago
 
 Ak máme všeobecnú matrix:
 
-\`\`\`
-R =
-| r11 | r12 | r13 |
-| r21 | r22 | r23 |
-| r31 | r32 | r33 |
-\`\`\`
+$$R =$$
+$$[ r11  r12  r13 ]$$
+$$[ r21  r22  r23 ]$$
+$$[ r31  r32  r33 ]$$
 
 potom:
 
@@ -104,11 +102,9 @@ Teraz chceme vypočítať trace celej pravej strany. Môžeme sa preto pozrieť 
 
 Prvý člen je identity matrix I:
 
-\`\`\`
-| 1 | 0 | 0 |
-| 0 | 1 | 0 |
-| 0 | 0 | 1 |
-\`\`\`
+$$[ 1  0  0 ]$$
+$$[ 0  1  0 ]$$
+$$[ 0  0  1 ]$$
 
 Na diagonále sú tri jednotky, takže:
 
@@ -182,11 +178,9 @@ teda angle od 0° do 180°. Toto obmedzenie nie je náhodné. Jednu rotation tot
 
 Predstav si, že robotický gripper má relative orientation opísanú matrix:
 
-\`\`\`
-|  0 | -1 |  0 |
-|  1 |  0 |  0 |
-|  0 |  0 |  1 |
-\`\`\`
+$$[ 0  -1  0 ]$$
+$$[ 1  0  0 ]$$
+$$[ 0  0  1 ]$$
 
 My teraz nechceme matrix iba rozpoznať ako známu z-axis rotation. Predstavme si, že ju dostal controller ako výsledok výpočtu a musí z nej rotation systematicky odvodiť.
 
@@ -264,11 +258,9 @@ Je to podobné, ako keby si mala dve fotografie toho istého obrazu, pričom jed
 
 Vráťme sa k našej matrix:
 
-\`\`\`
-|  0 | -1 |  0 |
-|  1 |  0 |  0 |
-|  0 |  0 |  1 |
-\`\`\`
+$$[ 0  -1  0 ]$$
+$$[ 1  0  0 ]$$
+$$[ 0  0  1 ]$$
 
 Už sme zistili:
 
@@ -280,20 +272,16 @@ Pre tento angle platí:
 
 Transpose matrix je:
 
-\`\`\`
-|  0 |  1 |  0 |
-| -1 |  0 |  0 |
-|  0 |  0 |  1 |
-\`\`\`
+$$[ 0  1  0 ]$$
+$$[ -1  0  0 ]$$
+$$[ 0  0  1 ]$$
 
 Teraz vypočítame rozdiel:
 
-\`\`\`
-R - RT =
-|  0 | -2 |  0 |
-|  2 |  0 |  0 |
-|  0 |  0 |  0 |
-\`\`\`
+$$R - RT =$$
+$$[ 0  -2  0 ]$$
+$$[ 2  0  0 ]$$
+$$[ 0  0  0 ]$$
 
 Podľa vzorca:
 
@@ -301,20 +289,16 @@ Podľa vzorca:
 
 a keďže sin theta = 1, delíme matrix dvoma:
 
-\`\`\`
-[omega-hat] =
-|  0 | -1 |  0 |
-|  1 |  0 |  0 |
-|  0 |  0 |  0 |
-\`\`\`
+$$[omega-hat] =$$
+$$[ 0  -1  0 ]$$
+$$[ 1  0  0 ]$$
+$$[ 0  0  0 ]$$
 
 Teraz si spomeňme, ako vyzerá všeobecná skew-symmetric matrix vectora:
 
-\`\`\`
-|   0  | -omega3 |  omega2 |
-| omega3 |    0   | -omega1 |
-| -omega2 | omega1 |    0   |
-\`\`\`
+$$[ 0  -omega3  omega2 ]$$
+$$[ omega3  0  -omega1 ]$$
+$$[ -omega2  omega1  0 ]$$
 
 Porovnaním vidíme:
 
@@ -590,12 +574,10 @@ Predstavme si:
 
 Potom:
 
-\`\`\`
-omega-hat omega-hatT =
-| omega1²      | omega1 omega2 | omega1 omega3 |
-| omega2 omega1 | omega2²      | omega2 omega3 |
-| omega3 omega1 | omega3 omega2 | omega3²      |
-\`\`\`
+$$omega-hat omega-hatT =$$
+$$[ omega1²  omega1 omega2  omega1 omega3 ]$$
+$$[ omega2 omega1  omega2²  omega2 omega3 ]$$
+$$[ omega3 omega1  omega3 omega2  omega3² ]$$
 
 A keďže:
 
@@ -613,11 +595,9 @@ Dôležitejšie než zapamätať si mechanicky jednotlivé varianty vzorca je po
 
 Predstavme si rotation matrix:
 
-\`\`\`
-| 1 |  0 |  0 |
-| 0 | -1 |  0 |
-| 0 |  0 | -1 |
-\`\`\`
+$$[ 1  0  0 ]$$
+$$[ 0  -1  0 ]$$
+$$[ 0  0  -1 ]$$
 
 Najprv vypočítame trace:
 

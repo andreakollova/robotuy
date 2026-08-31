@@ -161,12 +161,10 @@ Pre unit vector:
 
 je skew-symmetric matrix:
 
-\`\`\`
-[omega-hat] =
-|  0       | -omega3  |  omega2  |
-|  omega3  |  0       | -omega1  |
-| -omega2  |  omega1  |  0       |
-\`\`\`
+$$[omega-hat] =$$
+$$[ 0  -omega3  omega2 ]$$
+$$[ omega3  0  -omega1 ]$$
+$$[ -omega2  omega1  0 ]$$
 
 Táto matrix má vlastnosť:
 
@@ -368,21 +366,17 @@ Rotation axis je:
 
 Skew-symmetric matrix je:
 
-\`\`\`
-[omega-hat] =
-|  0 | -1 |  0 |
-|  1 |  0 |  0 |
-|  0 |  0 |  0 |
-\`\`\`
+$$[omega-hat] =$$
+$$[ 0  -1  0 ]$$
+$$[ 1  0  0 ]$$
+$$[ 0  0  0 ]$$
 
 Druhá mocnina:
 
-\`\`\`
-[omega-hat]^2 =
-| -1 |  0 |  0 |
-|  0 | -1 |  0 |
-|  0 |  0 |  0 |
-\`\`\`
+$$[omega-hat]^2 =$$
+$$[ -1  0  0 ]$$
+$$[ 0  -1  0 ]$$
+$$[ 0  0  0 ]$$
 
 Teraz dosadíme do Rodriguesovej formuly:
 
@@ -390,37 +384,29 @@ Teraz dosadíme do Rodriguesovej formuly:
 
 Identity matrix:
 
-\`\`\`
-I =
-| 1 | 0 | 0 |
-| 0 | 1 | 0 |
-| 0 | 0 | 1 |
-\`\`\`
+$$I =$$
+$$[ 1  0  0 ]$$
+$$[ 0  1  0 ]$$
+$$[ 0  0  1 ]$$
 
 Prvý člen sin(theta)[omega-hat]:
 
-\`\`\`
-|  0        | -sin(theta) |  0 |
-|  sin(theta) |  0         |  0 |
-|  0        |  0          |  0 |
-\`\`\`
+$$[ 0  -sin(theta)  0 ]$$
+$$[ sin(theta)  0  0 ]$$
+$$[ 0  0  0 ]$$
 
 Druhý člen (1-cos(theta))[omega-hat]^2:
 
-\`\`\`
-| -(1-cos(theta)) |  0               |  0 |
-|  0               | -(1-cos(theta)) |  0 |
-|  0               |  0               |  0 |
-\`\`\`
+$$[ -(1-cos(theta))  0  0 ]$$
+$$[ 0  -(1-cos(theta))  0 ]$$
+$$[ 0  0  0 ]$$
 
 Sčítaním dostaneme:
 
-\`\`\`
-R =
-|  cos(theta) | -sin(theta) | 0 |
-|  sin(theta) |  cos(theta) | 0 |
-|  0          |  0          | 1 |
-\`\`\`
+$$R =$$
+$$[ cos(theta)  -sin(theta)  0 ]$$
+$$[ sin(theta)  cos(theta)  0 ]$$
+$$[ 0  0  1 ]$$
 
 To je presne štandardná z-axis rotation matrix, ktorú už poznáme. Rodriguesova formula teda dáva správny výsledok.
 
@@ -436,12 +422,10 @@ Pre theta = pi/2:
 
 Dosadením do predchádzajúceho výsledku:
 
-\`\`\`
-R =
-|  0 | -1 | 0 |
-|  1 |  0 | 0 |
-|  0 |  0 | 1 |
-\`\`\`
+$$R =$$
+$$[ 0  -1  0 ]$$
+$$[ 1  0  0 ]$$
+$$[ 0  0  1 ]$$
 
 To je rotation, ktorá premení x-axis na y-axis a y-axis na negative x-axis. Presne quarter turn counter-clockwise okolo z-axis.
 
@@ -451,12 +435,10 @@ Pre theta = pi:
 
 **cos(pi) = -1**
 
-\`\`\`
-R =
-| -1 |  0 | 0 |
-|  0 | -1 | 0 |
-|  0 |  0 | 1 |
-\`\`\`
+$$R =$$
+$$[ -1  0  0 ]$$
+$$[ 0  -1  0 ]$$
+$$[ 0  0  1 ]$$
 
 To je 180-degree rotation okolo z-axis. Obe osi x a y sa obrátia.
 

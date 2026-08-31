@@ -335,29 +335,23 @@ Pripomeňme si Adjoint representation.
 
 Pre transformation:
 
-\`\`\`
-T =
-| R | p |
-| 0 | 1 |
-\`\`\`
+$$T =$$
+$$[ R  p ]$$
+$$[ 0  1 ]$$
 
 je Adjoint matrix 6 x 6 matrix:
 
-\`\`\`
-[Ad-T] =
-| R        | 0   |
-| [p]R     | R   |
-\`\`\`
+$$[Ad-T] =$$
+$$[ R  0 ]$$
+$$[ [p]R  R ]$$
 
 kde [p] je skew-symmetric matrix vectora p.
 
 Transpose tejto matice je:
 
-\`\`\`
-[Ad-T]^T =
-| R^T       | ([p]R)^T |
-| 0         | R^T      |
-\`\`\`
+$$[Ad-T]^T =$$
+$$[ R^T  ([p]R)^T ]$$
+$$[ 0  R^T ]$$
 
 Keďže:
 
@@ -365,11 +359,9 @@ Keďže:
 
 dostaneme:
 
-\`\`\`
-[Ad-T]^T =
-| R^T          | -R^T [p] |
-| 0            | R^T      |
-\`\`\`
+$$[Ad-T]^T =$$
+$$[ R^T  -R^T [p] ]$$
+$$[ 0  R^T ]$$
 
 Táto matrix transformuje wrench medzi frames.
 

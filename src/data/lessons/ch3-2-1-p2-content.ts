@@ -253,12 +253,10 @@ Predstavme si, že frame {b} je oproti {a} otočený o +90° okolo z-axis.
 
 Potom:
 
-\`\`\`
-Rab =
-| 0  | -1 | 0 |
-| 1  |  0 | 0 |
-| 0  |  0 | 1 |
-\`\`\`
+$$Rab =$$
+$$[ 0  -1  0 ]$$
+$$[ 1  0  0 ]$$
+$$[ 0  0  1 ]$$
 
 Vo frame {b} máme vector:
 
@@ -494,12 +492,10 @@ Predstav si, že otáčame objekt okolo x-axis.
 
 Samotná x-axis sa pri rotation nemení. Preto má matrix tvar:
 
-\`\`\`
-Rot(x-hat, theta) =
-| 1 |     0    |      0    |
-| 0 | cos theta | -sin theta |
-| 0 | sin theta |  cos theta |
-\`\`\`
+$$Rot(x-hat, theta) =$$
+$$[ 1  0  0 ]$$
+$$[ 0  cos theta  -sin theta ]$$
+$$[ 0  sin theta  cos theta ]$$
 
 Prečo zostáva v prvom riadku a columne jednotka?
 
@@ -513,12 +509,10 @@ Je to podobné ako otáčanie kolesa nasadeného na os. Os zostáva na mieste, z
 
 Pre rotation okolo y-axis používame:
 
-\`\`\`
-Rot(y-hat, theta) =
-|  cos theta | 0 | sin theta |
-|      0     | 1 |     0     |
-| -sin theta | 0 | cos theta |
-\`\`\`
+$$Rot(y-hat, theta) =$$
+$$[ cos theta  0  sin theta ]$$
+$$[ 0  1  0 ]$$
+$$[ -sin theta  0  cos theta ]$$
 
 Tentoraz zostáva nezmenená y-component, pretože práve y-axis je axis of rotation.
 
@@ -532,12 +526,10 @@ Predstav si kameru na gimbale, ktorá sa nakláňa hore a dole okolo horizontál
 
 Pre rotation okolo z-axis dostávame:
 
-\`\`\`
-Rot(z-hat, theta) =
-| cos theta | -sin theta | 0 |
-| sin theta |  cos theta | 0 |
-|     0     |      0     | 1 |
-\`\`\`
+$$Rot(z-hat, theta) =$$
+$$[ cos theta  -sin theta  0 ]$$
+$$[ sin theta  cos theta  0 ]$$
+$$[ 0  0  1 ]$$
 
 Toto je v podstate planar rotation matrix rozšírená do 3D.
 

@@ -49,11 +49,9 @@ Teraz ich spojíme do jednej matice.
 
 Úplnú configuration jedného reference frame vzhľadom na druhý budeme reprezentovať maticou:
 
-\`\`\`
-T =
-| R     | p |
-| 0 0 0 | 1 |
-\`\`\`
+$$T =$$
+$$[ R  p ]$$
+$$[ 0 0 0  1 ]$$
 
 Presnejšie ide o 4 x 4 maticu. Jej horná ľavá časť je 3 x 3 rotation matrix R a napravo od nej sa nachádza 3 x 1 position vector p. Posledný riadok je vždy:
 
@@ -61,12 +59,10 @@ Presnejšie ide o 4 x 4 maticu. Jej horná ľavá časť je 3 x 3 rotation matri
 
 Ak si to rozpíšeme úplne:
 
-\`\`\`
-| r11 | r12 | r13 | p1 |
-| r21 | r22 | r23 | p2 |
-| r31 | r32 | r33 | p3 |
-|  0  |  0  |  0  |  1 |
-\`\`\`
+$$[ r11  r12  r13  p1 ]$$
+$$[ r21  r22  r23  p2 ]$$
+$$[ r31  r32  r33  p3 ]$$
+$$[ 0  0  0  1 ]$$
 
 Horných deväť čísel patrí rotation matrix R. Tri čísla p1, p2 a p3 určujú position.
 
@@ -106,10 +102,8 @@ Preto:
 
 **Tsb =**
 
-\`\`\`
-| Rsb  | psb |
-| 0 0 0 | 1  |
-\`\`\`
+$$[ Rsb  psb ]$$
+$$[ 0 0 0  1 ]$$
 
 opisuje celú configuration {b} vzhľadom na {s}.
 
@@ -157,24 +151,18 @@ Teraz použijeme:
 
 čiže:
 
-\`\`\`
-| R     | p |
-| 0 0 0 | 1 |
-\`\`\`
+$$[ R  p ]$$
+$$[ 0 0 0  1 ]$$
 
 krát:
 
-\`\`\`
-| x |
-| 1 |
-\`\`\`
+$$[ x ]$$
+$$[ 1 ]$$
 
 Výsledkom je:
 
-\`\`\`
-| Rx + p |
-| 1      |
-\`\`\`
+$$[ Rx + p ]$$
+$$[ 1 ]$$
 
 Horná časť teda presne vytvorí:
 
@@ -248,11 +236,9 @@ Keď k rotation pridáme translation, dostávame množinu:
 
 Každá matrix:
 
-\`\`\`
-T =
-| R     | p |
-| 0 0 0 | 1 |
-\`\`\`
+$$T =$$
+$$[ R  p ]$$
+$$[ 0 0 0  1 ]$$
 
 kde:
 
@@ -276,11 +262,9 @@ Planar rigid body má tri DOF: dve translations x a y a jednu rotation theta. Je
 
 Homogeneous transformation potom vyzerá:
 
-\`\`\`
-T =
-| R   | p |
-| 0 0 | 1 |
-\`\`\`
+$$T =$$
+$$[ R  p ]$$
+$$[ 0 0  1 ]$$
 
 čo je 3 x 3 matrix.
 
@@ -358,11 +342,9 @@ Roznásobíme:
 
 A z toho už vidíme inverse transformation:
 
-\`\`\`
-Tsb-1 =
-| RsbT | -RsbT psb |
-| 0 0 0 | 1         |
-\`\`\`
+$$Tsb-1 =$$
+$$[ RsbT  -RsbT psb ]$$
+$$[ 0 0 0  1 ]$$
 
 Toto je veľmi dôležitý vzorec.
 
@@ -436,27 +418,21 @@ Nie je to formálne algebraické rušenie písmen, ale veľmi užitočná pomôc
 
 Rozpíšme si dve transformations:
 
-\`\`\`
-T1 =
-| R1 | p1 |
-|  0 |  1 |
-\`\`\`
+$$T1 =$$
+$$[ R1  p1 ]$$
+$$[ 0  1 ]$$
 
 a:
 
-\`\`\`
-T2 =
-| R2 | p2 |
-|  0 |  1 |
-\`\`\`
+$$T2 =$$
+$$[ R2  p2 ]$$
+$$[ 0  1 ]$$
 
 Ich súčin je:
 
-\`\`\`
-T1 T2 =
-| R1 R2 | R1 p2 + p1 |
-|   0   |     1      |
-\`\`\`
+$$T1 T2 =$$
+$$[ R1 R2  R1 p2 + p1 ]$$
+$$[ 0  1 ]$$
 
 Rotation časť:
 
@@ -878,11 +854,9 @@ Rotation matrix R vyriešila iba polovicu problému spatial rigid body. Vedeli s
 
 Hlavný tvar je:
 
-\`\`\`
-T =
-| R     | p |
-| 0 0 0 | 1 |
-\`\`\`
+$$T =$$
+$$[ R  p ]$$
+$$[ 0 0 0  1 ]$$
 
 R opisuje orientation a p position. Posledný riadok spolu s homogeneous coordinates umožňuje, aby sme rotation aj translation zapísali ako jednu matrix multiplication. Point sa potom transformuje podľa známej geometrickej myšlienky:
 

@@ -397,11 +397,9 @@ A body z-axis smeruje rovnako ako space z-axis:
 
 Keď tieto tri vectors vložíme ako columns do R, dostaneme:
 
-\`\`\`
-| 1 | 0 | 0 |
-| 0 | 1 | 0 |
-| 0 | 0 | 1 |
-\`\`\`
+$$[ 1  0  0 ]$$
+$$[ 0  1  0 ]$$
+$$[ 0  0  1 ]$$
 
 To je **identity matrix I**.
 
@@ -423,11 +421,9 @@ Body z-axis zostáva nezmenená, pretože rotujeme práve okolo nej:
 
 Keď ich opäť vložíme ako columns:
 
-\`\`\`
-|  0 | -1 | 0 |
-|  1 |  0 | 0 |
-|  0 |  0 | 1 |
-\`\`\`
+$$[  0  -1   0 ]$$
+$$[  1   0   0 ]$$
+$$[  0   0   1 ]$$
 
 dostaneme rotation matrix pre rotation o +90° okolo z-axis.
 
@@ -519,13 +515,11 @@ V robotike je však veľmi užitočné spojiť ich do jednej **4 x 4 homogeneous
 
 Jej všeobecný tvar je:
 
-\`\`\`
-T =
-| r11 | r12 | r13 | p1 |
-| r21 | r22 | r23 | p2 |
-| r31 | r32 | r33 | p3 |
-|  0  |  0  |  0  |  1 |
-\`\`\`
+$$T =$$
+$$[ r11  r12  r13  p1 ]$$
+$$[ r21  r22  r23  p2 ]$$
+$$[ r31  r32  r33  p3 ]$$
+$$[  0    0    0    1  ]$$
 
 Horná ľavá časť je rotation matrix **R**. Pravý column obsahuje position vector **p**. Spodný row **0 0 0 1** umožňuje spojiť rotation a translation do jedného matrix operation.
 

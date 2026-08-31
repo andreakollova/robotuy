@@ -178,7 +178,7 @@ export default function TopicLessonPage() {
                 const isNextMath = nextLine.startsWith('$$') && nextLine.endsWith('$$');
                 const isFirst = !isPrevMath;
                 const isLast = !isNextMath;
-                return <div key={i} style={{ background: 'rgba(79,42,133,0.05)', padding: isFirst && isLast ? '10px 14px' : isFirst ? '10px 14px 2px' : isLast ? '2px 14px 10px' : '2px 14px', borderRadius: isFirst && isLast ? 8 : isFirst ? '8px 8px 0 0' : isLast ? '0 0 8px 8px' : 0, marginTop: isFirst ? 8 : 0, marginBottom: isLast ? 8 : 0, fontFamily: 'var(--font-mono)', fontSize: 13, color: '#4f2a85', overflowX: 'auto', border: '1px solid var(--border)', borderTop: isFirst ? undefined : 'none' }}>{trimmed.slice(2, -2)}</div>;
+                return <div key={i} style={{ background: 'rgba(79,42,133,0.05)', padding: isFirst && isLast ? '10px 14px' : isFirst ? '10px 14px 4px' : isLast ? '4px 14px 10px' : '4px 14px', borderRadius: isFirst && isLast ? 8 : isFirst ? '8px 8px 0 0' : isLast ? '0 0 8px 8px' : 0, marginTop: isFirst ? 8 : 0, marginBottom: isLast ? 8 : 0, fontFamily: 'var(--font-mono)', fontSize: 13, color: '#4f2a85', overflowX: 'auto', borderLeft: '1px solid var(--border)', borderRight: '1px solid var(--border)', borderTop: isFirst ? '1px solid var(--border)' : 'none', borderBottom: isLast ? '1px solid var(--border)' : 'none' }}>{trimmed.slice(2, -2)}</div>;
               }
               const imgMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
               if (imgMatch) return <img key={i} src={imgMatch[2]} alt={imgMatch[1]} style={{ width: '100%', borderRadius: 10, margin: '10px 0' }} />;

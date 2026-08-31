@@ -80,7 +80,7 @@ export const ch3IntroExercises: Exercise[] = [
   // 39
   { id: 'ch3i-q39', type: 'mcq', conceptId: 'exp-coords', prompt: 'Čo predstavuje Sθ pri exponential coordinates rigid-body motion?', options: ['Iba orientation rigid body', 'Screw axis spolu s množstvom motion pozdĺž nej', 'Force aplikovanú na screw joint', 'Difference medzi dvoma velocities'], correctAnswer: 'Screw axis spolu s množstvom motion pozdĺž nej', explanation: 'S opisuje screw axis a θ určuje, ako ďaleko sa po zodpovedajúcom screw motion pohybujeme.', xp: 10 },
   // 40
-  { id: 'ch3i-q40', type: 'mcq', conceptId: 'exp-coords', prompt: 'Ak screw motion predstavuje pure translation, čo theta fyzicky reprezentuje?', options: ['Angular acceleration', 'Pitch nulovej hodnoty', 'Rotation angle', 'Linear distance'], correctAnswer: 'Linear distance', explanation: 'Pri čistej translation nie je rotation, preto theta predstavuje prejdenú vzdialenosť.', xp: 10 },
+  { id: 'ch3i-q40', type: 'mcq', conceptId: 'exp-coords', prompt: 'Ak screw motion predstavuje pure translation, čo θ fyzicky reprezentuje?', options: ['Angular acceleration', 'Pitch nulovej hodnoty', 'Rotation angle', 'Linear distance'], correctAnswer: 'Linear distance', explanation: 'Pri čistej translation nie je rotation, preto θ predstavuje prejdenú vzdialenosť.', xp: 10 },
   // 41
   { id: 'ch3i-q41', type: 'mcq', conceptId: 'twist', prompt: 'Ktorý vzťah intuitívne vyjadruje twist ako motion po screw axis?', options: ['T = R + p', 'F = m + f', 'V = S theta-dot', 'p = R theta'], correctAnswer: 'V = S theta-dot', explanation: 'S určuje screw axis a theta-dot určuje rýchlosť pohybu po tejto axis.', xp: 10 },
   // 42

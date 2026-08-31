@@ -27,6 +27,8 @@ import { ch323p2Content } from './lessons/ch3-2-3-p2-content';
 import { ch323p2Exercises } from './lessons/ch3-2-3-p2-exercises';
 import { ch331Content } from './lessons/ch3-3-1-content';
 import { ch331Exercises } from './lessons/ch3-3-1-exercises';
+import { ch332p1Content } from './lessons/ch3-3-2-p1-content';
+import { ch332p1Exercises } from './lessons/ch3-3-2-p1-exercises';
 
 export const projectTopics: ProjectTopic[] = [
   {
@@ -160,6 +162,15 @@ export const projectTopics: ProjectTopic[] = [
         videoUrl: 'https://www.youtube.com/watch?v=vlb3P7arbkU',
         bookPage: 97,
         exercises: ch331Exercises,
+      },
+      {
+        id: 'ch3-3-2-p1',
+        unitId: 'modern-robotics',
+        title: 'Chapter 3.3.2: Twists (Part 1 of 2)',
+        content: ch332p1Content,
+        videoUrl: 'https://www.youtube.com/watch?v=mvGZtO_ruj0',
+        bookPage: 104,
+        exercises: ch332p1Exercises,
       },
     ],
   },

@@ -653,7 +653,7 @@ Preto môže byť celý C-space zakrivený, zatiaľ čo pri jednej konkrétnej c
 
 ---
 
-## Screw motion - prečo ho vôbec potrebujeme?
+## 21. Screw motion - prečo ho vôbec potrebujeme?
 
 Predstav si, že máš v ruke **knihu**. Kniha je najskôr pred tebou. Potom ju presunieš doprava a zároveň ju trochu otočíš. Na začiatku teda mala jednu **configuration** a na konci má inú configuration - zmenila sa jej **position aj orientation**.
 

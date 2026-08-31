@@ -729,31 +729,25 @@ Najdôležitejšia myšlienka je teda veľmi jednoduchá:
 
 ## 23. Exponential coordinates: axis a množstvo motion
 
-Screw motion prirodzene vedie k ďalšiemu spôsobu reprezentácie configuration.
+**Exponential coordinates** sú jednoducho spôsob, ako povedať dve veci: **akým smerom sa teleso pohybuje a o koľko sa má pohnúť**.
 
-Pri rotation môžeme opísať motion pomocou:
+Pri obyčajnej rotation máme **rotation axis ω̂**, ktorá hovorí, **okolo akej osi sa otáčame**, a číslo **θ**, ktoré hovorí, **o koľko sa otočíme**. Napríklad: „otáčaj sa okolo z-axis o 90°." Spolu to zapisujeme ako **ω̂θ**.
 
-**rotation axis ω̂**
+Pri celom rigid-body motion je myšlienka rovnaká, len namiesto obyčajnej rotation axis použijeme **screw axis S**. Tá opisuje **aký typ screw motion má teleso vykonať** a **θ** hovorí, **koľko z tohto pohybu vykonáme**.
 
-a
+Preto zapisujeme:
 
-**rotation angle θ.**
+**Sθ ∈ R⁶**
 
-Spolu môžeme tieto quantities zapísať ako:
+Predstav si to ako **smer + množstvo pohybu**:
 
-**ω̂θ.**
+**S = ako sa mám pohybovať**
 
-Toto sa nazýva **exponential coordinate representation of rotation**.
+**θ = koľko sa mám takto pohnúť**
 
-Pri celom rigid-body motion použijeme podobnú myšlienku. Screw axis označíme **S** a quantity **θ** určuje, ako ďaleko sa po tomto screw motion máme pohybovať.
+Ak ide o otáčanie, **θ je uhol otočenia**. Ak ide iba o posúvanie bez rotation, **θ je vzdialenosť posunutia**.
 
-Dostaneme:
-
-**Sθ ∈ R⁶.**
-
-Ak screw motion obsahuje rotation, θ predstavuje rotation angle. Pri čistej translation predstavuje θ linear distance.
-
-Takto získame šesťparametrovú reprezentáciu rigid-body displacement.
+Exponential coordinates nám teda umožňujú opísať **rotation aj translation rigid body jedným spoločným spôsobom**.
 
 ---
 

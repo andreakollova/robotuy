@@ -871,45 +871,43 @@ Twist teda opisuje **motion**, zatiaľ čo wrench opisuje **forces a moments pô
 
 ## 29. Prečo je wrench praktický
 
-Predstav si robotický gripper držiaci jablko.
+Predstav si robotický **gripper**, ktorý drží jablko. Jablko svojou váhou tlačí smerom nadol, takže na robota pôsobí určitá **force**. Ak však jablko nie je presne pod stredom zápästia robota, jeho váha zároveň vytvára **moment**, ktorý sa snaží zápästie pootočiť.
 
-Na jablko pôsobí gravity. Ak sa pozeráme na celý systém vzhľadom na force-torque sensor v zápästí robota, gravity vytvára nielen force, ale podľa geometrie môže vytvárať aj moment okolo sensoru.
+Robot preto potrebuje vedieť nielen **ako silno a akým smerom je tlačený**, ale aj **ako silno je otáčaný**. Six-axis force-torque sensor v zápästí preto meria šesť hodnôt:
 
-Sensor preto často nemeria iba tri force components. Moderné six-axis force-torque senzory merajú:
+**Fx, Fy, Fz - forces v troch smeroch**
 
-**Fx, Fy, Fz**
+**Mx, My, Mz - moments okolo troch osí**
 
-a zároveň
+Týchto šesť hodnôt spolu tvorí **wrench**.
 
-**Mx, My, Mz.**
-
-Presne takýto šesťprvkový údaj je wrench.
-
-Tento pojem bude neskôr veľmi dôležitý pri robot dynamics, contact forces a manipulation.
+Wrench je teda praktický preto, že robot dostane v jednom údaji **kompletnú informáciu o forces aj moments, ktoré naň pôsobia**. To je dôležité napríklad pri uchopovaní predmetov, kontakte robota s okolím a neskôr pri **robot dynamics**.
 
 ---
 
 ## 30. Ako je postavený celý Chapter 3
 
-Celá kapitola má veľmi logickú štruktúru.
+Celý Chapter 3 postupuje od jednoduchších vecí k tomu, aby sme nakoniec dokázali **kompletne opísať rigid body v 3D - kde je, ako je otočené, ako sa pohybuje a aké forces naň pôsobia**.
 
-Najprv sa naučíme reprezentovať **orientation** pomocou rotation matrices.
+Najprv riešime iba **orientation**. Pomocou **rotation matrix R** opíšeme, ako je teleso natočené. Potom pridáme **angular velocity**, aby sme vedeli opísať, ako sa jeho orientation práve mení. Pomocou **exponential coordinates** a **matrix exponential/logarithm** následne dokážeme prepájať opis rotation typu „axis + angle" s rotation matrix.
 
-Potom sa pozrieme na **angular velocity** a na to, čo sa deje s rotation matrix, keď sa teleso otáča.
+Potom k orientation pridáme **position**. Spojením position a orientation dostaneme **homogeneous transformation matrix T**, ktorá už opisuje celú configuration rigid body.
 
-Ďalej vytvoríme **exponential coordinates of rotation**, ktoré nám umožnia prechádzať medzi axis-angle representation a rotation matrix.
+Ďalej sa presunieme ku velocity. **Angular velocity + linear velocity** spojíme do jedného 6D vectora nazývaného **twist**. Pomocou **screw motion** potom dokážeme rotation a translation chápať ako jeden spoločný rigid-body motion.
 
-Potom k orientation pridáme position a dostaneme **homogeneous transformation matrices**.
+Nakoniec rovnakú myšlienku použijeme pri forces. **Moment + force** spojíme do jedného 6D vectora nazývaného **wrench**.
 
-Následne spojíme angular a linear velocity do **twistu**.
+Celá kapitola teda smeruje k jednému spoločnému jazyku:
 
-Twist interpretujeme cez **screw axis**, a pomocou exponential coordinates budeme schopní opisovať celé rigid-body motions.
+**R - ako som otočený**
 
-Na záver analogicky spojíme force a moment do **wrenchu**.
+**T - kde som + ako som otočený**
 
-Výsledkom je jeden súvislý matematický jazyk pre:
+**Twist - ako sa práve pohybujem**
 
-**orientation, position, velocity, motion a forces rigid body.**
+**Screw motion - aký pohyb vykonávam**
+
+**Wrench - aké forces a moments na mňa pôsobia**
 
 ---
 

@@ -599,25 +599,37 @@ Táto non-Euclidean geometria je jeden z dôvodov, prečo používame špeciáln
 
 ## 19. Velocity rigid body sa dá opísať jednoduchšie než jeho configuration
 
-Aj keď samotný C-space rigid body nie je obyčajný vector space, jeho instantaneous velocity môžeme reprezentovať ako point v **R6**.
+Predstav si dron.
 
-Rigid body môže mať súčasne:
+Jeho configuration hovorí, kde sa dron nachádza a ako je natočený. Na to potrebujeme position p a rotation matrix R.
 
-**tri angular velocity components**
+Velocity však odpovedá na inú otázku:
 
-a
+**„Ako sa dron práve teraz pohybuje?"**
 
-**tri linear velocity components.**
+V jednom okamihu môže dron robiť dva druhy pohybu naraz. Môže sa presúvať - napríklad doprava, dopredu alebo hore. To opisuje linear velocity, ktorá má 3 components:
 
-Predstav si dron. V jednom okamihu môže letieť dopredu, stúpať nahor a zároveň sa otáčať okolo vlastnej osi.
+**v = (vx, vy, vz)**
 
-Na úplný opis jeho instantaneous motion preto potrebujeme translational aj rotational časť.
+Zároveň sa môže otáčať - napríklad nakláňať dopredu, do strany alebo sa otáčať okolo zvislej osi. To opisuje angular velocity, ktorá má tiež 3 components:
 
-Keď tieto dve časti spojíme do jedného 6-dimensional vectora, dostaneme:
+**ω = (ωx, ωy, ωz)**
 
-**spatial velocity alebo twist.**
+Ak chceme vedieť úplne všetko o tom, ako sa dron v danom okamihu pohybuje, potrebujeme teda:
 
-Twist teda opisuje, **ako sa rigid body práve teraz pohybuje**.
+**3 čísla pre jeho posúvanie + 3 čísla pre jeho otáčanie = 6 čísel.**
+
+Tieto dve časti môžeme spojiť do jedného 6-dimensional vectora, ktorý sa nazýva **twist**.
+
+Napríklad dron môže práve teraz letieť dopredu a hore a zároveň sa otáčať doľava. Twist dokáže všetky tieto pohyby opísať naraz.
+
+Takže najjednoduchšie:
+
+**Configuration** - Kde som a ako som natočený?
+
+**Twist** - Ako sa práve teraz pohybujem a otáčam?
+
+A preto má twist 6 components: **3 pre rotation + 3 pre translation**.
 
 ---
 

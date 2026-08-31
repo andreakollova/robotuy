@@ -219,13 +219,13 @@ Predstav si napríklad ceruzku postavenú kolmo na stôl. Ceruzka predstavuje z-
 
 Preto keď v robotike dostaneš:
 
-**theta = +30° okolo z-axis**
+**θ = +30° okolo z-axis**
 
 znamienko **+** neznamená iba „30 je kladné číslo". Hovorí nám, **ktorým smerom sa má teleso otočiť**. Nasmeruješ pravý palec do +z a zahnuté prsty ti ukážu smer rotation.
 
 Ak by sme mali:
 
-**theta = -30° okolo z-axis**
+**θ = −30° okolo z-axis**
 
 rotation by prebehla **opačným smerom**.
 

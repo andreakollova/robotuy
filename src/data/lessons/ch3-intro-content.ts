@@ -461,25 +461,33 @@ V ďalšom kroku ich budeme vedieť spojiť do jednej reprezentácie, ktorá bud
 
 ## 13. Prečo rotation matrix používa deväť čísel, keď orientation má iba 3 DOF
 
-Rotation matrix v 3D má rozmer:
+Rotation matrix má 9 čísel, pretože opisuje smer troch osí body frame:
 
-**3 x 3.**
+**x-axis potrebuje 3 čísla - (x, y, z)**
 
-Obsahuje teda deväť numbers.
+**y-axis potrebuje 3 čísla - (x, y, z)**
 
-Orientation rigid body však má iba **3 DOF**. To znamená, že na určenie orientation potrebujeme iba tri nezávislé quantities.
+**z-axis potrebuje 3 čísla - (x, y, z)**
 
-Ako teda môže mať rotation matrix deväť entries?
+Spolu teda **3 × 3 = 9 čísel**.
 
-Odpoveď je, že tých deväť numbers **nemôžeme vyberať nezávisle**.
+Ale týchto 9 čísel si nemôžeme vybrať ľubovoľne.
 
-Každý column rotation matrix predstavuje jednu axis reference frame. Tieto axes musia mať dĺžku jedna, musia byť navzájom perpendicular a musia vytvárať right-handed frame.
+Predstav si tri šípky pripevnené k robotovi, ktoré predstavujú jeho x, y a z axes. Keď určíš, kam smeruje x-axis a kam smeruje y-axis, z-axis už nemôže smerovať hocikam. Musí byť kolmá na obe a musí byť orientovaná správnym smerom podľa right-hand rule.
 
-Predstav si tri tyče, ktoré majú predstavovať x, y a z axes. Ak prvé dve nastavíš určitým spôsobom, tretiu už nemôžeš nasmerovať kamkoľvek. Musí byť perpendicular na obe a jej smer musí rešpektovať right-handed convention.
+Napríklad ak:
 
-Rotation matrix je teda **implicit representation**.
+**x-axis - doprava**
 
-To je presne pojem, ktorý sme mali v Chapter 2. Používame viac variables než je skutočný počet DOF, ale tieto variables sú navzájom previazané constraints.
+a
+
+**y-axis - dopredu**
+
+potom z-axis už nemôžeš otočiť napríklad doľava. Musí smerovať **hore**.
+
+Čiže rotation matrix síce uchováva 9 čísel, ale tie sú medzi sebou previazané pravidlami. V skutočnosti má orientation iba **3 nezávislé možnosti pohybu = 3 DOF**.
+
+Preto rotation matrix nazývame **implicit representation**: používame viac čísel, než skutočne potrebujeme, ale tie čísla musia spĺňať určité constraints.
 
 ---
 

@@ -15,6 +15,8 @@ import { ch24Exercises } from './lessons/ch2-4-exercises';
 import { ch25Content } from './lessons/ch2-5-content';
 import { ch25Exercises } from './lessons/ch2-5-exercises';
 import { ch231Exercises } from './lessons/ch2-3-1-exercises';
+import { ch3IntroContent } from './lessons/ch3-intro-content';
+import { ch3IntroExercises } from './lessons/ch3-intro-exercises';
 
 export const projectTopics: ProjectTopic[] = [
   {
@@ -94,6 +96,15 @@ export const projectTopics: ProjectTopic[] = [
         videoUrl: 'https://www.youtube.com/watch?v=hTuW51CpUg4',
         bookPage: 38,
         exercises: ch25Exercises,
+      },
+      {
+        id: 'ch3-intro',
+        unitId: 'modern-robotics',
+        title: 'Chapter 3: Introduction to Rigid-Body Motions',
+        content: ch3IntroContent,
+        videoUrl: 'https://www.youtube.com/watch?v=29LhXWjn7Pc',
+        bookPage: 63,
+        exercises: ch3IntroExercises,
       },
     ],
   },

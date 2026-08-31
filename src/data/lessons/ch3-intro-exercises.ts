@@ -74,7 +74,7 @@ export const ch3IntroExercises: Exercise[] = [
   // 36
   { id: 'ch3i-q36', type: 'mcq', conceptId: 'screw', prompt: 'Čo je špeciálnym prípadom screw motion?', options: ['Iba planar motion', 'Iba motion s nenulovou translation', 'Iba pohyb rigid body s 1 DOF', 'Pure rotation'], correctAnswer: 'Pure rotation', explanation: 'Ak je translation pozdĺž screw axis nulová, zostáva čistá rotation. Pure translation sa dá tiež interpretovať ako špeciálny limitný prípad.', xp: 10 },
   // 37
-  { id: 'ch3i-q37', type: 'mcq', conceptId: 'exp-coords', prompt: 'V exponential coordinates rotation, čo predstavuje omega-hat?', options: ['Unit rotation axis', 'Linear velocity', 'Position vector', 'Force direction'], correctAnswer: 'Unit rotation axis', explanation: 'omega-hat určuje direction osi, okolo ktorej rotation prebieha.', xp: 10 },
+  { id: 'ch3i-q37', type: 'mcq', conceptId: 'exp-coords', prompt: 'V exponential coordinates rotation, čo predstavuje ω̂?', options: ['Unit rotation axis', 'Linear velocity', 'Position vector', 'Force direction'], correctAnswer: 'Unit rotation axis', explanation: 'ω̂ určuje direction osi, okolo ktorej rotation prebieha.', xp: 10 },
   // 38
   { id: 'ch3i-q38', type: 'mcq', conceptId: 'exp-coords', prompt: 'Čo predstavuje theta v zápise omega-hat theta?', options: ['Translation direction', 'Wrench magnitude', 'Rotation angle', 'Number of DOF'], correctAnswer: 'Rotation angle', explanation: 'omega-hat určuje axis a theta množstvo rotation okolo nej.', xp: 10 },
   // 39

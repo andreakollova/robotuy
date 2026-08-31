@@ -29,6 +29,14 @@ import { ch331Content } from './lessons/ch3-3-1-content';
 import { ch331Exercises } from './lessons/ch3-3-1-exercises';
 import { ch332p1Content } from './lessons/ch3-3-2-p1-content';
 import { ch332p1Exercises } from './lessons/ch3-3-2-p1-exercises';
+import { ch323p1Content } from './lessons/ch3-2-3-p1-content';
+import { ch323p1Exercises } from './lessons/ch3-2-3-p1-exercises';
+import { ch332p2Content } from './lessons/ch3-3-2-p2-content';
+import { ch332p2Exercises } from './lessons/ch3-3-2-p2-exercises';
+import { ch333Content } from './lessons/ch3-3-3-content';
+import { ch333Exercises } from './lessons/ch3-3-3-exercises';
+import { ch34Content } from './lessons/ch3-4-content';
+import { ch34Exercises } from './lessons/ch3-4-exercises';
 
 export const projectTopics: ProjectTopic[] = [
   {
@@ -146,6 +154,15 @@ export const projectTopics: ProjectTopic[] = [
         exercises: ch322Exercises,
       },
       {
+        id: 'ch3-2-3-p1',
+        unitId: 'modern-robotics',
+        title: 'Chapter 3.2.3: Exponential Coordinates of Rotation (Part 1 of 2)',
+        content: ch323p1Content,
+        videoUrl: 'https://www.youtube.com/watch?v=v_KBHaG0mas',
+        bookPage: 86,
+        exercises: ch323p1Exercises,
+      },
+      {
         id: 'ch3-2-3-p2',
         unitId: 'modern-robotics',
         title: 'Chapter 3.2.3: Exponential Coordinates of Rotation (Part 2 of 2)',
@@ -171,6 +188,33 @@ export const projectTopics: ProjectTopic[] = [
         videoUrl: 'https://www.youtube.com/watch?v=mvGZtO_ruj0',
         bookPage: 104,
         exercises: ch332p1Exercises,
+      },
+      {
+        id: 'ch3-3-2-p2',
+        unitId: 'modern-robotics',
+        title: 'Chapter 3.3.2: Twists (Part 2 of 2)',
+        content: ch332p2Content,
+        videoUrl: 'https://www.youtube.com/watch?v=VTv0qmLNvjg',
+        bookPage: 110,
+        exercises: ch332p2Exercises,
+      },
+      {
+        id: 'ch3-3-3',
+        unitId: 'modern-robotics',
+        title: 'Chapter 3.3.3: Exponential Coordinates of Rigid-Body Motion',
+        content: ch333Content,
+        videoUrl: 'https://www.youtube.com/watch?v=1jYMvm1U2D0',
+        bookPage: 117,
+        exercises: ch333Exercises,
+      },
+      {
+        id: 'ch3-4',
+        unitId: 'modern-robotics',
+        title: 'Chapter 3.4: Wrenches',
+        content: ch34Content,
+        videoUrl: 'https://www.youtube.com/watch?v=0wsYPJPGtKE',
+        bookPage: 125,
+        exercises: ch34Exercises,
       },
     ],
   },

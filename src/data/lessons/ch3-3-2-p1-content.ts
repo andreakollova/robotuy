@@ -545,6 +545,8 @@ Ak teleso vykonáva čistú rotation okolo space originu, point telesa ležiaci 
 
 Aj keď body origin niekde na tyči obieha po kružnici a jeho pdot je nenulové.
 
+![Physical interpretation of the spatial twist vs showing the velocity of a point of the extended body at the space origin](/book/ch3/fig3-17.png)
+
 ---
 
 ## 16. Body twist a spatial twist opisujú ten istý pohyb

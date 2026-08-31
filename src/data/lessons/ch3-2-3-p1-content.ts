@@ -316,6 +316,8 @@ Výraz v zátvorke je:
 
 Celý matrix exponential sa teda zredukuje na tri členy.
 
+![Vector p(0) rotated by angle theta about axis omega-hat to produce p(theta)](/book/ch3/fig3-11.png)
+
 ---
 
 ## 12. Rodriguesova formula
@@ -481,6 +483,8 @@ Tri čísla, z ktorých Rodriguesova formula vytvorí plnú 3 x 3 rotation matri
 V praxi by sme postupovali: zostrojíme [omega-hat], vypočítame [omega-hat]^2, vyhodnotíme sin(2pi/3) a cos(2pi/3), a dosadíme do formuly.
 
 Výsledná rotation matrix bude mať tvar permutation matrix, pretože cyklická permutácia axes je špeciálna rotation.
+
+![Frame {b} obtained by rotating frame {s} about a given axis](/book/ch3/fig3-12.png)
 
 ---
 

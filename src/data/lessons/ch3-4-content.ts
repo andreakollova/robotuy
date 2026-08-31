@@ -373,6 +373,8 @@ dostaneme:
 
 Táto matrix transformuje wrench medzi frames.
 
+![Wrench transformation between two reference frames](/book/ch3/fig3-21.png)
+
 ---
 
 ## 18. Príklad transformácie wrenchu
@@ -449,6 +451,8 @@ Tieto hodnoty sú v coordinates senzorového frame. Ak potrebujeme vedieť, aký
 alebo ekvivalentne použiť vzťah s transpose Adjoint.
 
 Práve takáto transformácia je v robotike bežná rutina pri spracovaní údajov zo senzorov.
+
+![Robot hand holding an apple with gravity force creating a wrench at the force/torque sensor](/book/ch3/fig3-22.png)
 
 ---
 

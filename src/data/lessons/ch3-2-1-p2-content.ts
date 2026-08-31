@@ -35,6 +35,8 @@ Telefón sa medzičasom nikam nepohol. Rozdiel vznikol preto, že obaja opisujú
 
 V robotike preto nestačí vidieť vector ako trojicu numbers. Musíme vedieť aj to, v ktorom frame sú tieto numbers vyjadrené.
 
+![Three reference frames in the same physical space with point p having different coordinates in each](/book/ch3/fig3-7.png)
+
 ---
 
 ## 2. Fyzický vector a jeho coordinates nie sú to isté
@@ -328,6 +330,8 @@ Toto sa nazýva **subscript cancellation rule**.
 
 Nie je to matematické krátenie ako pri zlomkoch. Je to pomôcka, ktorá odráža logiku transformations medzi frames.
 
+![Three reference frames {a}, {b}, {c} with rotation transformations between them](/book/ch3/fig3-4.png)
+
 ---
 
 ## 10. Prečo musí byť poradie Rab Rbc práve takéto
@@ -456,6 +460,8 @@ V active prípade zostávaš stáť na rovnakom mieste, ale šálku fyzicky oto�
 
 Numbers môžu byť transformované podobnou matrix operation, ale geometrický príbeh je úplne iný.
 
+![Rigid-body displacement interpreted as a screw motion](/book/ch3/fig3-5.png)
+
 ---
 
 ## 14. Rotation operator Rot(omega-hat, theta)
@@ -477,6 +483,8 @@ znamená:
 otoč o 90° okolo z-axis.
 
 Smer positive rotation určujeme pomocou right-hand rule. Ak palec pravej ruky nasmerujeme pozdĺž positive direction rotation axis, smer zatočených prstov určuje positive rotation.
+
+![Rotation of a frame by angle theta about axis omega-hat](/book/ch3/fig3-8.png)
 
 ---
 
@@ -730,6 +738,8 @@ Numericky sme použili tú istú R.
 Fyzický výsledok však môže byť úplne iný.
 
 Preto pri matrix multiplication v robotike záleží nielen na matrices, ale aj na poradí a reference frames, ku ktorým sa vzťahujú.
+
+![Pre-multiplication vs post-multiplication: fixed-frame and body-frame rotation](/book/ch3/fig3-9.png)
 
 ---
 

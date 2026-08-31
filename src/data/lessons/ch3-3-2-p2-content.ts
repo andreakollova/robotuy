@@ -218,6 +218,8 @@ Každý twist môžeme geometricky interpretovať ako **screw motion**. To je po
 
 Predstav si skrutku. Keď ju zaskrutkujete, otáča sa a zároveň postupuje dopredu. Toto je screw motion.
 
+![Three-wheeled vehicle illustrating a twist as screw motion](/book/ch3/fig3-18.png)
+
 Chaslesov teorém hovorí, že každý instantaneous rigid-body motion možno opísať ako screw motion. Čiže pre každý twist existuje os, okolo ktorej sa teleso otáča, a pozdĺž ktorej sa posúva.
 
 Ak sa teleso iba otáča, je to špeciálny prípad screw motion s nulovým posunom pozdĺž osi. Ak sa iba posúva, je to špeciálny prípad, kde os udáva smer posunu a pitch je nekonečný.
@@ -278,6 +280,8 @@ Prvý člen -s-hat x q vzniká z toho, že os nemusí prechádzať originom. Ak 
 Druhý člen h s-hat je translation pozdĺž osi. Ak h = 0, tento člen zmizne a zostane čistá rotation.
 
 Celý twist teda obsahuje informáciu o osi rotation, o jej vzdialenosti od originu a o miere translation pozdĺž nej.
+
+![Screw axis representation with point q, direction s-hat, and pitch h](/book/ch3/fig3-19.png)
 
 ---
 

@@ -205,6 +205,8 @@ hovorí, kam smeruje body y-axis.
 
 Celá orientation frame je teda uložená v directions jeho axes.
 
+![Body frame {b} rotated by theta = 60 degrees relative to fixed frame {s} in the plane](/book/ch3/fig3-3.png)
+
 ---
 
 ## 7. Prečo to robíme komplikovanejšie, keď v 2D stačí theta

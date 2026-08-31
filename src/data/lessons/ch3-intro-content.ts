@@ -93,11 +93,11 @@ V robotike preto čísla bez uvedenia reference frame často nestačia. Ak povie
 
 musíme vedieť, **v ktorom frame sú tieto coordinates vyjadrené**.
 
+![Point p represented in two different reference frames {a} and {b}](/book/ch3/fig3-1.png)
+
 ---
 
 ## 5. Fyzický vector a jeho číselná reprezentácia
-
-Podklad tu zavádza veľmi dôležité rozlíšenie medzi samotnou fyzickou veličinou a číslami, ktorými ju reprezentujeme.
 
 Predstav si dron letiaci určitou velocity. Túto velocity si môžeme predstaviť ako šípku. Dĺžka šípky predstavuje speed a smer šípky predstavuje direction of motion.
 
@@ -183,8 +183,6 @@ Toto bude základná geometrická predstava celej kapitoly.
 
 ## 9. Dôležitá konvencia knihy: všetky frames sa formálne považujú za stationary
 
-Podklad tu upozorňuje na jednu trochu neobvyklú konvenciu.
-
 Intuitívne budeme hovoriť, že body frame je „pripevnený k pohybujúcemu sa telesu". Takto si ho môžeme pokojne predstavovať.
 
 Formálne však Modern Robotics interpretuje body frame {b} ako **stationary inertial frame, ktorý je v konkrétnom okamihu presne coincident s frame pripevneným k pohybujúcemu sa telesu**.
@@ -203,7 +201,7 @@ Intuitívne teda stále môžeme hovoriť „frame pripevnený k robotu", ale pr
 
 Všetky reference frames v Modern Robotics sú **right-handed**.
 
-Predstav si pravú ruku. V konvencii uvedenej v podklade môžeme osi priradiť tak, že index finger predstavuje x-axis, middle finger y-axis a thumb z-axis. Matematicky to vyjadruje vzťah:
+Predstav si pravú ruku. V Modern Robotics môžeme osi priradiť tak, že index finger predstavuje x-axis, middle finger y-axis a thumb z-axis. Matematicky to vyjadruje vzťah:
 
 **x̂ x ŷ = ẑ**
 
@@ -218,6 +216,8 @@ Ak teda povieme:
 **„otoč teleso o +30° okolo z-axis",**
 
 right-hand rule presne určuje, ktorým smerom sa má teleso otočiť.
+
+![Right-handed reference frame and right-hand rule for positive rotation](/book/ch3/fig3-2.png)
 
 ---
 
@@ -266,6 +266,8 @@ Ak takto zapíšeme všetky tri body axes a uložíme ich vedľa seba ako column
 **R = [x̂b  ŷb  ẑb].**
 
 Táto matrix sa nazýva **rotation matrix**.
+
+![Describing the position and orientation of a rigid body using a reference frame in 3D](/book/ch3/fig3-6.png)
 
 Dôležité je chápať, čo jej čísla fyzicky znamenajú. Rotation matrix nie je iba tabuľka deviatich hodnôt. Jej columns hovoria:
 

@@ -213,6 +213,8 @@ Vzťah:
 
 teda v jednom jednoduchom výraze zachytáva direction aj magnitude okamžitého pohybu bodu na rotujúcom rigid body.
 
+![Angular velocity vector omega and the resulting velocity of a point on a rotating body](/book/ch3/fig3-10.png)
+
 ---
 
 ## 8. Konkrétny príklad s rotujúcim kolesom

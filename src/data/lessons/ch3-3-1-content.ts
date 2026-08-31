@@ -100,6 +100,8 @@ Prvý subscript s označuje frame, **v ktorom výsledok vyjadrujeme**, a druhý 
 
 Túto logiku sme už videli pri rotation matrices. Rsb opisovalo orientation {b} vzhľadom na {s}. Teraz iba pridávame aj position.
 
+![Three reference frames in space with a point v described in different coordinates](/book/ch3/fig3-14.png)
+
 Preto:
 
 **Tsb =**
@@ -632,6 +634,8 @@ To je presne myšlienka post-multiplication. Transformation je viazaná na body 
 
 Tento rozdiel je veľmi dôležitý pri robotických ramenách. Príkaz „otoč gripper okolo world z-axis" a príkaz „otoč gripper okolo jeho vlastnej z-axis" môžu viesť k úplne iným výsledkom.
 
+![Fixed-frame vs body-frame transformation: pre-multiplication and post-multiplication](/book/ch3/fig3-15.png)
+
 ---
 
 ## 21. Prečo na poradí rotation a translation záleží
@@ -743,6 +747,8 @@ Teraz ich spojíme:
 Výsledok teda opisuje configuration objektu {e} vzhľadom na kameru {c}.
 
 Takéto výpočty sú presne dôvodom, prečo sú homogeneous transformations v robotike také dôležité. V reálnom systéme máme množstvo frames - základňa, jednotlivé links, gripper, kamera, nástroj, objekt - a potrebujeme medzi nimi systematicky prechádzať.
+
+![Reference frame assignment for a complex robot example with multiple frames](/book/ch3/fig3-16.png)
 
 ---
 

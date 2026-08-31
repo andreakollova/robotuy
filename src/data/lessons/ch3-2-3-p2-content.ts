@@ -801,6 +801,8 @@ a preto každý point na povrchu reprezentuje rotation o 180° okolo axis určen
 
 Na prvý pohľad by sa mohlo zdať, že sme tým našli pekný obyčajný 3D ball, ktorý je presne SO(3). Je tu však jedna veľmi dôležitá zvláštnosť.
 
+![SO(3) visualized as a solid ball with radius pi, with antipodal surface points identified](/book/ch3/fig3-13.png)
+
 ---
 
 ## 24. Prečo musíme na povrchu ballu spájať antipodal points

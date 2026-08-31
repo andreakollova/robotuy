@@ -347,6 +347,8 @@ To je jednoducho homogeneous transformation matrix pre čistú translation o vec
 
 Žiadna rotation (R = I) a position vector p = v-hat theta.
 
+![Two reference frames in a plane illustrating exponential coordinates of rigid-body motion](/book/ch3/fig3-20.png)
+
 ---
 
 ## 16. Prečo pri čistej translation vypadne G(theta)

@@ -733,25 +733,25 @@ Screw motion prirodzene vedie k ďalšiemu spôsobu reprezentácie configuration
 
 Pri rotation môžeme opísať motion pomocou:
 
-**rotation axis omega-hat**
+**rotation axis ω̂**
 
 a
 
-**rotation angle theta.**
+**rotation angle θ.**
 
 Spolu môžeme tieto quantities zapísať ako:
 
-**omega-hat theta.**
+**ω̂θ.**
 
 Toto sa nazýva **exponential coordinate representation of rotation**.
 
-Pri celom rigid-body motion použijeme podobnú myšlienku. Screw axis označíme **S** a quantity **theta** určuje, ako ďaleko sa po tomto screw motion máme pohybovať.
+Pri celom rigid-body motion použijeme podobnú myšlienku. Screw axis označíme **S** a quantity **θ** určuje, ako ďaleko sa po tomto screw motion máme pohybovať.
 
 Dostaneme:
 
-**S theta ∈ R6.**
+**Sθ ∈ R⁶.**
 
-Ak screw motion obsahuje rotation, theta predstavuje rotation angle. Pri čistej translation predstavuje theta linear distance.
+Ak screw motion obsahuje rotation, θ predstavuje rotation angle. Pri čistej translation predstavuje θ linear distance.
 
 Takto získame šesťparametrovú reprezentáciu rigid-body displacement.
 

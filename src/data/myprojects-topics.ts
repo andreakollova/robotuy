@@ -17,6 +17,10 @@ import { ch25Exercises } from './lessons/ch2-5-exercises';
 import { ch231Exercises } from './lessons/ch2-3-1-exercises';
 import { ch3IntroContent } from './lessons/ch3-intro-content';
 import { ch3IntroExercises } from './lessons/ch3-intro-exercises';
+import { ch321p1Content } from './lessons/ch3-2-1-p1-content';
+import { ch321p1Exercises } from './lessons/ch3-2-1-p1-exercises';
+import { ch321p2Content } from './lessons/ch3-2-1-p2-content';
+import { ch321p2Exercises } from './lessons/ch3-2-1-p2-exercises';
 
 export const projectTopics: ProjectTopic[] = [
   {
@@ -105,6 +109,24 @@ export const projectTopics: ProjectTopic[] = [
         videoUrl: 'https://www.youtube.com/watch?v=29LhXWjn7Pc',
         bookPage: 63,
         exercises: ch3IntroExercises,
+      },
+      {
+        id: 'ch3-2-1-p1',
+        unitId: 'modern-robotics',
+        title: 'Chapter 3.2.1: Rotation Matrices (Part 1 of 2)',
+        content: ch321p1Content,
+        videoUrl: 'https://www.youtube.com/watch?v=OZucG1DY_sY',
+        bookPage: 71,
+        exercises: ch321p1Exercises,
+      },
+      {
+        id: 'ch3-2-1-p2',
+        unitId: 'modern-robotics',
+        title: 'Chapter 3.2.1: Rotation Matrices (Part 2 of 2)',
+        content: ch321p2Content,
+        videoUrl: 'https://www.youtube.com/watch?v=6KIPusOv5fA',
+        bookPage: 75,
+        exercises: ch321p2Exercises,
       },
     ],
   },

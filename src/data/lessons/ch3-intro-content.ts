@@ -253,55 +253,213 @@ Takže ak uvidíš napríklad **+90° okolo z-axis**, predstav si pravý palec s
 
 ## 11. Position body frame môžeme opísať vectorom
 
-Máme space frame {s} a body frame {b}. Najprv chceme opísať iba position body frame.
+Predstav si, že máme v miestnosti položeného robota. Aby sme vedeli povedať, **kde sa robot nachádza**, potrebujeme nejaký pevný súradnicový systém, podľa ktorého budeme jeho position merať.
 
-Vytvoríme vector **p** smerujúci od origin space frame k origin body frame.
+Preto si vytvoríme **space frame {s}**. Môžeš si ho predstaviť ako coordinate system pevne pripevnený k miestnosti. Má svoj origin a axes x, y, z a počas pohybu robota zostáva stále na rovnakom mieste.
 
-V trojrozmernom priestore ho môžeme zapísať napríklad:
+Robot má zároveň svoj vlastný **body frame {b}**. Ten je pripevnený priamo k robotovi, takže keď sa robot pohne alebo otočí, body frame sa pohybuje a otáča spolu s ním.
 
-**p = (p1, p2, p3).**
+Máme teda dva coordinate frames:
 
-Predstav si, že:
+**space frame {s}** - stojí na mieste,
 
-**p = (2, 1, 3).**
+**body frame {b}** - je pripevnený k telesu a pohybuje sa spolu s ním.
 
-To znamená, že origin body frame sa z pohľadu space frame nachádza dve jednotky v smere x, jednu v smere y a tri v smere z.
+Teraz chceme ako prvé zistiť iba to, **kde sa body frame nachádza**. Zatiaľ nás nezaujíma, ako je otočený.
 
-Vector p teda úplne opisuje **position originu body frame vzhľadom na space frame**.
+Na to použijeme vector **p**.
 
-Stále nám však chýba orientation.
+Vector p začína v origine space frame a smeruje do originu body frame. Inými slovami nám ukazuje:
+
+**„Kam sa musím zo space origin posunúť, aby som sa dostala do body origin?"**
+
+Predstav si napríklad miestnosť, v ktorej je space origin v jednom bode na podlahe a robot sa nachádza niekoľko metrov od neho. Ak je:
+
+**p = (2, 1, 3)**
+
+znamená to, že body origin sa vzhľadom na space frame nachádza:
+
+**2 jednotky v smere x,
+1 jednotku v smere y,
+3 jednotky v smere z.**
+
+Vector p teda odpovedá iba na otázku:
+
+**Kde sa origin body frame nachádza?**
+
+A toto rozlíšenie je dôležité. Z p ešte **nevieme, ako je robot otočený**.
+
+Predstav si napríklad dron, ktorý sa vznáša na jednom konkrétnom mieste. Dron môže smerovať dopredu, potom sa na mieste otočiť o 90° doprava a jeho position sa pritom vôbec nemusí zmeniť.
+
+Vector p zostane rovnaký, pretože origin dronu zostal na rovnakom mieste. Zmenila sa však jeho **orientation**.
+
+Pre úplný opis configuration rigid body teda samotný p nestačí.
+
+Potrebujeme vedieť dve veci:
+
+**p - kde sa body frame nachádza**
+
+**R - ako je body frame otočený**
 
 ---
 
 ## 12. Orientation opíšeme pomocou smerov body axes
 
-Body frame má tri axes:
+Teraz už vieme, kde sa body frame nachádza. Potrebujeme ešte zistiť, **ako je otočený vzhľadom na space frame**.
 
-**x̂b, ŷb, ẑb.**
+Body frame má svoje vlastné tri axes:
 
-Space frame má:
+**x̂b, ŷb, ẑb**
 
-**x̂s, ŷs, ẑs.**
+a space frame má:
 
-Ak chceme vedieť orientation body frame vzhľadom na space frame, môžeme sa opýtať:
+**x̂s, ŷs, ẑs**
 
-**Kam smeruje x-axis body frame, keď ju opíšeme pomocou axes space frame?**
+Najjednoduchšie je opäť predstaviť si dron.
 
-Potom rovnakú otázku položíme pre y-axis a z-axis.
+Na dron si pomyselne nakreslíme tri šípky. Jeho **body x-axis** môže smerovať cez nos dronu dopredu, **body y-axis** do strany a **body z-axis** nahor.
 
-Predstav si dron. Jeho body x-axis môže smerovať cez nos dronu. Keď sa dron otočí doprava, táto axis už nebude zarovnaná s x-axis miestnosti. Stále však vieme opísať jej smer pomocou components v space frame.
+Tieto šípky sú pripevnené k dronu. Keď sa dron otočí, otočia sa spolu s ním.
 
-Ak takto zapíšeme všetky tri body axes a uložíme ich vedľa seba ako columns, dostaneme matrix:
+Space frame je však stále pevne pripevnený k miestnosti.
 
-**R = [x̂b  ŷb  ẑb].**
+Ak je dron na začiatku dokonale zarovnaný s miestnosťou, jeho body x-axis môže smerovať rovnakým smerom ako space x-axis. Podobne body y-axis smeruje rovnako ako space y-axis a body z-axis rovnako ako space z-axis.
 
-Táto matrix sa nazýva **rotation matrix**.
+Teraz dron otočíme.
+
+Jeho body x-axis už možno nebude smerovať rovnakým smerom ako space x-axis. Napríklad po otočení o 90° môže smerovať tam, kam v miestnosti smeruje +y.
+
+A práve toto potrebujeme matematicky zachytiť.
+
+Pre každú body axis sa preto opýtame:
+
+**„Kam táto axis smeruje, keď jej smer opíšem pomocou coordinate systému miestnosti, teda space frame?"**
+
+Začneme body x-axis.
+
+Povedzme, že po otočení dronu smeruje body x-axis úplne v smere +y space frame. Jej smer teda môžeme v space coordinates zapísať:
+
+**x̂b = (0, 1, 0)**
+
+Tento zápis znamená:
+
+**0 v smere space x,
+1 v smere space y,
+0 v smere space z.**
+
+Potom rovnakým spôsobom opíšeme, kam smeruje body y-axis a body z-axis.
+
+Nakoniec teda máme tri vectors:
+
+**x̂b - smer body x-axis vyjadrený v space frame**
+
+**ŷb - smer body y-axis vyjadrený v space frame**
+
+**ẑb - smer body z-axis vyjadrený v space frame**
+
+Tieto tri vectors uložíme vedľa seba ako columns jednej matrix:
+
+**R = [ x̂b  ŷb  ẑb ]**
+
+A práve toto je **rotation matrix R**.
 
 ![Describing the position and orientation of a rigid body using a reference frame in 3D](/book/ch3/fig3-6.png)
 
-Dôležité je chápať, čo jej čísla fyzicky znamenajú. Rotation matrix nie je iba tabuľka deviatich hodnôt. Jej columns hovoria:
+Jej význam je teda oveľa jednoduchší, než môže na prvý pohľad pôsobiť:
 
-**„Takto vyzerajú axes body frame, keď ich opisujem pomocou coordinates space frame."**
+**Rotation matrix nám hovorí, kam smerujú tri axes body frame, keď sa na ne pozeráme zo space frame.**
+
+Každý column má konkrétny význam:
+
+**1. column - kam smeruje body x-axis**
+
+**2. column - kam smeruje body y-axis**
+
+**3. column - kam smeruje body z-axis**
+
+---
+
+### Jednoduchý príklad
+
+Predstav si, že body frame a space frame sú na začiatku úplne zarovnané.
+
+Body x-axis smeruje rovnako ako space x-axis:
+
+**x̂b = (1, 0, 0)**
+
+Body y-axis smeruje rovnako ako space y-axis:
+
+**ŷb = (0, 1, 0)**
+
+A body z-axis smeruje rovnako ako space z-axis:
+
+**ẑb = (0, 0, 1)**
+
+Keď tieto tri vectors vložíme ako columns do R, dostaneme:
+
+\`\`\`
+| 1 | 0 | 0 |
+| 0 | 1 | 0 |
+| 0 | 0 | 1 |
+\`\`\`
+
+To je **identity matrix I**.
+
+A dáva to fyzický zmysel: body frame nie je vzhľadom na space frame vôbec otočený.
+
+Teraz si predstav, že body frame otočíme o 90° okolo +z-axis.
+
+Body x-axis, ktorá predtým smerovala do +x, teraz smeruje do +y:
+
+**x̂b = (0, 1, 0)**
+
+Body y-axis sa po tej istej rotation dostane do smeru -x:
+
+**ŷb = (-1, 0, 0)**
+
+Body z-axis zostáva nezmenená, pretože rotujeme práve okolo nej:
+
+**ẑb = (0, 0, 1)**
+
+Keď ich opäť vložíme ako columns:
+
+\`\`\`
+|  0 | -1 | 0 |
+|  1 |  0 | 0 |
+|  0 |  0 | 1 |
+\`\`\`
+
+dostaneme rotation matrix pre rotation o +90° okolo z-axis.
+
+Teraz už je možné vidieť, **odkiaľ čísla v rotation matrix vlastne pochádzajú**. Nie sú to náhodné čísla ani vzorec, ktorý vznikol bez fyzického významu. Každý column jednoducho opisuje smer jednej body axis z pohľadu space frame.
+
+---
+
+## Position a orientation sú dve rozdielne informácie
+
+Toto rozdelenie je veľmi dôležité.
+
+Vector **p** nám hovorí:
+
+**„Kde je body frame?"**
+
+Rotation matrix **R** nám hovorí:
+
+**„Ako je body frame otočený?"**
+
+Predstav si dron, ktorý stojí na jednom mieste a iba sa otáča. Vtedy sa **R mení, ale p môže zostať rovnaké**.
+
+Ak naopak dron letí rovno dopredu bez toho, aby sa otáčal, mení sa **p, ale R môže zostať rovnaká**.
+
+A ak dron zároveň letí aj mení svoj smer, menia sa **p aj R**.
+
+Preto na úplný opis configuration rigid body v 3D potrebujeme obidve informácie:
+
+**position - p**
+
+**orientation - R**
+
+V ďalšom kroku ich budeme vedieť spojiť do jednej reprezentácie, ktorá bude opisovať **position aj orientation body frame naraz**.
 
 ---
 

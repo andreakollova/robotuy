@@ -50,6 +50,26 @@ function getSubjectForDayOfWeek(planMonth: Month | undefined, dayOfWeek: number)
   return week.days[dayOfWeek];
 }
 
+/* ========== STUDY HISTORY ========== */
+const HISTORY_KEY = 'robotuy-study-history';
+
+type StudyHistory = Record<string, number>; // "2026-09-03" -> seconds
+
+function getHistory(): StudyHistory {
+  if (typeof window === 'undefined') return {};
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '{}'); } catch { return {}; }
+}
+
+function saveToHistory(dateStr: string, totalSeconds: number) {
+  const h = getHistory();
+  h[dateStr] = totalSeconds;
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+}
+
+function getHistoryForDate(dateStr: string): number {
+  return getHistory()[dateStr] || 0;
+}
+
 /* ========== CLOCK IN/OUT TIMER ========== */
 const TIMER_RUNNING_KEY = 'robotuy-timer-running';
 const TIMER_START_KEY = 'robotuy-timer-start';
@@ -62,18 +82,25 @@ function getTodayStr() {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
+function dateToStr(d: Date) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
 function useStudyTimer() {
   const getStoredElapsed = () => {
     if (typeof window === 'undefined') return 0;
-    // Reset if day changed
+    // Save previous day and reset if day changed
     const storedDate = localStorage.getItem(TIMER_DATE_KEY);
-    if (storedDate !== getTodayStr()) {
+    if (storedDate && storedDate !== getTodayStr()) {
+      const prevElapsed = parseInt(localStorage.getItem(TIMER_ELAPSED_KEY) || '0', 10);
+      if (prevElapsed > 0) saveToHistory(storedDate, prevElapsed);
       localStorage.setItem(TIMER_ELAPSED_KEY, '0');
       localStorage.setItem(TIMER_RUNNING_KEY, 'false');
       localStorage.removeItem(TIMER_START_KEY);
       localStorage.setItem(TIMER_DATE_KEY, getTodayStr());
       return 0;
     }
+    if (!storedDate) localStorage.setItem(TIMER_DATE_KEY, getTodayStr());
     return parseInt(localStorage.getItem(TIMER_ELAPSED_KEY) || '0', 10);
   };
   const getStoredRunning = () => {
@@ -105,16 +132,13 @@ function useStudyTimer() {
   useEffect(() => {
     if (!running) return;
     const iv = setInterval(() => {
-      const cur = calcCurrent();
-      setSeconds(cur);
-      // No auto-stop — timer continues past 3h goal
+      setSeconds(calcCurrent());
     }, 1000);
     return () => clearInterval(iv);
   }, [running, calcCurrent]);
 
   const clockIn = () => {
     if (running) return;
-    // Can always clock in again
     localStorage.setItem(TIMER_DATE_KEY, getTodayStr());
     localStorage.setItem(TIMER_START_KEY, String(Math.floor(Date.now() / 1000)));
     localStorage.setItem(TIMER_RUNNING_KEY, 'true');
@@ -126,6 +150,8 @@ function useStudyTimer() {
     const cur = calcCurrent();
     localStorage.setItem(TIMER_ELAPSED_KEY, String(cur));
     localStorage.setItem(TIMER_RUNNING_KEY, 'false');
+    // Save to history on every clock out
+    saveToHistory(getTodayStr(), cur);
     setRunning(false);
     setSeconds(cur);
   };
@@ -135,6 +161,7 @@ function useStudyTimer() {
     localStorage.setItem(TIMER_RUNNING_KEY, 'false');
     localStorage.removeItem(TIMER_START_KEY);
     localStorage.setItem(TIMER_DATE_KEY, getTodayStr());
+    saveToHistory(getTodayStr(), 0);
     setSeconds(0);
     setRunning(false);
   };
@@ -227,6 +254,95 @@ function StudyTimer() {
           width: `${Math.min(progress * 100, 100)}%`,
           background: done ? '#22c55e' : running ? '#3b82f6' : '#555',
         }} />
+      </div>
+    </div>
+  );
+}
+
+function StudyStats({ locale }: { locale: 'en' | 'sk' }) {
+  const [history, setHistory] = useState<StudyHistory>({});
+
+  useEffect(() => {
+    setHistory(getHistory());
+  }, []);
+
+  const entries = Object.entries(history)
+    .filter(([, secs]) => secs > 0)
+    .sort(([a], [b]) => b.localeCompare(a))
+    .slice(0, 14); // last 14 days with data
+
+  const totalAllTime = entries.reduce((sum, [, secs]) => sum + secs, 0);
+  const daysStudied = entries.length;
+
+  // This week
+  const now = new Date();
+  const monday = getMonday(now);
+  let weekTotal = 0;
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    weekTotal += getHistoryForDate(dateToStr(d));
+  }
+  // Add today's live time
+  const todayLive = parseInt(localStorage.getItem(TIMER_ELAPSED_KEY) || '0', 10);
+  const todayInHistory = getHistoryForDate(getTodayStr());
+  if (todayLive > todayInHistory) weekTotal += (todayLive - todayInHistory);
+
+  if (daysStudied === 0) return null;
+
+  return (
+    <div style={{
+      background: '#041540', border: '1px solid #1a1a1a', borderRadius: 16, padding: '16px 20px',
+    }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>
+        {locale === 'sk' ? 'Statistiky' : 'Stats'}
+      </div>
+
+      {/* Summary row */}
+      <div style={{ display: 'flex', gap: 12, marginBottom: 14 }}>
+        <div style={{ flex: 1, background: '#010d33', borderRadius: 10, padding: '10px 12px', textAlign: 'center' }}>
+          <div style={{ fontSize: 18, fontWeight: 700, color: '#fff', fontFamily: "'JetBrains Mono', monospace" }}>
+            {formatTime(totalAllTime)}
+          </div>
+          <div style={{ fontSize: 10, color: '#666', marginTop: 2 }}>{locale === 'sk' ? 'celkovo' : 'all time'}</div>
+        </div>
+        <div style={{ flex: 1, background: '#010d33', borderRadius: 10, padding: '10px 12px', textAlign: 'center' }}>
+          <div style={{ fontSize: 18, fontWeight: 700, color: '#fff', fontFamily: "'JetBrains Mono', monospace" }}>
+            {formatTime(weekTotal)}
+          </div>
+          <div style={{ fontSize: 10, color: '#666', marginTop: 2 }}>{locale === 'sk' ? 'tento tyzden' : 'this week'}</div>
+        </div>
+        <div style={{ flex: 1, background: '#010d33', borderRadius: 10, padding: '10px 12px', textAlign: 'center' }}>
+          <div style={{ fontSize: 18, fontWeight: 700, color: '#3b82f6', fontFamily: "'JetBrains Mono', monospace" }}>
+            {daysStudied}
+          </div>
+          <div style={{ fontSize: 10, color: '#666', marginTop: 2 }}>{locale === 'sk' ? 'dni' : 'days'}</div>
+        </div>
+      </div>
+
+      {/* Day-by-day list */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        {entries.map(([dateStr, secs]) => {
+          const d = new Date(dateStr + 'T00:00:00');
+          const dayName = locale === 'sk' ? DAY_NAMES_SK[d.getDay() === 0 ? 6 : d.getDay() - 1] : DAY_NAMES_EN[d.getDay() === 0 ? 6 : d.getDay() - 1];
+          const met = secs >= TIMER_DURATION;
+          const hrs = secs / 3600;
+          return (
+            <div key={dateStr} style={{
+              display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0',
+              borderBottom: '1px solid rgba(255,255,255,0.04)',
+            }}>
+              <div style={{ width: 8, height: 8, borderRadius: 4, background: met ? '#22c55e' : '#3b82f6', flexShrink: 0 }} />
+              <div style={{ fontSize: 12, color: '#888', width: 28, flexShrink: 0 }}>{dayName}</div>
+              <div style={{ fontSize: 12, color: '#ccc', flex: 1 }}>
+                {d.getDate()}.{d.getMonth() + 1}.
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 600, fontFamily: "'JetBrains Mono', monospace", color: met ? '#22c55e' : '#fff' }}>
+                {hrs >= 1 ? `${Math.floor(hrs)}h ${Math.floor((hrs % 1) * 60)}m` : `${Math.floor(secs / 60)}m`}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -336,27 +452,33 @@ function WeekCalendarView({ planMonth, locale }: { planMonth: Month; locale: 'en
           const isWeekend = i >= 5;
           const schedule = getSubjectForDayOfWeek(planMonth, i);
           const subjectColor = schedule ? (subjectColors[schedule.subject] || '#555') : '#333';
+          const studied = getHistoryForDate(dateToStr(d));
+          const metGoal = studied >= TIMER_DURATION;
 
           return (
             <div key={i} style={{
-              background: isToday ? '#0c255a' : '#041540',
-              border: isToday ? '2px solid #3b82f6' : '1px solid #1a1a1a',
+              background: isToday ? '#0c255a' : metGoal ? 'rgba(34,197,94,0.06)' : '#041540',
+              border: isToday ? '2px solid #3b82f6' : metGoal ? '1px solid rgba(34,197,94,0.3)' : '1px solid #1a1a1a',
               borderRadius: 12, padding: '10px 6px', textAlign: 'center',
               minHeight: 90, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
-              opacity: isWeekend ? 0.4 : 1,
+              opacity: isWeekend && !studied ? 0.4 : 1,
             }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: isToday ? '#3b82f6' : '#666', letterSpacing: '0.04em' }}>
                 {dayNames[i]}
               </div>
               <div style={{
                 width: 28, height: 28, borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: isToday ? '#3b82f6' : 'transparent',
-                color: isToday ? '#fff' : '#ccc',
+                background: isToday ? '#3b82f6' : metGoal ? '#22c55e' : 'transparent',
+                color: isToday ? '#fff' : metGoal ? '#fff' : studied > 0 ? '#22c55e' : '#ccc',
                 fontSize: 14, fontWeight: 700,
               }}>
                 {d.getDate()}
               </div>
-              {schedule && !isWeekend ? (
+              {studied > 0 ? (
+                <div style={{ fontSize: 9, fontWeight: 700, color: metGoal ? '#22c55e' : '#3b82f6' }}>
+                  {studied >= 3600 ? `${Math.floor(studied / 3600)}h${Math.floor((studied % 3600) / 60)}m` : `${Math.floor(studied / 60)}m`}
+                </div>
+              ) : schedule && !isWeekend ? (
                 <>
                   <div style={{
                     width: 6, height: 6, borderRadius: 3, background: subjectColor, marginTop: 2,
@@ -364,7 +486,6 @@ function WeekCalendarView({ planMonth, locale }: { planMonth: Month; locale: 'en
                   <div style={{ fontSize: 9, fontWeight: 700, color: subjectColor, letterSpacing: '0.03em' }}>
                     {schedule.subject}
                   </div>
-                  <div style={{ fontSize: 8, color: '#666' }}>{schedule.hours}h</div>
                 </>
               ) : isWeekend ? (
                 <div style={{ fontSize: 9, color: '#444', marginTop: 4 }}>
@@ -610,8 +731,13 @@ export default function SchedulePage() {
         </div>
 
         {/* Study Timer */}
-        <div style={{ marginBottom: 20 }}>
+        <div style={{ marginBottom: 12 }}>
           <StudyTimer />
+        </div>
+
+        {/* Study Stats */}
+        <div style={{ marginBottom: 20 }}>
+          <StudyStats locale={locale} />
         </div>
 
         {/* Plan month selector */}

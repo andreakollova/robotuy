@@ -295,96 +295,228 @@ Rotation matrix je teda v podstate fotografia troch osi {b} urobena z pohladu {s
 
 ## 11. Ale preco su tie vektory prave stlpce?
 
-Toto je velmi dobra otazka. Ak na nu poznasz odpoved, nikdy nebudes musiet pravidlo "osi davame do stlpcov" slepo memorovat, pretoze budes vediet, preco to tak je.
+Tuto cast spravme uplne od nuly, pretoze predtym sme prilis rychlo zacali pouzivat zapisy ako vᵦ a vₛ bez toho, aby bolo jasne, co je vlastne v, odkial sa vzalo a co znamena male b alebo s.
 
-### Najprv si pripomenme, co chceme od rotation matrix
+Najskor teda zabudni na nasobenie matic. Predstav si iba robota stojaceho v miestnosti.
 
-Chceme, aby rotation matrix Rₛᵦ vedela previest lubovolny vektor zapisany v {b} do {s}. Teda ak mame nejaky vektor vᵦ, chceme vediet vypocitat:
+Miestnost ma svoj pevny space frame {s} s osami x̂ₛ, ŷₛ, ẑₛ. Robot ma svoj vlastny body frame {b} s osami x̂ᵦ, ŷᵦ, ẑᵦ.
+
+Robot moze byt voci miestnosti otoceny. Preto jeho x̂ᵦ nemusi smerovat rovnako ako x̂ₛ, jeho ŷᵦ nemusi smerovat rovnako ako ŷₛ a podobne.
+
+A teraz do tejto situacie pridame nejaku sipku. Tato sipka moze predstavovat cokolvek: smer pohybu robota, smer ku prekazke, rychlost robota, smer laseru alebo napriklad smer, ktorym ma robot posunut gripper.
+
+Takuto vseobecnu sipku v matematike nazveme vektor a mozeme jej dat meno **v**.
+
+Cizie:
+
+**v = nejaky vektor, teda nejaka sipka so smerom a velkostou**
+
+Pismeno v nie je nic specialne. Je to iba meno. Rovnako ako by sme cloveka mohli nazvat Peter, tuto sipku sme nazvali v.
+
+### Co potom znamena vᵦ?
+
+Teraz prichadza dolezita vec. Tu istu fyzicku sipku v mozeme opisat pomocou roznych coordinate frames.
+
+Ak ju opiseme pomocou osi robota {b}, napiseme:
+
+**vᵦ**
+
+Male b dole znamena: "Vektor v je zapisany pomocou coordinate frame {b}."
+
+Ak tu istu sipku opiseme pomocou osi miestnosti {s}, napiseme:
+
+**vₛ**
+
+Male s znamena: "Vektor v je zapisany pomocou coordinate frame {s}."
+
+Takze vᵦ a vₛ nemusia byt dve rozne fyzicke sipky. Mozu to byt dva rozne ciselne opisy tej istej sipky.
+
+### Konkretny priklad: robotovo "dopredu"
+
+Predstav si, ze robot je otoceny takto: jeho x̂ᵦ smeruje tam, kam ŷₛ, jeho ŷᵦ smeruje opacne ako x̂ₛ, jeho ẑᵦ smeruje rovnako ako ẑₛ. To je presne nas predchadzajuci priklad.
+
+Teraz vytvorime sipku v, ktora smeruje jeden meter priamo dopredu od robota.
+
+Z pohladu robota je to uplne jednoduche. Robot povie: "Ta sipka ide 1 po mojom x̂ᵦ, 0 po mojom ŷᵦ a 0 po mojom ẑᵦ."
+
+Preto:
+
+**vᵦ = (1, 0, 0)**
+
+Teraz uz presne vieme, co znamena kazdy symbol. v = nasa sipka. Male b = cisla su zapisane pomocou body frame {b}. A (1, 0, 0) znamena: 1 jednotka po x̂ᵦ, 0 po ŷᵦ, 0 po ẑᵦ.
+
+### Ale miestnost tu istu sipku vidi inak
+
+Robot je otoceny. Jeho "dopredu" smeruje z pohladu miestnosti po +ŷₛ.
+
+Preto ked tu istu fyzicku sipku opiseme pomocou space frame {s}, dostaneme:
+
+**vₛ = (0, 1, 0)**
+
+Preco? Pretoze z pohladu miestnosti ide sipka: 0 po x̂ₛ, 1 po ŷₛ, 0 po ẑₛ.
+
+Mame teda:
+
+**vᵦ = (1, 0, 0)** a **vₛ = (0, 1, 0)**
+
+Cisla su ine, ale fyzicka sipka je ta ista.
+
+Predstav si auto smerujuce na sever. Vodic povie: "Brana je presne predo mnou." Clovek pozerajuci sa na mapu povie: "Brana je smerom na sever." Dva rozne opisy, ale jedna brana a jeden smer.
+
+### Na co nam je potom Rₛᵦ?
+
+Teraz mame problem. Robot nam moze dat vᵦ = (1, 0, 0), ale my potrebujeme vediet vₛ.
+
+Potrebujeme teda akysi prekladac medzi coordinate frames. A tym je rotation matrix **Rₛᵦ**.
+
+V tomto pouziti nam umoznuje prelozit coordinates zapisane pomocou {b} do coordinates zapisanych pomocou {s}:
 
 **vₛ = Rₛᵦ · vᵦ**
 
-To je zakladna poziadavka. A teraz sa pozrime, co z nej vyplyva.
+Citaj tuto rovnicu slovami: "Vezmi vektor v zapisany pomocou body frame {b}, pouzi vztah medzi {b} a {s} a dostanes coordinates toho isteho vektora pomocou space frame {s}."
 
-### Co sa stane, ak vᵦ = (1, 0, 0)?
+Az teraz ma zmysel pozriet sa na otazku, preco su axes v rotation matrix ulozene prave ako stlpce.
 
-Vektor (1, 0, 0) v body frame znamena: "Idem presne jednu jednotku v smere x̂ᵦ a nijako v smere ŷᵦ ani ẑᵦ."
+### Co musi rotation matrix vediet?
 
-Ak teda spravime:
+Zacnime najjednoduchsim moznym pripadom:
 
-**Rₛᵦ · (1, 0, 0)**
+**vᵦ = (1, 0, 0)**
 
-pytame sa: "Ako vyzera smer x̂ᵦ z pohladu {s}?"
+Uz vieme, co to znamena: "Vektor smeruje presne po x̂ᵦ."
 
-A odpoved uz pozname z predchadzajucich sekci - je to x̂ᵦ vyjadrene v {s}.
+Takze ked vypocitame Rₛᵦ · (1, 0, 0), v podstate sa pytame: "Dobre, viem, ze sipka smeruje po x̂ᵦ. Kam smeruje x̂ᵦ z pohladu {s}?"
+
+Rotation matrix nam musi dat odpoved. V nasom priklade vieme, ze x̂ᵦ = (0, 1, 0) v {s}.
+
+Preto ocakavame:
+
+**Rₛᵦ · (1, 0, 0) = (0, 1, 0)**
+
+A teraz sa pozrime, preco prave toto sposobi, ze x̂ᵦ musi byt v prvom stlpci.
 
 ### Ako funguje nasobenie matice vektorom?
 
-Tu je kluc. Pozrime sa, co sa deje pri nasobeni matice vektorom uplne mechanicky.
-
-Ak mame maticu s tromi stlpcami, ktore oznacime c₁, c₂, c₃, a vynasobime ju vektorom (a, b, c), vysledok je:
-
-**vysledok = a · c₁ + b · c₂ + c · c₃**
-
-Teda vysledok je kombinacia stlpcov matice, pricom cisla vo vektore hovoria, kolko z kazdeho stlpca zoberieme.
-
-### Co sa stane konkretne pri (1, 0, 0)?
-
-Ak vynasobime maticu vektorom (1, 0, 0):
-
-**vysledok = 1 · c₁ + 0 · c₂ + 0 · c₃ = c₁**
-
-Cisla 0 a 0 vynuluju druhy a treti stlpec. Zostane iba prvy stlpec.
-
-Takze:
-
-**Rₛᵦ · (1, 0, 0) = prvy stlpec Rₛᵦ**
-
-### A teraz to spojme
-
-Vieme, ze Rₛᵦ · (1, 0, 0) musi dat x̂ᵦ vyjadrene v {s}, pretoze to je cely zmysel rotation matrix.
-
-Zaroven sme prave ukazali, ze Rₛᵦ · (1, 0, 0) vzdy vyberie prvy stlpec matice.
-
-Preto prvy stlpec Rₛᵦ musi byt x̂ᵦ vyjadrene v {s}.
-
-### Rovnako pre dalsie osi
-
-Ak vynasobime maticu vektorom (0, 1, 0):
-
-**vysledok = 0 · c₁ + 1 · c₂ + 0 · c₃ = c₂**
-
-Teda dostaneme druhy stlpec.
-
-A Rₛᵦ · (0, 1, 0) musi dat ŷᵦ vyjadrene v {s}.
-
-Preto druhy stlpec Rₛᵦ musi byt ŷᵦ.
-
-A uplne rovnako:
-
-**Rₛᵦ · (0, 0, 1) = treti stlpec = ẑᵦ vyjadrene v {s}**
-
-### Overme si to na nasom priklade
-
-Mame:
+Mame nasu konkretnu rotation matrix:
 
 $$Rₛᵦ =$$
 $$[  0  -1   0 ]$$
 $$[  1   0   0 ]$$
 $$[  0   0   1 ]$$
 
-Prvy stlpec je (0, 1, 0). A naozaj, x̂ᵦ smeruje v smere +ŷₛ.
+Rozdelme si ju mentalne na tri stlpce:
 
-Druhy stlpec je (-1, 0, 0). A naozaj, ŷᵦ smeruje opacne ako x̂ₛ.
+Prvy stlpec: **(0, 1, 0)**
 
-Treti stlpec je (0, 0, 1). A naozaj, ẑᵦ smeruje rovnako ako ẑₛ.
+Druhy stlpec: **(-1, 0, 0)**
 
-### Preco je toto dolezite?
+Treti stlpec: **(0, 0, 1)**
 
-Pretoze teraz chapes, ze osi su v stlpcoch nie kvoli nejakej konvencii, ale pretoze to priamo vyplyva z matematiky nasobenia matice vektorom.
+Ked matrix nasobime vektorom, cisla vo vektore hovoria, kolko mame zobrat z jednotlivych stlpcov. To je velmi dolezita myslienka.
 
-Ak by sme osi dali do riadkov namiesto stlpcov, nasobenie Rₛᵦ · vᵦ by nedavalo spravny vysledok. Stlpce su jediny spravny sposob, ako osi ulozit, aby multiplication fungoval tak, ako potrebujeme.
+### Co spravi (1, 0, 0)?
 
-Takze si zapamataj: **Stlpce rotation matrix su osi body frame vyjadrene v space frame, pretoze prave tak to vyzaduje nasobenie matice vektorom.**
+Cisla 1, 0, 0 hovoria: vezmi 1-krat prvy stlpec, 0-krat druhy stlpec a 0-krat treti stlpec.
+
+Teda:
+
+**1 · (0, 1, 0) + 0 · (-1, 0, 0) + 0 · (0, 0, 1)**
+
+Cokolvek krat nula je nula, takze druhy a treti stlpec zmiznu. Zostane:
+
+**(0, 1, 0)**
+
+Cizie:
+
+**Rₛᵦ · (1, 0, 0) = prvy stlpec Rₛᵦ**
+
+A teraz to spojme s fyzickym vyznamom. Vstup (1, 0, 0) v body frame znamenal: "Smerujem po x̂ᵦ." Preto vysledok musi povedat: "Takto vyzera x̂ᵦ z pohladu {s}." A nasobenie automaticky vybralo prvy stlpec.
+
+Preto: **1. stlpec rotation matrix musi byt x̂ᵦ vyjadrene v {s}.**
+
+To nie je nahodne pravidlo. Vyplyva to priamo z toho, ako funguje matrix multiplication.
+
+### Preco je ŷᵦ v druhom stlpci?
+
+Teraz vezmeme vᵦ = (0, 1, 0). Co to znamena? 0 po x̂ᵦ, 1 po ŷᵦ, 0 po ẑᵦ. Cizie tato sipka smeruje presne po ŷᵦ.
+
+Ked ju chceme prelozit do {s}, vypocitame Rₛᵦ · (0, 1, 0). Cisla 0, 1, 0 povedia: 0-krat prvy stlpec + 1-krat druhy stlpec + 0-krat treti stlpec.
+
+Preto zostane iba druhy stlpec: **(-1, 0, 0)**
+
+A to presne sedi s nasim obrazkom: ŷᵦ = -x̂ₛ.
+
+Preto: **2. stlpec rotation matrix je ŷᵦ vyjadrene v {s}.**
+
+### A preco je ẑᵦ v tretom stlpci?
+
+Teraz uz pravdepodobne vidis vzor. Mame vᵦ = (0, 0, 1). To znamena: smerujeme presne po ẑᵦ.
+
+Nasobenie Rₛᵦ · (0, 0, 1) vezme: 0-krat prvy stlpec + 0-krat druhy stlpec + 1-krat treti stlpec. Zostane: **(0, 0, 1)**
+
+Preto: **3. stlpec rotation matrix je ẑᵦ vyjadrene v {s}.**
+
+### Preto rotation matrix vyzera prave takto
+
+Mame teda:
+
+**Rₛᵦ = [ x̂ᵦ  ŷᵦ  ẑᵦ ] vyjadrene v {s}**
+
+Prvy stlpec odpoveda: Kam smeruje x̂ᵦ z pohladu {s}? Druhy: Kam smeruje ŷᵦ z pohladu {s}? Treti: Kam smeruje ẑᵦ z pohladu {s}?
+
+### Co ak mame normalny vektor, ktory nesmeruje iba po jednej osi?
+
+Teraz uz mozeme pochopit, preco to cele funguje aj pri komplikovanejsom vektore. Predstav si:
+
+**vᵦ = (2, 3, 0)**
+
+Co to znamena? Robot jednoducho hovori: "Tato sipka obsahuje 2 jednotky mojho smeru x̂ᵦ, 3 jednotky mojho smeru ŷᵦ a nic v smere ẑᵦ."
+
+Ked vypocitame Rₛᵦ · (2, 3, 0), cisla 2, 3, 0 povedia matrix: vezmi 2-krat prvy stlpec, 3-krat druhy stlpec a 0-krat treti stlpec.
+
+Teda: **2 · (0, 1, 0) + 3 · (-1, 0, 0) + 0 · (0, 0, 1)**
+
+Dostaneme: **(0, 2, 0) + (-3, 0, 0) = (-3, 2, 0)**
+
+Takze:
+
+**vₛ = (-3, 2, 0)**
+
+Robot povedal: "2 mojim smerom x̂ᵦ a 3 mojim smerom ŷᵦ." Space frame povedal: "Aha, z mojho pohladu je ta ista sipka -3 po x̂ₛ a +2 po ŷₛ."
+
+Fyzicka sipka sa vobec nezmenila. Iba sme ju opisali pomocou inych osi.
+
+### Predstav si to ako prekladac
+
+Toto je asi najlepsi mentalny obraz celej sekcie.
+
+Robot ma vlastny jazyk: x̂ᵦ, ŷᵦ, ẑᵦ. Miestnost ma vlastny jazyk: x̂ₛ, ŷₛ, ẑₛ. Rotation matrix Rₛᵦ je slovnik medzi tymito jazykmi.
+
+Jej prvy stlpec hovori: "Takto sa v jazyku {s} povie x̂ᵦ." Druhy stlpec: "Takto sa v jazyku {s} povie ŷᵦ." Treti: "Takto sa v jazyku {s} povie ẑᵦ."
+
+Ked robot potom povie vᵦ = (2, 3, 0), rotation matrix si to precita ako: "Potrebujem 2 kusy x̂ᵦ, 3 kusy ŷᵦ a 0 kusov ẑᵦ." Pozrie sa do svojich troch stlpcov, prelozi kazdy smer do {s} a vsetko spoji.
+
+### Na co si zapamatat
+
+Pismeno **v** je iba nazov pre nejaku sipku - nejaky vektor. Moze predstavovat smer pohybu, rychlost alebo cokolvek ine.
+
+**vᵦ** znamena: vektor v opisany pomocou body frame {b}.
+
+**vₛ** znamena: ten isty vektor v opisany pomocou space frame {s}.
+
+A rovnica **vₛ = Rₛᵦ · vᵦ** v tejto situacii znamena: "Preloz coordinates vektora z jazyka {b} do jazyka {s}."
+
+A teraz uz vieme aj to, preco rotation matrix obsahuje axes prave v stlpcoch. Vektor (1, 0, 0) v body frame znamena x̂ᵦ a pri nasobeni vyberie prvy stlpec. Preto prvy stlpec musi byt x̂ᵦ vyjadrene v {s}. Vektor (0, 1, 0) znamena ŷᵦ a vyberie druhy stlpec. A (0, 0, 1) znamena ẑᵦ a vyberie treti stlpec.
+
+Preto si nemusis memorovat vetu "axes patria do stlpcov". Staci si zapamatat ovela prirodzenejsiu myslienku:
+
+**1. stlpec = co znamena x̂ᵦ v jazyku {s}**
+
+**2. stlpec = co znamena ŷᵦ v jazyku {s}**
+
+**3. stlpec = co znamena ẑᵦ v jazyku {s}**
+
+Rotation matrix ma tieto tri odpovede ulozene v stlpcoch preto, ze pri nasobeni cisla vo vektore hovoria, kolko z prveho, druheho a tretieho stlpca sa ma pouzit.
 
 ---
 

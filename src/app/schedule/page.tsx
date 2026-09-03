@@ -192,17 +192,20 @@ function ProgramsThisMonth({ codes, locale }: { codes: string[]; locale: 'en' | 
       {codes.map(code => {
         const p = programs.find(pr => pr.code === code);
         if (!p) return null;
+        const Wrapper = p.link ? 'a' : 'div';
+        const linkProps = p.link ? { href: p.link, target: '_blank', rel: 'noopener noreferrer' } : {};
         return (
-          <div key={code} style={{
+          <Wrapper key={code} {...linkProps} style={{
             background: '#041540', border: '1px solid #1a1a1a', borderRadius: 14,
             padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12,
+            textDecoration: 'none', transition: 'border-color 0.15s',
           }}>
             <div style={{
               width: 36, height: 36, borderRadius: 10, background: '#010d33',
               display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-              border: '1px solid #1a1a1a',
+              border: '1px solid #1a1a1a', overflow: 'hidden',
             }}>
-              <img src={p.logo} alt={p.university} style={{ width: 22, height: 22, objectFit: 'contain' }}
+              <img src={p.logo} alt={p.university} style={{ width: 28, height: 28, objectFit: 'contain' }}
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
               />
             </div>
@@ -216,7 +219,7 @@ function ProgramsThisMonth({ codes, locale }: { codes: string[]; locale: 'en' | 
             }}>
               {p.code}
             </div>
-          </div>
+          </Wrapper>
         );
       })}
     </div>

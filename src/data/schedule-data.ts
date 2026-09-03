@@ -8,18 +8,19 @@ export interface Program {
   hours: string;
   logo: string;
   color: string;
+  link?: string;
 }
 
 export const programs: Program[] = [
-  { code: 'MR',  name: 'Modern Robotics: Mechanics, Planning, and Control', university: 'Northwestern University', hours: '~120 h', logo: '/logos/northwestern.png', color: '#4E2A84' },
-  { code: 'EL',  name: 'Introduction to Electronics', university: 'Georgia Tech', hours: '~50 h', logo: '/logos/gatech.png', color: '#B3A369' },
-  { code: 'IOT', name: 'An Introduction to Programming the IoT', university: 'UC Irvine', hours: '~80 h', logo: '/logos/uci.png', color: '#0064A4' },
-  { code: 'CAD', name: '3D Modeling for 3D Printing - Fusion 360', university: 'Coursera Project', hours: '~6 h', logo: '/logos/coursera.png', color: '#0056D2' },
-  { code: 'CPP', name: 'Coding for Everyone: C and C++', university: 'UC Santa Cruz', hours: '~80 h', logo: '/logos/ucsc.png', color: '#003C6C' },
-  { code: 'EMB', name: 'Introduction to Embedded Systems Software', university: 'CU Boulder', hours: '~9 h', logo: '/logos/cuboulder.png', color: '#CFB87C' },
-  { code: 'PE',  name: 'Introduction to Power Electronics', university: 'CU Boulder', hours: '~10 h', logo: '/logos/cuboulder.png', color: '#CFB87C' },
-  { code: 'ROS', name: 'ROS 2 Foundations: Architecture, Programming & Core Concepts', university: 'Coursera', hours: '~4 h', logo: '/logos/coursera.png', color: '#0056D2' },
-  { code: 'CV',  name: 'Introduction to Computer Vision and Image Processing', university: 'IBM', hours: '~20 h', logo: '/logos/ibm.png', color: '#0530AD' },
+  { code: 'MR',  name: 'Modern Robotics: Mechanics, Planning, and Control', university: 'Northwestern University', hours: '~120 h', logo: '/logos/northwestern.png', color: '#4E2A84', link: 'https://www.coursera.org/specializations/modernrobotics' },
+  { code: 'EL',  name: 'Introduction to Electronics', university: 'Georgia Tech', hours: '~50 h', logo: '/logos/gatech.png', color: '#B3A369', link: 'https://www.coursera.org/learn/electronics' },
+  { code: 'IOT', name: 'An Introduction to Programming the IoT', university: 'UC Irvine', hours: '~80 h', logo: '/logos/uci.png', color: '#0064A4', link: 'https://www.coursera.org/specializations/iot' },
+  { code: 'CAD', name: '3D Modeling for 3D Printing - Fusion 360', university: 'Coursera Project', hours: '~6 h', logo: '/logos/coursera.png', color: '#0056D2', link: 'https://www.coursera.org/learn/3d-modeling-fusion-360' },
+  { code: 'CPP', name: 'Coding for Everyone: C and C++', university: 'UC Santa Cruz', hours: '~80 h', logo: '/logos/ucsc.png', color: '#003C6C', link: 'https://www.coursera.org/specializations/coding-for-everyone' },
+  { code: 'EMB', name: 'Introduction to Embedded Systems Software', university: 'CU Boulder', hours: '~9 h', logo: '/logos/cuboulder.png', color: '#CFB87C', link: 'https://www.coursera.org/learn/introduction-embedded-systems' },
+  { code: 'PE',  name: 'Introduction to Power Electronics', university: 'CU Boulder', hours: '~10 h', logo: '/logos/cuboulder.png', color: '#CFB87C', link: 'https://www.coursera.org/learn/power-electronics' },
+  { code: 'ROS', name: 'Mastering ROS 2 for Robotics Programming', university: 'Packt', hours: '~4 h', logo: '/logos/packt-ros.png', color: '#E74C3C', link: 'https://www.coursera.org/specializations/packt-mastering-ros-2-for-robotics-programming' },
+  { code: 'CV',  name: 'Introduction to Computer Vision and Image Processing', university: 'IBM', hours: '~20 h', logo: '/logos/ibm.png', color: '#0530AD', link: 'https://www.coursera.org/learn/introduction-computer-vision-watson-opencv' },
 ];
 
 export interface WeekDay {

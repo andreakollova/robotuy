@@ -5,13 +5,13 @@ export const ch333Content = `# Modern Robotics – Chapter 3.3.3
 
 # Exponential Coordinates of Rigid-Body Motion
 
-V predchádzajúcich lekciách sme sa naučili dva veľmi dôležité spôsoby, ako pracovať s rigid-body motion. Najprv sme si ukázali **homogeneous transformation matrix T**, ktorá opisuje configuration rigid body v jednom kompaktnom zápise. Potom sme prešli k **twists**, ktoré opisujú instantaneous velocity rigid body.
+V predchádzajúcich lekciách sme sa naučili dva veľmi dôležité spôsoby, ako pracovať s rigid-body motion. Najprv sme si ukázali **homogeneous transformation matrix T**, ktorá opisuje configuration rigid body (tuhé teleso) v jednom kompaktnom zápise. Potom sme prešli k **twists**, ktoré opisujú instantaneous velocity rigid body.
 
 Teraz sa dostávame k tretej veľkej téme tejto kapitoly. Chceme odpovedať na otázku:
 
-**„Ak poznáme twist a chceme sa pozdĺž neho pohybovať o určitú veľkosť, aká bude výsledná configuration?"**
+**„Ak poznáme twist (priestorová rýchlosť) a chceme sa pozdĺž neho pohybovať o určitú veľkosť, aká bude výsledná configuration?"**
 
-Inými slovami, chceme nájsť spôsob, ako z twistu vytvoriť **finite rigid-body motion**. Presne rovnakú úlohu sme riešili pri rotations, keď sme z angular velocity omega a angle θ vypočítali rotation matrix R pomocou matrix exponential. Teraz urobíme to isté, ale pre celý rigid-body motion zahŕňajúci rotation aj translation.
+Inými slovami, chceme nájsť spôsob, ako z twistu vytvoriť **finite rigid-body motion**. Presne rovnakú úlohu sme riešili pri rotations, keď sme z angular velocity (uhlová rýchlosť) omega a angle θ vypočítali rotation matrix R pomocou matrix exponential. Teraz urobíme to isté, ale pre celý rigid-body motion zahŕňajúci rotation aj translation.
 
 Výsledkom bude **matrix exponential pre SE(3)**, ktorý z prvku se(3) vytvorí prvok SE(3).
 
@@ -21,9 +21,9 @@ Výsledkom bude **matrix exponential pre SE(3)**, ktorý z prvku se(3) vytvorí 
 
 Pri rotations sme mali dve reprezentácie tej istej veci.
 
-Na jednej strane stála **rotation matrix R ∈ SO(3)**, ktorá opisovala orientation.
+Na jednej strane stála **rotation matrix (rotačná matica) R ∈ SO(3)**, ktorá opisovala orientation (orientácia).
 
-Na druhej strane bola **exponential coordinate representation**: unit vector omega-hat určujúci rotation axis a scalar θ určujúci rotation angle. Spolu tvorili exponential coordinate vector:
+Na druhej strane bola **exponential coordinate representation**: unit vector (jednotkový vektor) omega-hat určujúci rotation axis a scalar θ určujúci rotation angle. Spolu tvorili exponential coordinate vector:
 
 **omega-hat θ**
 
@@ -47,7 +47,7 @@ Teraz chceme celú túto štruktúru rozšíriť z rotations na celé rigid-body
 
 Pri rotation sme celý motion opísali šiestimi slovami: **„otoč okolo tejto osi o tento angle."**
 
-Pri rigid-body motion chceme povedať niečo podobné, ale bohatšie: **„pohybuj sa pozdĺž tejto screw axis o túto veľkosť."**
+Pri rigid-body motion chceme povedať niečo podobné, ale bohatšie: **„pohybuj sa pozdĺž tejto screw axis (skrutková os) o túto veľkosť."**
 
 V lekcii o twists sme videli, že instantaneous rigid-body motion môžeme zapísať ako 6D twist:
 
@@ -211,7 +211,7 @@ Preto:
 
 **p = G(θ) v**
 
-Predstav si to takto: pri čistej rotation by sa body origin pohyboval po oblúku. Translation časť twistu v spolu s G(θ) presne opisujú, aký net displacement vznikne kombináciou rotation a translation pozdĺž screw axis.
+Predstav si to takto: pri čistej rotation by sa body origin pohyboval po oblúku. Translation časť twistu v spolu s G(θ) presne opisujú, aký net displacement (premiestnenie) vznikne kombináciou rotation a translation pozdĺž screw axis.
 
 ---
 
@@ -285,7 +285,7 @@ To dáva zmysel. Ak teleso iba rotuje okolo osi prechádzajúcej originom, jeho 
 
 ---
 
-## 14. Príklad: screw motion s rotation aj translation
+## 14. Príklad: screw motion (skrutkový pohyb) s rotation aj translation
 
 Teraz si vezmime screw motion: rotation okolo osi a zároveň translation pozdĺž tej istej osi.
 
@@ -295,7 +295,7 @@ Unit twist S bude mať:
 
 **omega-hat** - unit vector pozdĺž screw axis
 
-**v** - bude obsahovať informáciu aj o translation pozdĺž axis aj o position axis
+**v** - bude obsahovať informáciu aj o translation pozdĺž axis aj o position (poloha) axis
 
 Theta bude rotation angle.
 
@@ -402,7 +402,7 @@ V robotike má každý joint svoju axis. Revolute joint rotuje okolo osi a prism
 
 Oba tipy joints zodpovedajú screw motions.
 
-Revolute joint je screw motion s omega ≠ 0. Ak joint nemá pitch (h = 0), ide o čistú rotation okolo axis. Ak má nenulový pitch, rotation aj translation prebiehajú súčasne.
+Revolute joint je screw motion s omega ≠ 0. Ak joint nemá pitch (stúpanie) (h = 0), ide o čistú rotation okolo axis. Ak má nenulový pitch, rotation aj translation prebiehajú súčasne.
 
 Prismatic joint je screw motion s omega = 0. Je to čistá translation pozdĺž axis jointu.
 

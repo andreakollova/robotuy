@@ -3,7 +3,7 @@
 
 export const ch3IntroContent = `# Chapter 3 – Introduction to Rigid-Body Motions
 
-V predchádzajúcej kapitole sme sa naučili rozmýšľať o robotoch cez **configuration space (C-space)**. Zaujímalo nás, koľko nezávislých údajov potrebujeme na to, aby sme úplne opísali configuration robota alebo rigid body. Pri voľnom rigid body v trojrozmernom priestore sme dospeli k výsledku, že potrebuje **6 degrees of freedom (DOF)**. Tri z nich určujú jeho position a ďalšie tri orientation.
+V predchádzajúcej kapitole sme sa naučili rozmýšľať o robotoch cez **configuration space (C-space) (konfiguračný priestor)**. Zaujímalo nás, koľko nezávislých údajov potrebujeme na to, aby sme úplne opísali configuration robota alebo **rigid body (tuhé teleso)**. Pri voľnom rigid body v trojrozmernom priestore sme dospeli k výsledku, že potrebuje **6 degrees of freedom (DOF) (stupne voľnosti)**. Tri z nich určujú jeho **position (poloha)** a ďalšie tri **orientation (orientácia)**.
 
 To nám však zatiaľ hovorí iba to, **koľko informácií potrebujeme**. Ešte sme si nevytvorili praktický matematický jazyk, pomocou ktorého by sme vedeli s position a orientation počítať. A práve to je hlavná téma Chapter 3.
 
@@ -39,13 +39,13 @@ V Chapter 2 sme riešili hlavne to, prečo je výsledkom práve šesť. Teraz ch
 
 ## 2. Základný nápad: pripevníme k telesu reference frame
 
-Namiesto toho, aby sme sledovali každý bod rigid body zvlášť, pripevníme k telesu vlastný **reference frame**.
+Namiesto toho, aby sme sledovali každý bod rigid body zvlášť, pripevníme k telesu vlastný **reference frame (vzťažná sústava)**.
 
 Predstav si malý trojrozmerný súradnicový systém s osami x, y a z, ktorý pevne prilepíme na dron. Keď dron letí, frame sa pohybuje spolu s ním. Keď sa dron otočí, otočia sa spolu s ním aj osi frame.
 
 Toto funguje práve preto, že ide o **rigid body**. Jeho body nemenia svoju vzájomnú polohu. Ak teda poznáme configuration jedného frame, ktorý je s telesom pevne spojený, poznáme tým configuration celého telesa.
 
-V robotike si preto často zvolíme dva základné frames. Prvý je **space frame {s}**, teda pevný reference frame prostredia. Môžeme si ho predstaviť napríklad v rohu miestnosti alebo na základni robota. Druhý je **body frame {b}**, ktorý je spojený s pohybujúcim sa telesom, napríklad s dronom alebo s end-effectorom robotického ramena.
+V robotike si preto často zvolíme dva základné frames. Prvý je **space frame (priestorový frame) {s}**, teda pevný reference frame prostredia. Môžeme si ho predstaviť napríklad v rohu miestnosti alebo na základni robota. Druhý je **body frame (teleso frame) {b}**, ktorý je spojený s pohybujúcim sa telesom, napríklad s dronom alebo s end-effectorom robotického ramena.
 
 Potom už nemusíme hovoriť všeobecne „kde je dron". Môžeme položiť presnejšiu otázku:
 
@@ -101,7 +101,7 @@ musíme vedieť, **v ktorom frame sú tieto coordinates vyjadrené**.
 
 Predstav si dron letiaci určitou velocity. Túto velocity si môžeme predstaviť ako šípku. Dĺžka šípky predstavuje speed a smer šípky predstavuje direction of motion.
 
-Takýto geometrický objekt nazývame **free vector**. Hovoríme mu „free", pretože nie je pevne pripútaný ku konkrétnemu bodu. Ak šípku paralelne presunieme bez toho, aby sme zmenili jej dĺžku alebo smer, stále reprezentuje tú istú fyzickú veličinu.
+Takýto geometrický objekt nazývame **free vector (voľný vektor)**. Hovoríme mu „free", pretože nie je pevne pripútaný ku konkrétnemu bodu. Ak šípku paralelne presunieme bez toho, aby sme zmenili jej dĺžku alebo smer, stále reprezentuje tú istú fyzickú veličinu.
 
 Samotná velocity teda existuje nezávisle od coordinate systemu. Až keď si vyberieme reference frame, môžeme povedať, aké má components.
 
@@ -159,7 +159,7 @@ Skrutka sa pri tom nikam nepohne. Meníme iba frame, v ktorom ju opisujeme.
 
 Takýto **change of reference frame** je v robotike úplne základná operácia. Kamery, joints, end-effector, mobilná platforma a objekty v prostredí môžu mať každý vlastný frame. Aby robot dokázal ich informácie kombinovať, potrebuje medzi týmito frames systematicky prechádzať.
 
-Práve na to budeme používať rotation matrices a homogeneous transformation matrices.
+Práve na to budeme používať **rotation matrices (rotačné matice)** a homogeneous transformation matrices.
 
 ---
 
@@ -209,7 +209,7 @@ Matematicky sa tento vzťah zapisuje:
 
 **x̂ × ŷ = ẑ**
 
-Symbol **×** znamená cross product. V tomto prípade si z neho stačí predstaviť: **ak vezmeme smer +x a smer +y, pravidlo cross productu nám ukáže smer +z.**
+Symbol **×** znamená **cross product (vektorový súčin)**. V tomto prípade si z neho stačí predstaviť: **ak vezmeme smer +x a smer +y, pravidlo cross productu nám ukáže smer +z.**
 
 Toto pravidlo však neurčuje iba rozloženie osí. Pravú ruku používame aj na určenie toho, **ktorým smerom je kladná rotation okolo určitej osi**.
 
@@ -357,11 +357,11 @@ Nakoniec teda máme tri vectors:
 
 **ẑb - smer body z-axis vyjadrený v space frame**
 
-Tieto tri vectors uložíme vedľa seba ako columns jednej matrix:
+Tieto tri vectors uložíme vedľa seba ako columns (stĺpce) jednej matrix:
 
 **R = [ x̂b  ŷb  ẑb ]**
 
-A práve toto je **rotation matrix R**.
+A práve toto je **rotation matrix (rotačná matica) R**.
 
 ![Describing the position and orientation of a rigid body using a reference frame in 3D](/book/ch3/fig3-6.png)
 
@@ -487,7 +487,7 @@ potom z-axis už nemôžeš otočiť napríklad doľava. Musí smerovať **hore*
 
 Čiže rotation matrix síce uchováva 9 čísel, ale tie sú medzi sebou previazané pravidlami. V skutočnosti má orientation iba **3 nezávislé možnosti pohybu = 3 DOF**.
 
-Preto rotation matrix nazývame **implicit representation**: používame viac čísel, než skutočne potrebujeme, ale tie čísla musia spĺňať určité constraints.
+Preto rotation matrix nazývame **implicit representation**: používame viac čísel, než skutočne potrebujeme, ale tie čísla musia spĺňať určité constraints (obmedzenia).
 
 ---
 
@@ -529,7 +529,7 @@ $$[ r21  r22  r23  p2 ]$$
 $$[ r31  r32  r33  p3 ]$$
 $$[  0    0    0    1  ]$$
 
-Horná ľavá časť je rotation matrix **R**. Pravý column obsahuje position vector **p**. Spodný row **0 0 0 1** umožňuje spojiť rotation a translation do jedného matrix operation.
+Horná ľavá časť je rotation matrix **R**. Pravý stĺpec obsahuje position vector **p**. Spodný row (riadok) **0 0 0 1** umožňuje spojiť rotation a translation do jedného matrix operation.
 
 Takáto matrix bude neskôr označovať celú configuration rigid body.
 
@@ -607,11 +607,11 @@ Velocity však odpovedá na inú otázku:
 
 **„Ako sa dron práve teraz pohybuje?"**
 
-V jednom okamihu môže dron robiť dva druhy pohybu naraz. Môže sa presúvať - napríklad doprava, dopredu alebo hore. To opisuje linear velocity, ktorá má 3 components:
+V jednom okamihu môže dron robiť dva druhy pohybu naraz. Môže sa presúvať - napríklad doprava, dopredu alebo hore. To opisuje **linear velocity (lineárna rýchlosť)**, ktorá má 3 components:
 
 **v = (vx, vy, vz)**
 
-Zároveň sa môže otáčať - napríklad nakláňať dopredu, do strany alebo sa otáčať okolo zvislej osi. To opisuje angular velocity, ktorá má tiež 3 components:
+Zároveň sa môže otáčať - napríklad nakláňať dopredu, do strany alebo sa otáčať okolo zvislej osi. To opisuje **angular velocity (uhlová rýchlosť)**, ktorá má tiež 3 components:
 
 **ω = (ωx, ωy, ωz)**
 
@@ -619,7 +619,7 @@ Ak chceme vedieť úplne všetko o tom, ako sa dron v danom okamihu pohybuje, po
 
 **3 čísla pre jeho posúvanie + 3 čísla pre jeho otáčanie = 6 čísel.**
 
-Tieto dve časti môžeme spojiť do jedného 6-dimensional vectora, ktorý sa nazýva **twist**.
+Tieto dve časti môžeme spojiť do jedného 6-dimensional vectora, ktorý sa nazýva **twist (priestorová rýchlosť)**.
 
 Napríklad dron môže práve teraz letieť dopredu a hore a zároveň sa otáčať doľava. Twist dokáže všetky tieto pohyby opísať naraz.
 
@@ -659,7 +659,7 @@ Predstav si, že máš v ruke **knihu**. Kniha je najskôr pred tebou. Potom ju 
 
 Takýto pohyb môžeme opisovať oddelene: povedať, **o koľko sa kniha posunula** a potom **o koľko sa otočila**. V robotike však chceme mať spôsob, ktorým dokážeme tieto dve zmeny opísať **spoločne ako jeden 3D pohyb**.
 
-Práve tu prichádza **screw motion**.
+Práve tu prichádza **screw motion (skrutkový pohyb)**.
 
 ### Čo je screw motion?
 
@@ -677,7 +677,7 @@ Vráťme sa ku knihe. Presunula si ju doprava a zároveň otočila. Výsledok vy
 
 Ukazuje sa však, že môžeme nájsť **jednu vhodne umiestnenú a nasmerovanú os**, okolo ktorej by sa kniha mohla otočiť a zároveň sa pozdĺž nej posunúť tak, aby skončila **presne v rovnakej konečnej configuration**.
 
-Táto špeciálna os sa nazýva **screw axis**.
+Táto špeciálna os sa nazýva **screw axis (skrutková os)**.
 
 Nejde teda o tvrdenie:
 
@@ -693,7 +693,7 @@ To je podstatný rozdiel.
 
 A práve toto nám hovorí **Chasles-Mozzi theorem**:
 
-**Každý displacement rigid body v 3D sa dá opísať ako screw motion okolo vhodnej screw axis.**
+**Každý displacement (premiestnenie) rigid body v 3D sa dá opísať ako screw motion okolo vhodnej screw axis.**
 
 Predstav si teda robotický gripper, ktorý bol najskôr tu:
 
@@ -849,7 +849,7 @@ Najjednoduchšie si to môžeš rozdeliť takto:
 
 Pri rigid body často nestačí povedať iba **aká force na teleso pôsobí**. Dôležité je aj to, **kde táto force pôsobí**, pretože môže teleso zároveň otáčať.
 
-Predstav si **dvere**. Keď zatlačíš na kľučku, pôsobíš na dvere force. Keďže však tlačíš ďaleko od pántov, táto force zároveň vytvára **moment (torque)**, ktorý dvere otáča.
+Predstav si **dvere**. Keď zatlačíš na kľučku, pôsobíš na dvere force. Keďže však tlačíš ďaleko od pántov, táto force zároveň vytvára **moment (moment sily)** alebo **torque (krútiaci moment)**, ktorý dvere otáča.
 
 Pri rigid body preto často potrebujeme poznať naraz:
 
@@ -857,7 +857,7 @@ Pri rigid body preto často potrebujeme poznať naraz:
 
 **moment - ako sa ho tým snažíme otáčať**
 
-Tieto dve informácie spojíme do jedného 6-dimensional vectora, ktorý sa nazýva **wrench**. Obsahuje **3 components momentu + 3 components force**.
+Tieto dve informácie spojíme do jedného 6-dimensional vectora, ktorý sa nazýva **wrench (priestorová sila)**. Obsahuje **3 components momentu + 3 components force**.
 
 Je to podobné ako pri **twiste**:
 

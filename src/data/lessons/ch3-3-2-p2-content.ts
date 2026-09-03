@@ -5,7 +5,7 @@ export const ch332p2Content = `# Modern Robotics – Chapter 3.3.2
 
 # Twists – Part 2 of 2
 
-V prvej časti sme si vytvorili základnú predstavu o tom, čo je **twist**. Naučili sme sa, že twist je 6D vector, ktorý opisuje instantaneous motion rigid body. Poznáme dve jeho formy: body twist Vb a spatial twist Vs. Vieme, odkiaľ pochádzajú vzťahy:
+V prvej časti sme si vytvorili základnú predstavu o tom, čo je **twist (priestorová rýchlosť)**. Naučili sme sa, že twist je 6D vector, ktorý opisuje instantaneous motion rigid body (tuhé teleso). Poznáme dve jeho formy: body twist Vb a spatial twist Vs. Vieme, odkiaľ pochádzajú vzťahy:
 
 **[Vb] = T-1 Tdot**
 
@@ -13,15 +13,15 @@ a:
 
 **[Vs] = Tdot T-1**
 
-a chápeme, že angular časti omega-b a omega-s sú tá istá fyzická angular velocity vyjadrená v rôznych frames, zatiaľ čo linear časti vb a vs majú odlišné geometrické interpretácie.
+a chápeme, že angular časti omega-b a omega-s sú tá istá fyzická angular velocity (uhlová rýchlosť) vyjadrená v rôznych frames, zatiaľ čo linear časti vb a vs majú odlišné geometrické interpretácie.
 
 Teraz sa posunieme ďalej. V tejto časti sa naučíme tri veľmi dôležité veci:
 
 Ako prechádzať medzi body a spatial twistom pomocou **Adjoint transformation**.
 
-Ako twist geometricky chápať ako pohyb okolo **screw axis**.
+Ako twist geometricky chápať ako pohyb okolo **screw axis (skrutková os)**.
 
-A ako twist správne **normalizovať** a pracovať s pojmami **pitch** a **screw motion**.
+A ako twist správne **normalizovať** a pracovať s pojmami **pitch (stúpanie)** a **screw motion (skrutkový pohyb)**.
 
 ---
 
@@ -57,7 +57,7 @@ $$[ [p]R  R ]$$
 
 kde [p] je skew-symmetric matrix vectora p.
 
-Táto matrix má teda štyri bloky. V hornom ľavom rohu je rotation matrix R. V hornom pravom rohu je nulová 3 x 3 matrix. V dolnom ľavom rohu je súčin [p]R. A v dolnom pravom rohu je opäť R.
+Táto matrix má teda štyri bloky. V hornom ľavom rohu je rotation matrix (rotačná matica) R. V hornom pravom rohu je nulová 3 x 3 matrix. V dolnom ľavom rohu je súčin [p]R. A v dolnom pravom rohu je opäť R.
 
 Všimni si, že R sa objaví trikrát. To nie je náhoda. Rotation ovplyvňuje obe časti twistu a navyše translation prispieva k premene linear časti.
 
@@ -73,7 +73,7 @@ Angular časti omega-b a omega-s sú tá istá angular velocity v rôznych frame
 
 To vysvetľuje horný riadok [AdT]: R vľavo a 0 vpravo.
 
-Linear časti vb a vs však nie sú jednoducho rovnaká velocity v rôznych coordinates. Preto nestačí iba rotovať vb. Musíme pridať ešte príspevok od angular velocity a position:
+Linear časti vb a vs však nie sú jednoducho rovnaká velocity v rôznych coordinates. Preto nestačí iba rotovať vb. Musíme pridať ešte príspevok od angular velocity a position (poloha):
 
 **vs = R vb + [p] R omega-b**
 
@@ -154,7 +154,7 @@ $$Tsb =$$
 $$[ I  p ]$$
 $$[ 0  1 ]$$
 
-kde R = I (orientation je rovnaká) a p = (1, 0, 0).
+kde R = I (orientation (orientácia) je rovnaká) a p = (1, 0, 0).
 
 Teda gripper je posunutý o 1 m pozdĺž x-axis, ale má rovnakú orientation ako base.
 
@@ -186,7 +186,7 @@ Pre p = (1,0,0):
 
 **[p](0,0,1) = p x (0,0,1) = (0, -1, 0) x ... = (0·0 - 0·1, 0·0 - 1·0, 1·1 - 0·0)**
 
-Počítajme cross product (1,0,0) x (0,0,1):
+Počítajme cross product (vektorový súčin) (1,0,0) x (0,0,1):
 
 **(0·1 - 0·0, 0·0 - 1·1, 1·0 - 0·0) = (0, -1, 0)**
 
@@ -223,7 +223,7 @@ Os, okolo ktorej a pozdĺž ktorej sa rigid body pohybuje, sa nazýva **screw ax
 Screw axis je definovaná:
 
 - Point q na osi
-- Unit vector s-hat udávajúci smer osi
+- Unit vector (jednotkový vektor) s-hat udávajúci smer osi
 - Scalar h nazývaný **pitch**
 
 Tieto tri informácie spolu popisujú celú geometriu screw motion.
@@ -240,7 +240,7 @@ kde S je normalizovaný twist a θ̇ je rýchlosť pohybu pozdĺž screw axis.
 
 Pitch h je pomer linear motion pozdĺž osi k angular motion okolo osi:
 
-**h = linear displacement pozdĺž osi / angular displacement okolo osi**
+**h = linear displacement (premiestnenie) pozdĺž osi / angular displacement okolo osi**
 
 Ak h = 0, rigid body sa iba otáča okolo osi bez posunu pozdĺž nej. To je čistá rotation.
 
@@ -356,7 +356,7 @@ Ak omega = 0: normalizujeme v na jednotkový vector. Theta-dot je linear speed.
 
 Prečo nemáme jednu univerzálnu normalizáciu?
 
-Pretože twist spája dva rôzne druhy quantities. Angular velocity má rozmer rad/s a linear velocity má rozmer m/s. Nemôžeme ich jednoducho porovnávať alebo sčítavať.
+Pretože twist spája dva rôzne druhy quantities. Angular velocity má rozmer rad/s a linear velocity (lineárna rýchlosť) má rozmer m/s. Nemôžeme ich jednoducho porovnávať alebo sčítavať.
 
 Keď normalizujeme omega, θ̇ má rozmer angular speed a pitch h hovorí, koľko metrov sa teleso posunie na jeden radián otáčania.
 
@@ -492,9 +492,9 @@ Exponential je naopak vždy dobre definovaný. Pre ľubovoľné S a θ vždy dos
 
 Twist opisuje instantaneous motion rigid body. Existuje však aj duálny pojem:
 
-**Wrench F = [m; f]**
+**Wrench (priestorová sila) F = [m; f]**
 
-kde m je moment (torque) a f je force.
+kde m je moment (moment sily/krútiaci moment) a f je force.
 
 Wrench je 6D vector, ktorý opisuje sily pôsobiace na rigid body, rovnako ako twist opisuje jeho motion.
 

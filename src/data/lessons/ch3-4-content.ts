@@ -5,13 +5,13 @@ export const ch34Content = `# Modern Robotics – Chapter 3.4
 
 # Wrenches
 
-Doteraz sme sa v Chapter 3 pozerali najmä na to, **ako sa rigid body nachádza a ako sa pohybuje**. Configuration sme opisovali pomocou homogeneous transformation matrix T a instantaneous motion pomocou twistu V. Všetko sa zatiaľ točilo okolo kinematiky, teda geometrie a rýchlosti pohybu.
+Doteraz sme sa v Chapter 3 pozerali najmä na to, **ako sa rigid body (tuhé teleso) nachádza a ako sa pohybuje**. Configuration sme opisovali pomocou homogeneous transformation matrix T a instantaneous motion pomocou twistu V. Všetko sa zatiaľ točilo okolo kinematiky, teda geometrie a rýchlosti pohybu.
 
 Teraz prichádza na rad otázka:
 
 **"Čo spôsobuje, že sa rigid body pohybuje?"**
 
-Odpoveď je: sily a momenty. V tejto lekcii sa naučíme, ako ich spojiť do jedného 6D objektu, ktorý nazývame **wrench**. Wrench je pre sily a momenty presne to, čo twist je pre angular a linear velocity.
+Odpoveď je: sily a momenty. V tejto lekcii sa naučíme, ako ich spojiť do jedného 6D objektu, ktorý nazývame **wrench (priestorová sila)**. Wrench je pre sily a momenty presne to, čo twist je pre angular a linear velocity.
 
 ---
 
@@ -41,13 +41,13 @@ Napríklad gravitačná sila pôsobiaca na 2 kg predmet v space frame, kde z-axi
 
 v jednotkách Newtonov.
 
-Force sama o sebe spôsobuje translačné zrýchlenie rigid body. Ak by neexistoval žiaden constraint, sila by celé teleso posúvala v smere f.
+Force sama o sebe spôsobuje translačné zrýchlenie rigid body. Ak by neexistoval žiaden constraint (obmedzenie), sila by celé teleso posúvala v smere f.
 
 ---
 
-## 3. Moment pôsobiaci na rigid body
+## 3. Moment (moment sily) pôsobiaci na rigid body
 
-Moment, niekedy nazývaný torque, je tiež 3D vector:
+Moment, niekedy nazývaný torque (krútiaci moment), je tiež 3D vector:
 
 **m = (m1, m2, m3)**
 
@@ -67,11 +67,11 @@ Moment teda robí pre rotation niečo analogické tomu, čo force robí pre tran
 
 Veľmi dôležitá vlastnosť je, že force pôsobiaca na rigid body v pointe, ktorý neleží na osi prechádzajúcej referenčným bodom, vytvára moment okolo tohto referenčného bodu.
 
-Ak force f pôsobí v pointe s position vectorom r vzhľadom na referenčný bod, vzniká moment:
+Ak force f pôsobí v pointe s position (poloha) vectorom r vzhľadom na referenčný bod, vzniká moment:
 
 **m = r x f**
 
-kde x značí cross product.
+kde x značí cross product (vektorový súčin).
 
 Predstav si kľúč, ktorým uťahujeme skrutku. Sila pôsobí na konci kľúča a vytvára moment okolo skrutky. Čím dlhší kľúč, tým väčší moment pri rovnakej sile.
 
@@ -107,7 +107,7 @@ Neskôr uvidíme, že power je:
 
 **P = F^T V**
 
-teda jednoduchý dot product wrenchu a twistu. Aby tento vzťah nadobudol správny tvar, moment musí byť v hornej časti wrenchu a force v dolnej, rovnako ako omega je v hornej časti twistu a v je v dolnej.
+teda jednoduchý dot product (skalárny súčin) wrenchu a twistu. Aby tento vzťah nadobudol správny tvar, moment musí byť v hornej časti wrenchu a force v dolnej, rovnako ako omega je v hornej časti twistu a v je v dolnej.
 
 Keby sme poradie obrátili, museli by sme do vzorca pre power pridávať prešmyčky a vzťah by stratil svoju jednoduchosť.
 
@@ -183,7 +183,7 @@ Power je:
 
 **P = F^T V**
 
-kde F je wrench a V je twist, oba vyjadrené v rovnakom reference frame.
+kde F je wrench a V je twist, oba vyjadrené v rovnakom reference frame (vzťažná sústava).
 
 Rozpisime si to:
 
@@ -448,7 +448,7 @@ Práve takáto transformácia je v robotike bežná rutina pri spracovaní údaj
 
 ---
 
-## 22. Wrench a equilibrium
+## 22. Wrench a equilibrium (rovnováha)
 
 Rigid body je v statickom equilibriu, keď celkový wrench pôsobiaci na neho je zero:
 
@@ -512,7 +512,7 @@ Spatial inertia matrix M spája celý wrench s celým acceleration vectorom. Obs
 
 ---
 
-## 25. Wrench na screw axis
+## 25. Wrench na screw axis (skrutková os)
 
 Podobne ako twist môžeme interpretovať ako motion pozdĺž screw axis, aj wrench má geometrickú interpretáciu spojenú so screw.
 
@@ -529,7 +529,7 @@ Toto je presne duálna štruktúra k interpretácii twistu ako motion pozdĺž s
 
 ---
 
-## 26. Pitch wrenchu
+## 26. Pitch (stúpanie) wrenchu
 
 Pri twiste sme definovali pitch h ako pomer translation speed ku angular speed:
 
@@ -599,7 +599,7 @@ Tieto constraint wrenchy sú vždy reciprocal k povoleným twistom. To je matema
 
 Pre každý kĺb alebo mechanizmus môžeme definovať:
 
-**Twist space**: množina všetkých povolených twistov
+**Twist (priestorová rýchlosť) space**: množina všetkých povolených twistov
 
 **Wrench space**: množina všetkých constraint wrenchov
 
@@ -681,7 +681,7 @@ Ak referenčný bod je ďaleko od osi sily, moment je veľký.
 
 Preto pri zmene reference frame sa moment-component wrenchu mení nielen kvôli zmene orientácie axes (to robí R^T), ale aj kvôli zmene position referenčného bodu (to robí člen s [p]).
 
-Force sa naopak nemení podľa referenčného bodu. Force je free vector - závisí iba od smeru a veľkosti, nie od bodu pôsobenia.
+Force sa naopak nemení podľa referenčného bodu. Force je free vector (voľný vektor) - závisí iba od smeru a veľkosti, nie od bodu pôsobenia.
 
 ---
 
@@ -815,9 +815,9 @@ A vzťah medzi nimi:
 
 V Modern Robotics sa opakovane objavuje princíp duality. Zosumarizujme duálne páry:
 
-**Angular velocity omega** je duálna k **moment m**.
+**Angular velocity (uhlová rýchlosť) omega** je duálna k **moment m**.
 
-**Linear velocity v** je duálna k **force f**.
+**Linear velocity (lineárna rýchlosť) v** je duálna k **force f**.
 
 **Twist V = [omega; v]** je duálny k **wrench F = [m; f]**.
 

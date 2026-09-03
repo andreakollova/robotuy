@@ -3,7 +3,7 @@
 
 export const ch323p1Content = `# Chapter 3.2.3 Part 1 – Exponential Coordinates of Rotation
 
-V predchádzajúcej časti Chapter 3 sme sa naučili opisovať orientáciu telesa pomocou **rotation matrix R** a jej okamžitú zmenu pomocou **angular velocity omega**. Vedeli sme teda povedať, akú orientation rigid body práve má, a ako sa táto orientation v danom okamihu mení. Teraz chceme urobiť ďalší krok. Chceme nájsť spôsob, ako z informácie o **osi a uhle rotation** priamo zostrojiť **konečnú rotation matrix**.
+V predchádzajúcej časti Chapter 3 sme sa naučili opisovať orientáciu telesa pomocou **rotation matrix (rotačná matica) R** a jej okamžitú zmenu pomocou **angular velocity omega**. Vedeli sme teda povedať, akú orientation rigid body (tuhé teleso) práve má, a ako sa táto orientation v danom okamihu mení. Teraz chceme urobiť ďalší krok. Chceme nájsť spôsob, ako z informácie o **osi a uhle rotation** priamo zostrojiť **konečnú rotation matrix**.
 
 Táto myšlienka vedie k **exponential coordinates of rotation**. Namiesto deviatich entries rotation matrix stačia tri čísla: smer osi a veľkosť uhla. Z nich pomocou **matrix exponential** zostrojíme plnohodnotnú rotation matrix. Tým sa vytvára veľmi dôležité spojenie medzi priestorom instantaneous angular velocities **so(3)** a priestorom orientations **SO(3)**.
 
@@ -43,7 +43,7 @@ sa nazýva **axis-angle representation** rotation.
 
 ## 2. Unit rotation axis omega-hat
 
-Unit vector omega-hat má tri components:
+Unit vector (jednotkový vektor) omega-hat má tri components:
 
 **omega-hat = (omega1, omega2, omega3)**
 
@@ -174,7 +174,7 @@ a pre ľubovoľný vector v platí:
 
 **[omega-hat]v = omega-hat x v**
 
-kde x označuje cross product.
+kde x označuje cross product (vektorový súčin).
 
 Skew-symmetric matrix teda kóduje cross product s omega-hat ako matrix multiplication.
 
@@ -472,13 +472,13 @@ Výsledná rotation matrix bude mať tvar permutation matrix, pretože cyklická
 
 ## 17. Exponential coordinates ako 3-parametrová representation
 
-Rotation matrix R má 9 entries, ale iba 3 degrees of freedom. Exponential coordinates:
+Rotation matrix R má 9 entries, ale iba 3 degrees of freedom (stupne voľnosti). Exponential coordinates:
 
 **omega-hat θ = (e1, e2, e3)**
 
 priamo odrážajú tieto 3 degrees of freedom.
 
-To je veľká výhoda oproti rotation matrix. Namiesto 9 čísiel s 6 constraints (ortonormality) máme 3 čísla bez additional constraints.
+To je veľká výhoda oproti rotation matrix. Namiesto 9 čísiel s 6 constraints (obmedzenia ortonormality) máme 3 čísla bez additional constraints.
 
 Ale pozor, exponential coordinates nie sú úplne bez problémov.
 
@@ -628,7 +628,7 @@ Preto:
 
 **[omega-hat]^2 v = (omega-hat omega-hatT - I)v = projection(v na omega-hat) - v**
 
-Geometricky [omega-hat]^2 teda odoberá z vectora v jeho component perpendicular na rotation axis a obráti ho.
+Geometricky [omega-hat]^2 teda odoberá z vectora v jeho component perpendicular (kolmý) na rotation axis a obráti ho.
 
 Toto má priamy význam v Rodriguesovej formule: člen (1-cos(θ))[omega-hat]^2 opisuje, ako sa component vectora perpendicular na rotation axis otáča.
 
@@ -642,7 +642,7 @@ Rotation vectora v o uhol θ okolo osi omega-hat:
 
 **v' = v cos(θ) + (omega-hat x v) sin(θ) + omega-hat(omega-hat . v)(1 - cos(θ))**
 
-kde . je dot product.
+kde . je dot product (skalárny súčin).
 
 Prvý člen škáluje pôvodný vector.
 
@@ -664,7 +664,7 @@ a:
 
 **omega-hat θ**
 
-Prvý je **angular velocity** - vector, ktorý opisuje instantaneous rotational motion v danom čase.
+Prvý je **angular velocity (uhlová rýchlosť)** - vector, ktorý opisuje instantaneous rotational motion v danom čase.
 
 Druhý sú **exponential coordinates** - vector, ktorý opisuje finite rotation od identity orientation.
 
@@ -672,7 +672,7 @@ Oba sú 3D vectory. Oba súvisia s rotation axis. Ale ich fyzikálny význam je 
 
 Angular velocity je rate of change. Exponential coordinates sú celkový accumulated angle.
 
-Ak si predstavíme analógiu s linear motion: angular velocity je ako linear velocity v, exponential coordinates sú ako displacement x.
+Ak si predstavíme analógiu s linear motion: angular velocity je ako linear velocity (lineárna rýchlosť) v, exponential coordinates sú ako displacement (premiestnenie) x.
 
 Displacement = velocity x time, podobne exponential coordinates = angular velocity x time pri constant rotation.
 
@@ -748,7 +748,7 @@ Toto uzatvára kruh: angular velocity z predchádzajúcej lekcie a exponential c
 
 Porovnajme so situáciou z Chapter 2.
 
-V Chapter 2 sme mali **configuration space** (polohy systému) a **tangent space** (instantaneous velocities).
+V Chapter 2 sme mali **configuration space (konfiguračný priestor)** (polohy systému) a **tangent space** (instantaneous velocities).
 
 Teraz máme:
 

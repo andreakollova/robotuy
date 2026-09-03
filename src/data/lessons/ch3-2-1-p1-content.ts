@@ -5,7 +5,7 @@ export const ch321p1Content = `# Chapter 3.2.1 – Rotation Matrices
 
 ## Part 1 of 2
 
-V úvodnej časti Chapter 3 sme si vytvorili základnú predstavu, že configuration rigid body v trojrozmernom priestore pozostáva z dvoch častí: z jeho **position** a **orientation**. Position vieme pomerne prirodzene opísať tromi coordinates. Ak sa napríklad origin body frame nachádza dva metre v smere x, jeden meter v smere y a tri metre v smere z, môžeme jeho position zapísať vectorom.
+V úvodnej časti Chapter 3 sme si vytvorili základnú predstavu, že configuration rigid body (tuhé teleso) v trojrozmernom priestore pozostáva z dvoch častí: z jeho **position (poloha)** a **orientation (orientácia)**. Position vieme pomerne prirodzene opísať tromi coordinates. Ak sa napríklad origin body frame nachádza dva metre v smere x, jeden meter v smere y a tri metre v smere z, môžeme jeho position zapísať vectorom.
 
 Pri orientation však vzniká zaujímavejší problém. Nestačí povedať, kde sa teleso nachádza. Potrebujeme presne vedieť, **ako je natočené**. A práve na systematickú reprezentáciu orientation budeme používať **rotation matrices**.
 
@@ -429,7 +429,7 @@ P = [ cos θ     −sin θ ]
     [ sin θ      cos θ ]
 
 
-A dostaneme **rotation matrix**.
+A dostaneme **rotation matrix (rotačná matica)**.
 
 Takže keď sa nabudúce pozrieš na rotation matrix, skús si povedať:
 
@@ -705,7 +705,7 @@ A to je presne rovnaký princíp, aký sme používali v 2D. Iba sme k nemu prid
 
 ---
 
-## 16. Prečo columns rotation matrix nemôžu byť ľubovoľné vectors
+## 16. Prečo columns (stĺpce) rotation matrix nemôžu byť ľubovoľné vectors
 
 Tu sa dostávame k jednej z najdôležitejších častí celej témy.
 
@@ -715,13 +715,13 @@ Nemôžeme.
 
 Prečo?
 
-Pretože columns rotation matrix majú predstavovať axes skutočného reference frame. A coordinate axes majú špecifické geometrické vlastnosti.
+Pretože columns rotation matrix majú predstavovať axes skutočného reference frame (vzťažná sústava). A coordinate axes majú špecifické geometrické vlastnosti.
 
 Predstav si tri pevné tyčky pripevnené v jednom bode. Majú predstavovať x, y a z axes body frame.
 
-Každá musí mať unit length.
+Každá musí mať unit length (dĺžka).
 
-Každé dve musia byť perpendicular.
+Každé dve musia byť perpendicular (kolmé).
 
 A spolu musia vytvárať správne orientovaný, right-handed frame.
 
@@ -729,7 +729,7 @@ Ak by sme do matrix vložili tri náhodné vectors, pravdepodobne by tieto podmi
 
 ---
 
-## 17. Prvá podmienka: každá axis musí byť unit vector
+## 17. Prvá podmienka: každá axis musí byť unit vector (jednotkový vektor)
 
 Reference frame používa **unit coordinate axes**. To znamená, že každý axis vector má length:
 
@@ -763,7 +763,7 @@ Presne rovnaké pravidlo musí platiť pre druhý a tretí column:
 
 **r13² + r23² + r33² = 1**
 
-Máme teda prvé tri constraints.
+Máme teda prvé tri constraints (obmedzenia).
 
 ---
 
@@ -799,7 +799,7 @@ Preto potrebujeme ďalšiu podmienku:
 
 **ŷb . ẑb = 0**
 
-Symbol **.** označuje dot product.
+Symbol **.** označuje dot product (skalárny súčin).
 
 Pre dva vectors platí, že ak je ich dot product nulový, vectors sú perpendicular.
 
@@ -1009,7 +1009,7 @@ Pre 3 x 3 matrix s columns **a, b, c** možno determinant zapísať ako:
 
 **det R = c . (a x b)**
 
-pričom **x** je cross product.
+pričom **x** je cross product (vektorový súčin).
 
 Pri right-handed frame platí:
 
@@ -1152,7 +1152,7 @@ To je presne dôvod, prečo by sme nemali zamieňať:
 
 s
 
-**počtom degrees of freedom systému.**
+**počtom degrees of freedom (stupne voľnosti) systému.**
 
 ---
 

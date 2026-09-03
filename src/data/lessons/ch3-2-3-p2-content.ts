@@ -17,7 +17,7 @@ Matematicky chceme obrátiť proces z prvej časti. Predtým sme poznali **omega
 
 Najjednoduchšie je predstaviť si celý proces ako dve cesty medzi dvoma rôznymi spôsobmi opisu tej istej rotation.
 
-Na jednej strane máme **rotation matrix R**. Tá je veľmi praktická pri výpočtoch, skladaní rotations a transformovaní vectors medzi reference frames. Na druhej strane máme **axis-angle representation**: unit vector omega-hat určujúci rotation axis a angle θ určujúci veľkosť rotation.
+Na jednej strane máme **rotation matrix (rotačná matica) R**. Tá je veľmi praktická pri výpočtoch, skladaní rotations a transformovaní vectors medzi reference frames. Na druhej strane máme **axis-angle representation**: unit vector (jednotkový vektor) omega-hat určujúci rotation axis a angle θ určujúci veľkosť rotation.
 
 Ak poznáme axis a angle, používame matrix exponential:
 
@@ -633,7 +633,7 @@ Pri 180° rotation existuje veľmi pekná geometrická vlastnosť.
 
 **Vector ležiaci pozdĺž rotation axis sa rotation vôbec nezmení.**
 
-Ak otáčaš knihu okolo z-axis, vector smerujúci pozdĺž z-axis zostáva smerovať presne tým istým smerom. Menia sa vectors perpendicular na axis.
+Ak otáčaš knihu okolo z-axis, vector smerujúci pozdĺž z-axis zostáva smerovať presne tým istým smerom. Menia sa vectors perpendicular (kolmý) na axis.
 
 Pre rotation axis teda platí:
 
@@ -829,7 +829,7 @@ Toto presne nadväzuje na Chapter 2 o configuration spaces. Počet DOF nám hovo
 
 SO(3) má 3 DOF, ale nie je to R3.
 
-Je to ďalší príklad toho, prečo v robotike musíme rozlišovať medzi počtom independent parameters a globálnym tvarom configuration space.
+Je to ďalší príklad toho, prečo v robotike musíme rozlišovať medzi počtom independent parameters a globálnym tvarom configuration space (konfiguračný priestor).
 
 ---
 
@@ -853,7 +853,7 @@ Podobný princíp sa používa pri riadení orientations robotických ramien, dr
 
 ---
 
-## 27. Najčastejšia zámena: angular velocity a exponential coordinates
+## 27. Najčastejšia zámena: angular velocity (uhlová rýchlosť) a exponential coordinates
 
 Na tomto mieste je veľmi dôležité nezameniť dve veci, ktoré môžu vyzerať podobne.
 
@@ -967,4 +967,4 @@ a opačne:
 
 Matrix exponential a matrix logarithm nám umožňujú prechádzať medzi dvoma pohľadmi na rotation: medzi **orientation reprezentovanou pomocou R v SO(3)** a **axis-angle/exponential-coordinate opisom rotation spojeným so so(3)**.
 
-Práve tento spôsob uvažovania sa čoskoro rozšíri z čistej rotation na celý spatial rigid-body motion. Namiesto samotného SO(3) budeme pracovať s **SE(3)**, namiesto čistej angular velocity sa objaví **twist** a namiesto obyčajnej rotation axis budeme používať **screw axis**. Myšlienka však zostane veľmi podobná: hľadať systematický spôsob, ako prechádzať medzi configuration rigid body a geometrickým opisom motion, ktorý túto configuration vytvára.`;
+Práve tento spôsob uvažovania sa čoskoro rozšíri z čistej rotation na celý spatial rigid-body motion. Namiesto samotného SO(3) budeme pracovať s **SE(3)**, namiesto čistej angular velocity sa objaví **twist (priestorová rýchlosť)** a namiesto obyčajnej rotation axis budeme používať **screw axis (skrutková os)**. Myšlienka však zostane veľmi podobná: hľadať systematický spôsob, ako prechádzať medzi configuration rigid body a geometrickým opisom motion, ktorý túto configuration vytvára.`;

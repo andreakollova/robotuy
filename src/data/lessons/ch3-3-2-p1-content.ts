@@ -7,7 +7,7 @@ export const ch332p1Content = `# Modern Robotics – Chapter 3.3.2
 
 V predchádzajúcej kapitole sme sa naučili opisovať **configuration rigid body** pomocou homogeneous transformation matrix T. Tá nám v jednom zápise povedala dve veci naraz: kde sa teleso nachádza a ako je natočené. Inými slovami, T odpovedá na otázku:
 
-**„Akú má teleso práve teraz polohu a orientation?"**
+**„Akú má teleso práve teraz polohu a orientation (orientácia)?"**
 
 Teraz však chceme riešiť inú otázku:
 
@@ -17,19 +17,19 @@ To je zásadný rozdiel. Configuration opisuje stav telesa v konkrétnom okamihu
 
 Predstav si robotický gripper. V jednom okamihu môže byť 50 cm nad stolom a natočený smerom k predmetu. To je jeho configuration. Zároveň sa však môže posúvať dopredu rýchlosťou 20 cm/s a súčasne sa otáčať. To už nie je informácia o configuration, ale o jeho instantaneous motion.
 
-Keď sme riešili iba rotations, mali sme podobnú dvojicu pojmov. Rotation matrix R opisovala orientation a angular velocity omega opisovala, ako sa táto orientation práve mení. Teraz už však rigid body nerotuje iba na mieste. Môže sa súčasne **otáčať aj posúvať**.
+Keď sme riešili iba rotations, mali sme podobnú dvojicu pojmov. Rotation matrix (rotačná matica) R opisovala orientation a angular velocity omega opisovala, ako sa táto orientation práve mení. Teraz už však rigid body (tuhé teleso) nerotuje iba na mieste. Môže sa súčasne **otáčať aj posúvať**.
 
-Potrebujeme preto nový spôsob, ako tieto dve zložky pohybu spojiť do jedného celku. Tento opis sa nazýva **twist**.
+Potrebujeme preto nový spôsob, ako tieto dve zložky pohybu spojiť do jedného celku. Tento opis sa nazýva **twist (priestorová rýchlosť)**.
 
 ---
 
 ## 1. Prečo samotná angular velocity nestačí
 
-Predstav si dron letiaci cez miestnosť. Môže sa pohybovať dopredu a zároveň sa pomaly otáčať doľava. Ak by sme poznali iba jeho angular velocity, vedeli by sme, ako rýchlo sa mení jeho orientation, ale nevedeli by sme, ako rýchlo sa presúva jeho position.
+Predstav si dron letiaci cez miestnosť. Môže sa pohybovať dopredu a zároveň sa pomaly otáčať doľava. Ak by sme poznali iba jeho angular velocity, vedeli by sme, ako rýchlo sa mení jeho orientation, ale nevedeli by sme, ako rýchlo sa presúva jeho position (poloha).
 
 Naopak, ak by sme poznali iba velocity jedného bodu na drone, napríklad jeho stredu, nevedeli by sme z toho úplne určiť, ako sa celý dron otáča.
 
-Rigid body v 3D priestore má 6 DOF: tri translačné a tri rotačné. Je preto prirodzené, že aj jeho okamžitý pohyb potrebujeme opísať pomocou šiestich numbers.
+Rigid body v 3D priestore má 6 DOF (stupne voľnosti): tri translačné a tri rotačné. Je preto prirodzené, že aj jeho okamžitý pohyb potrebujeme opísať pomocou šiestich numbers.
 
 Prvé tri numbers budú tvoriť angular velocity:
 
@@ -51,7 +51,7 @@ Dôležité však je nepredstavovať si v automaticky ako „velocity originu te
 
 ## 2. Najprv si pripomeňme, čo opisuje Tsb
 
-Máme pevný space frame {s} a body frame {b} spojený s rigid body.
+Máme pevný space frame (priestorový frame) {s} a body frame (teleso frame) {b} spojený s rigid body.
 
 Configuration body frame vzhľadom na space frame zapisujeme:
 
@@ -223,7 +223,7 @@ Takže:
 
 **vb**
 
-je **linear velocity originu body frame vyjadrená v body coordinates**.
+je **linear velocity (lineárna rýchlosť) originu body frame vyjadrená v body coordinates**.
 
 To je veľmi dôležitá interpretácia a pri body twist je veľmi intuitívna.
 
@@ -495,7 +495,7 @@ Prečo?
 
 Pretože celý motion je čistá rotation okolo space originu. Spatial twist tento motion veľmi prirodzene opisuje ako:
 
-**angular velocity ≠ 0**
+**angular velocity (uhlová rýchlosť) ≠ 0**
 
 a:
 
@@ -709,7 +709,7 @@ Rovnakú štruktúru sme mali pri rotations:
 
 **[omega-s] = Rdot R-1**
 
-Násobenie inverse z príslušnej strany spôsobí, že instantaneous change vyjadríme v inom reference frame.
+Násobenie inverse z príslušnej strany spôsobí, že instantaneous change vyjadríme v inom reference frame (vzťažná sústava).
 
 Pri body twist výsledok prirodzene patrí k body coordinates.
 
@@ -779,7 +779,7 @@ Môžeme si to predstaviť takto:
 
 **[V] hovorí, ktorým smerom a ako rýchlo sa z tejto configuration práve pohybujeme.**
 
-Toto úzko súvisí s myšlienkou tangent space, ktorú sme už stretli pri configuration spaces. Configuration space nemusí byť obyčajný Euclidean vector space, ale instantaneous velocities pri konkrétnej configuration môžeme reprezentovať pomocou vectorov.
+Toto úzko súvisí s myšlienkou tangent space, ktorú sme už stretli pri configuration spaces. Configuration space (konfiguračný priestor) nemusí byť obyčajný Euclidean vector space, ale instantaneous velocities pri konkrétnej configuration môžeme reprezentovať pomocou vectorov.
 
 Twist je práve takýto velocity object pre rigid body.
 
@@ -957,4 +957,4 @@ a preto vs vo všeobecnosti nie je velocity body originu. Najlepšie to vidíme 
 
 Celá téma zároveň nadväzuje na predchádzajúce kapitoly veľmi systematicky. Rotation matrix R bola configuration orientation a angular velocity omega opisovala jej instantaneous change. Homogeneous transformation T teraz opisuje celú rigid-body configuration a twist V opisuje jej instantaneous change.
 
-V ďalšej časti sa k twists pridá ďalšia veľmi dôležitá geometrická interpretácia. Uvidíme, ako medzi body a spatial twistom prechádzať pomocou **Adjoint transformation** a ako možno twist chápať ako motion okolo **screw axis**. Tým sa rotation a translation spoja nielen algebraicky, ale aj do veľmi konkrétnej geometrickej predstavy pohybu rigid body.`;
+V ďalšej časti sa k twists pridá ďalšia veľmi dôležitá geometrická interpretácia. Uvidíme, ako medzi body a spatial twistom prechádzať pomocou **Adjoint transformation** a ako možno twist chápať ako motion okolo **screw axis (skrutková os)**. Tým sa rotation a translation spoja nielen algebraicky, ale aj do veľmi konkrétnej geometrickej predstavy pohybu rigid body.`;

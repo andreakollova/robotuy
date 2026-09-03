@@ -3,9 +3,9 @@
 
 export const ch322Content = `# Chapter 3.2.2 – Angular Velocities
 
-V predchádzajúcich lekciách sme sa naučili reprezentovať **orientation rigid body** pomocou rotation matrix R. Vedeli sme teda odpovedať na otázku, ako je teleso natočené vzhľadom na zvolený reference frame. Teraz však chceme ísť o krok ďalej. Nestačí nám vedieť, akú orientation má robotický gripper alebo dron v konkrétnom okamihu. Chceme vedieť aj to, **ako sa táto orientation práve mení**.
+V predchádzajúcich lekciách sme sa naučili reprezentovať **orientation (orientácia) rigid body** pomocou rotation matrix (rotačná matica) R. Vedeli sme teda odpovedať na otázku, ako je teleso natočené vzhľadom na zvolený reference frame (vzťažná sústava). Teraz však chceme ísť o krok ďalej. Nestačí nám vedieť, akú orientation má robotický gripper alebo dron v konkrétnom okamihu. Chceme vedieť aj to, **ako sa táto orientation práve mení**.
 
-Presne tu vzniká pojem **angular velocity**. Je to rotational obdoba linear velocity. Ak position hovorí, kde sa bod nachádza, linear velocity hovorí, ako rýchlo sa jeho position mení. Podobne rotation matrix hovorí, akú orientation rigid body práve má, zatiaľ čo angular velocity opisuje, **ako rýchlo a okolo akej osi sa táto orientation mení**.
+Presne tu vzniká pojem **angular velocity (uhlová rýchlosť)**. Je to rotational obdoba linear velocity (lineárna rýchlosť). Ak position (poloha) hovorí, kde sa bod nachádza, linear velocity hovorí, ako rýchlo sa jeho position mení. Podobne rotation matrix hovorí, akú orientation rigid body (tuhé teleso) práve má, zatiaľ čo angular velocity opisuje, **ako rýchlo a okolo akej osi sa táto orientation mení**.
 
 Táto lekcia preto spája dve doteraz oddelené myšlienky: rotation matrix ako opis orientation a velocity ako okamžitú zmenu configuration. Uvidíme, že derivácia rotation matrix má veľmi špeciálnu štruktúru a že angular velocity sa dá reprezentovať nielen 3D vectorom, ale aj **skew-symmetric matrix**. Práve tento krok nás pripraví na exponential coordinates v ďalšej časti Chapter 3.
 
@@ -45,7 +45,7 @@ Prvou je **axis of rotation**. Tá nám hovorí, okolo akej priamky sa teleso ot
 
 **omega-hat**
 
-Strieška nad omega znamená, že ide o unit vector, teda vector s length 1.
+Strieška nad omega znamená, že ide o unit vector (jednotkový vektor), teda vector s length 1.
 
 Druhou informáciou je, ako rýchlo sa rotation angle mení. Ak angle označíme:
 
@@ -119,7 +119,7 @@ Toto je dôležité aj z pohľadu C-space. Orientation space SO(3) nie je obyča
 
 Teraz chceme angular velocity spojiť s tým, čo už poznáme.
 
-Rotation matrix R reprezentuje orientation body frame. Jej columns môžeme zapísať ako:
+Rotation matrix R reprezentuje orientation body frame. Jej columns (stĺpce) môžeme zapísať ako:
 
 **R = [r1 r2 r3]**
 
@@ -153,7 +153,7 @@ Predstav si vinylovú platňu otáčajúcu sa na gramofóne. Zo stredu platne na
 
 Keď sa platňa otáča, length vectora r sa nemení. Mení sa iba jeho direction.
 
-Jeho koncový bod sa pohybuje po kružnici. Instantaneous direction pohybu je tangentná ku kružnici, takže je perpendicular na r.
+Jeho koncový bod sa pohybuje po kružnici. Instantaneous direction pohybu je tangentná ku kružnici, takže je perpendicular (kolmý) na r.
 
 Ak má platňa angular velocity omega, platí veľmi dôležitý vzťah:
 
@@ -161,7 +161,7 @@ Ak má platňa angular velocity omega, platí veľmi dôležitý vzťah:
 
 Na ľavej strane máme **rdot**, teda ako rýchlo sa vector r mení.
 
-Na pravej strane máme **omega x r**, cross product angular velocity a aktuálneho vectora r.
+Na pravej strane máme **omega x r**, cross product (vektorový súčin) angular velocity a aktuálneho vectora r.
 
 Tento vzťah spája angular motion telesa s linear change konkrétneho vectora, ktorý je na teleso pevne pripojený.
 
@@ -328,7 +328,7 @@ krát:
 
 **(y1, y2, y3)**
 
-Prvý row dá:
+Prvý row (riadok) dá:
 
 **-x3 y2 + x2 y3**
 
@@ -511,7 +511,7 @@ Možno sa pýtaš, prečo výsledok:
 
 naozaj musí mať skew-symmetric tvar.
 
-Vyplýva to priamo z constraint, ktorý rotation matrix vždy spĺňa:
+Vyplýva to priamo z constraint (obmedzenie), ktorý rotation matrix vždy spĺňa:
 
 **R RT = I**
 

@@ -3,13 +3,13 @@
 
 export const ch321p2Content = `# Modern Robotics – Chapter 3.2.1: Rotation Matrices
 
-## Part 2 of 2 – Ako rotation matrix používame v praxi
+## Part 2 of 2 – Ako rotation matrix (rotačná matica) používame v praxi
 
-V prvej časti sme riešili najmä to, čo rotation matrix je a prečo má práve takú štruktúru. Videli sme, že 3D orientation môžeme reprezentovať pomocou troch navzájom kolmých unit axes uložených ako columns matice. Z toho vznikli podmienky RT R = I a det R = 1, ktoré definujú skupinu SO(3).
+V prvej časti sme riešili najmä to, čo rotation matrix je a prečo má práve takú štruktúru. Videli sme, že 3D orientation (orientácia) môžeme reprezentovať pomocou troch navzájom kolmých unit axes uložených ako columns (stĺpce) matice. Z toho vznikli podmienky RT R = I a det R = 1, ktoré definujú skupinu SO(3).
 
 Teraz sa posunieme k praktickejšej otázke. Keď už rotation matrix R máme, čo s ňou vlastne môžeme robiť?
 
-Tu vzniká jedna z najdôležitejších myšlienok celej kapitoly. Rovnaká rotation matrix sa môže objaviť v troch situáciách, ktoré matematicky vyzerajú veľmi podobne, ale fyzicky znamenajú niečo iné. Môže opisovať orientation jedného frame vzhľadom na druhý, môže nám umožniť prepísať coordinates toho istého objektu do iného reference frame, alebo môže objekt skutočne otočiť.
+Tu vzniká jedna z najdôležitejších myšlienok celej kapitoly. Rovnaká rotation matrix sa môže objaviť v troch situáciách, ktoré matematicky vyzerajú veľmi podobne, ale fyzicky znamenajú niečo iné. Môže opisovať orientation jedného frame vzhľadom na druhý, môže nám umožniť prepísať coordinates toho istého objektu do iného reference frame (vzťažná sústava), alebo môže objekt skutočne otočiť.
 
 Práve rozlíšenie týchto troch významov je hlavnou témou tejto časti.
 
@@ -448,7 +448,7 @@ Tento rozdiel sa niekedy opisuje ako passive vs. active transformation.
 
 Pri passive transformation nemeníme fyzický vector. Meníme iba reference frame, v ktorom ho opisujeme.
 
-Pri active transformation nechávame reference frame na mieste a fyzicky otáčame vector alebo rigid body.
+Pri active transformation nechávame reference frame na mieste a fyzicky otáčame vector alebo rigid body (tuhé teleso).
 
 Predstav si šálku s rúčkou smerujúcou doprava.
 
@@ -468,7 +468,7 @@ Keď chceme zdôrazniť, že matrix používame ako rotation operator, Modern Ro
 
 **R = Rot(omega-hat, θ)**
 
-Symbol omega-hat označuje unit vector určujúci axis of rotation.
+Symbol omega-hat označuje unit vector (jednotkový vektor) určujúci axis of rotation.
 
 Symbol θ označuje angle, o ktorý otáčame.
 

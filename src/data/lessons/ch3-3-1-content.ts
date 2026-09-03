@@ -5,7 +5,7 @@ export const ch331Content = `# Modern Robotics – Chapter 3.3.1
 
 # Homogeneous Transformation Matrices
 
-Doteraz sme sa pri pohybe tuhého telesa sústredili najmä na jeho **orientáciu**. Naučili sme sa používať rotation matrix R, pomocou ktorej vieme opísať, ako je jedno teleso alebo súradnicový systém natočený vzhľadom na iný. V reálnom robotickom systéme však samotná orientácia nestačí. Robotické rameno, kamera, gripper alebo mobilný robot sa môže nielen otáčať, ale aj meniť svoju polohu v priestore.
+Doteraz sme sa pri pohybe tuhého telesa sústredili najmä na jeho **orientáciu**. Naučili sme sa používať rotation matrix (rotačná matica) R, pomocou ktorej vieme opísať, ako je jedno teleso alebo súradnicový systém natočený vzhľadom na iný. V reálnom robotickom systéme však samotná orientácia nestačí. Robotické rameno, kamera, gripper alebo mobilný robot sa môže nielen otáčať, ale aj meniť svoju polohu v priestore.
 
 Predstav si robotický gripper nad stolom. Môže smerovať presne správnym smerom, ale ak sa nachádza pol metra vedľa predmetu, ktorý má uchopiť, jeho orientácia nám veľmi nepomôže. Na úplný opis jeho configuration potrebujeme vedieť dve veci naraz: **kde sa nachádza a ako je natočený**.
 
@@ -15,7 +15,7 @@ Práve preto teraz spojíme rotation matrix R a position vector p do jednej spol
 
 ## 1. Prečo už samotná rotation matrix nestačí
 
-Predstav si na stole dve rovnaké knihy. Obe sú natočené úplne rovnako: ich horné hrany smerujú tým istým smerom a ich bočné hrany sú navzájom rovnobežné. Z pohľadu orientation teda majú rovnakú rotation matrix R.
+Predstav si na stole dve rovnaké knihy. Obe sú natočené úplne rovnako: ich horné hrany smerujú tým istým smerom a ich bočné hrany sú navzájom rovnobežné. Z pohľadu orientation (orientácia) teda majú rovnakú rotation matrix R.
 
 Jedna kniha však leží na ľavej strane stola a druhá na pravej.
 
@@ -31,7 +31,7 @@ a
 
 **p - kde sa teleso nachádza**
 
-Pri rigid body v 3D priestore má R tri rotačné DOF a p tri translačné DOF. Spolu teda opisujú všetkých:
+Pri rigid body (tuhé teleso) v 3D priestore má R tri rotačné DOF (stupne voľnosti) a p tri translačné DOF. Spolu teda opisujú všetkých:
 
 **3 + 3 = 6 DOF**
 
@@ -47,7 +47,7 @@ Teraz ich spojíme do jednej matice.
 
 ## 2. Homogeneous transformation matrix spája polohu a orientáciu
 
-Úplnú configuration jedného reference frame vzhľadom na druhý budeme reprezentovať maticou:
+Úplnú configuration jedného reference frame (vzťažná sústava) vzhľadom na druhý budeme reprezentovať maticou:
 
 $$T =$$
 $$[ R  p ]$$
@@ -250,7 +250,7 @@ a p je ľubovoľný 3D position vector, patrí do:
 
 Fyzicky teda môžeme SE(3) chápať ako **priestor všetkých možných configurations spatial rigid body**. Každý jeho prvok opisuje jednu konkrétnu kombináciu position a orientation.
 
-Rigid body má 6 DOF, takže SE(3) je 6-dimensional configuration space, hoci jeho prvky zapisujeme pomocou 4 x 4 matrices.
+Rigid body má 6 DOF, takže SE(3) je 6-dimensional configuration space (konfiguračný priestor), hoci jeho prvky zapisujeme pomocou 4 x 4 matrices.
 
 ---
 
@@ -516,7 +516,7 @@ Toto je **passive interpretation** transformation.
 
 ---
 
-## 17. Rigid-body displacement - objekt sa skutočne pohne
+## 17. Rigid-body displacement (premiestnenie) - objekt sa skutočne pohne
 
 Teraz si predstav, že hrnček naozaj vezmeš do ruky, otočíš ho a položíš na iné miesto.
 
@@ -782,13 +782,13 @@ T má 16 entries, ale spatial rigid body má iba 6 DOF.
 
 Ako je to možné?
 
-Rotation časť R má deväť entries, ale iba tri rotačné DOF, pretože jej columns musia byť unit vectors, musia byť navzájom perpendicular a musí platiť správna handedness. Position p obsahuje tri nezávislé numbers. Posledný riadok T je navyše vždy pevne:
+Rotation časť R má deväť entries, ale iba tri rotačné DOF, pretože jej columns musia byť unit vectors (jednotkové vektory), musia byť navzájom perpendicular (kolmý) a musí platiť správna handedness. Position p obsahuje tri nezávislé numbers. Posledný riadok T je navyše vždy pevne:
 
 **0 0 0 1**
 
 Počet zapísaných numbers teda nie je to isté ako počet DOF.
 
-To je presne rovnaká myšlienka ako pri rotation matrix. Reprezentácia môže používať viac numbers než je dimension configuration space, ak sú tieto numbers navzájom previazané constraints.
+To je presne rovnaká myšlienka ako pri rotation matrix. Reprezentácia môže používať viac numbers než je dimension configuration space, ak sú tieto numbers navzájom previazané constraints (obmedzeniami).
 
 SE(3) má preto dimension 6, aj keď jeho prvky zapisujeme 4 x 4 matrices.
 
@@ -810,7 +810,7 @@ Teraz sme rotation rozšírili o translation a dostali:
 
 To pripravuje pôdu pre veľmi podobnú myšlienku pri celom rigid-body motion.
 
-Namiesto samotnej rotation axis budeme používať **screw axis**. Namiesto čistej angular velocity sa objaví **twist**. A namiesto exponential coordinates rotation omega-hat θ budeme mať exponential coordinates celého rigid-body motion.
+Namiesto samotnej rotation axis budeme používať **screw axis (skrutková os)**. Namiesto čistej angular velocity (uhlová rýchlosť) sa objaví **twist (priestorová rýchlosť)**. A namiesto exponential coordinates rotation omega-hat θ budeme mať exponential coordinates celého rigid-body motion.
 
 Štruktúra bude veľmi podobná tomu, čo už poznáme zo SO(3), iba teraz bude opisovať rotation a translation spoločne.
 
@@ -820,9 +820,9 @@ Namiesto samotnej rotation axis budeme používať **screw axis**. Namiesto čis
 
 **Homogeneous transformation matrix T** je 4 x 4 matrix, ktorá spája rotation R a position p do jednej reprezentácie. Opisuje celú configuration spatial rigid body alebo vzťah medzi dvoma reference frames.
 
-**Rotation matrix R** je horná ľavá 3 x 3 časť T. Určuje orientation jedného frame vzhľadom na druhý.
+**Rotation matrix (rotačná matica) R** je horná ľavá 3 x 3 časť T. Určuje orientation jedného frame vzhľadom na druhý.
 
-**Position vector p** je horná pravá 3 x 1 časť T. Určuje position originu jedného frame vzhľadom na druhý.
+**Position (poloha) vector p** je horná pravá 3 x 1 časť T. Určuje position originu jedného frame vzhľadom na druhý.
 
 **Homogeneous coordinates** - point (x1,x2,x3) rozšírime na (x1,x2,x3,1). Vďaka tomu môžeme rotation aj translation vykonať jednou matrix multiplication.
 
@@ -872,4 +872,4 @@ Práve preto môžeme napríklad z transformations jednotlivých links vypočít
 
 Zároveň je dôležité stále sledovať, **čo transformation fyzicky znamená**. Rovnaká matrix môže opisovať configuration frame, zmenu reference frame alebo skutočný displacement telesa. Rovnako musíme sledovať poradie multiplication. Transformation vykonaná vzhľadom na fixed frame a transformation vykonaná vzhľadom na body frame vo všeobecnosti nevedú k rovnakému výsledku.
 
-Celá kapitola zároveň vytvára prirodzený prechod od **SO(3)** k **SE(3)**. SO(3) opisovalo iba orientations. SE(3) opisuje celé configurations spatial rigid body - tri rotačné a tri translačné DOF. V ďalších častiach sa rovnaká logika, ktorú sme pri rotations spájali s angular velocity, so(3) a exponential coordinates, rozšíri na celý rigid-body motion. Objaví sa **twist**, priestor **se(3)** a **screw motion**, vďaka čomu budeme vedieť opisovať rotation a translation ako jeden spoločný pohyb.`;
+Celá kapitola zároveň vytvára prirodzený prechod od **SO(3)** k **SE(3)**. SO(3) opisovalo iba orientations. SE(3) opisuje celé configurations spatial rigid body - tri rotačné a tri translačné DOF. V ďalších častiach sa rovnaká logika, ktorú sme pri rotations spájali s angular velocity, so(3) a exponential coordinates, rozšíri na celý rigid-body motion. Objaví sa **twist**, priestor **se(3)** a **screw motion (skrutkový pohyb)**, vďaka čomu budeme vedieť opisovať rotation a translation ako jeden spoločný pohyb.`;

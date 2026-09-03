@@ -299,31 +299,31 @@ Toto je velmi dobra otazka. Ak na nu poznasz odpoved, nikdy nebudes musiet pravi
 
 ### Najprv si pripomenme, co chceme od rotation matrix
 
-Chceme, aby rotation matrix Rsb vedela previest lubovolny vektor zapisany v {b} do {s}. Teda ak mame nejaky vektor v_b, chceme vediet vypocitat:
+Chceme, aby rotation matrix Rₛᵦ vedela previest lubovolny vektor zapisany v {b} do {s}. Teda ak mame nejaky vektor vᵦ, chceme vediet vypocitat:
 
-**v_s = Rsb * v_b**
+**vₛ = Rₛᵦ · vᵦ**
 
 To je zakladna poziadavka. A teraz sa pozrime, co z nej vyplyva.
 
-### Co sa stane, ak v_b = (1, 0, 0)?
+### Co sa stane, ak vᵦ = (1, 0, 0)?
 
-Vektor (1, 0, 0) v body frame znamena: "Idem presne jednu jednotku v smere x_b a nijako v smere y_b ani z_b."
+Vektor (1, 0, 0) v body frame znamena: "Idem presne jednu jednotku v smere x̂ᵦ a nijako v smere ŷᵦ ani ẑᵦ."
 
 Ak teda spravime:
 
-**Rsb * (1, 0, 0)**
+**Rₛᵦ · (1, 0, 0)**
 
-pytame sa: "Ako vyzera smer x_b z pohladu {s}?"
+pytame sa: "Ako vyzera smer x̂ᵦ z pohladu {s}?"
 
-A odpoved uz pozname z predchadzajucich sekci - je to x_b vyjadrene v {s}.
+A odpoved uz pozname z predchadzajucich sekci - je to x̂ᵦ vyjadrene v {s}.
 
 ### Ako funguje nasobenie matice vektorom?
 
 Tu je kluc. Pozrime sa, co sa deje pri nasobeni matice vektorom uplne mechanicky.
 
-Ak mame maticu s tromi stlpcami, ktore oznacime c1, c2, c3, a vynasobime ju vektorom (a, b, c), vysledok je:
+Ak mame maticu s tromi stlpcami, ktore oznacime c₁, c₂, c₃, a vynasobime ju vektorom (a, b, c), vysledok je:
 
-**vysledok = a * c1 + b * c2 + c * c3**
+**vysledok = a · c₁ + b · c₂ + c · c₃**
 
 Teda vysledok je kombinacia stlpcov matice, pricom cisla vo vektore hovoria, kolko z kazdeho stlpca zoberieme.
 
@@ -331,58 +331,58 @@ Teda vysledok je kombinacia stlpcov matice, pricom cisla vo vektore hovoria, kol
 
 Ak vynasobime maticu vektorom (1, 0, 0):
 
-**vysledok = 1 * c1 + 0 * c2 + 0 * c3 = c1**
+**vysledok = 1 · c₁ + 0 · c₂ + 0 · c₃ = c₁**
 
 Cisla 0 a 0 vynuluju druhy a treti stlpec. Zostane iba prvy stlpec.
 
 Takze:
 
-**Rsb * (1, 0, 0) = prvy stlpec Rsb**
+**Rₛᵦ · (1, 0, 0) = prvy stlpec Rₛᵦ**
 
 ### A teraz to spojme
 
-Vieme, ze Rsb * (1, 0, 0) musi dat x_b vyjadrene v {s}, pretoze to je cely zmysel rotation matrix.
+Vieme, ze Rₛᵦ · (1, 0, 0) musi dat x̂ᵦ vyjadrene v {s}, pretoze to je cely zmysel rotation matrix.
 
-Zaroven sme prave ukazali, ze Rsb * (1, 0, 0) vzdy vyberie prvy stlpec matice.
+Zaroven sme prave ukazali, ze Rₛᵦ · (1, 0, 0) vzdy vyberie prvy stlpec matice.
 
-Preto prvy stlpec Rsb musi byt x_b vyjadrene v {s}.
+Preto prvy stlpec Rₛᵦ musi byt x̂ᵦ vyjadrene v {s}.
 
 ### Rovnako pre dalsie osi
 
 Ak vynasobime maticu vektorom (0, 1, 0):
 
-**vysledok = 0 * c1 + 1 * c2 + 0 * c3 = c2**
+**vysledok = 0 · c₁ + 1 · c₂ + 0 · c₃ = c₂**
 
 Teda dostaneme druhy stlpec.
 
-A Rsb * (0, 1, 0) musi dat y_b vyjadrene v {s}.
+A Rₛᵦ · (0, 1, 0) musi dat ŷᵦ vyjadrene v {s}.
 
-Preto druhy stlpec Rsb musi byt y_b.
+Preto druhy stlpec Rₛᵦ musi byt ŷᵦ.
 
 A uplne rovnako:
 
-**Rsb * (0, 0, 1) = treti stlpec = z_b vyjadrene v {s}**
+**Rₛᵦ · (0, 0, 1) = treti stlpec = ẑᵦ vyjadrene v {s}**
 
 ### Overme si to na nasom priklade
 
 Mame:
 
-$$Rsb =$$
+$$Rₛᵦ =$$
 $$[  0  -1   0 ]$$
 $$[  1   0   0 ]$$
 $$[  0   0   1 ]$$
 
-Prvy stlpec je (0, 1, 0). A naozaj, x_b smeruje v smere +y_s.
+Prvy stlpec je (0, 1, 0). A naozaj, x̂ᵦ smeruje v smere +ŷₛ.
 
-Druhy stlpec je (-1, 0, 0). A naozaj, y_b smeruje opacne ako x_s.
+Druhy stlpec je (-1, 0, 0). A naozaj, ŷᵦ smeruje opacne ako x̂ₛ.
 
-Treti stlpec je (0, 0, 1). A naozaj, z_b smeruje rovnako ako z_s.
+Treti stlpec je (0, 0, 1). A naozaj, ẑᵦ smeruje rovnako ako ẑₛ.
 
 ### Preco je toto dolezite?
 
 Pretoze teraz chapes, ze osi su v stlpcoch nie kvoli nejakej konvencii, ale pretoze to priamo vyplyva z matematiky nasobenia matice vektorom.
 
-Ak by sme osi dali do riadkov namiesto stlpcov, nasobenie Rsb * v_b by nedavalo spravny vysledok. Stlpce su jediny spravny sposob, ako osi ulozit, aby multiplication fungoval tak, ako potrebujeme.
+Ak by sme osi dali do riadkov namiesto stlpcov, nasobenie Rₛᵦ · vᵦ by nedavalo spravny vysledok. Stlpce su jediny spravny sposob, ako osi ulozit, aby multiplication fungoval tak, ako potrebujeme.
 
 Takze si zapamataj: **Stlpce rotation matrix su osi body frame vyjadrene v space frame, pretoze prave tak to vyzaduje nasobenie matice vektorom.**
 

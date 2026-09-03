@@ -452,24 +452,27 @@ function WeekCalendarView({ planMonth, locale }: { planMonth: Month; locale: 'en
           const isWeekend = i >= 5;
           const schedule = getSubjectForDayOfWeek(planMonth, i);
           const subjectColor = schedule ? (subjectColors[schedule.subject] || '#555') : '#333';
-          const studied = getHistoryForDate(dateToStr(d));
+          // For today, use live elapsed from localStorage (not just history)
+          const historyVal = getHistoryForDate(dateToStr(d));
+          const liveToday = isToday ? parseInt((typeof window !== 'undefined' ? localStorage.getItem(TIMER_ELAPSED_KEY) : null) || '0', 10) : 0;
+          const studied = Math.max(historyVal, liveToday);
           const metGoal = studied >= TIMER_DURATION;
 
           return (
             <div key={i} style={{
-              background: isToday ? '#0c255a' : metGoal ? 'rgba(34,197,94,0.06)' : '#041540',
-              border: isToday ? '2px solid #3b82f6' : metGoal ? '1px solid rgba(34,197,94,0.3)' : '1px solid #1a1a1a',
+              background: isToday && metGoal ? 'rgba(34,197,94,0.08)' : isToday ? '#0c255a' : metGoal ? 'rgba(34,197,94,0.06)' : '#041540',
+              border: isToday && metGoal ? '2px solid #22c55e' : isToday ? '2px solid #3b82f6' : metGoal ? '1px solid rgba(34,197,94,0.3)' : '1px solid #1a1a1a',
               borderRadius: 12, padding: '10px 6px', textAlign: 'center',
               minHeight: 90, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
               opacity: isWeekend && !studied ? 0.4 : 1,
             }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: isToday ? '#3b82f6' : '#666', letterSpacing: '0.04em' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: isToday && metGoal ? '#22c55e' : isToday ? '#3b82f6' : '#666', letterSpacing: '0.04em' }}>
                 {dayNames[i]}
               </div>
               <div style={{
                 width: 28, height: 28, borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: isToday ? '#3b82f6' : metGoal ? '#22c55e' : 'transparent',
-                color: isToday ? '#fff' : metGoal ? '#fff' : studied > 0 ? '#22c55e' : '#ccc',
+                background: isToday && metGoal ? '#22c55e' : isToday ? '#3b82f6' : metGoal ? '#22c55e' : 'transparent',
+                color: (isToday && metGoal) || metGoal ? '#fff' : isToday ? '#fff' : studied > 0 ? '#22c55e' : '#ccc',
                 fontSize: 14, fontWeight: 700,
               }}>
                 {d.getDate()}

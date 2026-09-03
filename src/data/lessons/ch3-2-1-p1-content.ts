@@ -47,45 +47,86 @@ To je základ rotation matrix.
 
 ---
 
-## 3. Najprv jednoduchší planar príklad
+## 3. Najprv jednoduchší príklad v rovine
 
-Predstav si dve reference frames v rovine. Fixed frame označíme **{s}** a body frame **{b}**.
+Predstav si dve súradnicové sústavy. Prvá je pevná a označíme ju **{s}** (*space frame*). Má os **x̂ₛ**, ktorá smeruje doprava, a os **ŷₛ**, ktorá smeruje nahor.
 
-Space frame má axes:
+Druhá súradnicová sústava je **{b}** (*body frame*). Môže byť napríklad pripevnená k robotovi. Keď sa robot otočí, spolu s ním sa otočí aj body frame.
 
-**x̂s, ŷs**
+Najskôr si predstavme, že body frame ešte nie je otočený. Obe súradnicové sústavy sú teda presne zarovnané.
 
-a body frame:
+Os **x̂ᵦ** smeruje rovnakým smerom ako **x̂ₛ** a os **ŷᵦ** smeruje rovnakým smerom ako **ŷₛ**.
 
-**x̂b, ŷb**.
+Preto v tomto konkrétnom prípade môžeme napísať:
 
-Body frame je voči space frame otočený o angle **θ**.
+**x̂ᵦ = x̂ₛ**
 
-Ak sa body x-axis otočila o θ, jej direction vyjadrený v coordinates space frame je:
+**ŷᵦ = ŷₛ**
 
-**x̂b = cos θ . x̂s + sin θ . ŷs**
+Teraz však body frame **{b}** otočíme proti smeru hodinových ručičiek o uhol **θ**. Space frame **{s}** zostáva na mieste.
 
-Prečo práve cos θ a sin θ?
+Po otočení už **x̂ᵦ** nesmeruje rovnakým smerom ako **x̂ₛ**. Smeruje šikmo doprava a nahor.
 
-Predstav si unit vector dĺžky 1 otočený o angle θ od x-axis. Keď ho rozložíme na horizontal a vertical component, horizontal component má veľkosť **cos θ** a vertical component **sin θ**.
+Napríklad:
 
-Ak je napríklad:
+```text
+        ŷₛ
+        |
+        |       / x̂ᵦ
+        |      /
+        |     /
+        |    / θ
+        |   /
+        └────────────→ x̂ₛ
+```
+
+Teraz chceme zistiť, **ako opísať smer x̂ᵦ pomocou pevných osí x̂ₛ a ŷₛ**.
+
+Otočená os **x̂ᵦ** smeruje čiastočne doprava a čiastočne nahor.
+
+Časť smerujúcu doprava určuje:
+
+**cos θ**
+
+a časť smerujúcu nahor:
+
+**sin θ**
+
+Preto môžeme zapísať:
+
+**x̂ᵦ = cos θ · x̂ₛ + sin θ · ŷₛ**
+
+Táto rovnica iba hovorí:
+
+**„Os x̂ᵦ smeruje trochu v smere x̂ₛ a trochu v smere ŷₛ."**
+
+Koľko presne pripadá na každý smer, určujú **cos θ** a **sin θ**.
+
+### Keď θ = 0°
+
+Ak body frame neotočíme, potom:
 
 **θ = 0°**
 
-potom:
+Vieme, že:
 
 **cos 0° = 1**
 
 **sin 0° = 0**
 
-a teda:
+Preto:
 
-**x̂b = 1 . x̂s + 0 . ŷs**
+**x̂ᵦ = 1 · x̂ₛ + 0 · ŷₛ**
 
-Body x-axis je presne zarovnaná so space x-axis.
+čiže:
 
-Ak body frame otočíme o:
+**x̂ᵦ = x̂ₛ**
+
+Os x body frame teda smeruje presne rovnakým smerom ako os x space frame.
+
+### Keď θ = 90°
+
+Ak body frame otočíme o 90° proti smeru hodinových ručičiek:
 
 **θ = 90°**
 
@@ -95,25 +136,29 @@ potom:
 
 **sin 90° = 1**
 
-a dostaneme:
+Preto:
 
-**x̂b = ŷs**
+**x̂ᵦ = 0 · x̂ₛ + 1 · ŷₛ**
 
-Body x-axis teraz smeruje tam, kde pôvodne smerovala space y-axis.
+čiže:
+
+**x̂ᵦ = ŷₛ**
+
+Os x body frame teraz smeruje nahor, teda presne tým smerom, ktorým smeruje os y space frame.
 
 ---
 
 ## 4. Čo sa stane s druhou osou
 
-Body y-axis musí zostať perpendicular na body x-axis. Keďže celý frame rotujeme ako rigidný coordinate system, axes sa nemôžu deformovať alebo meniť svoj vzájomný angle.
+Os y body frame musí zostať kolmá na os x body frame. Keďže celý frame otáčame ako tuhú súradnicovú sústavu, osi sa nemôžu deformovať ani meniť svoj vzájomný uhol.
 
 Preto platí:
 
-**ŷb = -sin θ . x̂s + cos θ . ŷs**
+**ŷᵦ = -sin θ · x̂ₛ + cos θ · ŷₛ**
 
 Záporné znamienko pri **-sin θ** nie je náhodné.
 
-Predstav si θ = 90°. Body y-axis, ktorá pôvodne smerovala nahor, sa po positive 90° rotation dostane doľava.
+Predstav si θ = 90°. Os y body frame, ktorá pôvodne smerovala nahor, sa po otočení o 90° proti smeru hodinových ručičiek dostane doľava.
 
 Pre θ = 90° máme:
 
@@ -125,11 +170,11 @@ a
 
 takže:
 
-**ŷb = -x̂s**
+**ŷᵦ = -x̂ₛ**
 
 čo presne zodpovedá obrázku otočeného frame.
 
-Takto vieme orientation celého planar frame vyjadriť pomocou directions jeho dvoch axes.
+Takto vieme orientation celého rovinného frame vyjadriť pomocou smerov jeho dvoch osí.
 
 ---
 

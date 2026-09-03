@@ -2,26 +2,27 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, FolderCode, BookMarked, Wrench, Swords } from 'lucide-react';
+import { BookOpen, FolderCode, BookMarked, Wrench, Swords, CalendarDays } from 'lucide-react';
 import { useLocaleStore } from '@/store/localeStore';
 import { s } from '@/data/strings';
 
-// Mobile order: Projekt, Slovník, Kurz, Aréna, Šatník
+// Mobile order: Programy, Rozvrh, Kurz, Arena, Satnik
 const tabDefs = [
-  { href: '/topics',   labelKey: 'projects' as const, Icon: FolderCode },
-  { href: '/glossary', labelKey: 'glossary' as const,  Icon: BookMarked },
-  { href: '/',          labelKey: 'courses' as const,  Icon: BookOpen },
-  { href: '/arena',    labelKey: 'arena' as const,     Icon: Swords },
-  { href: '/workshop', labelKey: 'workshop' as const,  Icon: Wrench },
+  { href: '/topics',    labelKey: 'programs' as const,  Icon: FolderCode },
+  { href: '/schedule',  labelKey: 'schedule' as const,  Icon: CalendarDays },
+  { href: '/',          labelKey: 'courses' as const,   Icon: BookOpen },
+  { href: '/arena',     labelKey: 'arena' as const,     Icon: Swords },
+  { href: '/workshop',  labelKey: 'workshop' as const,  Icon: Wrench },
 ];
 
 // Desktop order: Kurz first
 const desktopTabDefs = [
-  { href: '/',          labelKey: 'courses' as const,  Icon: BookOpen },
-  { href: '/topics',   labelKey: 'projects' as const, Icon: FolderCode },
-  { href: '/glossary', labelKey: 'glossary' as const,  Icon: BookMarked },
-  { href: '/arena',    labelKey: 'arena' as const,     Icon: Swords },
-  { href: '/workshop', labelKey: 'workshop' as const,  Icon: Wrench },
+  { href: '/',          labelKey: 'courses' as const,   Icon: BookOpen },
+  { href: '/topics',    labelKey: 'programs' as const,  Icon: FolderCode },
+  { href: '/schedule',  labelKey: 'schedule' as const,  Icon: CalendarDays },
+  { href: '/glossary',  labelKey: 'glossary' as const,  Icon: BookMarked },
+  { href: '/arena',     labelKey: 'arena' as const,     Icon: Swords },
+  { href: '/workshop',  labelKey: 'workshop' as const,  Icon: Wrench },
 ];
 
 export default function BottomNav() {

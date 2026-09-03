@@ -26,7 +26,8 @@ const strings = {
   courses: { en: 'Course', sk: 'Kurz' },
   reels: { en: 'Reels', sk: 'Reels' },
   settings: { en: 'Settings', sk: 'Nastavenia' },
-  projects: { en: 'Project', sk: 'Projekt' },
+  programs: { en: 'Programs', sk: 'Programy' },
+  schedule: { en: 'Schedule', sk: 'Rozvrh' },
   arena: { en: 'Arena', sk: 'Aréna' },
   glossary: { en: 'Glossary', sk: 'Slovník' },
   workshop: { en: 'Workshop', sk: 'Šatník' },
@@ -126,8 +127,8 @@ const strings = {
   done: { en: 'Done', sk: 'Hotovo' },
 
   // Topics page
-  myProjects: { en: 'My Projects', sk: 'Moje Projekty' },
-  myProjectsDesc: { en: 'Pick topics from real projects you want to master.', sk: 'Vyber témy z reálnych projektov, ktoré chceš ovládať.' },
+  myProjects: { en: 'My Programs', sk: 'Moje Programy' },
+  myProjectsDesc: { en: 'Courses and programs currently in progress.', sk: 'Kurzy a programy, ktoré aktuálne bežia.' },
   startLessons: { en: 'Start lessons', sk: 'Začať lekcie' },
   topics: { en: 'topics', sk: 'tém' },
   selectOneTopic: { en: 'Select at least one topic to start learning.', sk: 'Vyber aspoň jednu tému a začni sa učiť z praxe.' },

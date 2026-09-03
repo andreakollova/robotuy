@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Beaker, Wrench as WrenchIcon, Play, Pause, RotateCcw, Timer, GraduationCap } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Beaker, Wrench as WrenchIcon, Play, Pause, RotateCcw, Timer, GraduationCap, BookOpen, Check } from 'lucide-react';
 import StatusBar from '@/components/StatusBar';
 import { useLocaleStore } from '@/store/localeStore';
+import { useUserStore } from '@/store/userStore';
 import { scheduleMonths, programs, subjectColors } from '@/data/schedule-data';
 import type { Month, Week, WeekDay } from '@/data/schedule-data';
 
@@ -398,6 +399,7 @@ function ProgramsThisMonth({ codes, locale }: { codes: string[]; locale: 'en' | 
 function WeekCalendarView({ planMonth, locale }: { planMonth: Month; locale: 'en' | 'sk' }) {
   const today = useMemo(() => new Date(), []);
   const [weekOffset, setWeekOffset] = useState(0);
+  const [selectedDay, setSelectedDay] = useState<number | null>(null); // 0-6 index in weekDays
 
   const monday = useMemo(() => {
     const m = getMonday(today);
@@ -458,13 +460,15 @@ function WeekCalendarView({ planMonth, locale }: { planMonth: Month; locale: 'en
           const studied = Math.max(historyVal, liveToday);
           const metGoal = studied >= TIMER_DURATION;
 
+          const isSelected = selectedDay === i;
           return (
-            <div key={i} style={{
+            <div key={i} onClick={() => setSelectedDay(isSelected ? null : i)} style={{
               background: isToday && metGoal ? 'rgba(34,197,94,0.08)' : isToday ? '#0c255a' : metGoal ? 'rgba(34,197,94,0.06)' : '#041540',
-              border: isToday && metGoal ? '2px solid #22c55e' : isToday ? '2px solid #3b82f6' : metGoal ? '1px solid rgba(34,197,94,0.3)' : '1px solid #1a1a1a',
+              border: isSelected && !isToday ? '2px solid #fff' : isToday && metGoal ? '2px solid #22c55e' : isToday ? '2px solid #3b82f6' : metGoal ? '1px solid rgba(34,197,94,0.3)' : '1px solid #1a1a1a',
               borderRadius: 12, padding: '10px 6px', textAlign: 'center',
               minHeight: 90, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
               opacity: isWeekend && !studied ? 0.4 : 1,
+              cursor: 'pointer', transition: 'border-color 0.15s',
             }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: isToday && metGoal ? '#22c55e' : isToday ? '#3b82f6' : '#666', letterSpacing: '0.04em' }}>
                 {dayNames[i]}
@@ -500,49 +504,167 @@ function WeekCalendarView({ planMonth, locale }: { planMonth: Month; locale: 'en
         })}
       </div>
 
-      {/* Today's detail card */}
+      {/* Selected day detail card */}
       {(() => {
-        const todayDow = today.getDay() === 0 ? 6 : today.getDay() - 1;
-        if (weekOffset !== 0) return null;
-        const sched = getSubjectForDayOfWeek(planMonth, todayDow);
+        const dayIdx = selectedDay !== null ? selectedDay : (weekOffset === 0 ? (today.getDay() === 0 ? 6 : today.getDay() - 1) : null);
+        if (dayIdx === null) return null;
+        const isShowingToday = selectedDay === null;
+        const sched = getSubjectForDayOfWeek(planMonth, dayIdx);
+        const dayDate = weekDays[dayIdx];
+        const dayLabel = isShowingToday ? (locale === 'sk' ? 'Dnes' : 'Today') : `${dayNames[dayIdx]} ${dayDate.getDate()}.${dayDate.getMonth() + 1}.`;
+
+        // Find program for this day's subject
+        const prog = sched ? programs.find(p => p.code === sched.subject) : null;
+        // Find lab/project for this week
+        const currentWeekNum = Math.ceil((dayDate.getDate() + (new Date(dayDate.getFullYear(), dayDate.getMonth(), 1).getDay() || 7) - 1) / 7);
+        const weekData = planMonth.weeks[Math.min(currentWeekNum - 1, planMonth.weeks.length - 1)] || planMonth.weeks[0];
+
         if (!sched) return (
           <div style={{
             background: '#041540', border: '1px solid #1a1a1a', borderRadius: 14, padding: '14px 16px',
             textAlign: 'center', color: '#666', fontSize: 13,
           }}>
-            {locale === 'sk' ? 'Dnes je voľný deň' : "Today is a day off"}
+            {locale === 'sk' ? `${dayLabel} - volny den` : `${dayLabel} - day off`}
           </div>
         );
+
+        const borderColor = isShowingToday ? '#3b82f6' : subjectColors[sched.subject] || '#555';
+
         return (
           <div style={{
-            background: '#041540', border: '1px solid #3b82f6', borderRadius: 14, padding: '14px 16px',
+            background: '#041540', border: `1px solid ${borderColor}`, borderRadius: 14, overflow: 'hidden',
           }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
-              {locale === 'sk' ? 'Dnes' : 'Today'}
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{
-                width: 8, height: 8, borderRadius: 4, flexShrink: 0,
-                background: subjectColors[sched.subject] || '#555',
-              }} />
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>
-                  {locale === 'sk' ? sched.labelSK : sched.label}
+            {/* Header */}
+            <div style={{ padding: '12px 16px', borderBottom: '1px solid #1a1a1a' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: borderColor, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>
+                {dayLabel}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                {prog && (
+                  <div style={{
+                    width: 30, height: 30, borderRadius: 8, background: '#010d33',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                    border: '1px solid #1a1a1a', overflow: 'hidden',
+                  }}>
+                    <img src={prog.logo} alt="" style={{ width: 20, height: 20, objectFit: 'contain' }}
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                  </div>
+                )}
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>
+                    {locale === 'sk' ? sched.labelSK : sched.label}
+                  </div>
+                  <div style={{ fontSize: 12, color: '#888' }}>{sched.hours}h - {sched.subject}</div>
                 </div>
-                <div style={{ fontSize: 12, color: '#888' }}>{sched.hours}h - {sched.subject}</div>
               </div>
             </div>
+
+            {/* Link to course */}
+            {prog?.link && (
+              <a href={prog.link} target="_blank" rel="noopener noreferrer" style={{
+                display: 'block', padding: '10px 16px', borderBottom: '1px solid #1a1a1a',
+                fontSize: 12, color: '#3b82f6', fontWeight: 600, textDecoration: 'none',
+              }}>
+                {locale === 'sk' ? 'Otvorit kurz na Coursera' : 'Open course on Coursera'} →
+              </a>
+            )}
+
+            {/* Lab/project for this week (shown on Friday/LAB days or when selected) */}
+            {sched.subject === 'LAB' && weekData && (weekData.lab || weekData.project) && (
+              <div style={{ padding: '12px 16px', background: '#010d33' }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: weekData.project ? '#22c55e' : '#888', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
+                  {weekData.project ? (locale === 'sk' ? 'Projekt' : 'Project') : 'Lab'}
+                </div>
+                <div style={{ fontSize: 12, color: weekData.project ? '#22c55e' : '#ccc', lineHeight: 1.6 }}>
+                  {weekData.project
+                    ? (locale === 'sk' ? weekData.projectSK : weekData.project)
+                    : (locale === 'sk' ? weekData.labSK : weekData.lab)
+                  }
+                </div>
+              </div>
+            )}
+
+            {/* If not LAB day, still show week's lab info as context */}
+            {sched.subject !== 'LAB' && weekData && (weekData.lab || weekData.project) && (
+              <div style={{ padding: '10px 16px', borderTop: '1px solid #1a1a1a' }}>
+                <div style={{ fontSize: 10, color: '#555', marginBottom: 4 }}>
+                  {locale === 'sk' ? 'Lab tento tyzden:' : 'Lab this week:'}
+                </div>
+                <div style={{ fontSize: 11, color: '#888', lineHeight: 1.5 }}>
+                  {weekData.project
+                    ? (locale === 'sk' ? weekData.projectSK : weekData.project)
+                    : (locale === 'sk' ? weekData.labSK : weekData.lab)
+                  }
+                </div>
+              </div>
+            )}
           </div>
         );
       })()}
 
-      {/* Weekly plan blocks (from schedule data) */}
-      <div style={{ fontSize: 11, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 4 }}>
-        {locale === 'sk' ? 'Týždenný plán' : 'Weekly plan'}
+      {/* This week's completed lessons */}
+      <WeekLessonsCompleted locale={locale} />
+    </div>
+  );
+}
+
+function WeekLessonsCompleted({ locale }: { locale: 'en' | 'sk' }) {
+  const { completedLessons } = useUserStore();
+
+  // Get lessons completed this week (from Monday)
+  const today = useMemo(() => new Date(), []);
+  const monday = useMemo(() => getMonday(today), [today]);
+
+  // completedLessons is string[] of lesson IDs like "modern-robotics-ch3-2-1-p1-q1"
+  // We don't have timestamps per lesson, so show all completed lessons as a summary
+  const lessonCount = completedLessons.length;
+
+  if (lessonCount === 0) return null;
+
+  // Group by prefix (topic-lessonId) to show unique lessons not individual exercises
+  const uniqueLessons = new Set<string>();
+  completedLessons.forEach(id => {
+    // Extract lesson part: everything before last -qN
+    const match = id.match(/^(.+)-q\d+$/);
+    if (match) uniqueLessons.add(match[1]);
+    else uniqueLessons.add(id);
+  });
+
+  const recentLessons = [...uniqueLessons].slice(-10).reverse(); // last 10
+
+  return (
+    <div style={{
+      background: '#041540', border: '1px solid #1a1a1a', borderRadius: 14,
+      overflow: 'hidden', marginTop: 8,
+    }}>
+      <div style={{
+        padding: '10px 16px', borderBottom: '1px solid #1a1a1a',
+        display: 'flex', alignItems: 'center', gap: 8,
+      }}>
+        <BookOpen size={14} color="#22c55e" />
+        <div style={{ fontSize: 11, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+          {locale === 'sk' ? 'Dokoncene lekcie' : 'Completed lessons'}
+        </div>
+        <div style={{ marginLeft: 'auto', fontSize: 11, fontWeight: 700, color: '#22c55e' }}>
+          {lessonCount}
+        </div>
       </div>
-      {planMonth.weeks.map(w => (
-        <WeekPlanCard key={w.weekNum} week={w} locale={locale} />
-      ))}
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {recentLessons.map((lessonId, i) => {
+          // Make it human readable
+          const parts = lessonId.split('-');
+          const readable = parts.slice(1).join(' ').replace(/ch(\d)/, 'Ch $1').replace(/p(\d)/, 'Part $1');
+          return (
+            <div key={lessonId} style={{
+              display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px',
+              borderBottom: i < recentLessons.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+            }}>
+              <Check size={12} color="#22c55e" />
+              <div style={{ fontSize: 12, color: '#ccc', flex: 1 }}>{readable}</div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

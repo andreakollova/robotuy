@@ -75,6 +75,8 @@ Všimni si, že **p** nemá striešku. Nie je to unit vector, ktorým by sme chc
 
 Predstav si napríklad robota stojaceho v sklade. {s} môže byť coordinate frame celého skladu a {b} coordinate frame robota. Vector p nám povie: "Kde v sklade sa robot nachádza?" Ale samotné p nám ešte vôbec nepovie, kam je robot otočený.
 
+![Body frame {b} otočený o θ = 60° vzhľadom na space frame {s}](/book/ch3/fig3-3.png)
+
 ### Ako zistíme, ako je {b} otočený?
 
 Teraz na chvíľu zabudnime na p a pozrime sa iba na hrubé šípky x̂ᵦ a ŷᵦ.
@@ -88,6 +90,8 @@ Na obrázku vidíme, že x̂ᵦ už nesmeruje presne po x̂ₛ. Je od x̂ₛ oto
 To znamená, že x̂ᵦ má jednu časť v smere x̂ₛ a druhú časť v smere ŷₛ.
 
 A práve tu prichádzajú **cos θ** a **sin θ**.
+
+![Body frame {b} otočený o θ = 60° vzhľadom na space frame {s}](/book/ch3/fig3-3.png)
 
 ### Prečo je x̂ᵦ = (cos θ, sin θ)?
 
@@ -109,6 +113,8 @@ Pri θ = 60° dostaneme cos 60° = 0,5 a sin 60° ≈ 0,866. Takže:
 
 A stále ide o unit vector, pretože sqrt(0,5² + 0,866²) ≈ 1. Otočenie totiž zmenilo jeho smer, nie jeho dĺžku.
 
+![Body frame {b} otočený o θ = 60° vzhľadom na space frame {s}](/book/ch3/fig3-3.png)
+
 ### A čo ŷᵦ?
 
 Teraz položíme druhú otázku: **Kam smeruje ŷᵦ, keď sa naň pozeráme z {s}?**
@@ -125,6 +131,8 @@ Pri 60°:
 
 Čítaj to veľmi konkrétne: "Ak prejdem jednu jednotku v kladnom smere ŷᵦ, z pohľadu {s} prejdem približne 0,866 jednotky doľava a 0,5 jednotky nahor." Preto je prvé číslo záporné a druhé kladné.
 
+![Body frame {b} otočený o θ = 60° vzhľadom na space frame {s}](/book/ch3/fig3-3.png)
+
 ### Prečo je ŷᵦ práve takto otočené voči x̂ᵦ?
 
 Pretože coordinate frame nemôžeme nakresliť tak, že jeho osi smerujú hocijako. Osi x̂ᵦ a ŷᵦ musia zostať na seba kolmé, teda zvierať 90°.
@@ -134,6 +142,8 @@ Ak je x̂ᵦ otočené o 60° od x̂ₛ, potom ŷᵦ musí byť ďalších 90° 
 Preto sa neotáča iba jedna os. Keď otočíš celý body frame, všetky jeho osi sa otočia spolu a ich vzájomný pravý uhol zostáva zachovaný.
 
 Predstav si súradnice nakreslené fixkou na kuse kartónu. Keď kartón otočíš o 60°, nemôže sa otočiť iba nakreslené x a y zostať na mieste. Obe osi sú súčasťou jedného frame, takže sa otočia spolu.
+
+![Body frame {b} otočený o θ = 60° vzhľadom na space frame {s}](/book/ch3/fig3-3.png)
 
 ### Čo teda celý obrázok hovorí?
 

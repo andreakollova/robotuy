@@ -8,6 +8,8 @@ import { useLocaleStore } from '@/store/localeStore';
 import { useUserStore } from '@/store/userStore';
 import { scheduleMonths, programs, subjectColors } from '@/data/schedule-data';
 import type { Month, Week, WeekDay } from '@/data/schedule-data';
+import { projectTopics } from '@/data/myprojects-topics';
+import Link from 'next/link';
 
 /* ========== DATE HELPERS ========== */
 
@@ -611,60 +613,90 @@ function WeekCalendarView({ planMonth, locale }: { planMonth: Month; locale: 'en
 function WeekLessonsCompleted({ locale }: { locale: 'en' | 'sk' }) {
   const { completedLessons } = useUserStore();
 
-  // Get lessons completed this week (from Monday)
-  const today = useMemo(() => new Date(), []);
-  const monday = useMemo(() => getMonday(today), [today]);
+  // Get all lessons from projectTopics
+  const allLessons = useMemo(() => {
+    const lessons: { id: string; title: string; topicId: string; exerciseCount: number }[] = [];
+    for (const topic of projectTopics) {
+      for (const lesson of topic.lessons) {
+        lessons.push({
+          id: lesson.id,
+          title: lesson.title,
+          topicId: topic.id,
+          exerciseCount: lesson.exercises?.length || 0,
+        });
+      }
+    }
+    return lessons;
+  }, []);
 
-  // completedLessons is string[] of lesson IDs like "modern-robotics-ch3-2-1-p1-q1"
-  // We don't have timestamps per lesson, so show all completed lessons as a summary
-  const lessonCount = completedLessons.length;
+  // For each lesson, count how many exercises are completed
+  const lessonProgress = useMemo(() => {
+    return allLessons.map(lesson => {
+      const prefix = lesson.topicId + '-' + lesson.id;
+      const done = completedLessons.filter(id => id.startsWith(prefix)).length;
+      return { ...lesson, done, completed: done >= lesson.exerciseCount && lesson.exerciseCount > 0 };
+    });
+  }, [allLessons, completedLessons]);
 
-  if (lessonCount === 0) return null;
+  const completedCount = lessonProgress.filter(l => l.completed).length;
+  const nextLesson = lessonProgress.find(l => !l.completed);
 
-  // Group by prefix (topic-lessonId) to show unique lessons not individual exercises
-  const uniqueLessons = new Set<string>();
-  completedLessons.forEach(id => {
-    // Extract lesson part: everything before last -qN
-    const match = id.match(/^(.+)-q\d+$/);
-    if (match) uniqueLessons.add(match[1]);
-    else uniqueLessons.add(id);
-  });
-
-  const recentLessons = [...uniqueLessons].slice(-10).reverse(); // last 10
+  // Recent completed (last 5)
+  const recentCompleted = lessonProgress.filter(l => l.completed).slice(-5).reverse();
 
   return (
     <div style={{
       background: '#041540', border: '1px solid #1a1a1a', borderRadius: 14,
       overflow: 'hidden', marginTop: 8,
     }}>
+      {/* Next lesson to do */}
+      {nextLesson && (
+        <Link href={'/topics'} style={{ textDecoration: 'none' }}>
+          <div style={{
+            padding: '12px 16px', borderBottom: '1px solid #1a1a1a',
+            background: 'rgba(59,130,246,0.06)',
+          }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>
+              {locale === 'sk' ? 'Nasledujuca lekcia' : 'Next lesson'}
+            </div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>
+              {nextLesson.title}
+            </div>
+            <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
+              {nextLesson.done}/{nextLesson.exerciseCount} {locale === 'sk' ? 'cviceni' : 'exercises'}
+            </div>
+          </div>
+        </Link>
+      )}
+
+      {/* Completed lessons header */}
       <div style={{
-        padding: '10px 16px', borderBottom: '1px solid #1a1a1a',
+        padding: '10px 16px', borderBottom: recentCompleted.length > 0 ? '1px solid #1a1a1a' : 'none',
         display: 'flex', alignItems: 'center', gap: 8,
       }}>
-        <BookOpen size={14} color="#22c55e" />
+        <Check size={14} color="#22c55e" />
         <div style={{ fontSize: 11, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           {locale === 'sk' ? 'Dokoncene lekcie' : 'Completed lessons'}
         </div>
         <div style={{ marginLeft: 'auto', fontSize: 11, fontWeight: 700, color: '#22c55e' }}>
-          {lessonCount}
+          {completedCount}/{allLessons.length}
         </div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {recentLessons.map((lessonId, i) => {
-          // Make it human readable
-          const parts = lessonId.split('-');
-          const readable = parts.slice(1).join(' ').replace(/ch(\d)/, 'Ch $1').replace(/p(\d)/, 'Part $1');
-          return (
-            <div key={lessonId} style={{
+
+      {/* Recent completed */}
+      {recentCompleted.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {recentCompleted.map((lesson, i) => (
+            <div key={lesson.id} style={{
               display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px',
-              borderBottom: i < recentLessons.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+              borderBottom: i < recentCompleted.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
             }}>
               <Check size={12} color="#22c55e" />
-              <div style={{ fontSize: 12, color: '#ccc', flex: 1 }}>{readable}</div>
+              <div style={{ fontSize: 12, color: '#ccc', flex: 1 }}>{lesson.title}</div>
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

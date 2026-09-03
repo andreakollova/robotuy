@@ -39,12 +39,15 @@ function getCalendarDays(year: number, month: number) {
   return days;
 }
 
-/** Map day-of-week (0=Mon..4=Fri) to schedule plan subjects for a given plan month */
-function getSubjectForDayOfWeek(planMonth: Month, dayOfWeek: number): WeekDay | null {
+/** Map day-of-week (0=Mon..4=Fri) to schedule plan subjects for a given plan month.
+ *  Uses the FIRST week of the plan month as the daily template. */
+function getSubjectForDayOfWeek(planMonth: Month | undefined, dayOfWeek: number): WeekDay | null {
+  if (!planMonth) return null;
   if (dayOfWeek >= 5) return null; // weekend
-  const week = planMonth.weeks[0]; // use first week as template for daily pattern
-  if (!week) return null;
-  return week.days[dayOfWeek] || null;
+  const week = planMonth.weeks[0];
+  if (!week || !week.days) return null;
+  if (dayOfWeek >= week.days.length) return null;
+  return week.days[dayOfWeek];
 }
 
 /* ========== PERSISTENT TIMER ========== */

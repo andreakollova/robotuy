@@ -1,940 +1,392 @@
 // Chapter 3.2.1 – Rotation Matrices (Part 2 of 2)
 // Full lesson content - DO NOT SHORTEN
 
-export const ch321p2Content = `# Modern Robotics – Chapter 3.2.1: Rotation Matrices
+export const ch321p2Content = `# Rotation Matrices - Part 2: Co s rotation matrix dokážeme robit?
 
-## Part 2 of 2 – Ako rotation matrix (rotačná matica) používame v praxi
+## 1. Jedna rotation matrix, ale tri rôzne významy
 
-V prvej časti sme riešili najmä to, čo rotation matrix je a prečo má práve takú štruktúru. Videli sme, že 3D orientation (orientácia) môžeme reprezentovať pomocou troch navzájom kolmých unit axes uložených ako columns (stĺpce) matice. Z toho vznikli podmienky RT R = I a det R = 1, ktoré definujú skupinu SO(3).
+V prvej časti sme rotation matrix používali na opis orientacie. Ak máme napriklad **Rₛᵦ**, vieme pomocou nej povedat, ako je frame {b} orientovaný vzhľadom na frame {s}. V druhej časti však prichadza velmi dolezita myslienka: ta istá rotation matrix sa da použiť tromi roznymi spôsobmi a podľa kontextu môže matematicka operacia znamenať nieco ine.
 
-Teraz sa posunieme k praktickejšej otázke. Keď už rotation matrix R máme, čo s ňou vlastne môžeme robiť?
+Tri pouzitia rotation matrix:
 
-Tu vzniká jedna z najdôležitejších myšlienok celej kapitoly. Rovnaká rotation matrix sa môže objaviť v troch situáciách, ktoré matematicky vyzerajú veľmi podobne, ale fyzicky znamenajú niečo iné. Môže opisovať orientation jedného frame vzhľadom na druhý, môže nám umožniť prepísať coordinates toho istého objektu do iného reference frame (vzťažná sústava), alebo môže objekt skutočne otočiť.
+**1. Represent an orientation (opisat orientaciu)**
 
-Práve rozlíšenie týchto troch významov je hlavnou témou tejto časti.
+**2. Change reference frame (zmenit suradnicovu sustavu)**
 
----
+**3. Rotate a vector or frame (otocit vektor alebo frame)**
 
-## 1. Jeden fyzický priestor môžeme opisovať z rôznych reference frames
+Prve už poznáme. Matrix samotna môže opisovať orientáciu jedného frame vzhľadom na druhy. Nove a ovela dôležitéjsie pre tuto lekciu sú body 2 a 3.
 
-Predstav si robotické rameno stojace v miestnosti. Na podlahe máme pevný space frame (priestorový frame) {s}. Jeho x-axis môže smerovať napríklad doprava, y-axis dopredu a z-axis nahor.
-
-Na gripper robota však môžeme pripevniť ďalší coordinate frame {b}. Keď sa gripper otočí, jeho axes už nemusia smerovať rovnakými smermi ako axes miestnosti. Jeho x-axis môže smerovať dopredu, y-axis doľava a z-axis stále nahor.
-
-Dôležité je, že fyzický priestor sa nezmenil. Máme stále tú istú miestnosť, toho istého robota a tie isté objekty. Zmenil sa iba coordinate system, pomocou ktorého ich opisujeme.
-
-To je podobné, ako keby dvaja ľudia stáli pri stole z rôznych strán. Na stole leží telefón. Jeden človek môže povedať:
-
-„Telefón je odo mňa doprava."
-
-Človek stojaci oproti nemu však môže povedať:
-
-„Telefón je odo mňa doľava."
-
-Telefón sa medzičasom nikam nepohol. Rozdiel vznikol preto, že obaja opisujú ten istý fyzický objekt vzhľadom na inú orientáciu svojho coordinate frame.
-
-V robotike preto nestačí vidieť vector ako trojicu numbers. Musíme vedieť aj to, v ktorom frame sú tieto numbers vyjadrené.
-
-![Three reference frames in the same physical space with point p having different coordinates in each](/book/ch3/fig3-7.png)
+Prečo ich vobec potrebujeme rozlišovať? Pretoze robotika je plná rôznych coordinate frames. Kamera vidi svet vo svojom frame, robotické rameno počíta vo svojom frame a mapa miestnosti používa dalsi frame. Niekedy teda potrebujeme ten istý fyzicky objekt iba opísať z iného pohladu. Inokedy však chceme objekt skutočne otocit. Matematika môže vyzerat podobne, ale fyzikálne ide o dve úplne odlišné situácie.
 
 ---
 
-## 2. Fyzický vector a jeho coordinates nie sú to isté
+## 2. Fyzicky vector a cisla, ktorymi ho opisujeme, nie sú to iste
 
-Predstav si bod p v priestore. Môže to byť napríklad poloha špičky nástroja robota.
+Toto je základ celej druhej casti.
 
-Samotný fyzický bod existuje nezávisle od toho, aký coordinate system si zvolíme. Ak však chceme jeho polohu zapísať pomocou numbers, potrebujeme reference frame.
+Predstav si, že stojíš na futbalovom ihrisku a ukazuješ rukou smerom k brane. Tvoja vystretá ruka predstavuje jeden fyzicky vector. Trener stojaci pri postrannej ciare môže povedat: "Ukazuje približne smerom na sever." Ty však môžeš povedat: "Ukazujem presne doprava odo mna."
 
-V jednom frame môže mať bod coordinates:
+Tvoja ruka sa medzi tymito dvoma vyrokmi vobec nepohla. Zmenil sa iba coordinate frame, pomocou ktoreho jej smer opisujeme.
 
-**pa = (1, 1, 0)**
+V matematike preto musime rozlišovať samotny geometrický vector **p** a jeho coordinates. Ak ho opisujeme pomocou frame {b}, môžeme jeho coordinates označiť **pᵦ**. Ak presne ten istý vector opíšeme pomocou frame {s}, dostaneme **pₛ**.
 
-V inom otočenom frame môže mať ten istý bod napríklad:
+Moze teda pokojne platit:
 
-**pb = (1, -1, 0)**
+**pᵦ = (1, 0, 0)**
 
-To neznamená, že existujú dva body. Je to jeden fyzický bod p, iba opísaný dvoma rôznymi spôsobmi.
+a zaroven:
 
-Preto sa pri vectors v tejto kapitole začnú objavovať subscripts:
+**pₛ = (0, 1, 0)**
 
-**pa**
+Nie je to rozpor. Fyzicky môže ísť o tu istú sipku.
 
-**pb**
+Predstav si auto smerujúce na sever. Ak jeho x̂ᵦ axis znamena "dopredu", smer jazdy je z pohladu auta pᵦ = (1, 0, 0). Ak však mapa používa ŷₛ ako sever, presne ten istý smer je z pohľadu mapy pₛ = (0, 1, 0).
 
-**pc**
-
-Subscript nám hovorí:
-
-„V coordinates ktorého frame je tento vector zapísaný?"
-
-To bude veľmi dôležité. Samotné (1, 1, 0) bez informácie o reference frame môže byť v robotike nejednoznačné.
+Prečo sú čísla ine? Pretoze čísla vo vektore nehovoria iba "kam vector smeruje". Hovoria koľko z tohto vectora ide pozdĺž jednotlivých osi coordinate frame, ktory práve pouzivame. Ked zmeníme osi, voči ktorym vector meriame, prirodzene sa zmenia aj cisla.
 
 ---
 
-## 3. Prvé použitie rotation matrix: reprezentácia orientation
+## 3. Change of reference frame: objekt necháme na pokoji, zmeníme jeho opis
 
-Začnime najjednoduchším použitím.
+Teraz prichadza druhe použitie rotation matrix:
 
-Predstav si dva frames {a} a {b}, ktoré majú spoločný origin, ale {b} je oproti {a} otočený.
+**Change reference frame (zmena vztaznej sustavy)**
 
-Chceme odpovedať na otázku:
+Predstav si autonómne auto. Auto má svoj body frame {b} a celé mesto alebo mapa má world frame {s}. Senzor auta zisti prekážku a povie, že vector smerujuci k prekazke má v coordinates auta hodnotu **pᵦ**.
 
-**Ako je frame {b} orientovaný vzhľadom na frame {a}?**
+Navigacny system však vsetko počíta v world frame {s}. Potrebuje preto odpoveď na otázku: "Dobre, viem, ako tuto prekážku opisuje auto. Ako by ten istý smer opisala mapa?"
 
-Na to použijeme rotation matrix:
+Ak poznáme orientation auta **Rₛᵦ**, môžeme vypočítat:
 
-**Rab**
+**pₛ = Rₛᵦ · pᵦ**
 
-Notation má presný význam:
+Prečo práve multiplication rotation matrix? Pretoze pᵦ nam hovori, koľko vectora lezi v smeroch x̂ᵦ, ŷᵦ, ẑᵦ, zatiaľ co Rₛᵦ nam hovori, ako tieto tri smery vyzeraju v coordinate frame {s}. Nasobenim teda v podstate prekladáme jednotlive "kusky" vectora z jazyka {b} do jazyka {s}.
 
-prvý subscript a hovorí, v akom frame orientation opisujeme,
+Fyzicky vector sa pritom ani o milimeter nepohol. Prekazka zostala tam, kde bola. Auto zostalo tam, kde bolo. Zmenili sme iba cisla, ktorymi ten istý geometrický smer opisujeme.
 
-druhý subscript b hovorí, ktorý frame opisujeme.
-
-Teda:
-
-**Rab = orientation frame {b} vyjadrená vzhľadom na frame {a}.**
-
-Môžeš si to čítať ako:
-
-„b v a"
-
-Toto je veľmi užitočný spôsob čítania notation.
-
-Napríklad:
-
-**Rsb**
-
-znamená:
-
-orientation body frame (teleso frame) {b} vzhľadom na space frame {s}.
-
-Ak má robot na konci ramena gripper, Rsb nám teda hovorí, ako je gripper natočený vzhľadom na svet.
+To je presne význam change of reference frame.
 
 ---
 
-## 4. Čo presne sa nachádza v Rab
+## 4. Prečo matematicky funguje pₛ = Rₛᵦ · pᵦ?
 
-Z prvej časti už vieme, že columns rotation matrix predstavujú coordinate axes jedného frame vyjadrené v druhom frame. Teraz túto myšlienku spojíme s notation Rab.
+Povedzme, že kamera alebo robot nam da:
 
-V matrix:
+**pᵦ = (2, 3, 1)**
 
-**Rab**
+Co tieto tri čísla skutočne znamenaju? Znamenaju, že vector je zlozeny ako:
 
-sú uložené axes frame {b}, ale ich directions sú zapísané pomocou coordinates frame {a}.
+**p = 2 · x̂ᵦ + 3 · ŷᵦ + 1 · ẑᵦ**
 
-Schematicky:
+Teda "vezmi dva diely smeru x̂ᵦ, tri diely smeru ŷᵦ a jeden diel smeru ẑᵦ".
 
-**Rab = [ x̂b ŷb ẑb ] vyjadrené v {a}**
+Lenze my ho chceme opísať pomocou x̂ₛ, ŷₛ, ẑₛ. Rotation matrix Rₛᵦ už obsahuje informaciu o tom, ako vyzeraju x̂ᵦ, ŷᵦ, ẑᵦ v {s}. Preto keď vypočítame Rₛᵦ · pᵦ, matrix multiplication automaticky vytvorí kombinaciu 2 · x̂ᵦ + 3 · ŷᵦ + 1 · ẑᵦ, pricom jednotlive body axes sú už zapisane pomocou coordinates {s}.
 
-Prvý column teda odpovedá:
+Preto vysledkom sú presne coordinates **pₛ**.
 
-Kam smeruje x-axis frame {b}, keď sa na ňu pozerám pomocou axes frame {a}?
-
-Druhý column robí to isté pre y-axis a tretí pre z-axis.
-
-Predstav si kameru namontovanú na robotovi. Kamera má vlastné axes. Ak poznáme rotation matrix medzi kamerou a robotom, vieme presne povedať, ako sú axes kamery orientované vzhľadom na axes robota.
-
-Rotation matrix teda nie je iba tabuľka numbers. Je to veľmi konkrétny geometrický opis vzájomnej orientation dvoch coordinate frames.
+Takze rotation matrix tu môžeš chapat ako prekladac coordinate languages. Dostane vetu napisanu pomocou x̂ᵦ, ŷᵦ, ẑᵦ a prepise ju pomocou x̂ₛ, ŷₛ, ẑₛ, pricom fyzicky význam vety zostane rovnaky.
 
 ---
 
-## 5. Opačný pohľad na tie isté dva frames
+## 5. Subscript cancellation - ako vediet, ktoru matrix pouzit
 
-Teraz prichádza veľmi užitočná vlastnosť.
+Velmi užitočné pravidlo. Predstav si, že mas **pᵦ** a potrebujes **pₛ**. Pouzijes:
 
-Ak poznáme:
+**Rₛᵦ · pᵦ = pₛ**
 
-**Rab**
+Mozes si to mentálne prečítať tak, že dve susedne **b** sa akoby zrusia a zostane **s**.
 
-teda orientation {b} vzhľadom na {a}, môžeme sa opýtať na opačnú otázku:
+Prečo toto pravidlo funguje? Pretoze indexy v skutocnosti opisuju cestu medzi coordinate frames. pᵦ je informácia momentálne napísaná v {b}. Rₛᵦ vie tuto informaciu previesť do {s}. Preto na konci zostane pₛ.
 
-**Ako vyzerá {a} vzhľadom na {b}?**
-
-To zapisujeme:
-
-**Rba**
-
-Keď obrátime smer vzťahu medzi frames, potrebujeme inverse rotation:
-
-**Rba = Rab-1**
-
-Z prvej časti však vieme, že pre rotation matrix platí:
-
-**R-1 = RT**
-
-Preto:
-
-**Rba = RabT**
-
-Toto má veľmi prirodzený fyzický význam.
-
-Predstav si, že stojíš oproti kamarátovi. Najprv opisuješ, ako je on natočený vzhľadom na teba. Potom sa otázka otočí a chceme vedieť, ako si ty natočená vzhľadom na neho.
-
-Ide o tie isté dva frames, ale smer vzťahu sme obrátili. Preto používame inverse transformation.
+Je to velmi podobne prevodu jednotiek. Ak mas vzdialenosť v centimetroch a faktor, ktory prevádza centimetre na metre, "centimetre" sa pri vypocte odstránia a výsledok zostane v metroch.
 
 ---
 
-## 6. Druhé použitie rotation matrix: change of reference frame
+## 6. Prečo potrebujeme treti frame {c}?
 
-Teraz sa dostávame k veľmi dôležitému rozdielu.
+![Tri coordinate frames - {s}, {b} a {c} s rotacnymi transformaciami medzi nimi](/book/ch3/fig3-4.png)
 
-Rotation matrix nemusí znamenať, že niečo fyzicky otáčame. Môžeme ju použiť iba na to, aby sme ten istý vector opísali v inom coordinate frame.
+Na obrazku už nie sú iba {s} a {b}, ale pribudol frame **{c}**. Toto nie je komplikácia vytvorená len kvôli matematike. V reálnych robotoch je práve toto úplne normálna situacia.
 
-Predstav si opäť bod p.
+Predstav si robotické rameno. Jeho základňa má frame {s}. Na konci ramena je wrist s frame {b}. Na wrist je namontovaná kamera s vlastným frame {c}.
 
-Jeho coordinates poznáme vo frame {b}:
+Takze mame:
 
-**pb**
+**{s} = base robota**
 
-Chceme však vedieť, aké coordinates bude mať ten istý fyzický bod vo frame {a}.
+**{b} = wrist**
 
-Ak poznáme orientation {b} vzhľadom na {a}, teda Rab, platí:
+**{c} = kamera**
 
-**pa = Rab pb**
+Vyrobca vie, ako je kamera namontovaná na wrist, takze poznáme **Rᵦc**. Robot zároveň zo svojich joint angles vie, ako je wrist momentálne orientovaný vzhľadom na base: **Rₛᵦ**.
 
-Čo sa tu fyzicky stalo?
-
-Nič sa nepohlo.
-
-Bod p zostal presne na tom istom mieste. Zmenil sa iba spôsob, akým jeho vector zapisujeme.
-
-To je change of reference frame.
-
-Je to podobné, ako keď tú istú teplotu prepíšeš z °C na °F. Fyzický stav sa nezmenil; zmenila sa jeho reprezentácia. Pri coordinate frames nejde o inú jednotku, ale o inú orientation coordinate axes.
+Lenze teraz chceme odpovedat na praktickú otázku: **Ako je kamera orientovaná vzhľadom na základňu robota?** Potrebujeme teda **Rₛc**.
 
 ---
 
-## 7. Prečo funguje pa = Rab pb
+## 7. Prečo plati Rₛc = Rₛᵦ · Rᵦc?
 
-Pozrime sa na to bez preskakovania krokov.
+Máme Rᵦc, co opisuje frame {c} pomocou {b}. Lenze potrebujeme frame {c} opisany pomocou {s}. Máme našťastie aj Rₛᵦ, ktora vie prejst z {b} representation do {s} representation.
 
-Predstav si, že vo frame {b} máme:
+Preto môžeme urobit cestu:
 
-**pb = (2, 1, 0)**
+**c → b → s**
 
-To znamená, že vector p môžeme geometricky zostaviť ako:
+Najprv vezmeme informaciu z {c} a vyjadrime ju cez {b}. Potom výsledok vyjadrime cez {s}.
 
-2 x x-axis frame {b} + 1 x y-axis frame {b}
+Matematicky:
 
-Lenže my chceme vedieť jeho coordinates vo frame {a}.
+**Rₛc = Rₛᵦ · Rᵦc**
 
-Rotation matrix Rab obsahuje práve informáciu o tom, ako xb, yb a zb vyzerajú v coordinates frame {a}.
+Prečo multiplication? Pretoze robime dve transformácie za sebou. Matrix multiplication je matematicky spôsob skladania lineárnych transformacii. Prava matrix posobi prva a lava druha. Preto Rᵦc najprv riesi vztah c → b a potom Rₛᵦ pokracuje b → s.
 
-Keď teda vypočítame:
-
-**Rab pb**
-
-matrix multiplication v skutočnosti urobí toto:
-
-vezme príslušné množstvo prvého columnu, príslušné množstvo druhého columnu a príslušné množstvo tretieho columnu a spočíta ich.
-
-Ak:
-
-**pb = (2, 1, 0)**
-
-výsledok je geometricky:
-
-2 x prvý column Rab + 1 x druhý column Rab + 0 x tretí column Rab
-
-A keďže columns predstavujú axes {b} vyjadrené v {a}, výsledkom sú coordinates toho istého vectora vo frame {a}.
-
-Preto vzťah
-
-**pa = Rab pb**
-
-nie je náhodné pravidlo. Priamo vychádza z geometrického významu columns rotation matrix.
+Indexy nam to krásne skontroluju - prostredne frames sa zhoduju a výsledok je Rₛc.
 
 ---
 
-## 8. Jednoduchý číselný príklad
+## 8. Predstav si to ako cestovanie s prestupom
 
-Predstavme si, že frame {b} je oproti {a} otočený o +90° okolo z-axis.
+Predstav si, že sa potrebujes dostat z malej dediny do Bratislavy, ale neexistuje priame spojenie. Najprv ides:
 
-Potom:
+**dedina → Trnava**
 
-$$Rab =$$
-$$[ 0  -1  0 ]$$
-$$[ 1  0  0 ]$$
-$$[ 0  0  1 ]$$
+a potom:
 
-Vo frame {b} máme vector:
+**Trnava → Bratislava**
 
-**pb = (1, 0, 0)**
+Keď obe cesty spojis, dostanes:
 
-To znamená, že vector smeruje presne pozdĺž +xb.
+**dedina → Bratislava**
 
-Ale x-axis frame {b} je po otočení o 90° nasmerovaná pozdĺž +ya.
+Trnava bola potrebna ako intermediate point, ale v konecnom oznaceni cesty už nie je.
 
-Preto očakávame:
+Presne toto robi Rₛᵦ · Rᵦc. Máme c → b a b → s. Po spojeni: c → s. Preto výsledok musi byt Rₛc.
 
-**pa = (0, 1, 0)**
+V robotike môže byt takychto "prestupov" obrovské množstvo. Roboticke rameno môže mat base, shoulder, upper arm, elbow, forearm, wrist a gripper. Nemusime poznat priamy vztah base → gripper. Môžeme skladat male transformácie medzi susednými castami.
 
-A skutočne:
-
-**pa = Rab pb**
-
-dá:
-
-**pa = (0, 1, 0)**
-
-Vector sa fyzicky nepohol. Iba sme ho opísali pomocou iných axes.
+To je jeden z hlavných dôvodov, prečo sú matrices pre robotiku také užitočné.
 
 ---
 
-## 9. Subscript cancellation rule
+## 9. Prečo zalezi na poradi matrices?
 
-Pri väčšom množstve frames sa veľmi ľahko pomýli poradie matrices. Modern Robotics preto používa praktické pravidlo, ktoré pomáha skontrolovať, či násobenie dáva zmysel.
+Toto je velmi dôležité:
 
-Predstav si tri frames:
+**Rₛᵦ · Rᵦc ≠ Rᵦc · Rₛᵦ**
 
-**{a}, {b}, {c}**
+vo vseobecnosti.
 
-Poznáme orientation {b} vzhľadom na {a}:
+Pri obycajnych cislach sme zvyknuti, že 2 · 3 = 3 · 2. Pri matrices však vseobecne **AB ≠ BA**.
 
-**Rab**
+Prečo to fyzicky dava zmysel? Predstav si telefon. Najprv ho otoc o 90° doprava a potom ho preklop dopredu. Teraz zacni od povodnej polohy a urob operacie opacne: najprv telefon preklop dopredu a az potom ho otoc doprava. Telefon vo vseobecnosti skonci v inej orientation.
 
-a orientation {c} vzhľadom na {b}:
+Rotacie v 3D teda zavisia od poradia.
 
-**Rbc**
-
-Chceme orientation {c} vzhľadom na {a}.
-
-Platí:
-
-**Rac = Rab Rbc**
-
-Všimni si vnútorné subscripts:
-
-**Rab Rbc**
-
-Máme tam:
-
-b - b
-
-Tieto dva subscripts si môžeme predstaviť ako „zrušené":
-
-a <- b <- c
-
-a zostane:
-
-a <- c
-
-teda:
-
-**Rac**
-
-Toto sa nazýva **subscript cancellation rule**.
-
-Nie je to matematické krátenie ako pri zlomkoch. Je to pomôcka, ktorá odráža logiku transformations medzi frames.
-
-![Three reference frames {a}, {b}, {c} with rotation transformations between them](/book/ch3/fig3-4.png)
+Aj indexy nam okamžite ukazu, prečo je Rₛᵦ · Rᵦc logicke. Prostredne frames sa zhoduju. Pri opacnom poradi by sme mali Rᵦc · Rₛᵦ, cizie medzi c a s nemame správne nadvazenie.
 
 ---
 
-## 10. Prečo musí byť poradie Rab Rbc práve takéto
+## 10. Co presne robi výpočet na obrazku?
 
-Predstav si kameru {c} pripevnenú ku gripperu {b}. Robot stojí v miestnosti reprezentovanej frame {a}.
+Na obrazku mame:
 
-Poznáme:
+$$Rᵦc =$$
+$$[  0   0  -1 ]$$
+$$[  0   1   0 ]$$
+$$[  1   0   0 ]$$
 
-**Rbc**
+Táto matrix opisuje orientation frame {c} pomocou frame {b}.
 
-čiže orientation kamery vzhľadom na gripper.
+Z predchádzajúcej časti máme určitú matrix Rₛᵦ, ktorá opisuje {b} pomocou {s}. Video potom vypočíta:
 
-Poznáme tiež:
+**Rₛc = Rₛᵦ · Rᵦc**
 
-**Rab**
+a dostane:
 
-čiže orientation grippera vzhľadom na miestnosť.
+$$Rₛc =$$
+$$[  0  -1   0 ]$$
+$$[  0   0  -1 ]$$
+$$[  1   0   0 ]$$
 
-Chceme orientation kamery vzhľadom na miestnosť.
+Co sme tym fyzicky urobili? **Frame {c} sme vobec nepohli.** To je extrémne dôležité.
 
-Najprv máme informáciu vyjadrenú cez gripper:
+Neotocili sme kameru. Neotočili sme robota. Nic fyzicke sa nestalo. Frame {c} zostal presne tak orientovany, ako bol.
 
-c - b
+Pred vypoctom sme jeho orientation poznali v jazyku {b}: Rᵦc. Po vypocte poznáme tu istú orientation, ale v jazyku {s}: Rₛc.
 
-Potom ju prevedieme z grippera do miestnosti:
-
-b - a
-
-Celá cesta teda vyzerá:
-
-c - b - a
-
-A matematicky:
-
-**Rab Rbc = Rac**
-
-Toto bude neskôr v robotike všade. Robot môže mať frame na base, jednotlivých links, end-effectori, kamere aj objekte. Potom budeme transformations skladať do reťazca.
-
-Preto je správne poradie matrices zásadné.
+Preto video hovori **change reference frame**. Zmenili sme pozorovatela, nie objekt.
 
 ---
 
-## 11. Rovnaké pravidlo funguje aj pre vectors
+## 11. Realny priklad: kamera na dronovi
 
-Subscript cancellation môžeme použiť aj pri vectoroch.
+Predstav si dron letiaci nad polom. World frame {s} je pevné spojeny so Zemou. Dron má body frame {b}. Kamera namontovaná pod dronom má camera frame {c}.
 
-Ak máme vector:
+Kamera je namontovaná napriklad tak, že smeruje trochu nadol. Tento pevny vztah poznáme ako **Rᵦc**.
 
-**pb**
+Dron sa však pocas letu naklana a otaca. Jeho aktuálnu orientation voči Zemi poznáme ako **Rₛᵦ**.
 
-a chceme ho vyjadriť vo frame {a}, použijeme:
+Teraz kamera zaznamená objekt. Aby autopilot vedel, akým smerom vzhľadom na Zem sa kamera pozera, potrebuje orientation kamery vo world frame:
 
-**pa = Rab pb**
+**Rₛc = Rₛᵦ · Rᵦc**
 
-Opäť si môžeme predstaviť:
-
-**Rab pb**
-
-Vnútorné b sa spoja a výsledkom je:
-
-**pa**
-
-Táto notation nám teda často sama napovie, ktorú rotation matrix potrebujeme.
-
-Ak máš pb a chceš pa, potrebuješ transformation, ktorá vedie:
-
-b - a
-
-čiže:
-
-**Rab**
+Toto sa deje preto, že orientation kamery voči Zemi závisí od dvoch veci: ako je kamera namontovaná na drone a ako je samotny dron otočený voči Zemi. Ak sa kamera na drone vobec nepohne, ale celý dron sa nakloní o 30°, kamera sa voči Zemi samozrejme tiez nakloni. Preto potrebujeme oba vztahy skombinovat.
 
 ---
 
-## 12. Tretie použitie rotation matrix: skutočné otočenie vectora
+## 12. Druha úplne odlišná operacia: Rotate a vector
 
-Teraz sa dostávame k situácii, ktorá vyzerá matematicky skoro rovnako, ale fyzicky je úplne iná.
+Teraz prichadza najvacsi rozdiel celej lekcie.
 
-Predstav si šípku položenú na stole. Tentoraz nemeníme coordinate system. Máme stále ten istý frame.
+Rotation matrix môžeme použiť aj na to, aby sme vector **skutocne otocili**.
 
-Šípku však fyzicky otočíme.
+Predstav si šípku nakreslenú na otočnej doske. Coordinate axes miestnosti zostávajú pevne. Chytíš dosku a otočíš ju o 90°. Šípka fyzicky zmenila smer.
 
-Pôvodný vector označíme:
+Predtym sme pri change reference frame robili presný opak: šípka zostala na mieste a menili sme iba coordinate system, pomocou ktoreho sme ju opisovali.
 
-**v**
+Takze máme dva scenáre:
 
-Po rotation dostaneme nový vector:
+**Change reference frame** - Objekt zostáva rovnaky. Coordinate description sa meni.
 
-**v'**
+**Rotate vector** - Coordinate frame zostáva rovnaky. Samotny vector meni smer.
 
-Ak rotation opisuje matrix R, platí:
+A hoci sa v oboch prípadoch objavuje rotation matrix, geometrický význam je úplne iny.
 
-**v' = Rv**
-
-Na prvý pohľad to vyzerá takmer rovnako ako:
-
-**pa = Rab pb**
-
-Rozdiel však nie je v matrix multiplication. Rozdiel je v tom, čo fyzicky interpretujeme ako zmenu.
-
-Pri change of reference frame:
-
-objekt zostáva rovnaký, meníme coordinate system.
-
-Pri rotation operator:
-
-coordinate system zostáva rovnaký, objekt sa skutočne otočí.
-
-Toto je jeden z najdôležitejších rozdielov v celej téme rotation matrices.
+![Pasivna vs aktivna transformacia - change of frame vs rotation](/book/ch3/fig3-5.png)
 
 ---
 
-## 13. Pasívna a aktívna interpretácia
+## 13. Prečo môže ta istá matrix robit obe veci?
 
-Tento rozdiel sa niekedy opisuje ako passive vs. active transformation.
+Toto môže pôsobiť zvlastne. Ako môže jedna matrix raz menit coordinates a inokedy skutočne otáčať vector?
 
-Pri passive transformation nemeníme fyzický vector. Meníme iba reference frame, v ktorom ho opisujeme.
+Pretoze matrix sama o sebe opisuje vztah medzi smermi. To, ako tento vztah interpretujeme, závisí od toho, na ake coordinates ju aplikujeme.
 
-Pri active transformation nechávame reference frame na mieste a fyzicky otáčame vector alebo rigid body (tuhé teleso).
+Ak máme **pᵦ** a vypočítame **Rₛᵦ · pᵦ**, indexy krásne nadväzujú a výsledok je ten istý vector v inom coordinate frame.
 
-Predstav si šálku s rúčkou smerujúcou doprava.
+Ak však máme vector už vyjadreny v {s}, teda **pₛ**, a vypočítame **Rₛᵦ · pₛ**, indexy sa takto zrusit nedaju. Nemame "preklad z b do s", pretoze vstup už je v {s}. Matrix teraz interpretujeme ako **rotation operator**, ktory vytvorí nový geometrický vector:
 
-V passive prípade sa šálky vôbec nedotkneš. Len sa presunieš na inú stranu stola a začneš jej direction opisovať pomocou iných axes.
+**p'ₛ = R · pₛ**
 
-V active prípade zostávaš stáť na rovnakom mieste, ale šálku fyzicky otočíš.
-
-Numbers môžu byť transformované podobnou matrix operation, ale geometrický príbeh je úplne iný.
-
-![Rigid-body displacement interpreted as a screw motion](/book/ch3/fig3-5.png)
+Apostrof pri p' je dolezity. Hovori: **Toto už nie je iba iny zapis povodneho p. Toto je novy, otočený vector.**
 
 ---
 
-## 14. Rotation operator Rot(omega-hat, θ)
+## 14. Fyzicky priklad: kompasova rucicka
 
-Keď chceme zdôrazniť, že matrix používame ako rotation operator, Modern Robotics používa notation:
+Predstav si kompasovu rucicku ležiacu na stole a coordinate axes namaľované priamo na stole.
 
-**R = Rot(omega-hat, θ)**
+**Prva situacia:** Rucicka smeruje na sever. Ty sa presunies na druhu stranu stola a začneš používať inak orientované coordinate axes. Rucicky si sa nedotkla. Jej coordinates sa zmenili, ale fyzicky smer zostal rovnaky. To je **change reference frame**.
 
-Symbol omega-hat označuje unit vector (jednotkový vektor) určujúci axis of rotation.
+**Druha situacia:** Coordinate axes na stole necháš presne rovnake. Chytíš rucicku a otočíš ju zo severu na zapad. Teraz sa zmenil samotny fyzicky vector. To je **rotate vector**.
 
-Symbol θ označuje angle, o ktorý otáčame.
+Keď si nebudeš ista, co konkrétny výpočet znamena, polož si otázku: **Pohla sa sipka, alebo som iba zmenila sposob, akým ju opisujem?**
 
-Napríklad:
-
-**Rot(z-hat, 90°)**
-
-znamená:
-
-otoč o 90° okolo z-axis.
-
-Smer positive rotation určujeme pomocou right-hand rule. Ak palec pravej ruky nasmerujeme pozdĺž positive direction rotation axis, smer zatočených prstov určuje positive rotation.
-
-![Rotation of a frame by angle θ about axis omega-hat](/book/ch3/fig3-8.png)
+Táto otazka vyrieši velku cast zmätku okolo rotation matrices.
 
 ---
 
-## 15. Rotation okolo x-axis
+## 15. Rotation matrix môže otocit aj celý frame
 
-Predstav si, že otáčame objekt okolo x-axis.
+Rovnaky princip nemusíme aplikovať iba na jeden vector. Môžeme otocit celý coordinate frame.
 
-Samotná x-axis sa pri rotation nemení. Preto má matrix tvar:
+Predstav si malu kartónovú dosku, na ktorej mas nakreslené tri axes x, y, z. Ked dosku fyzicky otočíš, všetky tri axes sa otočia spolu.
 
-$$Rot(x-hat, θ) =$$
-$$[ 1  0  0 ]$$
-$$[ 0  cos θ  -sin θ ]$$
-$$[ 0  sin θ  cos θ ]$$
+Matematicky môžeme orientation frame reprezentovat rotation matrix R. Ak na celý frame aplikujeme ďalšiu rotaciu, dostaneme novu orientation.
 
-Prečo zostáva v prvom riadku a columne jednotka?
+A tu vznika dalsia velmi dolezita otazka: **Otaname vzhľadom na fixed space frame alebo vzhľadom na body frame?**
 
-Pretože rotation okolo x-axis nemení x-component. Pohyb prebieha v y-z plane.
+To rozhoduje o tom, z ktorej strany rotation matrix nasobime.
 
-Je to podobné ako otáčanie kolesa nasadeného na os. Os zostáva na mieste, zatiaľ čo body okolo nej opisujú kružnice.
+![Pre-multiplication vs post-multiplication: fixed-frame a body-frame rotation](/book/ch3/fig3-9.png)
 
 ---
 
-## 16. Rotation okolo y-axis
+## 16. Premultiplication vs. postmultiplication
 
-Pre rotation okolo y-axis používame:
+Ak máme orientation **Rₛᵦ** a chceme na nu aplikovať ďalšiu rotáciu **R**, môžeme dostat dva rôzne vysledky:
 
-$$Rot(y-hat, θ) =$$
-$$[ cos θ  0  sin θ ]$$
-$$[ 0  1  0 ]$$
-$$[ -sin θ  0  cos θ ]$$
+**R · Rₛᵦ** (premultiplication)
 
-Tentoraz zostáva nezmenená y-component, pretože práve y-axis je axis of rotation.
+alebo
 
-Pohyb prebieha v x-z plane.
+**Rₛᵦ · R** (postmultiplication)
 
-Predstav si kameru na gimbale, ktorá sa nakláňa hore a dole okolo horizontálnej y-axis. Kamera mení smer v x-z plane, ale samotná rotation axis zostáva zachovaná.
+Tieto výsledky vo vseobecnosti nie sú rovnake.
 
----
+Preco?
 
-## 17. Rotation okolo z-axis
+Pretoze v prvom pripade interpretujeme rotation axes vzhľadom na **space frame**, zatiaľ co v druhom pripade vzhľadom na **body frame**.
 
-Pre rotation okolo z-axis dostávame:
+Zjednodusene:
 
-$$Rot(z-hat, θ) =$$
-$$[ cos θ  -sin θ  0 ]$$
-$$[ sin θ  cos θ  0 ]$$
-$$[ 0  0  1 ]$$
+**Premultiply → rotation about space-frame axes**
 
-Toto je v podstate planar rotation matrix rozšírená do 3D.
+**Postmultiply → rotation about body-frame axes**
 
-z-component sa nemení a rotation prebieha v x-y plane.
-
-Predstav si človeka stojaceho vzpriamene na mieste. Ak sa otočí doľava alebo doprava bez nakláňania, približne vykonáva rotation okolo vertikálnej z-axis.
+Predstav si lietadlo. Mas world axes pevné vzhľadom na Zem a zároveň axes pripevnené k lietadlu. Ked sa lietadlo začne otacat, jeho vlastne axes sa otáčajú spolu s nim. Preto príkaz "otoc sa okolo world x-axis" nie je po niekoľkých rotáciách to isté ako "otoc sa okolo svojho vlastneho x-axis".
 
 ---
 
-## 18. Rotation nemusí prebiehať iba okolo coordinate axes
+## 17. Realny priklad s telefonom
 
-x, y a z sú jednoduché prípady, ale rigid body sa môže otáčať okolo ľubovoľnej axis v priestore.
+Vezmi si telefon a drz ho pred sebou.
 
-Môžeme mať napríklad unit vector:
+Predstav si, že miestnost má pevné osi. Vertikalny smer miestnosti zostáva stale rovnaký bez ohladu na to, ako telefon otocis.
 
-**omega-hat = (omega1, omega2, omega3)**
+Telefon však má aj vlastne axes: napriklad jeho dlha hrana môže byt ŷᵦ, kratka hrana x̂ᵦ a smer von z displeja ẑᵦ.
 
-ktorý smeruje šikmo cez priestor.
+Teraz telefon najprv naklon. Po tomto nakloneni už jeho vlastna x̂ᵦ axis nie je zarovnana s world x̂ₛ.
 
-Potom:
+Ak teraz poviem: "Otoc telefon okolo world x̂ₛ," je to ina operacia nez: "Otoc telefon okolo jeho vlastnej x̂ᵦ."
 
-**Rot(omega-hat, θ)**
-
-predstavuje rotation o θ okolo tejto axis.
-
-To je dôležité napríklad pri robotickom ramene. Joint axis nemusí byť zarovnaná so svetovou x, y alebo z-axis. Môže smerovať ľubovoľne podľa konštrukcie robota.
-
-Preto potrebujeme všeobecný spôsob reprezentácie rotation pomocou axis + angle.
-
-Podklad uvádza aj úplný všeobecný matrix expression pre Rot(omega-hat, θ). Je pomerne rozsiahly, ale jeho význam je jednoduchší než jeho vzhľad: dostane unit direction rotation axis omega-hat a angle θ a vytvorí rotation matrix, ktorá vykoná presne túto rotation. Neskôr sa k tomuto vzťahu vrátime oveľa systematickejšie cez exponential coordinates a Rodriguesovu formulu.
+Preto musime pri skladani rotácií vediet, v akom frame je nova rotation definovana. A preto zalezi na tom, či matrix násobíme zlava alebo sprava.
 
 ---
 
-## 19. Rovnaké numbers omega-hat nemusia označovať rovnakú fyzickú axis
+## 18. Prečo je toto vsetko v robotike take dôležité?
 
-Tu prichádza ďalší veľmi dôležitý problém reference frames.
+Predstav si robotické rameno, ktore má zdvihnúť pohar.
 
-Predstav si:
+**Kamera povie:** "Pohar je týmto smerom odo mna." Táto informácia vznikne v camera frame.
 
-**omega-hat = (0, 0, 1)**
+**Roboticke rameno však potrebuje vediet:** "Kde je pohár vzhľadom na moju zakladnu?" Musíme teda urobit **change of reference frame**.
 
-Na prvý pohľad by sme mohli povedať:
+Nasledne robot vypočíta, ako má otocit wrist, aby gripper správne uchopil pohar. Tu už nejde iba o prepis coordinates. Robot chce skutočne zmeniť orientation grippera. To je **rotate a frame**.
 
-„To je z-axis."
-
-Lenže z-axis ktorého frame?
-
-Ak {s} a {b} nie sú aligned, potom:
-
-**zs ≠ zb**
-
-vo fyzickom priestore.
-
-Numerický vector (0,0,1) teda znamená:
-
-„z-axis toho frame, v ktorom sú tieto coordinates vyjadrené."
-
-Ak ho interpretujeme v space frame, dostaneme jednu fyzickú axis. Ak rovnaké numbers interpretujeme v body frame, môžeme dostať úplne inú axis.
-
-Preto musíme pri rotations vedieť nielen o koľko otáčame, ale aj v ktorom frame je rotation axis vyjadrená.
+V jednom jedinom robotickom pohybe sa teda mozu použiť obe interpretácie rotation matrices. Najprv nimi prekladáme informácie medzi senzormi a robotom a potom pomocou rotácií vypočítavame požadovanú orientation jednotlivých časti robota.
 
 ---
 
-## 20. Fixed-frame rotation
+## 19. Celu lekciu si predstav ako tri rôzne otázky
 
-Majme body frame {b}, ktorého súčasnú orientation vzhľadom na space frame {s} opisuje:
+Keď uvidis rotation matrix, nesnaz sa okamžite nieco nasobit. Najprv sa spytaj:
 
-**Rsb**
+**"Chcem iba opísať orientation?"** Potom rotation matrix používam ako representation of orientation: Rₛᵦ. Hovorim napriklad: "Takto je kamera orientovaná vzhľadom na robota."
 
-Teraz ho chceme otočiť pomocou:
+**"Mam tu istú vec, ale potrebujem ju vyjadrit v inom coordinate frame?"** Potom robim change of reference frame: **pₛ = Rₛᵦ · pᵦ**. Fyzicky vector zostáva rovnaky. Alebo pri frames: **Rₛc = Rₛᵦ · Rᵦc**. Frame {c} zostáva fyzicky rovnako orientovany. Iba ho teraz opisujem pomocou {s}.
 
-**R = Rot(omega-hat, θ)**
+**"Chcem objekt skutočne otocit?"** Potom rotation matrix používam ako rotation operator: **p'ₛ = R · pₛ**. Tu už vznika nový vector p'.
 
-a omega-hat interpretujeme v space frame {s}.
-
-Výsledná orientation bude:
-
-**Rsb' = R Rsb**
-
-Novú rotation teda násobíme zľava.
-
-Tomu hovoríme **premultiplication**.
-
-Fyzicky to znamená, že rotation axis je fixovaná vo svete.
-
-Predstav si dron letiaci v miestnosti. V miestnosti je definovaná pevná vertical z-axis. Ak povieme:
-
-„Otoč dron o 90° okolo z-axis miestnosti,"
-
-rotation axis zostáva rovnaká bez ohľadu na to, ako bol dron predtým natočený.
-
-To je fixed-frame rotation.
+Toto rozlíšenie je ovela dôležitéjsie nez naucit sa jednotlive rovnice naspamäť.
 
 ---
 
-## 21. Body-frame rotation
+## Na co pamatat
 
-Teraz použijeme rovnakú numerical rotation matrix R, ale rotation axis interpretujeme v body frame {b}.
+**Fyzicky vector a jeho coordinates nie sú to iste.** Ten istý vector môže mat rôzne čísla podľa toho, v akom coordinate frame ho opisujeme. Preto mozu pᵦ a pₛ vyzerat úplne inak a stale predstavovat tu istú fyzicku sipku.
 
-Výsledok je:
+**Change of reference frame** - objekt sa nemeni, mení sa iba jeho matematicky opis: **pₛ = Rₛᵦ · pᵦ**
 
-**Rsb'' = Rsb R**
+**Skladanie transformacii** - ak máme viac frames, transformácie môžeme skladat: **Rₛc = Rₛᵦ · Rᵦc** (cesta c → b → s)
 
-Tentoraz násobíme sprava.
+**Subscript cancellation** - prostredne frames sa zhoduju a pomahaju kontrolovat správne poradie
 
-Ide o **postmultiplication**.
+**Poradie je dôležité** - AB ≠ BA. Fyzicky to dava zmysel, pretoze dve 3D rotacie v opacnom poradi mozu viest k úplne inej orientation.
 
-Fyzicky rotation axis cestuje spolu s telesom.
+**Premultiply = space frame axes. Postmultiply = body frame axes.**
 
-Predstav si lietadlo. Jeho vlastná x-axis smeruje cez nos lietadla. Keď pilot vykoná roll, lietadlo sa otáča okolo svojej vlastnej longitudinal axis.
+**Nezamienaj change reference frame a rotate vector.** Pri prvom zostáva fyzicka šípka rovnaká a meníš iba pohlad. Pri druhom zostáva coordinate frame rovnaký a fyzicky meníš smer sipky.
 
-Ak je lietadlo už predtým natočené vzhľadom na svet, jeho body x-axis nemusí vôbec smerovať pozdĺž world x-axis.
-
-Preto:
-
-rotation okolo world x-axis
-
-a
-
-rotation okolo body x-axis
-
-môžu byť dve úplne odlišné fyzické rotations.
-
----
-
-## 22. Prečo sa pri fixed-frame rotation násobí zľava
-
-Vzťah:
-
-**Rsb' = R Rsb**
-
-sa dá pochopiť cez to, čo robíme s axes body frame.
-
-Rsb už opisuje súčasné directions body axes vo world coordinates.
-
-Ak teraz chceme všetky tieto directions otočiť pomocou rotation R vyjadrenej vo world frame, aplikujeme R na každý column Rsb.
-
-Matrix multiplication:
-
-**R Rsb**
-
-presne toto vykoná.
-
-Predstav si, že Rsb obsahuje tri šípky predstavujúce body x, y a z axes. Rotation R vezme každú z nich a fyzicky ju otočí okolo axis definovanej vo fixed frame.
-
-Preto sa R objaví zľava.
-
----
-
-## 23. Prečo sa pri body-frame rotation násobí sprava
-
-Pri:
-
-**Rsb'' = Rsb R**
-
-je situácia iná.
-
-Rotation R teraz opisujeme pomocou body axes. Nehovoríme teda:
-
-„Otoč okolo world z-axis."
-
-Hovoríme:
-
-„Otoč okolo tvojej vlastnej body z-axis."
-
-Matrix Rsb následne preloží výslednú orientation body axes do space coordinates.
-
-Preto sa body-frame rotation prirodzene skladá ako:
-
-**Rsb R**
-
-Tento rozdiel je mimoriadne dôležitý pri robotických joints, manipulátoroch, dronoch aj mobile robots, pretože príkaz „otoč sa okolo z-axis" nie je úplný, kým nepovieme, z-axis ktorého frame máme na mysli.
-
----
-
-## 24. Premultiplication a postmultiplication na konkrétnom príklade
-
-Predstav si dron, ktorý je už naklonený tak, že jeho vlastná z-axis smeruje šikmo.
-
-Teraz máme rotation:
-
-**R = Rot(z-hat, 90°)**
-
-Ak vypočítame:
-
-**R Rsb**
-
-z-hat interpretujeme ako z-axis fixed frame. Dron sa teda otočí okolo vertikálnej world axis.
-
-Ak však vypočítame:
-
-**Rsb R**
-
-z-hat interpretujeme ako z-axis body frame. Keďže dron je naklonený, táto axis smeruje šikmo a dron sa otočí okolo nej.
-
-Numericky sme použili tú istú R.
-
-Fyzický výsledok však môže byť úplne iný.
-
-Preto pri matrix multiplication v robotike záleží nielen na matrices, ale aj na poradí a reference frames, ku ktorým sa vzťahujú.
-
-![Pre-multiplication vs post-multiplication: fixed-frame and body-frame rotation](/book/ch3/fig3-9.png)
-
----
-
-## 25. Prečo sú 3D rotations noncommutative
-
-Teraz môžeme lepšie pochopiť vlastnosť z prvej časti:
-
-**R1 R2 ≠ R2 R1**
-
-vo všeobecnosti.
-
-Nejde iba o abstraktnú vlastnosť matrix multiplication. Má veľmi konkrétny geometrický dôvod.
-
-V 3D môžeme otáčať okolo rôznych axes. Keď vykonáme prvú rotation, orientation telesa sa zmení. Druhá rotation teda môže pôsobiť na teleso, ktoré je už orientované úplne inak.
-
-Predstav si mobilný telefón.
-
-Najprv ho otoč o 90° okolo jednej axis a potom o 90° okolo druhej. Pozri sa, kam smeruje displej.
-
-Vráť telefón do pôvodnej orientation a vykonaj tie isté dve rotations v opačnom poradí.
-
-Vo všeobecnosti skončí displej otočený inak.
-
-Preto:
-
-**R1 R2 ≠ R2 R1**
-
-Poradie rotations je súčasťou pohybu.
-
----
-
-## 26. Prečo je SO(2) v tomto smere jednoduchšie
-
-Pri planar rotations je situácia špeciálna.
-
-Všetky rotations v rovine prebiehajú okolo tej istej axis kolmej na rovinu. Ak teda najprv otočíme o alpha a potom o beta, výsledok je jednoducho:
-
-**alpha + beta**
-
-Ak poradie obrátime:
-
-**beta + alpha**
-
-a keďže:
-
-**alpha + beta = beta + alpha**
-
-výsledok je rovnaký.
-
-Preto rotations v SO(2) komutujú.
-
-V SO(3) však môžeme otáčať okolo rôznych axes, takže táto jednoduchá vlastnosť vo všeobecnosti neplatí.
-
----
-
-## 27. Orientation matrix a rotation operator: rovnaká matrix, iná otázka
-
-Toto je miesto, kde sa oplatí spojiť celú lekciu.
-
-Majme jednu numerical matrix R.
-
-Keď ju interpretujeme ako orientation, odpovedá na otázku:
-
-**Ako je jeden frame orientovaný vzhľadom na druhý?**
-
-Keď ju použijeme na change of coordinates, odpovedá:
-
-**Aké coordinates má ten istý vector v inom reference frame?**
-
-Keď ju použijeme ako rotation operator, odpovedá:
-
-**Kam sa vector alebo frame dostane, keď ho fyzicky otočíme?**
-
-Matematický objekt je rovnaký.
-
-Mení sa jeho úloha v konkrétnom probléme.
-
-Toto je dôvod, prečo sa pri rotation matrices nedá pracovať iba mechanickým násobením numbers. Vždy musí byť jasné, čo jednotlivé matrices reprezentujú a v ktorých frames sú quantities vyjadrené.
-
----
-
-## 28. Typická chyba: change of coordinates nie je motion
-
-Predstav si robotickú kameru, ktorá vidí objekt.
-
-Kamera vypočíta coordinates objektu:
-
-**pc**
-
-Robotický controller však potrebuje coordinates objektu vo frame základne robota:
-
-**ps**
-
-Použijeme príslušnú rotation matrix a prevedieme coordinates.
-
-Objekt sa pritom nepohol ani o milimeter.
-
-Zmenili sme iba jeho mathematical representation.
-
-Ak by sme však zobrali fyzický gripper a pomocou rotation matrix mu prikázali zmeniť orientation, ide o skutočný motion.
-
-Tieto dve operácie môžu matematicky obsahovať podobné multiplication, ale fyzicky riešia úplne iný problém.
-
----
-
-## 29. Prečo je toto dôležité v skutočnej robotike
-
-Predstav si robotické rameno s kamerou na end-effectori.
-
-Kamera deteguje skrutku a povie:
-
-„Skrutka sa nachádza týmto smerom vzhľadom na môj camera frame."
-
-Robot však svoje joints riadi vzhľadom na base frame. Controller preto potrebuje údaj z kamery transformovať do coordinate systému robota.
-
-Rotation matrices nám umožňujú prepájať tieto rôzne pohľady na ten istý svet.
-
-Zároveň nimi reprezentujeme orientation end-effectora. A keď chceme end-effector otočiť, rotation matrices používame aj ako operators opisujúce samotný motion.
-
-Preto jeden matematický nástroj rieši tri veľmi praktické problémy:
-
-Ako som natočený?
-
-Ako tú istú vec opíšem z iného frame?
-
-Ako ju otočím?
-
----
-
-## 30. Ako si vybrať správne poradie matrices
-
-Keď vidíš viac rotation matrices, nezačínaj tým, že sa snažíš zapamätať poradie naspamäť. Najprv si povedz, odkiaľ kam potrebujem dostať representation.
-
-Ak chceš prejsť:
-
-{c} - {b} - {a}
-
-potrebuješ:
-
-**Rab Rbc**
-
-a dostaneš:
-
-**Rac**
-
-Subscripts ti umožňujú skontrolovať cestu.
-
-Ak však ide o fyzickú rotation už existujúceho frame Rsb, polož si inú otázku:
-
-**Je rotation axis definovaná vo fixed frame alebo body frame?**
-
-Ak vo fixed frame:
-
-**Rnew = R Rsb**
-
-Ak v body frame:
-
-**Rnew = Rsb R**
-
-Toto rozdelenie je omnoho spoľahlivejšie než slepé memorovanie „left alebo right".
-
----
-
-## Rekapitulácia najdôležitejších pojmov
-
-**Rab - relative orientation** - Rotation matrix Rab opisuje orientation frame {b} vzhľadom na frame {a}. Môžeme si ju čítať ako „b vyjadrené v a".
-
-**Inverse orientation** - Ak chceme obrátiť smer medzi frames, použijeme inverse rotation. Pre rotation matrices platí Rba = Rab-1 = RabT.
-
-**Change of reference frame** - Ten istý fyzický vector môže mať rôzne coordinates v rôznych frames. Vzťah pa = Rab pb nemení fyzický vector, iba jeho coordinate representation.
-
-**Subscript cancellation rule** - Pri skladaní transformations nám subscripts pomáhajú kontrolovať správne poradie. Napríklad Rab Rbc = Rac.
-
-**Rotation operator** - Matrix R môžeme použiť aj na skutočné otočenie vectora: v' = Rv. V tomto prípade sa nemení reference frame, ale samotný vector.
-
-**Passive transformation** - Fyzický objekt zostáva rovnaký a meníme coordinate frame, pomocou ktorého ho opisujeme.
-
-**Active transformation** - Reference frame zostáva rovnaký a fyzicky otáčame vector alebo rigid body.
-
-**Rot(omega-hat, θ)** - Rotation operator definovaný unit axis omega-hat a rotation angle θ.
-
-**Fixed-frame rotation** - Ak je rotation axis vyjadrená vo fixed frame, novú rotation premultiplikujeme: Rsb' = R Rsb.
-
-**Body-frame rotation** - Ak je rotation axis vyjadrená v body frame, rotation postmultiplikujeme: Rsb'' = Rsb R.
-
-**Premultiplication** - Násobenie novej rotation zľava. V tomto kontexte zodpovedá rotation okolo axis definovanej vo fixed frame.
-
-**Postmultiplication** - Násobenie novej rotation sprava. V tomto kontexte zodpovedá rotation okolo axis definovanej v body frame.
-
-**Noncommutativity** - V 3D vo všeobecnosti platí R1 R2 ≠ R2 R1. Poradie rotations môže zmeniť final orientation.
-
-**SO(2) vs. SO(3)** - Planar rotations v SO(2) komutujú, pretože všetky prebiehajú okolo tej istej axis. Spatial rotations v SO(3) môžu prebiehať okolo rôznych axes, takže poradie je dôležité.
-
----
-
-## Čo si z tejto lekcie odniesť
-
-Rotation matrix nie je iba spôsob, ako uložiť orientation do deviatich numbers. Je to nástroj, ktorý prepája coordinate frames, representations a samotné rotations. Aby sme s ním vedeli správne pracovať, vždy musíme vedieť, čo jednotlivé frames znamenajú.
-
-Ak máme Rab, opisujeme tým, ako je frame {b} orientovaný vzhľadom na {a}. Ak potom použijeme pa = Rab pb, fyzický vector p sa nikam nepohol. Iba sme jeho coordinates prepísali z frame {b} do frame {a}. Ak však použijeme v' = Rv a R interpretujeme ako rotation operator, reference frame zostáva rovnaký a fyzicky meníme direction vectora.
-
-Keď sa objaví viac frames, veľmi pomáha sledovať subscripts. Vzťah Rab Rbc = Rac môžeme chápať ako cestu c - b - a. Práve toto skladanie transformations bude neskôr základom opisovania celého robotického ramena.
-
-A napokon pri skutočných rotations musíme vedieť, v ktorom frame je definovaná rotation axis. Rotation okolo world z-axis a rotation okolo body z-axis nie sú vo všeobecnosti to isté. Preto fixed-frame rotation zapisujeme R Rsb, zatiaľ čo body-frame rotation zapisujeme Rsb R.
-
-Celá lekcia sa teda dá spojiť jednou myšlienkou: numbers samy osebe nestačia. V robotike musíme vždy vedieť, vzhľadom na ktorý reference frame majú význam. Práve táto schopnosť presne pracovať s frames nám umožní v ďalších častiach prejsť od samotnej orientation k angular velocity, a neskôr k úplnému opisu pohybu rigid body.`;
+**R⁻¹ = Rᵀ** - inverse rotation matrix je jej transpose. Ak poznas Rₛᵦ, automaticky poznas aj Rᵦₛ = Rₛᵦᵀ.`;

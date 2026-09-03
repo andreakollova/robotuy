@@ -1,73 +1,73 @@
 // Chapter 3.2.1 – Rotation Matrices (Part 1 of 2)
 // Full lesson content - DO NOT SHORTEN
 
-export const ch321p1Content = `# Rotation Matrix - od uplneho zakladu
+export const ch321p1Content = `# Rotation Matrix - od úplného základu
 
-## 1. Co sa vlastne snazime opisat?
+## 1. Čo sa vlastne snažíme opísať?
 
-Predtym, nez sa dostaneme k samotnej rotation matrix (rotacna matica), je dolezite pochopit problem, ktory pomocou nej riesime. Predstav si roboticke rameno stojace na stole. Miestnost alebo pracovny priestor robota ma svoj vlastny coordinate frame (suradnicova sustava), ktory oznacime **{s}** ako **space frame** (priestorovy frame). Ma tri osi **x̂ₛ**, **ŷₛ** a **ẑₛ**. Mozeme si napriklad predstavit, ze x̂ₛ smeruje doprava po stole, ŷₛ smeruje dopredu a ẑₛ smeruje nahor.
+Predtým, než sa dostaneme k samotnej rotation matrix (rotačná matica), je dôležité pochopiť problém, ktorý pomocou nej riešime. Predstav si robotické rameno stojace na stole. Miestnosť alebo pracovný priestor robota má svoj vlastný coordinate frame (súradnicová sústava), ktorý označíme **{s}** ako **space frame** (priestorový frame). Ma tri osi **x̂ₛ**, **ŷₛ** a **ẑₛ**. Môžeme si napríklad predstaviť, že x̂ₛ smeruje doprava po stole, ŷₛ smeruje dopredu a ẑₛ smeruje nahor.
 
-Robot vsak moze mat dalsi coordinate frame pripevneny napriklad ku svojmu ramenu, kamere alebo gripperu. Ten oznacime **{b}** ako **body frame** (teleso frame) a ma svoje vlastne osi **x̂ᵦ**, **ŷᵦ** a **ẑᵦ**. Ked sa roboticke rameno otoci, otoci sa spolu s nim aj cely jeho body frame. Osi x̂ᵦ, ŷᵦ, ẑᵦ preto uz nemusia smerovat rovnakym smerom ako osi x̂ₛ, ŷₛ, ẑₛ.
+Robot však môže mať ďalší coordinate frame pripevnený napríklad ku svojmu ramenu, kamere alebo gripperu. Ten označíme **{b}** ako **body frame** (teleso frame) a má svoje vlastné osi **x̂ᵦ**, **ŷᵦ** a **ẑᵦ**. Ked sa robotické rameno otočí, otočí sa spolu s ním aj celý jeho body frame. Osi x̂ᵦ, ŷᵦ, ẑᵦ preto už nemusia smerovať rovnakým smerom ako osi x̂ₛ, ŷₛ, ẑₛ.
 
-Prave tu vznika problem, ktory potrebujeme matematicky vyriesit: **Ako presne opiseme, ako je frame {b} natoceny vzhladom na frame {s}?** Odpovedou je rotation matrix.
-
----
-
-## 2. Preco vobec potrebujeme viac coordinate frames?
-
-Coordinate frame si mozes predstavit ako vlastny pohlad urciteho objektu na svet. Velmi dobrym prikladom je auto. Ked sedis za volantom, prirodzene pouzivavas smery "dopredu", "dozadu", "dolava" a "doprava". Ak niekto povie, ze prekazka je dva metre pred autom, tento opis dava zmysel vzhladom na auto. Lenze mapa mesta moze pouzivat uplne ine smery, napriklad sever a vychod.
-
-Predstav si, ze auto prave smeruje na sever. "Dopredu" z pohladu auta teda znamena "na sever" z pohladu mapy. Ak sa auto otoci doprava a zacne smerovat na vychod, jeho vlastny smer "dopredu" sa nezmenil - vodic ma stale pred sebou prednu cast auta. Z pohladu mapy vsak tento smer teraz znamena vychod.
-
-Presne rovnaky problem ma robot. Kamera moze povedat: "Objekt sa nachadza predo mnou." Robot vsak potrebuje vediet, co znamena "predo mnou" z pohladu svojho hlavneho coordinate frame. Roboticke rameno moze mat dokonca desiatky roznych frames: jeden na zakladni, dalsi na jednotlivych joints, dalsi na gripperi a dalsi na kamere. Preto musi existovat sposob, ako medzi tymito pohladmi matematicky prechadzat.
-
-Rotation matrix je jeden zo zakladnych nastrojov, ktory toto umoznuje.
+Práve tu vzniká problém, ktorý potrebujeme matematicky vyriesit: **Ako presne opíšeme, ako je frame {b} natočený vzhľadom na frame {s}?** Odpoveďou je rotation matrix.
 
 ---
 
-## 3. Co je teda rotation matrix?
+## 2. Prečo vôbec potrebujeme viac coordinate frames?
 
-Rotation matrix je matica, ktora opisuje **orientaciu** (orientation) jedneho coordinate frame vzhladom na iny coordinate frame. To je velmi dolezite odlisit od **polohy** (position). Ak polozim telefon na stol a otocim ho o 90°, jeho stred moze zostat presne na rovnakom mieste, ale jeho orientacia sa zmenila. Rotation matrix opisuje prave tuto orientaciu.
+Coordinate frame si môžeš predstaviť ako vlastny pohľad určitého objektu na svet. Veľmi dobrým príkladom je auto. Keď sedíš za volantom, prirodzene používaš smery "dopredu", "dozadu", "dolava" a "doprava". Ak niekto povie, že prekážka je dva metre pred autom, tento opis dáva zmysel vzhľadom na auto. Lenže mapa mesta môže používať úplne iné smery, napriklad sever a vychod.
 
-Predstav si dva coordinate frames, **{s}** a **{b}**. Ak chcem vediet, ako je {b} orientovany vzhladom na {s}, staci mi v podstate zodpovedat tri otazky: Kam z pohladu {s} smeruje os x̂ᵦ? Kam smeruje ŷᵦ? A kam smeruje ẑᵦ?
+Predstav si, že auto práve smeruje na sever. "Dopredu" z pohľadu auta teda znamená "na sever" z pohľadu mapy. Ak sa auto otočí doprava a začne smerovať na vychod, jeho vlastný smer "dopredu" sa nezmenil - vodič má stále pred sebou prednú časť auta. Z pohľadu mapy však tento smer teraz znamená vychod.
 
-Ked poznam odpovede na tieto tri otazky, poznam orientaciu celeho {b} frame. Nie je potrebne vediet nic dalsie. Ak totiz viem, kam smeruju vsetky jeho tri osi, jednoznacne viem, ako je cely coordinate frame natoceny.
+Presne rovnaký problém má robot. Kamera môže povedať: "Objekt sa nachádza predo mnou." Robot však potrebuje vedieť, čo znamená "predo mnou" z pohladu svojho hlavného coordinate frame. Roboticke rameno môže mať dokonca desiatky rôznych frames: jeden na základni, ďalší na jednotlivých joints, ďalší na gripperi a ďalší na kamere. Preto musí existovať spôsob, ako medzi týmito pohľadmi matematicky prechádzať.
 
-A prave tieto tri odpovede ulozime do rotation matrix.
+Rotation matrix je jeden zo základných nástrojov, ktorý toto umožňuje.
+
+---
+
+## 3. Čo je teda rotation matrix?
+
+Rotation matrix je matica, ktorá opisuje **orientaciu** (orientation) jedneho coordinate frame vzhľadom na iný coordinate frame. To je veľmi dôležité odlíšiť od **polohy** (position). Ak položím telefón na stôl a otočím ho o 90°, jeho stred môže zostať presne na rovnakom mieste, ale jeho orientácia sa zmenila. Rotation matrix opisuje práve túto orientáciu.
+
+Predstav si dva coordinate frames, **{s}** a **{b}**. Ak chcem vediet, ako je {b} orientovaný vzhľadom na {s}, stačí mi v podstate zodpovedať tri otázky: Kam z pohladu {s} smeruje os x̂ᵦ? Kam smeruje ŷᵦ? A kam smeruje ẑᵦ?
+
+Keď poznám odpovede na tieto tri otázky, poznám orientáciu celého {b} frame. Nie je potrebné vedieť nič ďalšie. Ak totiž viem, kam smeruju všetky jeho tri osi, jednoznačne viem, ako je celý coordinate frame natočený.
+
+A práve tieto tri odpovede uložíme do rotation matrix.
 
 ---
 
 ## 4. Co znamena Rₛᵦ?
 
-Zapis **Rₛᵦ** ma presny vyznam. Indexy **s** a **b** nie su nahodne. Hovoria nam, ktory frame opisujeme a vzhladom na ktory frame ho opisujeme. V pripade Rₛᵦ opisujeme orientaciu body frame {b} pomocou coordinate frame {s}.
+Zapis **Rₛᵦ** má presný význam. Indexy **s** a **b** nie sú náhodné. Hovoria nam, ktory frame opisujeme a vzhľadom na ktory frame ho opisujeme. V pripade Rₛᵦ opisujeme orientáciu body frame {b} pomocou coordinate frame {s}.
 
 Jednoduchy sposob, ako si to predstavovat:
 
-**Rₛᵦ = ako vyzera orientacia {b} z pohladu {s}**
+**Rₛᵦ = ako vyzera orientácia {b} z pohladu {s}**
 
-Predstav si, ze stojis v miestnosti a sledujes robota. Miestnost predstavuje {s} a robot predstavuje {b}. Rₛᵦ ti hovori, ako vidis robotove osi zo svojho pevneho pohladu v miestnosti.
+Predstav si, že stojíš v miestnosti a sledujes robota. Miestnost predstavuje {s} a robot predstavuje {b}. Rₛᵦ ti hovori, ako vidis robotove osi zo svojho pevneho pohladu v miestnosti.
 
-Toto bude neskor velmi dolezite, pretoze mozeme mat aj Rᵦc, Rₛc, Rᵦₛ a podobne. Poradie indexov teda nesmieme ignorovat.
+Toto bude neskor velmi dôležité, pretoze môžeme mat aj Rᵦc, Rₛc, Rᵦₛ a podobne. Poradie indexov teda nesmieme ignorovat.
 
 ---
 
 ## 5. Co presne vidime na obrazku?
 
-![Dva coordinate frames - space frame {s} a body frame {b} otoceny o 90° okolo z-osi](/book/ch3/fig3-3.png)
+![Dva coordinate frames - space frame {s} a body frame {b} otočený o 90° okolo z-osi](/book/ch3/fig3-3.png)
 
-Na obrazku mame hore coordinate frame **{s}**. Jeho osi su x̂ₛ, ŷₛ, ẑₛ. Pod nim mame body frame **{b}** s osami x̂ᵦ, ŷᵦ, ẑᵦ. Body frame je oproti space frame otoceny, ale vsimni si, ze os **z** zostala rovnaka. Frame {b} sa teda v tomto priklade v podstate otocil okolo osi z.
+Na obrazku máme hore coordinate frame **{s}**. Jeho osi sú x̂ₛ, ŷₛ, ẑₛ. Pod nim máme body frame **{b}** s osami x̂ᵦ, ŷᵦ, ẑᵦ. Body frame je oproti space frame otoceny, ale vsimni si, že os **z** zostala rovnaka. Frame {b} sa teda v tomto priklade v podstate otocil okolo osi z.
 
-Teraz sa na obrazok nemusime pozerat ako na komplikovanu geometriu. Staci porovnavat jednotlive sipky. Najprv vezmeme x̂ᵦ a spytame sa: Kam tato sipka smeruje z pohladu coordinate frame {s}? Potom urobime to iste pre ŷᵦ a nakoniec pre ẑᵦ.
+Teraz sa na obrazok nemusíme pozerat ako na komplikovanu geometriu. Staci porovnavat jednotlive sipky. Najprv vezmeme x̂ᵦ a spytame sa: Kam tato šípka smeruje z pohladu coordinate frame {s}? Potom urobime to isté pre ŷᵦ a nakoniec pre ẑᵦ.
 
-Ked odpovieme na tieto tri otazky, rotation matrix mame hotovu.
+Keď odpovieme na tieto tri otázky, rotation matrix máme hotovu.
 
 ---
 
-## 6. Preco je x̂ᵦ = (0, 1, 0)?
+## 6. Prečo je x̂ᵦ = (0, 1, 0)?
 
 Zacnime osou x̂ᵦ.
 
-Aby sme pochopili, odkial sa cisla vzali, musime najprv pochopit vyznam samotneho vektora. Ked pracujeme v coordinate frame {s}, jeho tri zakladne smery mozeme zapisat ako:
+Aby sme pochopili, odkial sa čísla vzali, musime najprv pochopit význam samotneho vektora. Ked pracujeme v coordinate frame {s}, jeho tri zakladne smery môžeme zapisat ako:
 
 **x̂ₛ = (1, 0, 0)**
 
@@ -75,29 +75,29 @@ Aby sme pochopili, odkial sa cisla vzali, musime najprv pochopit vyznam samotneh
 
 **ẑₛ = (0, 0, 1)**
 
-Prve cislo vzdy hovori, kolko vektora smeruje pozdlz x̂ₛ, druhe hovori, kolko smeruje pozdlz ŷₛ, a tretie hovori, kolko smeruje pozdlz ẑₛ.
+Prve číslo vzdy hovori, koľko vektora smeruje pozdĺž x̂ₛ, druhe hovori, koľko smeruje pozdĺž ŷₛ, a tretie hovori, koľko smeruje pozdĺž ẑₛ.
 
-Napriklad **(1, 0, 0)** znamena: "idem uplne v smere x̂ₛ, vobec nejdem v smere ŷₛ a vobec nejdem v smere ẑₛ." Preto je to jednoducho smer osi x̂ₛ.
+Napriklad **(1, 0, 0)** znamena: "idem úplne v smere x̂ₛ, vobec nejdem v smere ŷₛ a vobec nejdem v smere ẑₛ." Preto je to jednoducho smer osi x̂ₛ.
 
-Podobne **(0, 1, 0)** znamena: "nemam ziadnu cast v smere x̂ₛ, cela moja dlzka smeruje pozdlz ŷₛ a nemam ziadnu cast v smere ẑₛ." Je to teda presne smer ŷₛ.
+Podobne **(0, 1, 0)** znamena: "nemam ziadnu cast v smere x̂ₛ, cela moja dlzka smeruje pozdĺž ŷₛ a nemam ziadnu cast v smere ẑₛ." Je to teda presne smer ŷₛ.
 
-A teraz sa pozri na x̂ᵦ na obrazku. Sipka x̂ᵦ smeruje presne rovnakym smerom ako sipka ŷₛ. Preto mozeme povedat:
+A teraz sa pozri na x̂ᵦ na obrazku. Šípka x̂ᵦ smeruje presne rovnakým smerom ako šípka ŷₛ. Preto môžeme povedat:
 
 **x̂ᵦ = ŷₛ**
 
-Kedze smer ŷₛ zapisujeme ako **(0, 1, 0)**, dostavame:
+Kedze smer ŷₛ zapisujeme ako **(0, 1, 0)**, dostávame:
 
 **x̂ᵦ = (0, 1, 0)**
 
-Nie je za tym ziadny zvlastny vypocet. Jednoducho sme sa pozreli, kam smeruje x̂ᵦ z pohladu coordinate frame {s}.
+Nie je za tym ziadny zvláštny výpočet. Jednoducho sme sa pozreli, kam smeruje x̂ᵦ z pohladu coordinate frame {s}.
 
 ---
 
-## 7. Preco je ŷᵦ = (-1, 0, 0)?
+## 7. Prečo je ŷᵦ = (-1, 0, 0)?
 
-Teraz urobime presne to iste s druhou osou.
+Teraz urobime presne to isté s druhou osou.
 
-Pozri sa na sipku ŷᵦ. Ta smeruje presne opacne ako x̂ₛ. Ak x̂ₛ predstavuje jeden smer, potom opacny smer zapisujeme znamienkom minus:
+Pozri sa na šípku ŷᵦ. Ta smeruje presne opačne ako x̂ₛ. Ak x̂ₛ predstavuje jeden smer, potom opačný smer zapisujeme znamienkom minus:
 
 **ŷᵦ = -x̂ₛ**
 
@@ -107,15 +107,15 @@ Preto:
 
 **ŷᵦ = (-1, 0, 0)**
 
-Cislo **-1** teda neznamena nic komplikovane. Znamena jednoducho: smerujem presne opacnym smerom ako kladna os x̂ₛ.
+Číslo **-1** teda neznamena nič komplikovane. Znamena jednoducho: smerujem presne opacnym smerom ako kladná os x̂ₛ.
 
-Je to rovnake ako pri ceste. Ak si povieme, ze vychod je kladny smer, zapad mozeme povazovat za zaporny smer. +1 by znamenalo vychod a -1 zapad.
+Je to rovnaké ako pri ceste. Ak si povieme, že vychod je kladny smer, západ môžeme povazovat za záporný smer. +1 by znamenalo vychod a -1 zapad.
 
 ---
 
-## 8. Preco je ẑᵦ = (0, 0, 1)?
+## 8. Prečo je ẑᵦ = (0, 0, 1)?
 
-Pri tretej osi je situacia najjednoduchsia. Na obrazku vidis, ze ẑᵦ a ẑₛ smeruju presne rovnakym smerom nahor. Preto:
+Pri tretej osi je situácia najjednoduchsia. Na obrazku vidis, že ẑᵦ a ẑₛ smeruju presne rovnakým smerom nahor. Preto:
 
 **ẑᵦ = ẑₛ**
 
@@ -123,13 +123,13 @@ A kedze ẑₛ = (0, 0, 1), dostaneme:
 
 **ẑᵦ = (0, 0, 1)**
 
-To nam zaroven prezradza nieco o samotnom otoceni. Kedze sa smer osi z vobec nezmenil, frame {b} bol v tomto priklade otoceny okolo osi z. Predstav si ceruzku postavenu kolmo na stol a papier polozeny vodorovne okolo nej. Papier mozes otacat okolo ceruzky. Smery x a y na papieri sa menia, ale smer ceruzky - teda os z - zostava rovnaky.
+To nam zároveň prezrádza nieco o samotnom otoceni. Kedze sa smer osi z vobec nezmenil, frame {b} bol v tomto priklade otočený okolo osi z. Predstav si ceruzku postavenu kolmo na stol a papier polozeny vodorovne okolo nej. Papier môžeš otáčať okolo ceruzky. Smery x a y na papieri sa menia, ale smer ceruzky - teda os z - zostáva rovnaky.
 
 ---
 
 ## 9. A z tychto troch vektorov vznikne rotation matrix
 
-Teraz uz pozname vsetky tri osi {b} vyjadrene pomocou {s}:
+Teraz už poznáme všetky tri osi {b} vyjadrene pomocou {s}:
 
 **x̂ᵦ = (0, 1, 0)**
 
@@ -137,11 +137,11 @@ Teraz uz pozname vsetky tri osi {b} vyjadrene pomocou {s}:
 
 **ẑᵦ = (0, 0, 1)**
 
-Rotation matrix vytvorime tak, ze tieto tri vektory jednoducho vlozime vedla seba ako stlpce:
+Rotation matrix vytvorime tak, že tieto tri vektory jednoducho vlozime vedla seba ako stlpce:
 
 **Rₛᵦ = [ x̂ᵦ  ŷᵦ  ẑᵦ ]**
 
-Ked ich tam dosadime, dostaneme:
+Keď ich tam dosadime, dostaneme:
 
 $$[  0  -1   0 ]$$
 $$[  1   0   0 ]$$
@@ -149,31 +149,31 @@ $$[  0   0   1 ]$$
 
 A toto je presne rotation matrix z obrazku.
 
-Toto je velmi dolezity moment: rotation matrix nie je devat nahodnych cisel opisujucich nejake abstraktne otocenie. Je to jednoducho miesto, kam sme vedla seba ulozili tri osi jedneho coordinate frame vyjadrene pomocou druheho coordinate frame.
+Toto je velmi dolezity moment: rotation matrix nie je devat nahodnych čísel opisujucich nejake abstraktné otocenie. Je to jednoducho miesto, kam sme vedla seba ulozili tri osi jedneho coordinate frame vyjadrene pomocou druheho coordinate frame.
 
 ---
 
 ## 10. Ako mas rotation matrix "citat"
 
-Ked odteraz uvidis rotation matrix, nesnaz sa na nu pozerat ako na tabulku deviatich cisel. Mentalne si ju rozdel na tri stlpce.
+Keď odteraz uvidis rotation matrix, nesnaz sa na nu pozerat ako na tabulku deviatich cisel. Mentalne si ju rozdel na tri stlpce.
 
-Prvy stlpec **(0, 1, 0)** je odpoved na otazku: Kam smeruje x̂ᵦ, ked sa nan pozeram zo {s}?
+Prvy stĺpec **(0, 1, 0)** je odpoveď na otázku: Kam smeruje x̂ᵦ, keď sa nan pozeram zo {s}?
 
-Druhy stlpec **(-1, 0, 0)** odpoveda: Kam smeruje ŷᵦ?
+Druhy stĺpec **(-1, 0, 0)** odpoveda: Kam smeruje ŷᵦ?
 
-A treti stlpec **(0, 0, 1)** odpoveda: Kam smeruje ẑᵦ?
+A treti stĺpec **(0, 0, 1)** odpoveda: Kam smeruje ẑᵦ?
 
-Preto si mozes zapamatat velmi uzitocny obraz:
+Preto si môžeš zapamätať velmi uzitocny obraz:
 
 **Rₛᵦ = [ x̂ᵦ  ŷᵦ  ẑᵦ ] vyjadrene v {s}**
 
-Rotation matrix je teda v podstate fotografia troch osi {b} urobena z pohladu {s}, iba namiesto fotografie pouzivame cisla.
+Rotation matrix je teda v podstate fotografia troch osi {b} urobena z pohladu {s}, iba namiesto fotografie používame cisla.
 
 ---
 
-## 11. Ale preco su tie vektory prave stlpce?
+## 11. Ale prečo sú tie vektory práve stlpce?
 
-Toto je dobre pochopit, pretoze neskor nebudes musiet pravidlo "osi davame do stlpcov" slepo memorovat.
+Toto je dobre pochopit, pretoze neskor nebudeš musiet pravidlo "osi davame do stlpcov" slepo memorovat.
 
 Predstav si jednoduchy vektor v body frame:
 
@@ -185,7 +185,7 @@ Ak ho vynasobime rotation matrix:
 
 **Rₛᵦ · (1, 0, 0) = (0, 1, 0)**
 
-Pri nasobeni matice vektorom sa vyberie prave prvy stlpec matice. A to je presne x̂ᵦ vyjadrene v {s}.
+Pri násobení matice vektorom sa vyberie práve prvy stĺpec matice. A to je presne x̂ᵦ vyjadrene v {s}.
 
 Podobne:
 
@@ -199,23 +199,23 @@ Nakoniec:
 
 cim vyberieme treti stlpec, teda ẑᵦ.
 
-Preto su osi ulozene prave v stlpcoch. Nie je to svojvolna konvencia bez vyznamu. Vychadza to priamo z toho, ako funguje nasobenie matice vektorom.
+Preto sú osi ulozene práve v stlpcoch. Nie je to svojvolna konvencia bez významu. Vychadza to priamo z toho, ako funguje nasobenie matice vektorom.
 
 ---
 
-## 12. Co znamenaju jednotlive cisla r₁₁, r₂₁, r₃₁?
+## 12. Co znamenaju jednotlive čísla r₁₁, r₂₁, r₃₁?
 
-Vo vseobecnosti mozeme rotation matrix zapisat ako:
+Vo vseobecnosti môžeme rotation matrix zapisat ako:
 
 $$[ r₁₁  r₁₂  r₁₃ ]$$
 $$[ r₂₁  r₂₂  r₂₃ ]$$
 $$[ r₃₁  r₃₂  r₃₃ ]$$
 
-Teraz uz vieme, ze jednotlive stlpce predstavuju jednotlive osi body frame. Preto prvy stlpec **(r₁₁, r₂₁, r₃₁)** hovori, ako je x̂ᵦ zlozene zo smerov x̂ₛ, ŷₛ, ẑₛ. Mozeme teda napisat:
+Teraz už vieme, že jednotlive stĺpce predstavuju jednotlive osi body frame. Preto prvy stĺpec **(r₁₁, r₂₁, r₃₁)** hovori, ako je x̂ᵦ zlozene zo smerov x̂ₛ, ŷₛ, ẑₛ. Môžeme teda napisat:
 
 **x̂ᵦ = r₁₁ · x̂ₛ + r₂₁ · ŷₛ + r₃₁ · ẑₛ**
 
-Druhy stlpec opisuje ŷᵦ:
+Druhy stĺpec opisuje ŷᵦ:
 
 **ŷᵦ = r₁₂ · x̂ₛ + r₂₂ · ŷₛ + r₃₂ · ẑₛ**
 
@@ -223,17 +223,17 @@ A treti opisuje ẑᵦ:
 
 **ẑᵦ = r₁₃ · x̂ₛ + r₂₃ · ŷₛ + r₃₃ · ẑₛ**
 
-Toto je velmi dolezite, pretoze v realnom svete osi vacsinou nebudu dokonale zarovnane tak, aby sme dostavali iba 0, 1 a -1.
+Toto je velmi dôležité, pretoze v realnom svete osi vacsinou nebudu dokonale zarovnane tak, aby sme dostavali iba 0, 1 a -1.
 
 ---
 
-## 13. Co ak robot nebude otoceny presne o 90°?
+## 13. Co ak robot nebude otočený presne o 90°?
 
-Tu sa dostavame k tomu, preco sa v rotation matrices objavuju **sin** a **cos**.
+Tu sa dostávame k tomu, prečo sa v rotation matrices objavuju **sin** a **cos**.
 
-Predstav si 2D situaciu. Mame x̂ₛ smerujuce doprava a ŷₛ smerujuce nahor. Teraz otocime x̂ᵦ iba o uhol **θ**.
+Predstav si 2D situaciu. Máme x̂ₛ smerujúce doprava a ŷₛ smerujúce nahor. Teraz otocime x̂ᵦ iba o uhol **θ**.
 
-Jeho smer uz nebude uplne x̂ₛ, ale nebude ani uplne ŷₛ. Bude zlozeny z casti smeru x̂ₛ a z casti smeru ŷₛ.
+Jeho smer už nebude úplne x̂ₛ, ale nebude ani úplne ŷₛ. Bude zlozeny z časti smeru x̂ₛ a z časti smeru ŷₛ.
 
 Geometricky dostaneme:
 
@@ -243,25 +243,25 @@ Preto jeho coordinates su:
 
 **x̂ᵦ = (cos θ, sin θ, 0)**
 
-A teraz velmi dolezite preco.
+A teraz velmi dôležité preco.
 
 ![Otocenie vektora o uhol θ - projekcie na osi](/book/ch3/fig3-3.png)
 
 ---
 
-## 14. Preco je horizontalna cast cos θ a vertikalna sin θ?
+## 14. Prečo je horizontalna cast cos θ a vertikalna sin θ?
 
-Predstav si sipku x̂ᵦ s dlzkou presne 1. Ked ju naklomine o uhol θ, mozeme z jej konca spustit kolmice a vytvori sa pravouhly trojuholnik. Samotna sipka je prepona a ma dlzku 1.
+Predstav si šípku x̂ᵦ s dlzkou presne 1. Ked ju naklomine o uhol θ, môžeme z jej konca spustit kolmice a vytvorí sa pravouhly trojuholnik. Samotna šípka je prepona a má dlzku 1.
 
 Z trigonometrie plati:
 
 **cos θ = prilahlá odvesna / prepona**
 
-Kedze prepona ma dlzku 1:
+Kedze prepona má dlzku 1:
 
 **cos θ = x / 1 = x**
 
-Preto horizontalna cast sipky ma dlzku **x = cos θ**.
+Preto horizontalna cast šípky má dlzku **x = cos θ**.
 
 Podobne:
 
@@ -269,11 +269,11 @@ Podobne:
 
 takze **y = sin θ**.
 
-Preto jednotkovy vektor natoceny o θ mozeme zapisat ako:
+Preto jednotkovy vektor natočený o θ môžeme zapisat ako:
 
 **(cos θ, sin θ)**
 
-Sinus a cosinus sa teda v rotation matrices neobjavili preto, ze sa niekto rozhodol, ze "rotacie sa pocitaju cez sin a cos". Objavuju sa tam preto, ze opisujeme projekcie otoceneho unit vectora (jednotkovy vektor) na povodne coordinate axes.
+Sinus a cosinus sa teda v rotation matrices neobjavili preto, že sa niekto rozhodol, že "rotacie sa pocitaju cez sin a cos". Objavuju sa tam preto, že opisujeme projekcie otoceneho unit vectora (jednotkovy vektor) na povodne coordinate axes.
 
 ---
 
@@ -289,9 +289,9 @@ Preto:
 
 **x̂ᵦ = (0,866, 0,5)**
 
-To mozeme citat velmi intuitvne: otocena os x̂ᵦ smeruje stale hlavne v smere x̂ₛ, preto ma v tomto smere velku zlozku 0,866, ale zaroven uz smeruje trochu nahor, preto ma zlozku 0,5 v smere ŷₛ.
+To môžeme citat velmi intuitvne: otocena os x̂ᵦ smeruje stale hlavne v smere x̂ₛ, preto má v tomto smere velku zložku 0,866, ale zároveň už smeruje trochu nahor, preto má zložku 0,5 v smere ŷₛ.
 
-Ked uhol zvacsime na 90°:
+Keď uhol zvacsime na 90°:
 
 **cos 90° = 0**
 
@@ -301,19 +301,19 @@ Dostaneme:
 
 **x̂ᵦ = (0, 1)**
 
-A to je presne situacia z obrazku. Povodna os x̂ᵦ sa po otoceni o 90° uplne zarovnala s ŷₛ. Preto na obrazku vidis x̂ᵦ = (0, 1, 0).
+A to je presne situácia z obrazku. Povodna os x̂ᵦ sa po otočení o 90° úplne zarovnala s ŷₛ. Preto na obrazku vidis x̂ᵦ = (0, 1, 0).
 
-Takze cisla z obrazku nie su zvlastny samostatny pripad. Su iba velmi jednoduchym pripadom vseobecneho pravidla so sinusom a cosinusom.
+Takze čísla z obrazku nie sú zvláštny samostatny pripad. Su iba velmi jednoduchym pripadom vseobecneho pravidla so sinusom a cosinusom.
 
 ---
 
-## 16. Preco musi mat rotation matrix prave 3 x 3?
+## 16. Prečo musi mat rotation matrix práve 3 x 3?
 
-V 3D mame tri osi: x, y, z.
+V 3D máme tri osi: x, y, z.
 
-Kazdu os noveho frame potrebujeme opisat pomocou troch cisel, pretoze potrebujeme povedat jej zlozku v smere x̂ₛ, ŷₛ a ẑₛ.
+Kazdu os noveho frame potrebujeme opísať pomocou troch cisel, pretoze potrebujeme povedať jej zložku v smere x̂ₛ, ŷₛ a ẑₛ.
 
-Mame teda tri cisla pre x̂ᵦ, tri pre ŷᵦ a tri pre ẑᵦ. Ked tieto tri trojrozmerne vektory vlozime vedla seba, prirodzene dostaneme **3 x 3** maticu.
+Máme teda tri čísla pre x̂ᵦ, tri pre ŷᵦ a tri pre ẑᵦ. Ked tieto tri trojrozmerné vektory vlozime vedla seba, prirodzene dostaneme **3 x 3** maticu.
 
 Preto rotation matrix v trojrozmernom priestore vyzera ako:
 
@@ -321,15 +321,15 @@ $$[ r₁₁  r₁₂  r₁₃ ]$$
 $$[ r₂₁  r₂₂  r₂₃ ]$$
 $$[ r₃₁  r₃₂  r₃₃ ]$$
 
-Ale pozor: tychto devat cisel nie je devat nezavislych informacii. Orientation rigid body (tuhe teleso) v 3D ma iba **3 degrees of freedom (stupne volnosti)**. Cisla v rotation matrix preto musia splnat urcite pravidla.
+Ale pozor: tychto devat čísel nie je devat nezavislych informacii. Orientation rigid body (tuhe teleso) v 3D má iba **3 degrees of freedom (stupne volnosti)**. Čísla v rotation matrix preto musia splnat urcite pravidla.
 
 ---
 
-## 17. Preco nemozu byt v rotation matrix hociake cisla?
+## 17. Prečo nemozu byt v rotation matrix hociake cisla?
 
-Coordinate frame musi mat normalne osi. Kazda jeho os je **unit vector** (jednotkovy vektor), teda ma dlzku 1. Zaroven musia byt osi navzajom **kolme** (perpendicular).
+Coordinate frame musi mat normalne osi. Kazda jeho os je **unit vector** (jednotkovy vektor), teda má dlzku 1. Zaroven musia byt osi navzajom **kolme** (perpendicular).
 
-Ak mame napriklad x̂ᵦ = (0, 1, 0), jeho dlzka je:
+Ak máme napriklad x̂ᵦ = (0, 1, 0), jeho dlzka je:
 
 **sqrt(0² + 1² + 0²) = 1**
 
@@ -343,25 +343,25 @@ To vsetko sa da elegantne zapisat vlastnostou:
 
 **Rᵀ R = I**
 
-To znamena, ze transpose rotation matrix vynasobena samotnou rotation matrix da identity matrix.
+To znamena, že transpose rotation matrix vynasobena samotnou rotation matrix da identity matrix.
 
-Z toho zaroven vyplyva krasna vlastnost:
+Z toho zároveň vyplyva krasna vlastnost:
 
 **R⁻¹ = Rᵀ**
 
-Pri obycajnej matici moze byt vypocet inverse neprijemny. Pri rotation matrix staci prehodit riadky a stlpce.
+Pri obycajnej matici môže byt výpočet inverse neprijemny. Pri rotation matrix stačí prehodiť riadky a stlpce.
 
 ---
 
-## 18. Preco dava R⁻¹ = Rᵀ zmysel aj intuitvne?
+## 18. Prečo dava R⁻¹ = Rᵀ zmysel aj intuitvne?
 
-Predstav si, ze Rₛᵦ opisuje cestu medzi pohladmi {b} a {s}. Ak chceme ist opacnym smerom, potrebujeme opacnu transformaciu.
+Predstav si, že Rₛᵦ opisuje cestu medzi pohladmi {b} a {s}. Ak chceme ísť opacnym smerom, potrebujeme opacnu transformaciu.
 
 Preto:
 
 **Rᵦₛ = Rₛᵦ⁻¹**
 
-Kedze rotation matrices su orthogonal matrices:
+Kedze rotation matrices sú orthogonal matrices:
 
 **Rₛᵦ⁻¹ = Rₛᵦᵀ**
 
@@ -369,17 +369,17 @@ Teda:
 
 **Rᵦₛ = Rₛᵦᵀ**
 
-To je velmi prakticke. Ak viem, ako vyzera {b} z pohladu {s}, automaticky viem aj opacny vztah.
+To je velmi prakticke. Ak viem, ako vyzera {b} z pohladu {s}, automaticky viem aj opačný vztah.
 
 ---
 
-## 19. Rotation matrix moze menit coordinate description vektora
+## 19. Rotation matrix môže menit coordinate description vektora
 
-Predstav si, ze robot drzi laser a z pohladu robota laser smeruje presne dopredu:
+Predstav si, že robot drzi laser a z pohladu robota laser smeruje presne dopredu:
 
 **vᵦ = (1, 0, 0)**
 
-Robot je vsak otoceny podla rotation matrix:
+Robot je však otočený podľa rotation matrix:
 
 $$Rₛᵦ =$$
 $$[  0  -1   0 ]$$
@@ -398,7 +398,7 @@ Robot teda hovori: "Laser smeruje predo mnou."
 
 Miestnost hovori: "Laser smeruje v smere +ŷₛ."
 
-Fyzicky ide stale o ten isty laser a ten isty smer. Zmenili sme iba jazyk, ktorym ho opisujeme.
+Fyzicky ide stale o ten istý laser a ten istý smer. Zmenili sme iba jazyk, ktorym ho opisujeme.
 
 Toto je jeden z najdolezitejsich konceptov celej robotiky.
 
@@ -406,27 +406,27 @@ Toto je jeden z najdolezitejsich konceptov celej robotiky.
 
 ## 20. Priklad z realneho robota
 
-Predstav si autonomneho robota s kamerou. Kamera zisti cloveka a povie:
+Predstav si autonómneho robota s kamerou. Kamera zisti cloveka a povie:
 
 **p_c = (0, 0, 3)**
 
-To moze znamenat, ze clovek je tri metre priamo pred kamerou podla coordinate convention kamery.
+To môže znamenat, že clovek je tri metre priamo pred kamerou podľa coordinate convention kamery.
 
-Robot vsak potrebuje cloveka najst vo svojom vlastnom coordinate system. Kamera moze byt na robotovi otocena, takze jej "dopredu" nemusi byt rovnake ako "dopredu" robota.
+Robot však potrebuje cloveka najst vo svojom vlastnom coordinate system. Kamera môže byt na robotovi otocena, takze jej "dopredu" nemusi byt rovnaké ako "dopredu" robota.
 
-Robot preto potrebuje poznat orientaciu camera frame vzhladom na robot frame. Tu moze opisovat rotation matrix.
+Robot preto potrebuje poznat orientáciu camera frame vzhľadom na robot frame. Tu môže opisovať rotation matrix.
 
-A presne preto sa toto ucis. Nie preto, aby si vedela nasobit nejake abstraktne 3 x 3 tabulky, ale preto, ze robot ma mnozstvo senzorov a casti, ktore vidia svet z roznych coordinate frames, a vsetky tieto informacie musi vediet spojit.
+A presne preto sa toto ucis. Nie preto, aby si vedela nasobit nejake abstraktné 3 x 3 tabulky, ale preto, že robot má množstvo senzorov a casti, ktoré vidia svet z rôznych coordinate frames, a všetky tieto informácie musi vedieť spojit.
 
 ![Priklad robota s kamerou a viacerymi coordinate frames](/book/ch3/fig3-6.png)
 
 ---
 
-## 21. Najjednoduchsi mentalny model
+## 21. Najjednoduchsi mentálny model
 
-Ak by si si z celej tejto casti mala zapamatat jediny obraz, predstav si robota stojaceho v miestnosti. Miestnost ma tri sipky x̂ₛ, ŷₛ, ẑₛ. Robot ma na sebe namalovane dalsie tri sipky x̂ᵦ, ŷᵦ, ẑᵦ.
+Ak by si si z celej tejto časti mala zapamätať jediny obraz, predstav si robota stojaceho v miestnosti. Miestnost má tri šípky x̂ₛ, ŷₛ, ẑₛ. Robot má na sebe namaľované ďalšie tri šípky x̂ᵦ, ŷᵦ, ẑᵦ.
 
-Potom sa postavis do coordinate frame {s} a polozis tri otazky:
+Potom sa postavis do coordinate frame {s} a polozis tri otázky:
 
 **Kam smeruje robotovo x̂ᵦ?** Odpoved sa stane prvym stlpcom.
 
@@ -438,7 +438,7 @@ A dostanes:
 
 **Rₛᵦ = [ x̂ᵦ  ŷᵦ  ẑᵦ ] vyjadrene v {s}**
 
-Pre konkretny obrazok:
+Pre konkrétny obrazok:
 
 **x̂ᵦ = ŷₛ, ŷᵦ = -x̂ₛ, ẑᵦ = ẑₛ**
 
@@ -457,22 +457,22 @@ $$[  0  -1   0 ]$$
 $$[  1   0   0 ]$$
 $$[  0   0   1 ]$$
 
-Ked toto chapes ako tri osi ulozene vedla seba, rotation matrix prestava byt abstraktna matica. Je to jednoducho ciselny opis toho, kam smeruju tri sipky jedneho coordinate frame, ked sa na ne pozerame z ineho coordinate frame.
+Keď toto chapes ako tri osi ulozene vedla seba, rotation matrix prestava byt abstraktna matica. Je to jednoducho ciselny opis toho, kam smeruju tri šípky jedneho coordinate frame, keď sa na ne pozerame z iného coordinate frame.
 
 ---
 
 ## Na co pamatat
 
-**Rotation matrix opisuje orientaciu**, nie polohu. Hovori, ako su osi jedneho frame natocene vzhladom na iny frame.
+**Rotation matrix opisuje orientaciu**, nie polohu. Hovori, ako sú osi jedneho frame natocene vzhľadom na iny frame.
 
-**Stlpce rotation matrix su osi body frame** vyjadrene v space frame. Prvy stlpec je x̂ᵦ, druhy ŷᵦ, treti ẑᵦ.
+**Stlpce rotation matrix sú osi body frame** vyjadrene v space frame. Prvy stĺpec je x̂ᵦ, druhy ŷᵦ, treti ẑᵦ.
 
 **Rₛᵦ** znamena "orientacia {b} z pohladu {s}".
 
-**Cisla nie su nahodne.** Su to zlozky unit vektorov. Preto sa objavuju sin θ a cos θ - opisuju projekcie otoceneho vektora na povodne osi.
+**Čísla nie sú náhodné.** Su to zlozky unit vektorov. Preto sa objavuju sin θ a cos θ - opisuju projekcie otoceneho vektora na povodne osi.
 
-**Rᵀ R = I** - stlpce su jednotkove a navzajom kolme.
+**Rᵀ R = I** - stĺpce sú jednotkove a navzajom kolme.
 
 **R⁻¹ = Rᵀ** - inverse rotation matrix je jednoducho jej transpose.
 
-**vₛ = Rₛᵦ · vᵦ** - takto prepocitame vektor z body frame do space frame. Fyzicky sa nic nepohne, meni sa len opis.`;
+**vₛ = Rₛᵦ · vᵦ** - takto prepocitame vektor z body frame do space frame. Fyzicky sa nič nepohne, mení sa len opis.`;

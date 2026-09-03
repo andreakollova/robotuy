@@ -628,12 +628,12 @@ export default function SchedulePage() {
         </div>
 
         {/* View toggle */}
-        <div style={{ display: 'flex', gap: 4, marginBottom: 16, background: '#010d33', borderRadius: 10, padding: 3 }}>
+        <div style={{ display: 'flex', gap: 4, marginBottom: 16, background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 10, padding: 3 }}>
           {(['weekly', 'monthly'] as const).map(v => (
             <button key={v} onClick={() => setView(v)} style={{
               flex: 1, padding: '8px 0', borderRadius: 8, fontSize: 12, fontWeight: 600,
-              background: view === v ? '#041540' : 'transparent',
-              color: view === v ? '#fff' : '#666',
+              background: view === v ? 'var(--bg-raised)' : 'transparent',
+              color: view === v ? 'var(--text)' : 'var(--text-hint)',
               transition: 'all 0.15s',
             }}>
               {v === 'weekly'

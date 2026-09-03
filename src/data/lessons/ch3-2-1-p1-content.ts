@@ -69,7 +69,7 @@ Po otočení už **x̂ᵦ** nesmeruje rovnakým smerom ako **x̂ₛ**. Smeruje �
 
 Napríklad:
 
-```text
+
         ŷₛ
         |
         |       / x̂ᵦ
@@ -78,7 +78,7 @@ Napríklad:
         |    / θ
         |   /
         └────────────→ x̂ₛ
-```
+
 
 Teraz chceme zistiť, **ako opísať smer x̂ᵦ pomocou pevných osí x̂ₛ a ŷₛ**.
 
@@ -212,13 +212,13 @@ Namiesto toho, aby sme tieto dva vektory stále zapisovali samostatne, môžeme 
 
 Dostaneme:
 
-```text
+
       x̂ᵦ        ŷᵦ
        ↓          ↓
 
 P = [ cos θ    −sin θ ]
     [ sin θ     cos θ ]
-```
+
 
 Toto je **2 × 2 rotation matrix**.
 
@@ -232,10 +232,10 @@ Pretože body frame má v rovine dve osi.
 
 Pozrime sa na prvý stĺpec:
 
-```text
+
 [ cos θ ]
 [ sin θ ]
-```
+
 
 To je presne náš smer osi **x̂ᵦ**.
 
@@ -245,10 +245,10 @@ Dolné číslo hovorí, koľko smeruje v smere **ŷₛ**.
 
 Druhý stĺpec:
 
-```text
+
 [ −sin θ ]
 [  cos θ ]
-```
+
 
 rovnakým spôsobom opisuje smer osi **ŷᵦ**.
 
@@ -258,18 +258,18 @@ To je veľmi dôležité.
 
 Keď uvidíš:
 
-```text
+
 P = [ cos θ    −sin θ ]
     [ sin θ     cos θ ]
-```
+
 
 nesnaž sa ju zatiaľ vnímať ako štyri čísla, ktoré sa musíš naučiť naspamäť.
 
 Predstav si ju skôr takto:
 
-```text
+
 P = [ smer x̂ᵦ | smer ŷᵦ ]
-```
+
 
 Prvý stĺpec hovorí:
 
@@ -293,7 +293,7 @@ Predstav si, že body frame otočíme proti smeru hodinových ručičiek o:
 
 Vyzeralo by to približne takto:
 
-```text
+
         ŷₛ
         |
         |     \ ŷᵦ
@@ -303,7 +303,7 @@ Vyzeralo by to približne takto:
         | /      /
         |       / 60°
         └────────────────→ x̂ₛ
-```
+
 
 Pre 60° platí:
 
@@ -355,10 +355,10 @@ Máme teda:
 
 Teraz tieto dva vektory vložíme ako stĺpce jednej matice:
 
-```text
+
 P = [ 0,5      −0,866 ]
     [ 0,866     0,5   ]
-```
+
 
 A toto je rotation matrix pre otočenie o 60°.
 
@@ -368,17 +368,17 @@ A toto je rotation matrix pre otočenie o 60°.
 
 Keď uvidíš:
 
-```text
+
 P = [ 0,5      −0,866 ]
     [ 0,866     0,5   ]
-```
+
 
 vezmi si najskôr iba **prvý stĺpec**:
 
-```text
+
 [ 0,5   ]
 [ 0,866 ]
-```
+
 
 Ten hovorí:
 
@@ -386,10 +386,10 @@ Ten hovorí:
 
 Potom si vezmi **druhý stĺpec**:
 
-```text
+
 [ −0,866 ]
 [  0,5   ]
-```
+
 
 Ten hovorí:
 
@@ -421,13 +421,13 @@ a kam smeruje jeho os y:
 
 Nakoniec tieto dva vektory vložíme vedľa seba:
 
-```text
+
       smer x̂ᵦ   smer ŷᵦ
           ↓          ↓
 
 P = [ cos θ     −sin θ ]
     [ sin θ      cos θ ]
-```
+
 
 A dostaneme **rotation matrix**.
 
@@ -551,23 +551,23 @@ Symbol **r₁₁** teda v tomto prípade hovorí, akú zložku má os **x̂ᵦ**
 
 Preto tieto tri hodnoty spolu patria:
 
-```text
+
 x̂ᵦ → (r₁₁, r₂₁, r₃₁)
-```
+
 
 A neskôr ich uvidíme spolu v **prvom stĺpci rotation matrix**.
 
 To isté platí pre druhú os:
 
-```text
+
 ŷᵦ → (r₁₂, r₂₂, r₃₂)
-```
+
 
 a tretiu:
 
-```text
+
 ẑᵦ → (r₁₃, r₂₃, r₃₃)
-```
+
 
 Nemusíš sa teda učiť deväť symbolov samostatne. Oveľa jednoduchšie je rozdeliť si ich do troch skupín: **tri čísla opisujú x-os, ďalšie tri y-os a posledné tri z-os body frame**.
 
@@ -579,38 +579,38 @@ Teraz už máme všetko potrebné na vytvorenie rotation matrix. Máme tri vekto
 
 Prvý vektor opisuje **x̂ᵦ**:
 
-```text
+
 [ r₁₁ ]
 [ r₂₁ ]
 [ r₃₁ ]
-```
+
 
 Druhý opisuje **ŷᵦ**:
 
-```text
+
 [ r₁₂ ]
 [ r₂₂ ]
 [ r₃₂ ]
-```
+
 
 A tretí opisuje **ẑᵦ**:
 
-```text
+
 [ r₁₃ ]
 [ r₂₃ ]
 [ r₃₃ ]
-```
+
 
 Rovnako ako v 2D ich teraz jednoducho položíme vedľa seba ako stĺpce jednej matice:
 
-```text
+
           x̂ᵦ       ŷᵦ       ẑᵦ
            ↓         ↓         ↓
 
 R = [    r₁₁       r₁₂       r₁₃    ]
     [    r₂₁       r₂₂       r₂₃    ]
     [    r₃₁       r₃₂       r₃₃    ]
-```
+
 
 Preto má rotation matrix v 3D veľkosť **3 × 3**. Má tri stĺpce, pretože body frame má tri osi, a každý stĺpec obsahuje tri čísla, pretože na opis smeru jednej osi v trojrozmernom priestore potrebujeme tri zložky.
 
@@ -622,45 +622,45 @@ Toto je veľmi dôležité pochopiť. Rotation matrix nemá deväť čísel pret
 
 Keď teraz uvidíš rotation matrix:
 
-```text
+
 R = [ r₁₁   r₁₂   r₁₃ ]
     [ r₂₁   r₂₂   r₂₃ ]
     [ r₃₁   r₃₂   r₃₃ ]
-```
+
 
 nesnaž sa pozerať na všetkých deväť čísel naraz. Rozdeľ si ju na **tri stĺpce**:
 
-```text
+
 R = [   x̂ᵦ   |   ŷᵦ   |   ẑᵦ   ]
-```
+
 
 Prvý stĺpec:
 
-```text
+
 [ r₁₁ ]
 [ r₂₁ ]
 [ r₃₁ ]
-```
+
 
 hovorí, **kam smeruje x-os body frame vzhľadom na space frame**.
 
 Druhý stĺpec:
 
-```text
+
 [ r₁₂ ]
 [ r₂₂ ]
 [ r₃₂ ]
-```
+
 
 hovorí, **kam smeruje y-os body frame**.
 
 A tretí stĺpec:
 
-```text
+
 [ r₁₃ ]
 [ r₂₃ ]
 [ r₃₃ ]
-```
+
 
 hovorí, **kam smeruje z-os body frame**.
 
@@ -680,14 +680,14 @@ To znamená:
 
 Tieto tri čísla vložíme do prvého stĺpca rotation matrix:
 
-```text
+
              x̂ᵦ
               ↓
 
 R = [       0,8       ...       ... ]
     [       0,6       ...       ... ]
     [       0         ...       ... ]
-```
+
 
 Bodky zatiaľ znamenajú, že ešte nepoznáme smery osí **ŷᵦ** a **ẑᵦ**. Keby sme rovnakým spôsobom zistili ich tri zložky, vložili by sme ich do druhého a tretieho stĺpca a mali by sme kompletnú rotation matrix.
 
@@ -697,9 +697,9 @@ Takže ak by si z celej tejto časti mala pochopiť iba jednu vec, je to táto m
 
 Rotation matrix preto môžeme v hlave čítať jednoducho ako:
 
-```text
+
 R = [ smer x̂ᵦ | smer ŷᵦ | smer ẑᵦ ]
-```
+
 
 A to je presne rovnaký princíp, aký sme používali v 2D. Iba sme k nemu pridali tretí rozmer.
 

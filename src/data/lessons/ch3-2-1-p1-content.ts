@@ -459,75 +459,253 @@ V 3D máme tri axes, preto vytvoríme **3 x 3 rotation matrix**.
 
 ## 9. Rotation matrix v trojrozmernom priestore
 
-Máme fixed space frame:
+Doteraz sme pracovali iba v rovine, teda v 2D. Mali sme pevnú súradnicovú sústavu **{s}** (*space frame*) s osami **x̂ₛ** a **ŷₛ** a otočenú súradnicovú sústavu **{b}** (*body frame*) s osami **x̂ᵦ** a **ŷᵦ**. Keď sme chceli opísať orientáciu body frame, zisťovali sme, kam jeho dve osi smerujú vzhľadom na osi space frame. Smer každej osi sme opísali dvomi číslami a tieto dva vektory sme potom vložili ako stĺpce do rotation matrix.
 
-**{s}**
+V trojrozmernom priestore budeme robiť **presne to isté**. Jediný zásadný rozdiel je, že už nemáme dve osi, ale tri.
 
-s axes:
+Space frame **{s}** má teraz osi:
 
-**x̂s, ŷs, ẑs**
+**x̂ₛ, ŷₛ, ẑₛ**
 
-a body frame:
+a body frame **{b}** má svoje osi:
 
-**{b}**
+**x̂ᵦ, ŷᵦ, ẑᵦ**
 
-s axes:
+Predstav si napríklad robotické rameno a na jeho konci uchopovač. Space frame môže byť pevne umiestnený pri základni robota a body frame môže byť pripevnený k uchopovaču. Keď robot pohybuje uchopovačom a otáča ho v priestore, spolu s uchopovačom sa otáčajú aj osi **x̂ᵦ, ŷᵦ a ẑᵦ**. Osi space frame sa pritom nehýbu.
 
-**x̂b, ŷb, ẑb**.
-
-Každú body axis môžeme vyjadriť pomocou troch axes space frame.
-
-Body x-axis:
-
-**x̂b = r11 x̂s + r21 ŷs + r31 ẑs**
-
-Body y-axis:
-
-**ŷb = r12 x̂s + r22 ŷs + r32 ẑs**
-
-Body z-axis:
-
-**ẑb = r13 x̂s + r23 ŷs + r33 ẑs**
-
-Na prvý pohľad vyzerajú symboly **r11, r21,...** abstraktne, ale ich význam je jednoduchý.
-
-Sú to iba numbers hovoriace, **koľko z jednotlivých space-frame directions potrebujeme na zostavenie každej body axis**.
+Našou úlohou je zistiť, **ako je body frame otočený vzhľadom na space frame**. Rovnako ako v 2D to urobíme tak, že sa postupne pozrieme na jeho jednotlivé osi.
 
 ---
 
-## 10. Ako si jednotlivé rij predstaviť
+## 10. Ako opíšeme jednu os v 3D
 
-Predstav si body x-axis smerujúcu šikmo v priestore.
+Začnime iba osou **x̂ᵦ**. Predstav si ju ako šípku, ktorá smeruje niekam šikmo do priestoru. V 2D mohla šípka smerovať iba určitou kombináciou smerov x a y, napríklad doprava a nahor. Preto nám na opis jej smeru stačili dve čísla.
 
-Možno smeruje trochu doprava, veľa dopredu a trochu nahor. Jej direction teda môžeme rozložiť na tri components pozdĺž space x, y a z axes.
+V 3D však môže šípka smerovať aj v treťom smere. Na opis jej smeru preto potrebujeme povedať, akú má zložku v smere **x̂ₛ**, akú v smere **ŷₛ** a akú v smere **ẑₛ**.
 
-Ak napríklad body x-axis vyzerá takto:
+Predstav si napríklad, že os **x̂ᵦ** môžeme opísať takto:
 
-**x̂b = 0,8 x̂s + 0,6 ŷs + 0 ẑs**
+**x̂ᵦ = 0,8 · x̂ₛ + 0,6 · ŷₛ + 0 · ẑₛ**
 
-znamená to, že jej space-frame coordinates sú:
+Tento zápis hovorí, že os **x̂ᵦ** má zložku **0,8** v smere osi x space frame, zložku **0,6** v smere osi y space frame a žiadnu zložku v smere osi z space frame.
 
-**(0,8, 0,6, 0).**
+Ten istý smer môžeme oveľa stručnejšie zapísať trojicou:
 
-Tieto tri numbers sa stanú prvým columnom rotation matrix.
+**x̂ᵦ → (0,8, 0,6, 0)**
 
-Rovnakým spôsobom získame druhý column z body y-axis a tretí z body z-axis.
+Tieto tri čísla teda nie sú tri rôzne osi ani tri rôzne vektory. Sú to **tri zložky jedného vektora x̂ᵦ**, ktoré nám spoločne hovoria, kam táto jedna os smeruje v trojrozmernom priestore.
 
-Preto:
+Je to rovnaká myšlienka ako v 2D. Ak sme tam mali napríklad:
 
-**R = [x̂b  ŷb  ẑb]**
+**x̂ᵦ → (0,5, 0,866)**
 
-alebo rozpísane:
+prvé číslo opisovalo zložku v smere x a druhé zložku v smere y. V 3D jednoducho pridáme ešte tretie číslo pre smer z:
 
-$$[ r11  r12  r13 ]$$
-$$[ r21  r22  r23 ]$$
-$$[ r31  r32  r33 ]$$
-
-Rotation matrix R teda obsahuje deväť numbers, ale ich geometrický význam je veľmi konkrétny.
+**x̂ᵦ → (x-zložka, y-zložka, z-zložka)**
 
 ---
 
-## 11. Prečo columns rotation matrix nemôžu byť ľubovoľné vectors
+## 11. Rovnakým spôsobom musíme opísať všetky tri osi
+
+Ak chceme poznať orientáciu celého body frame, nestačí nám vedieť iba to, kam smeruje jeho os **x̂ᵦ**. Body frame má tri osi, takže potrebujeme poznať smer **x̂ᵦ**, smer **ŷᵦ** aj smer **ẑᵦ**.
+
+Pre každú z nich potrebujeme tri čísla. Aby sme nemuseli zakaždým používať konkrétne hodnoty ako 0,8 alebo 0,6, označíme tieto čísla všeobecne pomocou písmena **r**.
+
+Pre os **x̂ᵦ** použijeme:
+
+**x̂ᵦ = r₁₁ · x̂ₛ + r₂₁ · ŷₛ + r₃₁ · ẑₛ**
+
+Táto rovnica iba hovorí, že os **x̂ᵦ** má určitú zložku v smere x, určitú zložku v smere y a určitú zložku v smere z. Hodnoty **r₁₁, r₂₁ a r₃₁** sú jednoducho tieto tri zložky.
+
+Rovnakým spôsobom opíšeme os **ŷᵦ**:
+
+**ŷᵦ = r₁₂ · x̂ₛ + r₂₂ · ŷₛ + r₃₂ · ẑₛ**
+
+A nakoniec os **ẑᵦ**:
+
+**ẑᵦ = r₁₃ · x̂ₛ + r₂₃ · ŷₛ + r₃₃ · ẑₛ**
+
+Na prvý pohľad môže deväť rôznych symbolov pôsobiť komplikovane, ale nepribudol nám žiadny nový princíp. Stále robíme iba jednu vec: **pri každej osi body frame zisťujeme, ako veľmi smeruje pozdĺž jednotlivých osí space frame**.
+
+---
+
+## 12. Čo vlastne znamenajú r₁₁, r₂₁, r₃₁?
+
+Pozrime sa ešte raz iba na prvú rovnicu:
+
+**x̂ᵦ = r₁₁ · x̂ₛ + r₂₁ · ŷₛ + r₃₁ · ẑₛ**
+
+Predstav si, že namiesto písmen dosadíme náš predchádzajúci príklad:
+
+**x̂ᵦ = 0,8 · x̂ₛ + 0,6 · ŷₛ + 0 · ẑₛ**
+
+Potom jednoducho platí:
+
+**r₁₁ = 0,8**
+
+**r₂₁ = 0,6**
+
+**r₃₁ = 0**
+
+Symbol **r₁₁** teda v tomto prípade hovorí, akú zložku má os **x̂ᵦ** v smere **x̂ₛ**. Symbol **r₂₁** hovorí, akú zložku má tá istá os **x̂ᵦ** v smere **ŷₛ** a **r₃₁** hovorí, akú zložku má v smere **ẑₛ**.
+
+Preto tieto tri hodnoty spolu patria:
+
+```text
+x̂ᵦ → (r₁₁, r₂₁, r₃₁)
+```
+
+A neskôr ich uvidíme spolu v **prvom stĺpci rotation matrix**.
+
+To isté platí pre druhú os:
+
+```text
+ŷᵦ → (r₁₂, r₂₂, r₃₂)
+```
+
+a tretiu:
+
+```text
+ẑᵦ → (r₁₃, r₂₃, r₃₃)
+```
+
+Nemusíš sa teda učiť deväť symbolov samostatne. Oveľa jednoduchšie je rozdeliť si ich do troch skupín: **tri čísla opisujú x-os, ďalšie tri y-os a posledné tri z-os body frame**.
+
+---
+
+## 13. Prečo z toho vznikne matica 3 × 3?
+
+Teraz už máme všetko potrebné na vytvorenie rotation matrix. Máme tri vektory, pričom každý opisuje smer jednej osi body frame.
+
+Prvý vektor opisuje **x̂ᵦ**:
+
+```text
+[ r₁₁ ]
+[ r₂₁ ]
+[ r₃₁ ]
+```
+
+Druhý opisuje **ŷᵦ**:
+
+```text
+[ r₁₂ ]
+[ r₂₂ ]
+[ r₃₂ ]
+```
+
+A tretí opisuje **ẑᵦ**:
+
+```text
+[ r₁₃ ]
+[ r₂₃ ]
+[ r₃₃ ]
+```
+
+Rovnako ako v 2D ich teraz jednoducho položíme vedľa seba ako stĺpce jednej matice:
+
+```text
+          x̂ᵦ       ŷᵦ       ẑᵦ
+           ↓         ↓         ↓
+
+R = [    r₁₁       r₁₂       r₁₃    ]
+    [    r₂₁       r₂₂       r₂₃    ]
+    [    r₃₁       r₃₂       r₃₃    ]
+```
+
+Preto má rotation matrix v 3D veľkosť **3 × 3**. Má tri stĺpce, pretože body frame má tri osi, a každý stĺpec obsahuje tri čísla, pretože na opis smeru jednej osi v trojrozmernom priestore potrebujeme tri zložky.
+
+Toto je veľmi dôležité pochopiť. Rotation matrix nemá deväť čísel preto, že by sme si náhodne zvolili maticu 3 × 3. Jej veľkosť prirodzene vznikne z geometrie trojrozmerného priestoru.
+
+---
+
+## 14. Ako rotation matrix čítať
+
+Keď teraz uvidíš rotation matrix:
+
+```text
+R = [ r₁₁   r₁₂   r₁₃ ]
+    [ r₂₁   r₂₂   r₂₃ ]
+    [ r₃₁   r₃₂   r₃₃ ]
+```
+
+nesnaž sa pozerať na všetkých deväť čísel naraz. Rozdeľ si ju na **tri stĺpce**:
+
+```text
+R = [   x̂ᵦ   |   ŷᵦ   |   ẑᵦ   ]
+```
+
+Prvý stĺpec:
+
+```text
+[ r₁₁ ]
+[ r₂₁ ]
+[ r₃₁ ]
+```
+
+hovorí, **kam smeruje x-os body frame vzhľadom na space frame**.
+
+Druhý stĺpec:
+
+```text
+[ r₁₂ ]
+[ r₂₂ ]
+[ r₃₂ ]
+```
+
+hovorí, **kam smeruje y-os body frame**.
+
+A tretí stĺpec:
+
+```text
+[ r₁₃ ]
+[ r₂₃ ]
+[ r₃₃ ]
+```
+
+hovorí, **kam smeruje z-os body frame**.
+
+Keď poznáme smery všetkých troch osí, poznáme orientáciu celého body frame. A presne túto informáciu rotation matrix uchováva.
+
+---
+
+## 15. Konkrétny príklad prvého stĺpca
+
+Vráťme sa ešte raz k nášmu príkladu:
+
+**x̂ᵦ = 0,8 · x̂ₛ + 0,6 · ŷₛ + 0 · ẑₛ**
+
+To znamená:
+
+**x̂ᵦ → (0,8, 0,6, 0)**
+
+Tieto tri čísla vložíme do prvého stĺpca rotation matrix:
+
+```text
+             x̂ᵦ
+              ↓
+
+R = [       0,8       ...       ... ]
+    [       0,6       ...       ... ]
+    [       0         ...       ... ]
+```
+
+Bodky zatiaľ znamenajú, že ešte nepoznáme smery osí **ŷᵦ** a **ẑᵦ**. Keby sme rovnakým spôsobom zistili ich tri zložky, vložili by sme ich do druhého a tretieho stĺpca a mali by sme kompletnú rotation matrix.
+
+Takže ak by si z celej tejto časti mala pochopiť iba jednu vec, je to táto myšlienka:
+
+**V 3D rotation matrix obsahuje tri stĺpce. Prvý opisuje smer x-osi body frame, druhý smer y-osi a tretí smer z-osi. Každý stĺpec potrebuje tri čísla, pretože každú os opisujeme pomocou troch smerov space frame: x, y a z.**
+
+Rotation matrix preto môžeme v hlave čítať jednoducho ako:
+
+```text
+R = [ smer x̂ᵦ | smer ŷᵦ | smer ẑᵦ ]
+```
+
+A to je presne rovnaký princíp, aký sme používali v 2D. Iba sme k nemu pridali tretí rozmer.
+
+---
+
+## 16. Prečo columns rotation matrix nemôžu byť ľubovoľné vectors
 
 Tu sa dostávame k jednej z najdôležitejších častí celej témy.
 
@@ -551,7 +729,7 @@ Ak by sme do matrix vložili tri náhodné vectors, pravdepodobne by tieto podmi
 
 ---
 
-## 12. Prvá podmienka: každá axis musí byť unit vector
+## 17. Prvá podmienka: každá axis musí byť unit vector
 
 Reference frame používa **unit coordinate axes**. To znamená, že každý axis vector má length:
 
@@ -589,7 +767,7 @@ Máme teda prvé tri constraints.
 
 ---
 
-## 13. Čo by sa stalo, keby columns nemali unit length
+## 18. Čo by sa stalo, keby columns nemali unit length
 
 Predstav si frame nakreslený na pružnom materiáli.
 
@@ -605,7 +783,7 @@ Táto matematická podmienka má teda veľmi konkrétny fyzikálny význam: **ro
 
 ---
 
-## 14. Druhá podmienka: axes musia zostať perpendicular
+## 19. Druhá podmienka: axes musia zostať perpendicular
 
 Unit length ešte nestačí.
 
@@ -629,7 +807,7 @@ Tak dostávame ďalšie tri constraints.
 
 ---
 
-## 15. Prečo dot product nula znamená kolmosť
+## 20. Prečo dot product nula znamená kolmosť
 
 Pre dva vectors a a b platí:
 
@@ -667,7 +845,7 @@ Keď teda požadujeme nulový dot product medzi jednotlivými columns rotation m
 
 ---
 
-## 16. Šesť constraints a iba tri nezávislé DOF
+## 21. Šesť constraints a iba tri nezávislé DOF
 
 Rotation matrix má:
 
@@ -699,7 +877,7 @@ Rotation matrix používa deväť numbers na reprezentáciu orientation, ktorá 
 
 ---
 
-## 17. Všetkých šesť constraints zapíšeme jednou rovnicou
+## 22. Všetkých šesť constraints zapíšeme jednou rovnicou
 
 Písať šesť samostatných equations by bolo nepraktické.
 
@@ -727,7 +905,7 @@ Aby sme pochopili prečo, musíme sa pozrieť na to, čo multiplication **RT R**
 
 ---
 
-## 18. Prečo RT R obsahuje dot products columns
+## 23. Prečo RT R obsahuje dot products columns
 
 Predstavme si, že rotation matrix zapíšeme ako:
 
@@ -787,7 +965,7 @@ Táto equation teda nie je nejaké abstraktné pravidlo vytvorené bez dôvodu. 
 
 ---
 
-## 19. Orthogonal matrix ešte nemusí byť správna rotation matrix
+## 24. Orthogonal matrix ešte nemusí byť správna rotation matrix
 
 Tu vzniká ďalší jemný problém.
 
@@ -813,7 +991,7 @@ Potrebujeme teda ešte jednu podmienku, ktorá tieto dve možnosti rozlíši.
 
 ---
 
-## 20. Determinant rozlíši right-handed a left-handed frame
+## 25. Determinant rozlíši right-handed a left-handed frame
 
 Na to použijeme **determinant** matrix.
 
@@ -851,7 +1029,7 @@ Teda:
 
 ---
 
-## 21. Čo by sa stalo pri left-handed frame
+## 26. Čo by sa stalo pri left-handed frame
 
 Pri left-handed frame by platilo:
 
@@ -883,7 +1061,7 @@ Tým odstránime left-handed possibilities.
 
 ---
 
-## 22. Prečo det R = -1 nepredstavuje obyčajnú rotation
+## 27. Prečo det R = -1 nepredstavuje obyčajnú rotation
 
 Predstav si svoju pravú ruku pred zrkadlom.
 
@@ -903,7 +1081,7 @@ Preto platná rotation matrix musí mať:
 
 ---
 
-## 23. Formálna definícia SO(3)
+## 28. Formálna definícia SO(3)
 
 Teraz už máme všetky ingredients potrebné na formálnu definíciu.
 
@@ -933,7 +1111,7 @@ Názov sa dá pochopiť po častiach. „Orthogonal" súvisí s podmienkou **RT 
 
 ---
 
-## 24. SO(2) ako planar verzia
+## 29. SO(2) ako planar verzia
 
 Pre 2D rotations používame podobnú množinu:
 
@@ -958,7 +1136,7 @@ SO(2) teda reprezentuje planar orientations, zatiaľ čo SO(3) reprezentuje spat
 
 ---
 
-## 25. SO(2) má jeden DOF, SO(3) tri
+## 30. SO(2) má jeden DOF, SO(3) tri
 
 Toto pekne súvisí s Chapter 2.
 
@@ -978,7 +1156,7 @@ s
 
 ---
 
-## 26. Prečo sa SO(3) nazýva group
+## 31. Prečo sa SO(3) nazýva group
 
 Označenie **group** tu nie je iba všeobecné slovo. Ide o presný matematický pojem.
 
@@ -996,7 +1174,7 @@ Práve tieto vlastnosti vedú k group structure.
 
 ---
 
-## 27. Closure: dve rotations za sebou sú stále rotation
+## 32. Closure: dve rotations za sebou sú stále rotation
 
 Ak máme:
 
@@ -1032,7 +1210,7 @@ Preto:
 
 ---
 
-## 28. Identity rotation
+## 33. Identity rotation
 
 Každá group musí obsahovať **identity element**.
 
@@ -1061,7 +1239,7 @@ To je fyzická interpretácia identity rotation.
 
 ---
 
-## 29. Každá rotation má inverse
+## 34. Každá rotation má inverse
 
 Predstav si, že robotický gripper otočíme o 40° určitým smerom.
 
@@ -1085,7 +1263,7 @@ Inverse teda nemusíme počítať všeobecným matrix-inverse algoritmom. Stač�
 
 ---
 
-## 30. Prečo platí R-1 = RT
+## 35. Prečo platí R-1 = RT
 
 Už sme si ukázali základnú vlastnosť rotation matrix:
 
@@ -1109,7 +1287,7 @@ Toto nie je náhoda. Vzniká to práve preto, že columns rotation matrix tvoria
 
 ---
 
-## 31. Fyzický význam transpose ako inverse rotation
+## 36. Fyzický význam transpose ako inverse rotation
 
 Predstav si, že rotation matrix R otočí frame z orientation A do orientation B.
 
@@ -1131,7 +1309,7 @@ a zároveň:
 
 ---
 
-## 32. Associativity: záleží na zoskupení?
+## 37. Associativity: záleží na zoskupení?
 
 Ďalšou group property je **associativity**.
 
@@ -1153,7 +1331,7 @@ Meníme iba parentheses.
 
 ---
 
-## 33. Rotation matrices v 3D vo všeobecnosti nekomutujú
+## 38. Rotation matrices v 3D vo všeobecnosti nekomutujú
 
 Toto je jedna z najdôležitejších vlastností rotations:
 
@@ -1181,7 +1359,7 @@ nie je všeobecne rovnaká ako:
 
 ---
 
-## 34. Associative neznamená commutative
+## 39. Associative neznamená commutative
 
 Tieto dva pojmy sa veľmi ľahko zamieňajú.
 
@@ -1205,7 +1383,7 @@ Pri 3D rotations teda na poradí transformations veľmi záleží.
 
 ---
 
-## 35. Zaujímavá výnimka: planar rotations komutujú
+## 40. Zaujímavá výnimka: planar rotations komutujú
 
 Pri SO(2) je situácia jednoduchšia.
 
@@ -1227,7 +1405,7 @@ V SO(3) však máme rôzne possible rotation axes, takže táto vlastnosť vo v�
 
 ---
 
-## 36. Rotation musí zachovávať length vectora
+## 41. Rotation musí zachovávať length vectora
 
 Ďalšia veľmi dôležitá vlastnosť rotation matrix je, že **nemení length vectora**.
 
@@ -1247,7 +1425,7 @@ Ak by matrix length zmenila, nešlo by o čistú rotation. Obsahovala by scaling
 
 ---
 
-## 37. Prečo rotation zachováva length
+## 42. Prečo rotation zachováva length
 
 Length vectora x môžeme zapísať cez dot product:
 
@@ -1293,7 +1471,7 @@ Takto priamo z podmienky **RT R = I** vyplýva, že rotation nemení length.
 
 ---
 
-## 38. Čo zachovanie length znamená pre rigid body
+## 43. Čo zachovanie length znamená pre rigid body
 
 Táto vlastnosť je presne to, čo od rigid-body rotation fyzicky očakávame.
 
@@ -1309,7 +1487,7 @@ A to je dôvod, prečo je tak vhodná na opis rigid bodies.
 
 ---
 
-## 39. Rotation matrix nie je „matrix s angles"
+## 44. Rotation matrix nie je „matrix s angles"
 
 Častá chyba začiatočníka je pozerať sa na jednotlivé entries rotation matrix ako na angles.
 
@@ -1329,7 +1507,7 @@ Toto rozlíšenie bude neskôr veľmi dôležité pri čítaní 3D rotation matr
 
 ---
 
-## 40. Deväť entries neznamená deväť nezávislých rozhodnutí
+## 45. Deväť entries neznamená deväť nezávislých rozhodnutí
 
 Predstav si, že chceš zostaviť frame ručne.
 
@@ -1345,7 +1523,7 @@ Presne toto je podstata constraints v implicit representation.
 
 ---
 
-## 41. Rotation matrices prepájajú Chapter 2 a Chapter 3
+## 46. Rotation matrices prepájajú Chapter 2 a Chapter 3
 
 V Chapter 2 sme sa učili pozerať na configuration cez degrees of freedom a constraints.
 

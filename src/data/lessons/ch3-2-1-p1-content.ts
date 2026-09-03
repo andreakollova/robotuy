@@ -293,35 +293,98 @@ Rotation matrix je teda v podstate fotografia troch osi {b} urobena z pohladu {s
 
 ---
 
-## 11. Ale prečo sú tie vektory práve stlpce?
+## 11. Ale preco su tie vektory prave stlpce?
 
-Toto je dobre pochopit, pretoze neskor nebudeš musiet pravidlo "osi davame do stlpcov" slepo memorovat.
+Toto je velmi dobra otazka. Ak na nu poznasz odpoved, nikdy nebudes musiet pravidlo "osi davame do stlpcov" slepo memorovat, pretoze budes vediet, preco to tak je.
 
-Predstav si jednoduchy vektor v body frame:
+### Najprv si pripomenme, co chceme od rotation matrix
 
-**vᵦ = (1, 0, 0)**
+Chceme, aby rotation matrix Rsb vedela previest lubovolny vektor zapisany v {b} do {s}. Teda ak mame nejaky vektor v_b, chceme vediet vypocitat:
 
-Co tento vektor znamena? Znamena jednoducho "jeden krok v smere x̂ᵦ".
+**v_s = Rsb * v_b**
 
-Ak ho vynasobime rotation matrix:
+To je zakladna poziadavka. A teraz sa pozrime, co z nej vyplyva.
 
-**Rₛᵦ · (1, 0, 0) = (0, 1, 0)**
+### Co sa stane, ak v_b = (1, 0, 0)?
 
-Pri násobení matice vektorom sa vyberie práve prvy stĺpec matice. A to je presne x̂ᵦ vyjadrene v {s}.
+Vektor (1, 0, 0) v body frame znamena: "Idem presne jednu jednotku v smere x_b a nijako v smere y_b ani z_b."
 
-Podobne:
+Ak teda spravime:
 
-**Rₛᵦ · (0, 1, 0) = (-1, 0, 0)**
+**Rsb * (1, 0, 0)**
 
-pretože tym vyberieme druhy stlpec. A ten musi byt ŷᵦ.
+pytame sa: "Ako vyzera smer x_b z pohladu {s}?"
 
-Nakoniec:
+A odpoved uz pozname z predchadzajucich sekci - je to x_b vyjadrene v {s}.
 
-**Rₛᵦ · (0, 0, 1) = (0, 0, 1)**
+### Ako funguje nasobenie matice vektorom?
 
-cim vyberieme treti stlpec, teda ẑᵦ.
+Tu je kluc. Pozrime sa, co sa deje pri nasobeni matice vektorom uplne mechanicky.
 
-Preto sú osi ulozene práve v stlpcoch. Nie je to svojvolna konvencia bez významu. Vychadza to priamo z toho, ako funguje nasobenie matice vektorom.
+Ak mame maticu s tromi stlpcami, ktore oznacime c1, c2, c3, a vynasobime ju vektorom (a, b, c), vysledok je:
+
+**vysledok = a * c1 + b * c2 + c * c3**
+
+Teda vysledok je kombinacia stlpcov matice, pricom cisla vo vektore hovoria, kolko z kazdeho stlpca zoberieme.
+
+### Co sa stane konkretne pri (1, 0, 0)?
+
+Ak vynasobime maticu vektorom (1, 0, 0):
+
+**vysledok = 1 * c1 + 0 * c2 + 0 * c3 = c1**
+
+Cisla 0 a 0 vynuluju druhy a treti stlpec. Zostane iba prvy stlpec.
+
+Takze:
+
+**Rsb * (1, 0, 0) = prvy stlpec Rsb**
+
+### A teraz to spojme
+
+Vieme, ze Rsb * (1, 0, 0) musi dat x_b vyjadrene v {s}, pretoze to je cely zmysel rotation matrix.
+
+Zaroven sme prave ukazali, ze Rsb * (1, 0, 0) vzdy vyberie prvy stlpec matice.
+
+Preto prvy stlpec Rsb musi byt x_b vyjadrene v {s}.
+
+### Rovnako pre dalsie osi
+
+Ak vynasobime maticu vektorom (0, 1, 0):
+
+**vysledok = 0 * c1 + 1 * c2 + 0 * c3 = c2**
+
+Teda dostaneme druhy stlpec.
+
+A Rsb * (0, 1, 0) musi dat y_b vyjadrene v {s}.
+
+Preto druhy stlpec Rsb musi byt y_b.
+
+A uplne rovnako:
+
+**Rsb * (0, 0, 1) = treti stlpec = z_b vyjadrene v {s}**
+
+### Overme si to na nasom priklade
+
+Mame:
+
+$$Rsb =$$
+$$[  0  -1   0 ]$$
+$$[  1   0   0 ]$$
+$$[  0   0   1 ]$$
+
+Prvy stlpec je (0, 1, 0). A naozaj, x_b smeruje v smere +y_s.
+
+Druhy stlpec je (-1, 0, 0). A naozaj, y_b smeruje opacne ako x_s.
+
+Treti stlpec je (0, 0, 1). A naozaj, z_b smeruje rovnako ako z_s.
+
+### Preco je toto dolezite?
+
+Pretoze teraz chapes, ze osi su v stlpcoch nie kvoli nejakej konvencii, ale pretoze to priamo vyplyva z matematiky nasobenia matice vektorom.
+
+Ak by sme osi dali do riadkov namiesto stlpcov, nasobenie Rsb * v_b by nedavalo spravny vysledok. Stlpce su jediny spravny sposob, ako osi ulozit, aby multiplication fungoval tak, ako potrebujeme.
+
+Takze si zapamataj: **Stlpce rotation matrix su osi body frame vyjadrene v space frame, pretoze prave tak to vyzaduje nasobenie matice vektorom.**
 
 ---
 

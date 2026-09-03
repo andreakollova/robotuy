@@ -178,79 +178,270 @@ Takto vieme orientation celého rovinného frame vyjadriť pomocou smerov jeho d
 
 ---
 
-## 5. Z dvoch vectors vytvoríme rotation matrix
+## 5. Z dvoch vektorov vytvoríme rotation matrix
 
-Namiesto toho, aby sme tieto dva vectors zapisovali samostatne, vložíme ich vedľa seba ako columns jednej matrix.
+V predchádzajúcej časti sme zistili, ako po otočení smerujú obe osi body frame.
 
-Dostaneme:
+Pre os **x̂ᵦ** sme dostali:
 
-**P = [x̂b  ŷb]**
+**x̂ᵦ = cos θ · x̂ₛ + sin θ · ŷₛ**
 
-a po rozpísaní:
-
-$$[ cos θ  -sin θ ]$$
-$$[ sin θ  cos θ ]$$
-
-Toto je **2 x 2 rotation matrix**.
-
-Prvý column:
+To znamená, že smer osi **x̂ᵦ** môžeme zapísať pomocou dvoch čísel:
 
 **(cos θ, sin θ)**
 
-opisuje body x-axis.
+Prvé číslo hovorí, koľko os **x̂ᵦ** smeruje v smere **x̂ₛ** a druhé číslo hovorí, koľko smeruje v smere **ŷₛ**.
 
-Druhý column:
+Pre os **ŷᵦ** sme podobne dostali:
 
-**(-sin θ, cos θ)**
+**ŷᵦ = −sin θ · x̂ₛ + cos θ · ŷₛ**
 
-opisuje body y-axis.
+Jej smer teda môžeme zapísať pomocou dvojice:
 
-To je veľmi dôležitá interpretácia.
+**(−sin θ, cos θ)**
 
-Keď sa pozrieš na rotation matrix, nemala by si ju vidieť iba ako štyri čísla. Mala by si v nej vidieť dve unit axes body frame, zapísané pomocou coordinates fixed frame.
+Teraz teda máme dve dôležité informácie:
+
+**smer osi x̂ᵦ → (cos θ, sin θ)**
+
+**smer osi ŷᵦ → (−sin θ, cos θ)**
+
+Tieto dva smery spolu opisujú, ako je celý body frame otočený. Ak totiž vieme, kam smeruje jeho os x a kam smeruje jeho os y, poznáme jeho orientáciu.
+
+Namiesto toho, aby sme tieto dva vektory stále zapisovali samostatne, môžeme ich uložiť vedľa seba do jednej matice.
+
+Dostaneme:
+
+```text
+      x̂ᵦ        ŷᵦ
+       ↓          ↓
+
+P = [ cos θ    −sin θ ]
+    [ sin θ     cos θ ]
+```
+
+Toto je **2 × 2 rotation matrix**.
+
+Prečo má dva stĺpce?
+
+Pretože body frame má v rovine dve osi.
+
+**Prvý stĺpec opisuje os x̂ᵦ.**
+
+**Druhý stĺpec opisuje os ŷᵦ.**
+
+Pozrime sa na prvý stĺpec:
+
+```text
+[ cos θ ]
+[ sin θ ]
+```
+
+To je presne náš smer osi **x̂ᵦ**.
+
+Horné číslo hovorí, koľko táto os smeruje v smere **x̂ₛ**.
+
+Dolné číslo hovorí, koľko smeruje v smere **ŷₛ**.
+
+Druhý stĺpec:
+
+```text
+[ −sin θ ]
+[  cos θ ]
+```
+
+rovnakým spôsobom opisuje smer osi **ŷᵦ**.
+
+Rotation matrix teda nie je nová informácia. **Iba sme informácie, ktoré už máme o dvoch osiach, usporiadali do jednej matice.**
+
+To je veľmi dôležité.
+
+Keď uvidíš:
+
+```text
+P = [ cos θ    −sin θ ]
+    [ sin θ     cos θ ]
+```
+
+nesnaž sa ju zatiaľ vnímať ako štyri čísla, ktoré sa musíš naučiť naspamäť.
+
+Predstav si ju skôr takto:
+
+```text
+P = [ smer x̂ᵦ | smer ŷᵦ ]
+```
+
+Prvý stĺpec hovorí:
+
+**„Takto smeruje x-os body frame."**
+
+Druhý stĺpec hovorí:
+
+**„Takto smeruje y-os body frame."**
+
+A keď poznáme smer oboch osí, poznáme **orientáciu celého body frame vzhľadom na space frame**.
 
 ---
 
-## 6. Konkrétny planar príklad
+## 6. Konkrétny príklad: otočenie o 60°
 
-V podklade je body frame otočený približne o:
+Teraz si to ukážme na konkrétnych číslach.
 
-**θ = 60°**.
+Predstav si, že body frame otočíme proti smeru hodinových ručičiek o:
 
-Potom:
+**θ = 60°**
+
+Vyzeralo by to približne takto:
+
+```text
+        ŷₛ
+        |
+        |     \ ŷᵦ
+        |    /
+        |   /
+        |  /      / x̂ᵦ
+        | /      /
+        |       / 60°
+        └────────────────→ x̂ₛ
+```
+
+Pre 60° platí:
 
 **cos 60° = 0,5**
 
-a približne:
+a:
 
-**sin 60° = 0,866**.
+**sin 60° ≈ 0,866**
 
-Rotation matrix teda bude približne:
+Najskôr sa pozrime iba na os **x̂ᵦ**.
 
-$$[ 0,5  -0,866 ]$$
-$$[ 0,866  0,5 ]$$
+Vieme, že jej smer zapisujeme ako:
 
-Čo z nej vieme vyčítať?
+**(cos θ, sin θ)**
 
-Prvý column:
+Po dosadení 60° dostaneme:
 
 **(0,5, 0,866)**
 
-hovorí, kam smeruje body x-axis v coordinates fixed frame.
+Čo tieto čísla znamenajú?
 
-Druhý:
+Hodnota **0,5** hovorí, aká veľká časť osi **x̂ᵦ** smeruje doprava, teda v smere **x̂ₛ**.
 
-**(-0,866, 0,5)**
+Hodnota **0,866** hovorí, aká veľká časť smeruje nahor, teda v smere **ŷₛ**.
 
-hovorí, kam smeruje body y-axis.
+Preto os **x̂ᵦ** smeruje šikmo doprava a nahor.
 
-Celá orientation frame je teda uložená v directions jeho axes.
+Teraz sa pozrime na druhú os **ŷᵦ**.
+
+Jej smer zapisujeme ako:
+
+**(−sin θ, cos θ)**
+
+Po dosadení dostaneme:
+
+**(−0,866, 0,5)**
+
+Záporná hodnota **−0,866** znamená, že os smeruje výrazne doľava.
+
+Hodnota **0,5** znamená, že zároveň smeruje trochu nahor.
+
+Preto **ŷᵦ** smeruje šikmo doľava a nahor.
+
+Máme teda:
+
+**x̂ᵦ → (0,5, 0,866)**
+
+**ŷᵦ → (−0,866, 0,5)**
+
+Teraz tieto dva vektory vložíme ako stĺpce jednej matice:
+
+```text
+P = [ 0,5      −0,866 ]
+    [ 0,866     0,5   ]
+```
+
+A toto je rotation matrix pre otočenie o 60°.
 
 ![Body frame {b} rotated by θ = 60 degrees relative to fixed frame {s} in the plane](/book/ch3/fig3-3.png)
 
+### Ako túto maticu čítať?
+
+Keď uvidíš:
+
+```text
+P = [ 0,5      −0,866 ]
+    [ 0,866     0,5   ]
+```
+
+vezmi si najskôr iba **prvý stĺpec**:
+
+```text
+[ 0,5   ]
+[ 0,866 ]
+```
+
+Ten hovorí:
+
+**x̂ᵦ smeruje doprava a nahor.**
+
+Potom si vezmi **druhý stĺpec**:
+
+```text
+[ −0,866 ]
+[  0,5   ]
+```
+
+Ten hovorí:
+
+**ŷᵦ smeruje doľava a nahor.**
+
+Takže z jednej rotation matrix dokážeme zistiť, **kam smerujú obe osi body frame**.
+
+A preto dokážeme zistiť, ako je celý body frame otočený.
+
 ---
 
-## 7. Prečo to robíme komplikovanejšie, keď v 2D stačí θ
+## 7. Čo si z toho zapamätať
+
+Najdôležitejšie je pochopiť postup.
+
+Najprv máme body frame s dvoma osami:
+
+**x̂ᵦ a ŷᵦ**
+
+Body frame otočíme o uhol **θ**.
+
+Potom zistíme, kam smeruje jeho os x:
+
+**x̂ᵦ → (cos θ, sin θ)**
+
+a kam smeruje jeho os y:
+
+**ŷᵦ → (−sin θ, cos θ)**
+
+Nakoniec tieto dva vektory vložíme vedľa seba:
+
+```text
+      smer x̂ᵦ   smer ŷᵦ
+          ↓          ↓
+
+P = [ cos θ     −sin θ ]
+    [ sin θ      cos θ ]
+```
+
+A dostaneme **rotation matrix**.
+
+Takže keď sa nabudúce pozrieš na rotation matrix, skús si povedať:
+
+**„Prvý stĺpec mi hovorí, kam smeruje x-os. Druhý stĺpec mi hovorí, kam smeruje y-os."**
+
+To je hlavná myšlienka.
+
+Rotation matrix je jednoducho spôsob, ako **uložiť orientáciu súradnicovej sústavy pomocou smerov jej osí**.
+
+---
+
+## 8. Prečo to robíme komplikovanejšie, keď v 2D stačí θ
 
 Pri planar orientation by skutočne stačil jediný angle θ. Rotation matrix obsahuje štyri numbers, takže sa môže zdať zbytočne komplikovaná.
 
@@ -266,7 +457,7 @@ V 3D máme tri axes, preto vytvoríme **3 x 3 rotation matrix**.
 
 ---
 
-## 8. Rotation matrix v trojrozmernom priestore
+## 9. Rotation matrix v trojrozmernom priestore
 
 Máme fixed space frame:
 
@@ -304,7 +495,7 @@ Sú to iba numbers hovoriace, **koľko z jednotlivých space-frame directions po
 
 ---
 
-## 9. Ako si jednotlivé rij predstaviť
+## 10. Ako si jednotlivé rij predstaviť
 
 Predstav si body x-axis smerujúcu šikmo v priestore.
 
@@ -336,7 +527,7 @@ Rotation matrix R teda obsahuje deväť numbers, ale ich geometrický význam je
 
 ---
 
-## 10. Prečo columns rotation matrix nemôžu byť ľubovoľné vectors
+## 11. Prečo columns rotation matrix nemôžu byť ľubovoľné vectors
 
 Tu sa dostávame k jednej z najdôležitejších častí celej témy.
 
@@ -360,7 +551,7 @@ Ak by sme do matrix vložili tri náhodné vectors, pravdepodobne by tieto podmi
 
 ---
 
-## 11. Prvá podmienka: každá axis musí byť unit vector
+## 12. Prvá podmienka: každá axis musí byť unit vector
 
 Reference frame používa **unit coordinate axes**. To znamená, že každý axis vector má length:
 
@@ -398,7 +589,7 @@ Máme teda prvé tri constraints.
 
 ---
 
-## 12. Čo by sa stalo, keby columns nemali unit length
+## 13. Čo by sa stalo, keby columns nemali unit length
 
 Predstav si frame nakreslený na pružnom materiáli.
 
@@ -414,7 +605,7 @@ Táto matematická podmienka má teda veľmi konkrétny fyzikálny význam: **ro
 
 ---
 
-## 13. Druhá podmienka: axes musia zostať perpendicular
+## 14. Druhá podmienka: axes musia zostať perpendicular
 
 Unit length ešte nestačí.
 
@@ -438,7 +629,7 @@ Tak dostávame ďalšie tri constraints.
 
 ---
 
-## 14. Prečo dot product nula znamená kolmosť
+## 15. Prečo dot product nula znamená kolmosť
 
 Pre dva vectors a a b platí:
 
@@ -476,7 +667,7 @@ Keď teda požadujeme nulový dot product medzi jednotlivými columns rotation m
 
 ---
 
-## 15. Šesť constraints a iba tri nezávislé DOF
+## 16. Šesť constraints a iba tri nezávislé DOF
 
 Rotation matrix má:
 
@@ -508,7 +699,7 @@ Rotation matrix používa deväť numbers na reprezentáciu orientation, ktorá 
 
 ---
 
-## 16. Všetkých šesť constraints zapíšeme jednou rovnicou
+## 17. Všetkých šesť constraints zapíšeme jednou rovnicou
 
 Písať šesť samostatných equations by bolo nepraktické.
 
@@ -536,7 +727,7 @@ Aby sme pochopili prečo, musíme sa pozrieť na to, čo multiplication **RT R**
 
 ---
 
-## 17. Prečo RT R obsahuje dot products columns
+## 18. Prečo RT R obsahuje dot products columns
 
 Predstavme si, že rotation matrix zapíšeme ako:
 
@@ -596,7 +787,7 @@ Táto equation teda nie je nejaké abstraktné pravidlo vytvorené bez dôvodu. 
 
 ---
 
-## 18. Orthogonal matrix ešte nemusí byť správna rotation matrix
+## 19. Orthogonal matrix ešte nemusí byť správna rotation matrix
 
 Tu vzniká ďalší jemný problém.
 
@@ -622,7 +813,7 @@ Potrebujeme teda ešte jednu podmienku, ktorá tieto dve možnosti rozlíši.
 
 ---
 
-## 19. Determinant rozlíši right-handed a left-handed frame
+## 20. Determinant rozlíši right-handed a left-handed frame
 
 Na to použijeme **determinant** matrix.
 
@@ -660,7 +851,7 @@ Teda:
 
 ---
 
-## 20. Čo by sa stalo pri left-handed frame
+## 21. Čo by sa stalo pri left-handed frame
 
 Pri left-handed frame by platilo:
 
@@ -692,7 +883,7 @@ Tým odstránime left-handed possibilities.
 
 ---
 
-## 21. Prečo det R = -1 nepredstavuje obyčajnú rotation
+## 22. Prečo det R = -1 nepredstavuje obyčajnú rotation
 
 Predstav si svoju pravú ruku pred zrkadlom.
 
@@ -712,7 +903,7 @@ Preto platná rotation matrix musí mať:
 
 ---
 
-## 22. Formálna definícia SO(3)
+## 23. Formálna definícia SO(3)
 
 Teraz už máme všetky ingredients potrebné na formálnu definíciu.
 
@@ -742,7 +933,7 @@ Názov sa dá pochopiť po častiach. „Orthogonal" súvisí s podmienkou **RT 
 
 ---
 
-## 23. SO(2) ako planar verzia
+## 24. SO(2) ako planar verzia
 
 Pre 2D rotations používame podobnú množinu:
 
@@ -767,7 +958,7 @@ SO(2) teda reprezentuje planar orientations, zatiaľ čo SO(3) reprezentuje spat
 
 ---
 
-## 24. SO(2) má jeden DOF, SO(3) tri
+## 25. SO(2) má jeden DOF, SO(3) tri
 
 Toto pekne súvisí s Chapter 2.
 
@@ -787,7 +978,7 @@ s
 
 ---
 
-## 25. Prečo sa SO(3) nazýva group
+## 26. Prečo sa SO(3) nazýva group
 
 Označenie **group** tu nie je iba všeobecné slovo. Ide o presný matematický pojem.
 
@@ -805,7 +996,7 @@ Práve tieto vlastnosti vedú k group structure.
 
 ---
 
-## 26. Closure: dve rotations za sebou sú stále rotation
+## 27. Closure: dve rotations za sebou sú stále rotation
 
 Ak máme:
 
@@ -841,7 +1032,7 @@ Preto:
 
 ---
 
-## 27. Identity rotation
+## 28. Identity rotation
 
 Každá group musí obsahovať **identity element**.
 
@@ -870,7 +1061,7 @@ To je fyzická interpretácia identity rotation.
 
 ---
 
-## 28. Každá rotation má inverse
+## 29. Každá rotation má inverse
 
 Predstav si, že robotický gripper otočíme o 40° určitým smerom.
 
@@ -894,7 +1085,7 @@ Inverse teda nemusíme počítať všeobecným matrix-inverse algoritmom. Stač�
 
 ---
 
-## 29. Prečo platí R-1 = RT
+## 30. Prečo platí R-1 = RT
 
 Už sme si ukázali základnú vlastnosť rotation matrix:
 
@@ -918,7 +1109,7 @@ Toto nie je náhoda. Vzniká to práve preto, že columns rotation matrix tvoria
 
 ---
 
-## 30. Fyzický význam transpose ako inverse rotation
+## 31. Fyzický význam transpose ako inverse rotation
 
 Predstav si, že rotation matrix R otočí frame z orientation A do orientation B.
 
@@ -940,7 +1131,7 @@ a zároveň:
 
 ---
 
-## 31. Associativity: záleží na zoskupení?
+## 32. Associativity: záleží na zoskupení?
 
 Ďalšou group property je **associativity**.
 
@@ -962,7 +1153,7 @@ Meníme iba parentheses.
 
 ---
 
-## 32. Rotation matrices v 3D vo všeobecnosti nekomutujú
+## 33. Rotation matrices v 3D vo všeobecnosti nekomutujú
 
 Toto je jedna z najdôležitejších vlastností rotations:
 
@@ -990,7 +1181,7 @@ nie je všeobecne rovnaká ako:
 
 ---
 
-## 33. Associative neznamená commutative
+## 34. Associative neznamená commutative
 
 Tieto dva pojmy sa veľmi ľahko zamieňajú.
 
@@ -1014,7 +1205,7 @@ Pri 3D rotations teda na poradí transformations veľmi záleží.
 
 ---
 
-## 34. Zaujímavá výnimka: planar rotations komutujú
+## 35. Zaujímavá výnimka: planar rotations komutujú
 
 Pri SO(2) je situácia jednoduchšia.
 
@@ -1036,7 +1227,7 @@ V SO(3) však máme rôzne possible rotation axes, takže táto vlastnosť vo v�
 
 ---
 
-## 35. Rotation musí zachovávať length vectora
+## 36. Rotation musí zachovávať length vectora
 
 Ďalšia veľmi dôležitá vlastnosť rotation matrix je, že **nemení length vectora**.
 
@@ -1056,7 +1247,7 @@ Ak by matrix length zmenila, nešlo by o čistú rotation. Obsahovala by scaling
 
 ---
 
-## 36. Prečo rotation zachováva length
+## 37. Prečo rotation zachováva length
 
 Length vectora x môžeme zapísať cez dot product:
 
@@ -1102,7 +1293,7 @@ Takto priamo z podmienky **RT R = I** vyplýva, že rotation nemení length.
 
 ---
 
-## 37. Čo zachovanie length znamená pre rigid body
+## 38. Čo zachovanie length znamená pre rigid body
 
 Táto vlastnosť je presne to, čo od rigid-body rotation fyzicky očakávame.
 
@@ -1118,7 +1309,7 @@ A to je dôvod, prečo je tak vhodná na opis rigid bodies.
 
 ---
 
-## 38. Rotation matrix nie je „matrix s angles"
+## 39. Rotation matrix nie je „matrix s angles"
 
 Častá chyba začiatočníka je pozerať sa na jednotlivé entries rotation matrix ako na angles.
 
@@ -1138,7 +1329,7 @@ Toto rozlíšenie bude neskôr veľmi dôležité pri čítaní 3D rotation matr
 
 ---
 
-## 39. Deväť entries neznamená deväť nezávislých rozhodnutí
+## 40. Deväť entries neznamená deväť nezávislých rozhodnutí
 
 Predstav si, že chceš zostaviť frame ručne.
 
@@ -1154,7 +1345,7 @@ Presne toto je podstata constraints v implicit representation.
 
 ---
 
-## 40. Rotation matrices prepájajú Chapter 2 a Chapter 3
+## 41. Rotation matrices prepájajú Chapter 2 a Chapter 3
 
 V Chapter 2 sme sa učili pozerať na configuration cez degrees of freedom a constraints.
 

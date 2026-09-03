@@ -402,7 +402,7 @@ V robotike má každý joint svoju axis. Revolute joint rotuje okolo osi a prism
 
 Oba tipy joints zodpovedajú screw motions.
 
-Revolute joint je screw motion s omega ≠ 0. Ak joint nemá pitch (stúpanie) (h = 0), ide o čistú rotation okolo axis. Ak má nenulový pitch, rotation aj translation prebiehajú súčasne.
+Revolute joint je screw motion s omega ≠ 0. Ak joint nemá pitch (stúpanie, h = 0), ide o čistú rotation okolo axis. Ak má nenulový pitch, rotation aj translation prebiehajú súčasne.
 
 Prismatic joint je screw motion s omega = 0. Je to čistá translation pozdĺž axis jointu.
 

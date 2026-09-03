@@ -17,7 +17,7 @@ Práve rozlíšenie týchto troch významov je hlavnou témou tejto časti.
 
 ## 1. Jeden fyzický priestor môžeme opisovať z rôznych reference frames
 
-Predstav si robotické rameno stojace v miestnosti. Na podlahe máme pevný space frame {s}. Jeho x-axis môže smerovať napríklad doprava, y-axis dopredu a z-axis nahor.
+Predstav si robotické rameno stojace v miestnosti. Na podlahe máme pevný space frame (priestorový frame) {s}. Jeho x-axis môže smerovať napríklad doprava, y-axis dopredu a z-axis nahor.
 
 Na gripper robota však môžeme pripevniť ďalší coordinate frame {b}. Keď sa gripper otočí, jeho axes už nemusia smerovať rovnakými smermi ako axes miestnosti. Jeho x-axis môže smerovať dopredu, y-axis doľava a z-axis stále nahor.
 
@@ -107,7 +107,7 @@ Napríklad:
 
 znamená:
 
-orientation body frame {b} vzhľadom na space frame {s}.
+orientation body frame (teleso frame) {b} vzhľadom na space frame {s}.
 
 Ak má robot na konci ramena gripper, Rsb nám teda hovorí, ako je gripper natočený vzhľadom na svet.
 

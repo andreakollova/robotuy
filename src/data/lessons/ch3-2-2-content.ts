@@ -119,7 +119,7 @@ Toto je dôležité aj z pohľadu C-space. Orientation space SO(3) nie je obyča
 
 Teraz chceme angular velocity spojiť s tým, čo už poznáme.
 
-Rotation matrix R reprezentuje orientation body frame. Jej columns (stĺpce) môžeme zapísať ako:
+Rotation matrix R reprezentuje orientation body frame (teleso frame). Jej columns (stĺpce) môžeme zapísať ako:
 
 **R = [r1 r2 r3]**
 
@@ -255,7 +255,7 @@ Columns rotation matrix sú vectors:
 
 **r1, r2, r3**
 
-Každý z nich je pevne spojený s rigid body. Keď sa teleso otáča s angular velocity omega-s vyjadrenou v space frame, pre každý column platí:
+Každý z nich je pevne spojený s rigid body. Keď sa teleso otáča s angular velocity omega-s vyjadrenou v space frame (priestorový frame), pre každý column platí:
 
 **rdot1 = omega-s x r1**
 

@@ -5,7 +5,7 @@ export const ch321p1Content = `# Chapter 3.2.1 – Rotation Matrices
 
 ## Part 1 of 2
 
-V úvodnej časti Chapter 3 sme si vytvorili základnú predstavu, že configuration rigid body (tuhé teleso) v trojrozmernom priestore pozostáva z dvoch častí: z jeho **position (poloha)** a **orientation (orientácia)**. Position vieme pomerne prirodzene opísať tromi coordinates. Ak sa napríklad origin body frame nachádza dva metre v smere x, jeden meter v smere y a tri metre v smere z, môžeme jeho position zapísať vectorom.
+V úvodnej časti Chapter 3 sme si vytvorili základnú predstavu, že configuration rigid body (tuhé teleso) v trojrozmernom priestore pozostáva z dvoch častí: z jeho **position (poloha)** a **orientation (orientácia)**. Position vieme pomerne prirodzene opísať tromi coordinates. Ak sa napríklad origin body frame (teleso frame) nachádza dva metre v smere x, jeden meter v smere y a tri metre v smere z, môžeme jeho position zapísať vectorom.
 
 Pri orientation však vzniká zaujímavejší problém. Nestačí povedať, kde sa teleso nachádza. Potrebujeme presne vedieť, **ako je natočené**. A práve na systematickú reprezentáciu orientation budeme používať **rotation matrices**.
 
@@ -31,7 +31,7 @@ Modern Robotics preto používa iný prístup. Namiesto toho, aby sme priamo opi
 
 Predstav si dron a pripevni k nemu tri farebné šípky. Jedna predstavuje jeho body x-axis, druhá y-axis a tretia z-axis.
 
-Keď je dron zarovnaný so space frame, jeho body axes smerujú presne rovnakým smerom ako axes miestnosti. Ak však dron otočíme, jeho vlastné axes sa otočia spolu s ním.
+Keď je dron zarovnaný so space frame (priestorový frame), jeho body axes smerujú presne rovnakým smerom ako axes miestnosti. Ak však dron otočíme, jeho vlastné axes sa otočia spolu s ním.
 
 Orientation dronu preto môžeme určiť tak, že sa opýtame:
 

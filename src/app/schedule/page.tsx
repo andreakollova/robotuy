@@ -424,154 +424,116 @@ function WeekPlanCard({ week, locale }: { week: Week; locale: 'en' | 'sk' }) {
 /* ========== REAL MONTHLY CALENDAR ========== */
 
 function MonthCalendarView({ planMonth, locale }: { planMonth: Month; locale: 'en' | 'sk' }) {
-  const today = useMemo(() => new Date(), []);
-  const [calMonth, setCalMonth] = useState(today.getMonth());
-  const [calYear, setCalYear] = useState(today.getFullYear());
+  const dayNames = locale === 'sk' ? DAY_NAMES_SK.slice(0, 5) : DAY_NAMES_EN.slice(0, 5);
+  const sampleWeek = planMonth.weeks[0];
+  if (!sampleWeek) return null;
 
-  const calDays = useMemo(() => getCalendarDays(calYear, calMonth), [calYear, calMonth]);
-  const dayNames = locale === 'sk' ? DAY_NAMES_SK : DAY_NAMES_EN;
-  const monthNames = locale === 'sk' ? MONTH_NAMES_SK : MONTH_NAMES_EN;
-
-  const prevMonth = () => {
-    if (calMonth === 0) { setCalMonth(11); setCalYear(y => y - 1); }
-    else setCalMonth(m => m - 1);
-  };
-  const nextMonth = () => {
-    if (calMonth === 11) { setCalMonth(0); setCalYear(y => y + 1); }
-    else setCalMonth(m => m + 1);
-  };
-  const goToday = () => { setCalMonth(today.getMonth()); setCalYear(today.getFullYear()); };
-
-  const isCurrentMonth = calMonth === today.getMonth() && calYear === today.getFullYear();
+  // Unique courses in this month (not LAB)
+  const courseCodes = [...new Set(sampleWeek.days.filter(d => d.subject !== 'LAB').map(d => d.subject))];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      {/* Month nav */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 8,
-        background: '#041540', border: '1px solid #1a1a1a', borderRadius: 14, padding: '8px 12px',
-      }}>
-        <button onClick={prevMonth}><ChevronLeft size={18} color="#888" /></button>
-        <div style={{ flex: 1, textAlign: 'center' }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>
-            {monthNames[calMonth]} {calYear}
-          </span>
-          {!isCurrentMonth && (
-            <button onClick={goToday} style={{
-              marginLeft: 8, fontSize: 10, color: '#3b82f6', fontWeight: 600,
-              background: 'rgba(59,130,246,0.1)', padding: '2px 8px', borderRadius: 6,
-            }}>
-              {locale === 'sk' ? 'Dnes' : 'Today'}
-            </button>
-          )}
-        </div>
-        <button onClick={nextMonth}><ChevronRight size={18} color="#888" /></button>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* Sample week label */}
+      <div style={{ fontSize: 11, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        {locale === 'sk' ? 'Vzorový týždeň' : 'Sample week'}
       </div>
 
-      {/* Calendar grid */}
-      <div style={{
-        background: '#041540', border: '1px solid #1a1a1a', borderRadius: 14,
-        overflow: 'hidden',
-      }}>
-        {/* Day headers */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', borderBottom: '1px solid #1a1a1a' }}>
-          {dayNames.map((name, i) => (
-            <div key={name} style={{
-              textAlign: 'center', padding: '8px 0', fontSize: 10, fontWeight: 700,
-              color: i >= 5 ? '#444' : '#666', letterSpacing: '0.04em',
+      {/* Sample week - 5 day cards */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {sampleWeek.days.map((d, i) => {
+          const p = programs.find(pr => pr.code === d.subject);
+          const color = subjectColors[d.subject] || '#555';
+          return (
+            <div key={i} style={{
+              background: '#041540', border: '1px solid #1a1a1a', borderRadius: 12,
+              padding: '12px 14px', display: 'flex', alignItems: 'center', gap: 12,
             }}>
-              {name}
-            </div>
-          ))}
-        </div>
-
-        {/* Day cells */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)' }}>
-          {calDays.map((d, i) => {
-            if (!d) return <div key={`empty-${i}`} style={{ padding: '10px 4px', minHeight: 52 }} />;
-
-            const isToday = isSameDay(d, today);
-            const dow = i % 7; // 0=Mon
-            const isWeekend = dow >= 5;
-            const schedule = getSubjectForDayOfWeek(planMonth, dow);
-            const subjectColor = schedule ? (subjectColors[schedule.subject] || '#555') : undefined;
-
-            return (
-              <div key={i} style={{
-                padding: '6px 4px', minHeight: 52, textAlign: 'center',
-                borderRight: dow < 6 ? '1px solid rgba(255,255,255,0.03)' : 'none',
-                borderBottom: '1px solid rgba(255,255,255,0.03)',
-                background: isToday ? 'rgba(59,130,246,0.08)' : 'transparent',
+              <div style={{
+                width: 36, fontSize: 11, fontWeight: 800, color: '#666',
+                textAlign: 'center', flexShrink: 0,
               }}>
-                <div style={{
-                  width: 26, height: 26, borderRadius: 13, margin: '0 auto',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: isToday ? '#3b82f6' : 'transparent',
-                  color: isToday ? '#fff' : isWeekend ? '#444' : '#ccc',
-                  fontSize: 12, fontWeight: isToday ? 800 : 500,
-                }}>
-                  {d.getDate()}
-                </div>
-                {subjectColor && !isWeekend && (
-                  <div style={{
-                    width: 5, height: 5, borderRadius: 3, background: subjectColor,
-                    margin: '3px auto 0',
-                  }} />
-                )}
+                {dayNames[i]}
               </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Legend */}
-      <div style={{
-        display: 'flex', flexWrap: 'wrap', gap: 10, padding: '0 4px',
-      }}>
-        {[...new Set(planMonth.weeks[0]?.days.map(d => d.subject) || [])].map(subj => (
-          <div key={subj} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            <div style={{ width: 6, height: 6, borderRadius: 3, background: subjectColors[subj] || '#555' }} />
-            <span style={{ fontSize: 10, color: '#888' }}>{subj}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Plan weeks as list under calendar */}
-      <div style={{ fontSize: 11, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 4 }}>
-        {locale === 'sk' ? 'Plán mesiaca' : 'Month plan'}
-      </div>
-      {planMonth.weeks.map(w => (
-        <div key={w.weekNum} style={{
-          background: '#041540', border: '1px solid #1a1a1a', borderRadius: 14, padding: '14px 16px',
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>Week {w.weekNum}</div>
-            <div style={{ fontSize: 11, color: '#666' }}>
-              {w.days.reduce((a, d) => a + d.hours, 0)}h {locale === 'sk' ? 'celkovo' : 'total'}
-            </div>
-          </div>
-          <div style={{ fontSize: 12, color: '#aaa', marginBottom: 6 }}>
-            {locale === 'sk' ? w.focusSK : w.focus}
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-            {[...new Set(w.days.map(d => d.subject))].map(subj => (
-              <span key={subj} style={{
-                fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 6,
-                background: `${subjectColors[subj] || '#555'}20`,
-                color: subjectColors[subj] || '#888',
-                letterSpacing: '0.04em',
+              {p ? (
+                <div style={{
+                  width: 30, height: 30, borderRadius: 8, background: '#010d33',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                  border: '1px solid #1a1a1a', overflow: 'hidden',
+                }}>
+                  <img src={p.logo} alt={p.university} style={{ width: 20, height: 20, objectFit: 'contain' }}
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                </div>
+              ) : (
+                <div style={{
+                  width: 30, height: 30, borderRadius: 8, background: `${color}20`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                }}>
+                  <div style={{ width: 8, height: 8, borderRadius: 4, background: color }} />
+                </div>
+              )}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>
+                  {locale === 'sk' ? d.labelSK : d.label}
+                </div>
+              </div>
+              <div style={{
+                fontSize: 10, fontWeight: 700, color, background: `${color}15`,
+                padding: '2px 8px', borderRadius: 6, letterSpacing: '0.04em',
               }}>
-                {subj}
-              </span>
-            ))}
-          </div>
-          {w.project && (
-            <div style={{ marginTop: 8, fontSize: 11, color: '#22c55e', fontWeight: 600 }}>
-              {locale === 'sk' ? w.projectSK : w.project}
+                {d.subject}
+              </div>
+              <div style={{ fontSize: 11, color: '#666', flexShrink: 0 }}>{d.hours}h</div>
             </div>
-          )}
-        </div>
-      ))}
+          );
+        })}
+      </div>
+
+      {/* Total hours */}
+      <div style={{
+        textAlign: 'center', fontSize: 12, color: '#888',
+        padding: '8px 0', borderTop: '1px solid rgba(255,255,255,0.06)',
+      }}>
+        {sampleWeek.days.reduce((a, d) => a + d.hours, 0)}h / {locale === 'sk' ? 'týždeň' : 'week'}
+      </div>
+
+      {/* Courses with logos */}
+      <div style={{ fontSize: 11, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        {locale === 'sk' ? 'Kurzy tento mesiac' : 'Courses this month'}
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {courseCodes.map(code => {
+          const p = programs.find(pr => pr.code === code);
+          if (!p) return null;
+          const Wrapper = p.link ? 'a' : 'div';
+          const linkProps = p.link ? { href: p.link, target: '_blank', rel: 'noopener noreferrer' } : {};
+          return (
+            <Wrapper key={code} {...linkProps} style={{
+              background: '#041540', border: '1px solid #1a1a1a', borderRadius: 14,
+              padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12,
+              textDecoration: 'none',
+            }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: 10, background: '#010d33',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                border: '1px solid #1a1a1a', overflow: 'hidden',
+              }}>
+                <img src={p.logo} alt={p.university} style={{ width: 28, height: 28, objectFit: 'contain' }}
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</div>
+                <div style={{ fontSize: 11, color: '#888' }}>{p.university} - {p.hours}</div>
+              </div>
+              <div style={{
+                fontSize: 11, fontWeight: 700, color: p.color, background: `${p.color}15`,
+                padding: '3px 8px', borderRadius: 6, letterSpacing: '0.04em',
+              }}>
+                {p.code}
+              </div>
+            </Wrapper>
+          );
+        })}
+      </div>
     </div>
   );
 }

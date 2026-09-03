@@ -49,17 +49,17 @@ Strieška nad omega znamená, že ide o unit vector, teda vector s length 1.
 
 Druhou informáciou je, ako rýchlo sa rotation angle mení. Ak angle označíme:
 
-**theta**
+**θ**
 
 potom jeho časovú zmenu označíme:
 
-**theta-dot**
+**θ̇**
 
-a čítame ju ako „theta dot". Fyzicky ide o angular speed, typicky v jednotkách rad/s.
+a čítame ju ako „θ dot". Fyzicky ide o angular speed, typicky v jednotkách rad/s.
 
 Tieto dve informácie môžeme spojiť do jedného vectora:
 
-**omega = omega-hat theta-dot**
+**omega = omega-hat θ̇**
 
 Direction vectora omega teda určuje instantaneous rotation axis a jeho magnitude určuje angular speed.
 
@@ -69,7 +69,7 @@ Ak sa napríklad teleso otáča rýchlosťou 2 rad/s okolo positive z-axis, poto
 
 a:
 
-**theta-dot = 2**
+**θ̇ = 2**
 
 takže:
 
@@ -871,15 +871,15 @@ To bude úloha **matrix exponential**.
 
 V ďalšej lekcii uvidíme, že môžeme začať s axis-angle description:
 
-**omega-hat theta**
+**omega-hat θ**
 
 vytvoriť skew-symmetric matrix:
 
-**[omega-hat]theta**
+**[omega-hat]θ**
 
 a pomocou matrix exponential dostať:
 
-**R = e^[omega-hat]theta**
+**R = e^[omega-hat]θ**
 
 Tým sa instantaneous motion reprezentované v so(3) prepojí s finite orientation v SO(3).
 
@@ -889,7 +889,7 @@ Tým sa instantaneous motion reprezentované v so(3) prepojí s finite orientati
 
 **Angular velocity omega** opisuje instantaneous rotational motion rigid body. Jej direction určuje rotation axis podľa right-hand rule a magnitude určuje angular speed.
 
-**omega = omega-hat theta-dot** spája unit rotation axis omega-hat s rýchlosťou zmeny rotation angle theta-dot.
+**omega = omega-hat θ̇** spája unit rotation axis omega-hat s rýchlosťou zmeny rotation angle θ̇.
 
 **rdot = omega x r** opisuje, ako sa mení vector pevne pripojený k rotujúcemu telesu. Výsledný direction je tangentný k jeho kruhovému motion.
 

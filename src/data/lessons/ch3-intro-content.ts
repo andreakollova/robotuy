@@ -757,7 +757,7 @@ Exponential coordinates nám teda umožňujú opísať **rotation aj translation
 
 **Screw motion** opisuje celý pohyb telesa - napríklad robotický gripper sa **otočí a zároveň posunie**. **Twist** nám namiesto toho hovorí, **ako rýchlo a akým spôsobom sa gripper pohybuje práve teraz, v tomto okamihu**. Preto môžeme twist chápať ako **okamžitú rýchlosť screw motion**.
 
-Predstav si opäť skrutku. **Screw axis S** určuje, okolo akej osi sa skrutka otáča a pozdĺž akej osi sa posúva. **θ̇ (theta-dot)** potom hovorí, **ako rýchlo tento pohyb práve vykonáva**. Spolu dostaneme twist:
+Predstav si opäť skrutku. **Screw axis S** určuje, okolo akej osi sa skrutka otáča a pozdĺž akej osi sa posúva. **θ̇ (θ̇)** potom hovorí, **ako rýchlo tento pohyb práve vykonáva**. Spolu dostaneme twist:
 
 **V = Sθ̇**
 

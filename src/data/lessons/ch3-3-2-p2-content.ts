@@ -228,11 +228,11 @@ Screw axis je definovaná:
 
 Tieto tri informácie spolu popisujú celú geometriu screw motion.
 
-Ak poznáme screw axis S a scalar theta-dot, vieme napísať twist:
+Ak poznáme screw axis S a scalar θ̇, vieme napísať twist:
 
-**V = S theta-dot**
+**V = S θ̇**
 
-kde S je normalizovaný twist a theta-dot je rýchlosť pohybu pozdĺž screw axis.
+kde S je normalizovaný twist a θ̇ je rýchlosť pohybu pozdĺž screw axis.
 
 ---
 
@@ -312,13 +312,13 @@ Normalizovaný twist teda vyzerá:
 
 kde s-hat je unit vector.
 
-V tomto prípade theta-dot je angular speed a twist získame ako:
+V tomto prípade θ̇ je angular speed a twist získame ako:
 
-**V = S theta-dot**
+**V = S θ̇**
 
 Normalizácia je veľmi užitočná, pretože oddelí geometriu motion (kam a okolo čoho) od rýchlosti motion (ako rýchlo).
 
-S opisuje screw axis a theta-dot opisuje, ako rýchlo sa rigid body pozdĺž tejto osi pohybuje.
+S opisuje screw axis a θ̇ opisuje, ako rýchlo sa rigid body pozdĺž tejto osi pohybuje.
 
 ---
 
@@ -340,9 +340,9 @@ Theta-dot v tomto prípade nie je angular speed, ale linear speed.
 
 Opäť platí:
 
-**V = S theta-dot**
+**V = S θ̇**
 
-ale tentokrát theta-dot má rozmer m/s, nie rad/s.
+ale tentokrát θ̇ má rozmer m/s, nie rad/s.
 
 ---
 
@@ -358,9 +358,9 @@ Prečo nemáme jednu univerzálnu normalizáciu?
 
 Pretože twist spája dva rôzne druhy quantities. Angular velocity má rozmer rad/s a linear velocity má rozmer m/s. Nemôžeme ich jednoducho porovnávať alebo sčítavať.
 
-Keď normalizujeme omega, theta-dot má rozmer angular speed a pitch h hovorí, koľko metrov sa teleso posunie na jeden radián otáčania.
+Keď normalizujeme omega, θ̇ má rozmer angular speed a pitch h hovorí, koľko metrov sa teleso posunie na jeden radián otáčania.
 
-Keď normalizujeme v, theta-dot má rozmer linear speed a angular čast je zero.
+Keď normalizujeme v, θ̇ má rozmer linear speed a angular čast je zero.
 
 Táto dvojitá konvencia je praktická a v Modern Robotics sa dôsledne dodržiava.
 
@@ -384,15 +384,15 @@ kde ||v-hat|| = 1.
 
 V oboch prípadoch:
 
-**V = S theta-dot**
+**V = S θ̇**
 
-Screw axis S teda obsahuje geometriu pohybu a theta-dot jeho rýchlosť.
+Screw axis S teda obsahuje geometriu pohybu a θ̇ jeho rýchlosť.
 
 Toto je veľmi podobné tomu, čo sme mali pri angular velocity:
 
-**omega = omega-hat theta-dot**
+**omega = omega-hat θ̇**
 
-kde omega-hat je unit rotation axis a theta-dot je angular speed. Twist rozširuje túto myšlienku na celý rigid-body motion.
+kde omega-hat je unit rotation axis a θ̇ je angular speed. Twist rozširuje túto myšlienku na celý rigid-body motion.
 
 ---
 
@@ -400,17 +400,17 @@ kde omega-hat je unit rotation axis a theta-dot je angular speed. Twist rozširu
 
 V prvej časti o rotations sme videli, že:
 
-**R = e^([omega-hat] theta)**
+**R = e^([omega-hat] θ)**
 
-kde [omega-hat] je skew-symmetric matrix a theta je rotation angle.
+kde [omega-hat] je skew-symmetric matrix a θ je rotation angle.
 
 Teraz máme úplne analogicky:
 
-**T = e^([S] theta)**
+**T = e^([S] θ)**
 
-kde [S] je matrix representation normalizovaného twistu S a theta je scalar.
+kde [S] je matrix representation normalizovaného twistu S a θ je scalar.
 
-Ak S má omega ≠ 0, theta je rotation angle. Ak S má omega = 0, theta je translation distance.
+Ak S má omega ≠ 0, θ je rotation angle. Ak S má omega = 0, θ je translation distance.
 
 Toto je matrix exponential pre SE(3). Mapuje z se(3) do SE(3), teda z instantaneous motion do finite configuration.
 
@@ -418,17 +418,17 @@ Toto je matrix exponential pre SE(3). Mapuje z se(3) do SE(3), teda z instantane
 
 ## 19. Čo matrix exponential geometricky robí
 
-Predstav si, že máme screw axis S a scalar theta.
+Predstav si, že máme screw axis S a scalar θ.
 
 Matrix exponential:
 
-**e^([S] theta)**
+**e^([S] θ)**
 
-vypočíta transformation T, ktorá zodpovedá motion: otočenie o theta okolo screw axis a posun o h theta pozdĺž nej.
+vypočíta transformation T, ktorá zodpovedá motion: otočenie o θ okolo screw axis a posun o h θ pozdĺž nej.
 
-Ak h = 0, je to čistá rotation o theta.
+Ak h = 0, je to čistá rotation o θ.
 
-Ak h = infinity (omega = 0), je to čistá translation o theta v smere v-hat.
+Ak h = infinity (omega = 0), je to čistá translation o θ v smere v-hat.
 
 V oboch prípadoch exponential mapuje instantaneous description motion na jeho výsledný efekt po konečnom čase.
 
@@ -438,23 +438,23 @@ Toto je presne to isté, čo robil exponential pre rotations, iba rozšírené n
 
 ## 20. Rodriguesova formula pre SE(3)
 
-Pre rotations sme mali Rodriguesovu formulu na výpočet e^([omega-hat] theta).
+Pre rotations sme mali Rodriguesovu formulu na výpočet e^([omega-hat] θ).
 
 Pre SE(3) existuje analogická formula.
 
 Ak omega ≠ 0:
 
-$$e^([S] theta) =$$
-$$[ e^([omega-hat] theta)  G(theta) v ]$$
+$$e^([S] θ) =$$
+$$[ e^([omega-hat] θ)  G(θ) v ]$$
 $$[ 0  1 ]$$
 
 kde:
 
-**G(theta) = I theta + (1 - cos theta)[omega-hat] + (theta - sin theta)[omega-hat]^2**
+**G(θ) = I θ + (1 - cos θ)[omega-hat] + (θ - sin θ)[omega-hat]^2**
 
 Rotation časť je tá istá Rodriguesova formula, ktorú už poznáme.
 
-Translation časť G(theta) v kombinuje linear komponent twistu s rotáciou. Nie je to jednoducho v theta, pretože pri screw motion sa translation a rotation navzájom ovplyvňujú.
+Translation časť G(θ) v kombinuje linear komponent twistu s rotáciou. Nie je to jednoducho v θ, pretože pri screw motion sa translation a rotation navzájom ovplyvňujú.
 
 ---
 
@@ -462,13 +462,13 @@ Translation časť G(theta) v kombinuje linear komponent twistu s rotáciou. Nie
 
 Ak exponential mapuje z se(3) do SE(3), logarithm robí opak:
 
-**[S] theta = log T**
+**[S] θ = log T**
 
-Ak poznáme transformation T, logarithm nám dá screw axis S a angle theta, ktoré túto transformation generujú.
+Ak poznáme transformation T, logarithm nám dá screw axis S a angle θ, ktoré túto transformation generujú.
 
-Pre rotation časť: najprv extrahujeme R z T a nájdeme omega-hat a theta pomocou logarithmu pre SO(3).
+Pre rotation časť: najprv extrahujeme R z T a nájdeme omega-hat a θ pomocou logarithmu pre SO(3).
 
-Pre translation časť: z G(theta) a hornej pravej časti T vypočítame v.
+Pre translation časť: z G(θ) a hornej pravej časti T vypočítame v.
 
 Toto je veľmi užitočné v praxi. Ak poznáme desired configuration robota, logarithm nám povie, aký screw motion tam vedie.
 
@@ -478,13 +478,13 @@ Toto je veľmi užitočné v praxi. Ak poznáme desired configuration robota, lo
 
 Rovnako ako pri rotations, logarithm nie je vždy jednoznačný.
 
-Ak theta = 0, transformation je identity a screw axis nie je jednoznačne určený. Teleso sa nepohybuje, takže neexistuje preferovaná os.
+Ak θ = 0, transformation je identity a screw axis nie je jednoznačne určený. Teleso sa nepohybuje, takže neexistuje preferovaná os.
 
-Ak theta = pi, rotation axis má znamienkovú nejednoznačnosť.
+Ak θ = pi, rotation axis má znamienkovú nejednoznačnosť.
 
 Pre praktické výpočty sa tieto špeciálne prípady ošetrujú osobitne.
 
-Exponential je naopak vždy dobre definovaný. Pre ľubovoľné S a theta vždy dostaneme validnú transformation T ∈ SE(3).
+Exponential je naopak vždy dobre definovaný. Pre ľubovoľné S a θ vždy dostaneme validnú transformation T ∈ SE(3).
 
 ---
 
@@ -572,14 +572,14 @@ To je priamy zápis twistu ako 6D vectora.
 
 **Screw parameters** sú geometrický opis:
 
-**(q, s-hat, h, theta-dot)**
+**(q, s-hat, h, θ̇)**
 
-kde q je point na osi, s-hat je smer osi, h je pitch a theta-dot je speed.
+kde q je point na osi, s-hat je smer osi, h je pitch a θ̇ je speed.
 
 Oba opisy nesú rovnakú informáciu. Z jedného vieme vypočítať druhý:
 
-$$omega = s-hat theta-dot$$
-$$v = (-s-hat x q + h s-hat) theta-dot$$
+$$omega = s-hat θ̇$$
+$$v = (-s-hat x q + h s-hat) θ̇$$
 
 Twist coordinates sú kompaktnejšie pre výpočty. Screw parameters sú lepšie pre geometrickú intuíciu.
 
@@ -593,9 +593,9 @@ Prípad 1: omega ≠ 0
 
 **s-hat = omega / ||omega||**
 
-**theta-dot = ||omega||**
+**θ̇ = ||omega||**
 
-**h = s-hat · v / theta-dot = (omega · v) / ||omega||^2**
+**h = s-hat · v / θ̇ = (omega · v) / ||omega||^2**
 
 Point q na osi:
 
@@ -605,7 +605,7 @@ Prípad 2: omega = 0
 
 **s-hat = v / ||v||**
 
-**theta-dot = ||v||**
+**θ̇ = ||v||**
 
 **h = infinity**
 
@@ -623,7 +623,7 @@ Majme twist:
 
 Angular časť: omega = (0, 0, 2)
 
-||omega|| = 2, takže theta-dot = 2
+||omega|| = 2, takže θ̇ = 2
 
 s-hat = omega / 2 = (0, 0, 1)
 
@@ -677,7 +677,7 @@ Každý joint robota definuje screw axis. Revolute joint má screw axis s h = 0.
 
 Forward kinematics robota pomocou Product of Exponentials formula:
 
-**T = e^([S1] theta1) e^([S2] theta2) ... e^([Sn] thetan) M**
+**T = e^([S1] θ1) e^([S2] θ2) ... e^([Sn] θn) M**
 
 kde Si sú screw axes jointov a M je home configuration.
 
@@ -685,9 +685,9 @@ Táto formula priamo používa matrix exponentials twist representations jointov
 
 Jacobian robota spája joint velocities s twistom end-effectora:
 
-**V = J(theta) theta-dot**
+**V = J(θ) θ̇**
 
-kde J je Jacobian matrix a theta-dot je vector joint velocities.
+kde J je Jacobian matrix a θ̇ je vector joint velocities.
 
 ---
 
@@ -701,15 +701,15 @@ Existujú dva reference frames: body twist Vb a spatial twist Vs. Medzi nimi pre
 
 **Vs = [AdTsb] Vb**
 
-Každý twist zodpovedá screw motion. Screw axis S je normalizovaný twist a theta-dot je rýchlosť.
+Každý twist zodpovedá screw motion. Screw axis S je normalizovaný twist a θ̇ je rýchlosť.
 
 Matrix exponential prevádza screw parameters na transformation:
 
-**T = e^([S] theta)**
+**T = e^([S] θ)**
 
 A logarithm robí opačný prevod:
 
-**[S] theta = log T**
+**[S] θ = log T**
 
 Tieto nástroje spolu tvoria ucelený jazyk na opis motion rigid body. V ďalších kapitolách ich budeme intenzívne používať pri forward kinematics, inverse kinematics, Jacobians a dynamike robotov.
 
@@ -727,17 +727,17 @@ Tieto nástroje spolu tvoria ucelený jazyk na opis motion rigid body. V ďalš�
 
 **Pitch h** je pomer linear a angular displacement. h = 0 je čistá rotation, h = infinity je čistá translation.
 
-**Normalizácia twistu**: ak omega ≠ 0, normalizujeme ||omega|| = 1 a theta-dot je angular speed. Ak omega = 0, normalizujeme ||v|| = 1 a theta-dot je linear speed.
+**Normalizácia twistu**: ak omega ≠ 0, normalizujeme ||omega|| = 1 a θ̇ je angular speed. Ak omega = 0, normalizujeme ||v|| = 1 a θ̇ je linear speed.
 
-**Matrix exponential** e^([S] theta) mapuje screw parameters na transformation T ∈ SE(3).
+**Matrix exponential** e^([S] θ) mapuje screw parameters na transformation T ∈ SE(3).
 
-**Logarithm** log T dáva screw axis a angle [S] theta z transformation T.
+**Logarithm** log T dáva screw axis a angle [S] θ z transformation T.
 
 **Pre-multiplication** zodpovedá spatial frame reference, **post-multiplication** zodpovedá body frame reference.
 
 **Wrench F = [m; f]** je duálny objekt k twistu. Power je P = FT V.
 
-**Twist coordinates** (omega, v) sú priamy 6D zápis. **Screw parameters** (q, s-hat, h, theta-dot) sú geometrický opis. Oba nesú rovnakú informáciu.
+**Twist coordinates** (omega, v) sú priamy 6D zápis. **Screw parameters** (q, s-hat, h, θ̇) sú geometrický opis. Oba nesú rovnakú informáciu.
 
 ---
 
@@ -749,6 +749,6 @@ V prvej časti sme twist zaviedli ako 6D vector opisujúci instantaneous motion 
 
 **Screw interpretation** ukazuje, že každý twist zodpovedá pohybu okolo a pozdĺž jednej osi. Táto geometrická interpretácia dáva twistu veľmi konkrétny fyzický význam. Pitch h určuje pomer translation a rotation, pričom krajné prípady h = 0 a h = infinity zodpovedajú čistej rotation a čistej translation.
 
-**Normalizácia a exponential** spájajú instantaneous description s finite motion. Normalizovaný twist S je screw axis a theta je extent motion. Matrix exponential e^([S] theta) vypočíta výslednú transformation, čo je priame rozšírenie exponential map pre rotations na celý rigid-body motion.
+**Normalizácia a exponential** spájajú instantaneous description s finite motion. Normalizovaný twist S je screw axis a θ je extent motion. Matrix exponential e^([S] θ) vypočíta výslednú transformation, čo je priame rozšírenie exponential map pre rotations na celý rigid-body motion.
 
 Tieto koncepty sú jadrom Product of Exponentials formula pre forward kinematics, ktorej sa budeme venovať v nasledujúcich kapitolách. Každý joint robota definuje screw axis a celá kinematika ramena sa elegantne zapíše ako súčin exponentials.`;

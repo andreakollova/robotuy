@@ -258,7 +258,7 @@ Rigid body má 6 DOF, takže SE(3) je 6-dimensional configuration space, hoci je
 
 Rovnaká myšlienka funguje aj v rovine.
 
-Planar rigid body má tri DOF: dve translations x a y a jednu rotation theta. Jeho rotation matrix má rozmer 2 x 2 a position vector má dve components.
+Planar rigid body má tri DOF: dve translations x a y a jednu rotation θ. Jeho rotation matrix má rozmer 2 x 2 a position vector má dve components.
 
 Homogeneous transformation potom vyzerá:
 
@@ -272,7 +272,7 @@ Takéto transformations patria do:
 
 **SE(2)**.
 
-Predstav si robotický vysávač jazdiaci po podlahe. Jeho configuration môžeme opísať pomocou x, y a theta. Homogeneous transformation matrix v SE(2) obsahuje presne tie isté informácie, iba v matrix forme vhodnej na skladanie transformations.
+Predstav si robotický vysávač jazdiaci po podlahe. Jeho configuration môžeme opísať pomocou x, y a θ. Homogeneous transformation matrix v SE(2) obsahuje presne tie isté informácie, iba v matrix forme vhodnej na skladanie transformations.
 
 Rozdiel je teda jednoduchý:
 
@@ -798,7 +798,7 @@ SE(3) má preto dimension 6, aj keď jeho prvky zapisujeme 4 x 4 matrices.
 
 V predchádzajúcej lekcii sme sa naučili, že finite rotation môžeme reprezentovať pomocou exponential coordinates:
 
-**omega-hat theta**
+**omega-hat θ**
 
 a matrix exponential ich prevedie na:
 
@@ -810,7 +810,7 @@ Teraz sme rotation rozšírili o translation a dostali:
 
 To pripravuje pôdu pre veľmi podobnú myšlienku pri celom rigid-body motion.
 
-Namiesto samotnej rotation axis budeme používať **screw axis**. Namiesto čistej angular velocity sa objaví **twist**. A namiesto exponential coordinates rotation omega-hat theta budeme mať exponential coordinates celého rigid-body motion.
+Namiesto samotnej rotation axis budeme používať **screw axis**. Namiesto čistej angular velocity sa objaví **twist**. A namiesto exponential coordinates rotation omega-hat θ budeme mať exponential coordinates celého rigid-body motion.
 
 Štruktúra bude veľmi podobná tomu, čo už poznáme zo SO(3), iba teraz bude opisovať rotation a translation spoločne.
 

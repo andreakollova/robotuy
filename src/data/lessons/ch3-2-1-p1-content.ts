@@ -19,7 +19,7 @@ Predstav si robotický gripper vo vzduchu. Jeho origin sa momentálne vôbec neh
 
 Môže smerovať prstami dopredu, potom ho otočíš doprava, nakloníš nahor alebo prevrátiš. Position originu zostáva rovnaká, ale configuration sa mení, pretože sa mení **orientation**.
 
-V 2D sa orientation opisuje veľmi jednoducho. Ak sa objekt pohybuje iba v rovine, stačí jeden angle **theta**. Napríklad auto nakreslené na papieri môže byť otočené o 30°, 90° alebo 180°.
+V 2D sa orientation opisuje veľmi jednoducho. Ak sa objekt pohybuje iba v rovine, stačí jeden angle **θ**. Napríklad auto nakreslené na papieri môže byť otočené o 30°, 90° alebo 180°.
 
 V 3D je situácia komplikovanejšia. Rigid body môže meniť orientation okolo troch smerov a jeden jednoduchý angle už nestačí. Mohli by sme síce použiť tri angles, ale okamžite vzniká otázka: ktoré tri? V akom poradí máme rotations vykonať? A ako potom jednoducho kombinovať rotations alebo meniť reference frames?
 
@@ -59,19 +59,19 @@ a body frame:
 
 **x̂b, ŷb**.
 
-Body frame je voči space frame otočený o angle **theta**.
+Body frame je voči space frame otočený o angle **θ**.
 
-Ak sa body x-axis otočila o theta, jej direction vyjadrený v coordinates space frame je:
+Ak sa body x-axis otočila o θ, jej direction vyjadrený v coordinates space frame je:
 
-**x̂b = cos theta . x̂s + sin theta . ŷs**
+**x̂b = cos θ . x̂s + sin θ . ŷs**
 
-Prečo práve cos theta a sin theta?
+Prečo práve cos θ a sin θ?
 
-Predstav si unit vector dĺžky 1 otočený o angle theta od x-axis. Keď ho rozložíme na horizontal a vertical component, horizontal component má veľkosť **cos theta** a vertical component **sin theta**.
+Predstav si unit vector dĺžky 1 otočený o angle θ od x-axis. Keď ho rozložíme na horizontal a vertical component, horizontal component má veľkosť **cos θ** a vertical component **sin θ**.
 
 Ak je napríklad:
 
-**theta = 0°**
+**θ = 0°**
 
 potom:
 
@@ -87,7 +87,7 @@ Body x-axis je presne zarovnaná so space x-axis.
 
 Ak body frame otočíme o:
 
-**theta = 90°**
+**θ = 90°**
 
 potom:
 
@@ -109,13 +109,13 @@ Body y-axis musí zostať perpendicular na body x-axis. Keďže celý frame rotu
 
 Preto platí:
 
-**ŷb = -sin theta . x̂s + cos theta . ŷs**
+**ŷb = -sin θ . x̂s + cos θ . ŷs**
 
-Záporné znamienko pri **-sin theta** nie je náhodné.
+Záporné znamienko pri **-sin θ** nie je náhodné.
 
-Predstav si theta = 90°. Body y-axis, ktorá pôvodne smerovala nahor, sa po positive 90° rotation dostane doľava.
+Predstav si θ = 90°. Body y-axis, ktorá pôvodne smerovala nahor, sa po positive 90° rotation dostane doľava.
 
-Pre theta = 90° máme:
+Pre θ = 90° máme:
 
 **-sin 90° = -1**
 
@@ -143,20 +143,20 @@ Dostaneme:
 
 a po rozpísaní:
 
-$$[ cos theta  -sin theta ]$$
-$$[ sin theta  cos theta ]$$
+$$[ cos θ  -sin θ ]$$
+$$[ sin θ  cos θ ]$$
 
 Toto je **2 x 2 rotation matrix**.
 
 Prvý column:
 
-**(cos theta, sin theta)**
+**(cos θ, sin θ)**
 
 opisuje body x-axis.
 
 Druhý column:
 
-**(-sin theta, cos theta)**
+**(-sin θ, cos θ)**
 
 opisuje body y-axis.
 
@@ -170,7 +170,7 @@ Keď sa pozrieš na rotation matrix, nemala by si ju vidieť iba ako štyri čí
 
 V podklade je body frame otočený približne o:
 
-**theta = 60°**.
+**θ = 60°**.
 
 Potom:
 
@@ -201,13 +201,13 @@ hovorí, kam smeruje body y-axis.
 
 Celá orientation frame je teda uložená v directions jeho axes.
 
-![Body frame {b} rotated by theta = 60 degrees relative to fixed frame {s} in the plane](/book/ch3/fig3-3.png)
+![Body frame {b} rotated by θ = 60 degrees relative to fixed frame {s} in the plane](/book/ch3/fig3-3.png)
 
 ---
 
-## 7. Prečo to robíme komplikovanejšie, keď v 2D stačí theta
+## 7. Prečo to robíme komplikovanejšie, keď v 2D stačí θ
 
-Pri planar orientation by skutočne stačil jediný angle theta. Rotation matrix obsahuje štyri numbers, takže sa môže zdať zbytočne komplikovaná.
+Pri planar orientation by skutočne stačil jediný angle θ. Rotation matrix obsahuje štyri numbers, takže sa môže zdať zbytočne komplikovaná.
 
 Dôvod sa ukáže pri prechode do 3D.
 
@@ -713,10 +713,10 @@ a
 
 Každú matrix v SO(2) môžeme zapísať ako:
 
-$$[ cos theta  -sin theta ]$$
-$$[ sin theta  cos theta ]$$
+$$[ cos θ  -sin θ ]$$
+$$[ sin θ  cos θ ]$$
 
-kde theta môže reprezentovať ľubovoľnú planar orientation.
+kde θ môže reprezentovať ľubovoľnú planar orientation.
 
 SO(2) teda reprezentuje planar orientations, zatiaľ čo SO(3) reprezentuje spatial orientations.
 
@@ -726,7 +726,7 @@ SO(2) teda reprezentuje planar orientations, zatiaľ čo SO(3) reprezentuje spat
 
 Toto pekne súvisí s Chapter 2.
 
-Planar rigid body má iba jeden orientation DOF. Stačí angle theta. Preto orientation časť jeho C-space súvisí s **SO(2)**.
+Planar rigid body má iba jeden orientation DOF. Stačí angle θ. Preto orientation časť jeho C-space súvisí s **SO(2)**.
 
 Spatial rigid body má tri orientation DOF. Jeho orientations reprezentujeme pomocou **SO(3)**.
 
@@ -1087,7 +1087,7 @@ sú **components unit axes**.
 
 Napríklad prvý column hovorí, aké components má body x-axis v coordinates druhého frame.
 
-Angles sú v matrix ukryté nepriamo cez geometry. V planar prípade sa objavia ako cos theta a sin theta, ale jednotlivá hodnota v matrix sama osebe nie je „angle".
+Angles sú v matrix ukryté nepriamo cez geometry. V planar prípade sa objavia ako cos θ a sin θ, ale jednotlivá hodnota v matrix sama osebe nie je „angle".
 
 Toto rozlíšenie bude neskôr veľmi dôležité pri čítaní 3D rotation matrices.
 
@@ -1143,7 +1143,7 @@ To je presne dôvod, prečo sme v Chapter 2 rozlišovali medzi dimension samotn�
 
 **Rotation matrix R** je 3 x 3 matrix reprezentujúca spatial orientation. Jej tri columns predstavujú directions troch axes jedného reference frame vyjadrené v coordinates druhého frame.
 
-**SO(2)** je množina platných planar rotation matrices. Každú planar orientation možno reprezentovať 2 x 2 matrix odvodenou od jediného angle theta.
+**SO(2)** je množina platných planar rotation matrices. Každú planar orientation možno reprezentovať 2 x 2 matrix odvodenou od jediného angle θ.
 
 **SO(3)** je množina všetkých platných 3 x 3 spatial rotation matrices.
 

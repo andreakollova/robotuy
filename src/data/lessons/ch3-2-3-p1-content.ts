@@ -29,13 +29,13 @@ Strieška nad omega značí, že ide o vector s magnitude 1:
 
 Druhou informáciou je **rotation angle**:
 
-**theta**
+**θ**
 
 udávaný v radiánoch.
 
 Dvojica:
 
-**(omega-hat, theta)**
+**(omega-hat, θ)**
 
 sa nazýva **axis-angle representation** rotation.
 
@@ -63,9 +63,9 @@ Takáto os smeruje diagonálne rovnako ďaleko od všetkých troch coordinate ax
 
 ---
 
-## 3. Rotation angle theta
+## 3. Rotation angle θ
 
-Angle theta udáva, o koľko sa teleso otočí okolo osi omega-hat.
+Angle θ udáva, o koľko sa teleso otočí okolo osi omega-hat.
 
 Theta = 0 znamená žiadnu rotation. Identity matrix.
 
@@ -75,23 +75,23 @@ Theta = pi je otočenie o 180 stupňov.
 
 Theta = 2pi je plná otáčka. Rigid body sa vráti do pôvodnej orientation.
 
-Theta môže byť aj záporné. Záporná theta znamená rotation v opačnom smere, čo je ekvivalentné otočeniu smeru osi:
+Theta môže byť aj záporné. Záporná θ znamená rotation v opačnom smere, čo je ekvivalentné otočeniu smeru osi:
 
-**(omega-hat, -theta) je rovnaké ako (-omega-hat, theta)**
+**(omega-hat, -θ) je rovnaké ako (-omega-hat, θ)**
 
-Preto sa často volí konvencia, kde theta >= 0 a smer osi sa podľa toho upraví.
+Preto sa často volí konvencia, kde θ >= 0 a smer osi sa podľa toho upraví.
 
 ---
 
 ## 4. Prečo axis-angle nestačí samotné
 
-Axis-angle representation (omega-hat, theta) je veľmi intuitívna. Ale pri práci s ňou sa objavia problémy.
+Axis-angle representation (omega-hat, θ) je veľmi intuitívna. Ale pri práci s ňou sa objavia problémy.
 
 Napríklad ak chceme **zreťaziť dve rotations**, nemôžeme jednoducho sčítať axis-angle pairs. Rotation okolo x-axis o 90 stupňov nasledovaná rotation okolo y-axis o 90 stupňov nedáva výsledok (x+y, 180°).
 
 Composition rotations v axis-angle forme nie je priamočiara algebraická operácia.
 
-Ďalším problémom je nejednoznačnosť. Rotation (omega-hat, theta) a (-omega-hat, -theta) opisujú tú istú physical rotation. Plná otáčka (omega-hat, 2pi) je rovnaká ako žiadna rotation (omega-hat, 0).
+Ďalším problémom je nejednoznačnosť. Rotation (omega-hat, θ) a (-omega-hat, -θ) opisujú tú istú physical rotation. Plná otáčka (omega-hat, 2pi) je rovnaká ako žiadna rotation (omega-hat, 0).
 
 Preto potrebujeme **systematickejší matematický nástroj**, ktorý spája axis-angle representation s rotation matrices.
 
@@ -101,27 +101,27 @@ Tým nástrojom je **matrix exponential**.
 
 ## 5. Exponential coordinates of rotation
 
-Namiesto dvojice (omega-hat, theta) môžeme axis a angle spojiť do jedného 3D vectora:
+Namiesto dvojice (omega-hat, θ) môžeme axis a angle spojiť do jedného 3D vectora:
 
-**omega-hat theta**
+**omega-hat θ**
 
-Tento vector má direction omega-hat a magnitude theta. Nazýva sa **exponential coordinate vector** rotation.
+Tento vector má direction omega-hat a magnitude θ. Nazýva sa **exponential coordinate vector** rotation.
 
 Tri components tohto vectora sú:
 
-**(omega1 theta, omega2 theta, omega3 theta)**
+**(omega1 θ, omega2 θ, omega3 θ)**
 
 Z exponential coordinate vectora vieme vždy spätne získať axis aj angle.
 
 Magnitude vectora je:
 
-**||omega-hat theta|| = theta**
+**||omega-hat θ|| = θ**
 
 pretože omega-hat je unit vector.
 
 Direction vectora po normalizácii dáva:
 
-**omega-hat = (omega-hat theta) / ||omega-hat theta||**
+**omega-hat = (omega-hat θ) / ||omega-hat θ||**
 
 Exponential coordinates teda kompaktne kódujú rotation pomocou **troch čísiel** namiesto deviatich entries rotation matrix.
 
@@ -131,7 +131,7 @@ Exponential coordinates teda kompaktne kódujú rotation pomocou **troch čísie
 
 Názov pochádza z toho, že z exponential coordinate vectora zostrojíme rotation matrix pomocou **matrix exponential**:
 
-**R = e^[omega-hat]theta**
+**R = e^[omega-hat]θ**
 
 Na pravej strane je exponential funkcia, ale jej argument nie je obyčajné číslo. Je to **matrix**. Preto hovoríme o matrix exponential.
 
@@ -139,9 +139,9 @@ V hranaté zátvorke [omega-hat] je skew-symmetric matrix vytvorená z unit vect
 
 Celý výraz:
 
-**[omega-hat]theta**
+**[omega-hat]θ**
 
-je element priestoru so(3), čiže 3 x 3 skew-symmetric matrix vynásobená scalárom theta.
+je element priestoru so(3), čiže 3 x 3 skew-symmetric matrix vynásobená scalárom θ.
 
 Matrix exponential potom túto skew-symmetric matrix premení na rotation matrix, čiže element SO(3).
 
@@ -214,9 +214,9 @@ Keďže R(0) = I:
 
 **R(t) = e^([omega-hat]t)**
 
-V čase t = theta teda dostaneme:
+V čase t = θ teda dostaneme:
 
-**R(theta) = e^([omega-hat]theta)**
+**R(θ) = e^([omega-hat]θ)**
 
 Matrix exponential teda vzniká ako riešenie rotation s constant angular velocity od identity orientation.
 
@@ -236,11 +236,11 @@ kde A je štvorcová matrix.
 
 Pre náš prípad:
 
-**A = [omega-hat]theta**
+**A = [omega-hat]θ**
 
 dostaneme:
 
-**e^([omega-hat]theta) = I + [omega-hat]theta + ([omega-hat]theta)^2/2! + ([omega-hat]theta)^3/3! + ...**
+**e^([omega-hat]θ) = I + [omega-hat]θ + ([omega-hat]θ)^2/2! + ([omega-hat]θ)^3/3! + ...**
 
 Táto nekonečná rada konverguje pre každú matrix A. Výsledkom je vždy platná rotation matrix, ak A je skew-symmetric.
 
@@ -290,31 +290,31 @@ Vďaka cyklickej vlastnosti mocnín [omega-hat] môžeme power series rozdeliť 
 
 Nepárne mocniny:
 
-**[omega-hat]theta + [omega-hat]^3 theta^3/3! + [omega-hat]^5 theta^5/5! + ...**
+**[omega-hat]θ + [omega-hat]^3 θ^3/3! + [omega-hat]^5 θ^5/5! + ...**
 
 keďže [omega-hat]^3 = -[omega-hat] a [omega-hat]^5 = [omega-hat], toto sa stáva:
 
-**[omega-hat](theta - theta^3/3! + theta^5/5! - ...)**
+**[omega-hat](θ - θ^3/3! + θ^5/5! - ...)**
 
 Výraz v zátvorke je presne:
 
-**sin theta**
+**sin θ**
 
 Párne mocniny (okrem I):
 
-**[omega-hat]^2 theta^2/2! + [omega-hat]^4 theta^4/4! + ...**
+**[omega-hat]^2 θ^2/2! + [omega-hat]^4 θ^4/4! + ...**
 
 keďže [omega-hat]^4 = -[omega-hat]^2 a [omega-hat]^6 = [omega-hat]^2, toto sa stáva:
 
-**[omega-hat]^2 (theta^2/2! - theta^4/4! + theta^6/6! - ...)**
+**[omega-hat]^2 (θ^2/2! - θ^4/4! + θ^6/6! - ...)**
 
 Výraz v zátvorke je:
 
-**1 - cos theta**
+**1 - cos θ**
 
 Celý matrix exponential sa teda zredukuje na tri členy.
 
-![Vector p(0) rotated by angle theta about axis omega-hat to produce p(theta)](/book/ch3/fig3-11.png)
+![Vector p(0) rotated by angle θ about axis omega-hat to produce p(θ)](/book/ch3/fig3-11.png)
 
 ---
 
@@ -322,7 +322,7 @@ Celý matrix exponential sa teda zredukuje na tri členy.
 
 Po zjednodušení power series dostaneme uzavretú formulu:
 
-**e^([omega-hat]theta) = I + sin(theta)[omega-hat] + (1 - cos(theta))[omega-hat]^2**
+**e^([omega-hat]θ) = I + sin(θ)[omega-hat] + (1 - cos(θ))[omega-hat]^2**
 
 Toto je **Rodriguesova formula** (Rodrigues' rotation formula).
 
@@ -332,9 +332,9 @@ Na ľavej strane je matrix exponential skew-symmetric matrix. Na pravej strane s
 
 **I** je 3 x 3 identity matrix.
 
-**sin(theta)[omega-hat]** je skew-symmetric matrix vynásobená sínusom uhla.
+**sin(θ)[omega-hat]** je skew-symmetric matrix vynásobená sínusom uhla.
 
-**(1 - cos(theta))[omega-hat]^2** je druhá mocnina skew-symmetric matrix vynásobená výrazom (1 - cos theta).
+**(1 - cos(θ))[omega-hat]^2** je druhá mocnina skew-symmetric matrix vynásobená výrazom (1 - cos θ).
 
 Výsledkom je vždy platná 3 x 3 rotation matrix patriaca do SO(3).
 
@@ -352,13 +352,13 @@ Matrix [omega-hat] a jej druhú mocninu [omega-hat]^2.
 
 Pre počítač alebo embedded controller v robotickom systéme je to výrazne jednoduchšie ako sčítavať členy power series.
 
-Navyše Rodriguesova formula priamo ukazuje štruktúru rotation matrix. Sin a cos v nej jasne pripomínajú periodickú podstatu rotation. Ak zvýšime theta o 2pi, sin a cos sa vrátia na rovnaké hodnoty a dostaneme rovnakú rotation matrix.
+Navyše Rodriguesova formula priamo ukazuje štruktúru rotation matrix. Sin a cos v nej jasne pripomínajú periodickú podstatu rotation. Ak zvýšime θ o 2pi, sin a cos sa vrátia na rovnaké hodnoty a dostaneme rovnakú rotation matrix.
 
 ---
 
 ## 14. Príklad: rotation okolo z-axis
 
-Ukážeme si Rodriguesovu formulu na jednoduchom príklade. Chceme vytvoriť rotation matrix pre otočenie o uhol theta okolo z-axis.
+Ukážeme si Rodriguesovu formulu na jednoduchom príklade. Chceme vytvoriť rotation matrix pre otočenie o uhol θ okolo z-axis.
 
 Rotation axis je:
 
@@ -380,7 +380,7 @@ $$[ 0  0  0 ]$$
 
 Teraz dosadíme do Rodriguesovej formuly:
 
-**R = I + sin(theta)[omega-hat] + (1 - cos(theta))[omega-hat]^2**
+**R = I + sin(θ)[omega-hat] + (1 - cos(θ))[omega-hat]^2**
 
 Identity matrix:
 
@@ -389,23 +389,23 @@ $$[ 1  0  0 ]$$
 $$[ 0  1  0 ]$$
 $$[ 0  0  1 ]$$
 
-Prvý člen sin(theta)[omega-hat]:
+Prvý člen sin(θ)[omega-hat]:
 
-$$[ 0  -sin(theta)  0 ]$$
-$$[ sin(theta)  0  0 ]$$
+$$[ 0  -sin(θ)  0 ]$$
+$$[ sin(θ)  0  0 ]$$
 $$[ 0  0  0 ]$$
 
-Druhý člen (1-cos(theta))[omega-hat]^2:
+Druhý člen (1-cos(θ))[omega-hat]^2:
 
-$$[ -(1-cos(theta))  0  0 ]$$
-$$[ 0  -(1-cos(theta))  0 ]$$
+$$[ -(1-cos(θ))  0  0 ]$$
+$$[ 0  -(1-cos(θ))  0 ]$$
 $$[ 0  0  0 ]$$
 
 Sčítaním dostaneme:
 
 $$R =$$
-$$[ cos(theta)  -sin(theta)  0 ]$$
-$$[ sin(theta)  cos(theta)  0 ]$$
+$$[ cos(θ)  -sin(θ)  0 ]$$
+$$[ sin(θ)  cos(θ)  0 ]$$
 $$[ 0  0  1 ]$$
 
 To je presne štandardná z-axis rotation matrix, ktorú už poznáme. Rodriguesova formula teda dáva správny výsledok.
@@ -414,7 +414,7 @@ To je presne štandardná z-axis rotation matrix, ktorú už poznáme. Rodrigues
 
 ## 15. Príklad: rotation okolo z-axis o 90 stupňov
 
-Pre theta = pi/2:
+Pre θ = pi/2:
 
 **sin(pi/2) = 1**
 
@@ -429,7 +429,7 @@ $$[ 0  0  1 ]$$
 
 To je rotation, ktorá premení x-axis na y-axis a y-axis na negative x-axis. Presne quarter turn counter-clockwise okolo z-axis.
 
-Pre theta = pi:
+Pre θ = pi:
 
 **sin(pi) = 0**
 
@@ -450,7 +450,7 @@ Uvažujme rotation o 120 stupňov okolo diagonálnej osi:
 
 **omega-hat = (1/sqrt(3), 1/sqrt(3), 1/sqrt(3))**
 
-**theta = 2pi/3**
+**θ = 2pi/3**
 
 Táto rotation cyklicky permutuje coordinate axes:
 
@@ -458,7 +458,7 @@ Táto rotation cyklicky permutuje coordinate axes:
 
 Exponential coordinates sú:
 
-**omega-hat theta = (2pi/(3sqrt(3)), 2pi/(3sqrt(3)), 2pi/(3sqrt(3)))**
+**omega-hat θ = (2pi/(3sqrt(3)), 2pi/(3sqrt(3)), 2pi/(3sqrt(3)))**
 
 Tri čísla, z ktorých Rodriguesova formula vytvorí plnú 3 x 3 rotation matrix.
 
@@ -474,7 +474,7 @@ Výsledná rotation matrix bude mať tvar permutation matrix, pretože cyklická
 
 Rotation matrix R má 9 entries, ale iba 3 degrees of freedom. Exponential coordinates:
 
-**omega-hat theta = (e1, e2, e3)**
+**omega-hat θ = (e1, e2, e3)**
 
 priamo odrážajú tieto 3 degrees of freedom.
 
@@ -482,9 +482,9 @@ To je veľká výhoda oproti rotation matrix. Namiesto 9 čísiel s 6 constraint
 
 Ale pozor, exponential coordinates nie sú úplne bez problémov.
 
-Ak theta = 0, rotation axis omega-hat je ľubovoľná. Ľubovoľný unit vector krát nula dáva nulový vector. Takže identity rotation zodpovedá nulovému exponential coordinate vectoru (0, 0, 0) bez ohľadu na axis.
+Ak θ = 0, rotation axis omega-hat je ľubovoľná. Ľubovoľný unit vector krát nula dáva nulový vector. Takže identity rotation zodpovedá nulovému exponential coordinate vectoru (0, 0, 0) bez ohľadu na axis.
 
-Pre theta = pi existuje ďalšia nejednoznačnosť, pretože (omega-hat, pi) a (-omega-hat, pi) dávajú tú istú rotation matrix.
+Pre θ = pi existuje ďalšia nejednoznačnosť, pretože (omega-hat, pi) a (-omega-hat, pi) dávajú tú istú rotation matrix.
 
 Tieto singularity sa budú podrobnejšie rozoberať v Part 2.
 
@@ -494,19 +494,19 @@ Tieto singularity sa budú podrobnejšie rozoberať v Part 2.
 
 V lekcii o angular velocities sme videli, že angular velocity sa dá zapísať:
 
-**omega = omega-hat theta-dot**
+**omega = omega-hat θ̇**
 
-Ak sa teleso otáča constant angular speed 1 rad/s okolo osi omega-hat, potom theta-dot = 1 a:
+Ak sa teleso otáča constant angular speed 1 rad/s okolo osi omega-hat, potom θ̇ = 1 a:
 
 **omega = omega-hat**
 
-Po čase theta sekúnd sa teleso otočí o uhol theta a jeho orientation bude:
+Po čase θ sekúnd sa teleso otočí o uhol θ a jeho orientation bude:
 
-**R(theta) = e^([omega-hat]theta)**
+**R(θ) = e^([omega-hat]θ)**
 
 Exponential coordinates teda môžeme chápať aj fyzikálne: sú to **angular velocity krát čas** pre constant-velocity rotation.
 
-Ak sa teleso otáča constant omega = omega-hat po dobu theta sekúnd od identity orientation, výsledná orientation je daná matrix exponential.
+Ak sa teleso otáča constant omega = omega-hat po dobu θ sekúnd od identity orientation, výsledná orientation je daná matrix exponential.
 
 ---
 
@@ -516,11 +516,11 @@ Matrix exponential definuje zobrazenie:
 
 **exp: so(3) → SO(3)**
 
-Každému elementu so(3), čiže každej 3 x 3 skew-symmetric matrix [omega-hat]theta, priradí rotation matrix.
+Každému elementu so(3), čiže každej 3 x 3 skew-symmetric matrix [omega-hat]θ, priradí rotation matrix.
 
 Toto zobrazenie je **surjective**: pre každú rotation matrix R existuje aspoň jeden element so(3), ktorého exponential je R.
 
-Nie je však **injective**: rôzne elementy so(3) môžu dať rovnakú R. Napríklad [omega-hat]theta a [omega-hat](theta + 2pi) dávajú rovnakú rotation matrix.
+Nie je však **injective**: rôzne elementy so(3) môžu dať rovnakú R. Napríklad [omega-hat]θ a [omega-hat](θ + 2pi) dávajú rovnakú rotation matrix.
 
 Mapa exp je teda zobrazenie **z priestoru angular velocities do priestoru orientations**. Toto je presne ten most medzi so(3) a SO(3), ktorý sme avizovali.
 
@@ -534,9 +534,9 @@ Začíname v identity rotation I v SO(3).
 
 Vyberieme smer, ktorým sa chceme z I pohybovať. Tento smer je daný elementom so(3), čiže skew-symmetric matrix [omega-hat].
 
-Potom sa pozdĺž tohto smeru posúvame o vzdialenosť theta.
+Potom sa pozdĺž tohto smeru posúvame o vzdialenosť θ.
 
-Výsledok je rotation matrix R = e^([omega-hat]theta).
+Výsledok je rotation matrix R = e^([omega-hat]θ).
 
 Toto je podobné myšlienke z Chapter 2 o C-space. Tam sme sa na sphere pohybovali po geodetickej z jedného bodu. Tu sa na SO(3) pohybujeme po geodetickej z identity.
 
@@ -562,11 +562,11 @@ Preto exponential map nie je iba matematická konštrukcia. Je to **prirodzený 
 
 Rodriguesova formula:
 
-**e^([omega-hat]theta) = I + sin(theta)[omega-hat] + (1 - cos(theta))[omega-hat]^2**
+**e^([omega-hat]θ) = I + sin(θ)[omega-hat] + (1 - cos(θ))[omega-hat]^2**
 
 pripomína Eulerovu formulu pre komplexné čísla:
 
-**e^(i theta) = cos(theta) + i sin(theta)**
+**e^(i θ) = cos(θ) + i sin(θ)**
 
 V Eulerovej formule i je imaginárna jednotka s vlastnosťou i^2 = -1.
 
@@ -588,11 +588,11 @@ Rotation matrix R musí spĺňať:
 
 **det R = 1**
 
-Musíme overiť, že e^([omega-hat]theta) tieto podmienky spĺňa.
+Musíme overiť, že e^([omega-hat]θ) tieto podmienky spĺňa.
 
 Pre prvú podmienku využijeme vlastnosť skew-symmetric matrix. Keďže [omega-hat]T = -[omega-hat], platí:
 
-**(e^([omega-hat]theta))T = e^(-[omega-hat]theta)**
+**(e^([omega-hat]θ))T = e^(-[omega-hat]θ)**
 
 A pre matrix exponential platí:
 
@@ -600,11 +600,11 @@ A pre matrix exponential platí:
 
 Takže:
 
-**(e^([omega-hat]theta))T e^([omega-hat]theta) = e^(-[omega-hat]theta) e^([omega-hat]theta) = I**
+**(e^([omega-hat]θ))T e^([omega-hat]θ) = e^(-[omega-hat]θ) e^([omega-hat]θ) = I**
 
 Pre determinant: exponential matrix s nulovou trace má determinant 1. Skew-symmetric matrix má vždy nulovú trace (diagonal entries sú nuly). Preto:
 
-**det(e^([omega-hat]theta)) = e^(trace([omega-hat]theta)) = e^0 = 1**
+**det(e^([omega-hat]θ)) = e^(trace([omega-hat]θ)) = e^0 = 1**
 
 Výsledok je teda vždy platná rotation matrix.
 
@@ -630,7 +630,7 @@ Preto:
 
 Geometricky [omega-hat]^2 teda odoberá z vectora v jeho component perpendicular na rotation axis a obráti ho.
 
-Toto má priamy význam v Rodriguesovej formule: člen (1-cos(theta))[omega-hat]^2 opisuje, ako sa component vectora perpendicular na rotation axis otáča.
+Toto má priamy význam v Rodriguesovej formule: člen (1-cos(θ))[omega-hat]^2 opisuje, ako sa component vectora perpendicular na rotation axis otáča.
 
 ---
 
@@ -638,9 +638,9 @@ Toto má priamy význam v Rodriguesovej formule: člen (1-cos(theta))[omega-hat]
 
 Rodriguesova formula sa dá použiť aj na rotation jedného vectora v bez toho, aby sme najprv konštruovali celú rotation matrix.
 
-Rotation vectora v o uhol theta okolo osi omega-hat:
+Rotation vectora v o uhol θ okolo osi omega-hat:
 
-**v' = v cos(theta) + (omega-hat x v) sin(theta) + omega-hat(omega-hat . v)(1 - cos(theta))**
+**v' = v cos(θ) + (omega-hat x v) sin(θ) + omega-hat(omega-hat . v)(1 - cos(θ))**
 
 kde . je dot product.
 
@@ -648,7 +648,7 @@ Prvý člen škáluje pôvodný vector.
 
 Druhý člen je contribution z cross product, čiže tangentná zložka rotation.
 
-Tretí člen je projection na rotation axis, vynásobenú výrazom (1 - cos(theta)).
+Tretí člen je projection na rotation axis, vynásobenú výrazom (1 - cos(θ)).
 
 Táto formula je ekvivalentná maticovej verzii, ale niekedy je výpočtovo pohodlnejšia pre rotation jedného vectora.
 
@@ -658,11 +658,11 @@ Táto formula je ekvivalentná maticovej verzii, ale niekedy je výpočtovo poho
 
 Je dôležité rozlíšiť:
 
-**omega = omega-hat theta-dot**
+**omega = omega-hat θ̇**
 
 a:
 
-**omega-hat theta**
+**omega-hat θ**
 
 Prvý je **angular velocity** - vector, ktorý opisuje instantaneous rotational motion v danom čase.
 
@@ -700,37 +700,37 @@ Exponential teda premieňa infinitesimal description (axis a angle) na finite ro
 
 ## 28. Malé rotation: lineárna aproximácia
 
-Pre veľmi malé theta (theta blízke nule) platí:
+Pre veľmi malé θ (θ blízke nule) platí:
 
-**sin(theta) ≈ theta**
+**sin(θ) ≈ θ**
 
-**1 - cos(theta) ≈ theta^2/2 ≈ 0 pre veľmi malé theta**
+**1 - cos(θ) ≈ θ^2/2 ≈ 0 pre veľmi malé θ**
 
 Rodriguesova formula sa potom zjednoduší na:
 
-**R ≈ I + theta[omega-hat]**
+**R ≈ I + θ[omega-hat]**
 
 alebo ekvivalentne:
 
-**R ≈ I + [omega-hat theta]**
+**R ≈ I + [omega-hat θ]**
 
 Toto je **lineárna aproximácia** rotation matrix pre malé rotations.
 
-Pre malé theta je teda rotation matrix takmer identity, s malou skew-symmetric perturbáciou.
+Pre malé θ je teda rotation matrix takmer identity, s malou skew-symmetric perturbáciou.
 
 Táto aproximácia je veľmi užitočná v praxi. Mnoho robotických controllerov pracuje s malými odchýlkami od desired orientation a používa linearizované modely.
 
-Ak je napríklad theta = 0.01 rad (asi 0.57 stupňov), chyba aproximácie je rádovo theta^2 ≈ 0.0001, čo je zanedbateľné.
+Ak je napríklad θ = 0.01 rad (asi 0.57 stupňov), chyba aproximácie je rádovo θ^2 ≈ 0.0001, čo je zanedbateľné.
 
 ---
 
 ## 29. Malé rotation a angular velocity
 
-Pre malé theta a krátky čas dt platí:
+Pre malé θ a krátky čas dt platí:
 
 **R(dt) ≈ I + [omega]dt**
 
-kde omega = omega-hat theta-dot.
+kde omega = omega-hat θ̇.
 
 Toto priamo súvisí s definíciou angular velocity. Ak sa teleso za krátky čas dt pootočí o malý uhol, zmena orientation je lineárne úmerná angular velocity a času.
 
@@ -788,21 +788,21 @@ Exponential coordinates sú teda nie iba matematická kuriozita, ale **pracovný
 
 ## Rekapitulácia najdôležitejších pojmov
 
-**Axis-angle representation (omega-hat, theta)** opisuje rotation pomocou unit rotation axis omega-hat a rotation angle theta. Každá 3D rotation sa dá takto opísať.
+**Axis-angle representation (omega-hat, θ)** opisuje rotation pomocou unit rotation axis omega-hat a rotation angle θ. Každá 3D rotation sa dá takto opísať.
 
-**Exponential coordinates omega-hat theta** sú 3D vector, ktorý kombinuje axis a angle do jedného objektu. Jeho direction je rotation axis a magnitude je rotation angle.
+**Exponential coordinates omega-hat θ** sú 3D vector, ktorý kombinuje axis a angle do jedného objektu. Jeho direction je rotation axis a magnitude je rotation angle.
 
 **Skew-symmetric matrix [omega-hat]** prevádza cross product s omega-hat na matrix multiplication. Patrí do so(3) a je building block pre matrix exponential.
 
-**Matrix exponential e^([omega-hat]theta)** premieňa element so(3) na rotation matrix v SO(3). Definuje sa ako power series analogická skalárnej exponential.
+**Matrix exponential e^([omega-hat]θ)** premieňa element so(3) na rotation matrix v SO(3). Definuje sa ako power series analogická skalárnej exponential.
 
-**Rodriguesova formula** je uzavretý tvar matrix exponential: **e^([omega-hat]theta) = I + sin(theta)[omega-hat] + (1 - cos(theta))[omega-hat]^2**. Umožňuje priamy výpočet bez nekonečných rád.
+**Rodriguesova formula** je uzavretý tvar matrix exponential: **e^([omega-hat]θ) = I + sin(θ)[omega-hat] + (1 - cos(θ))[omega-hat]^2**. Umožňuje priamy výpočet bez nekonečných rád.
 
 **Vlastnosť [omega-hat]^3 = -[omega-hat]** pre unit omega-hat je kľúčom k odvodeniu Rodriguesovej formuly. Cyklické mocniny vedú k sin a cos presne ako pri Eulerovej formule.
 
 **Mapa exp: so(3) → SO(3)** je surjective ale nie injective. Každá rotation matrix sa dá zapísať ako matrix exponential, ale rôzne exponential coordinates môžu dať rovnakú rotation.
 
-**Malá rotation aproximácia R ≈ I + [omega-hat theta]** linearizuje exponential map. Pre malé uhly je rotation matrix takmer identity plus skew-symmetric perturbácia.
+**Malá rotation aproximácia R ≈ I + [omega-hat θ]** linearizuje exponential map. Pre malé uhly je rotation matrix takmer identity plus skew-symmetric perturbácia.
 
 **so(3) je Lie algebra** a **SO(3) je Lie group**. Exponential map ich spája podobne ako tangent space a configuration space v Chapter 2.
 
@@ -810,10 +810,10 @@ Exponential coordinates sú teda nie iba matematická kuriozita, ale **pracovný
 
 ## Čo si z tejto lekcie odniesť
 
-Každú 3D rotation môžeme opísať osou a uhlom. Unit vector omega-hat určuje os a scalár theta určuje uhol otočenia. Tieto dve informácie sa dajú spojiť do jedného 3D vectora omega-hat theta, ktorý nazývame exponential coordinates of rotation. Z tohto vectora zostrojíme rotation matrix pomocou matrix exponential: **R = e^([omega-hat]theta)**.
+Každú 3D rotation môžeme opísať osou a uhlom. Unit vector omega-hat určuje os a scalár θ určuje uhol otočenia. Tieto dve informácie sa dajú spojiť do jedného 3D vectora omega-hat θ, ktorý nazývame exponential coordinates of rotation. Z tohto vectora zostrojíme rotation matrix pomocou matrix exponential: **R = e^([omega-hat]θ)**.
 
-Matrix exponential definujeme ako power series analogickú skalárnej exponential. Vďaka cyklickej vlastnosti [omega-hat]^3 = -[omega-hat] sa nekonečná power series zredukuje na uzavretú Rodriguesovu formulu: **I + sin(theta)[omega-hat] + (1 - cos(theta))[omega-hat]^2**. Tá dáva priamy výpočet rotation matrix z osi a uhla bez akýchkoľvek iterácií.
+Matrix exponential definujeme ako power series analogickú skalárnej exponential. Vďaka cyklickej vlastnosti [omega-hat]^3 = -[omega-hat] sa nekonečná power series zredukuje na uzavretú Rodriguesovu formulu: **I + sin(θ)[omega-hat] + (1 - cos(θ))[omega-hat]^2**. Tá dáva priamy výpočet rotation matrix z osi a uhla bez akýchkoľvek iterácií.
 
-Exponential map vytvára most medzi Lie algebra so(3) a Lie group SO(3). Každá skew-symmetric matrix [omega-hat]theta z so(3) sa cez exponential premení na rotation matrix v SO(3). Táto mapa je surjective, takže pokrýva všetky rotations, ale nie je injective, pretože rôzne exponential coordinates môžu dať rovnakú rotation. Pre malé uhly je exponential map takmer lineárna a rotation matrix sa dá aproximovať ako I + [omega-hat theta].
+Exponential map vytvára most medzi Lie algebra so(3) a Lie group SO(3). Každá skew-symmetric matrix [omega-hat]θ z so(3) sa cez exponential premení na rotation matrix v SO(3). Táto mapa je surjective, takže pokrýva všetky rotations, ale nie je injective, pretože rôzne exponential coordinates môžu dať rovnakú rotation. Pre malé uhly je exponential map takmer lineárna a rotation matrix sa dá aproximovať ako I + [omega-hat θ].
 
-V druhej časti tejto lekcie sa budeme venovať **logarithm of rotation**, teda opačnej operácii: ako z danej rotation matrix R získať axis a angle. Uvidíme aj singularity pri theta = 0 a theta = pi a ich praktické dôsledky.`;
+V druhej časti tejto lekcie sa budeme venovať **logarithm of rotation**, teda opačnej operácii: ako z danej rotation matrix R získať axis a angle. Uvidíme aj singularity pri θ = 0 a θ = pi a ich praktické dôsledky.`;

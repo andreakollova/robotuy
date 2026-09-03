@@ -5,11 +5,11 @@ export const ch323p2Content = `# Chapter 3.2.3 – Exponential Coordinates of Ro
 
 ## Part 2 of 2
 
-V prvej časti sme riešili situáciu, v ktorej sme rotation už poznali v pomerne intuitívnej podobe. Mali sme **rotation axis omega-hat** a **rotation angle theta**. Napríklad sme mohli povedať: „otoč teleso o 60° okolo tejto osi." Z týchto údajov sme vytvorili exponential coordinates **omega-hat theta** a pomocou matrix exponential, respektíve Rodrigues' formula, sme vypočítali rotation matrix R.
+V prvej časti sme riešili situáciu, v ktorej sme rotation už poznali v pomerne intuitívnej podobe. Mali sme **rotation axis omega-hat** a **rotation angle θ**. Napríklad sme mohli povedať: „otoč teleso o 60° okolo tejto osi." Z týchto údajov sme vytvorili exponential coordinates **omega-hat θ** a pomocou matrix exponential, respektíve Rodrigues' formula, sme vypočítali rotation matrix R.
 
 Teraz sa dostávame k opačnému problému, ktorý je v robotike rovnako dôležitý. Predstav si robotické rameno, ktorého gripper sa už nachádza v určitej orientation. Z forward kinematics alebo zo senzora dostaneme rotation matrix R. Deväť čísel v tejto matrix presne opisuje orientation grippera, ale na prvý pohľad z nich nemusí byť jasné, **aká jednoduchá rotation tejto orientation zodpovedá**. Chceli by sme teda zistiť: okolo akej osi by sme teleso otočili a o aký angle, aby sme dostali práve túto orientation?
 
-Matematicky chceme obrátiť proces z prvej časti. Predtým sme poznali **omega-hat a theta** a hľadali R. Teraz poznáme **R a hľadáme omega-hat a theta**. Operácia, ktorá nám umožňuje ísť týmto opačným smerom, sa nazýva **matrix logarithm**.
+Matematicky chceme obrátiť proces z prvej časti. Predtým sme poznali **omega-hat a θ** a hľadali R. Teraz poznáme **R a hľadáme omega-hat a θ**. Operácia, ktorá nám umožňuje ísť týmto opačným smerom, sa nazýva **matrix logarithm**.
 
 ---
 
@@ -17,25 +17,25 @@ Matematicky chceme obrátiť proces z prvej časti. Predtým sme poznali **omega
 
 Najjednoduchšie je predstaviť si celý proces ako dve cesty medzi dvoma rôznymi spôsobmi opisu tej istej rotation.
 
-Na jednej strane máme **rotation matrix R**. Tá je veľmi praktická pri výpočtoch, skladaní rotations a transformovaní vectors medzi reference frames. Na druhej strane máme **axis-angle representation**: unit vector omega-hat určujúci rotation axis a angle theta určujúci veľkosť rotation.
+Na jednej strane máme **rotation matrix R**. Tá je veľmi praktická pri výpočtoch, skladaní rotations a transformovaní vectors medzi reference frames. Na druhej strane máme **axis-angle representation**: unit vector omega-hat určujúci rotation axis a angle θ určujúci veľkosť rotation.
 
 Ak poznáme axis a angle, používame matrix exponential:
 
-**[omega-hat]theta - matrix exponential - R**
+**[omega-hat]θ - matrix exponential - R**
 
 čo zapisujeme:
 
-**R = e^[omega-hat]theta**
+**R = e^[omega-hat]θ**
 
-Matrix **[omega-hat]** je skew-symmetric matrix vytvorená z vectora omega-hat. Súčin **[omega-hat]theta** teda obsahuje rovnakú informáciu ako exponential coordinate vector **omega-hat theta**, iba zapísanú v matrix forme.
+Matrix **[omega-hat]** je skew-symmetric matrix vytvorená z vectora omega-hat. Súčin **[omega-hat]θ** teda obsahuje rovnakú informáciu ako exponential coordinate vector **omega-hat θ**, iba zapísanú v matrix forme.
 
 V tejto lekcii chceme vykonať opačný proces:
 
-**R - matrix logarithm - [omega-hat]theta**
+**R - matrix logarithm - [omega-hat]θ**
 
 čiže:
 
-**[omega-hat]theta = log(R)**
+**[omega-hat]θ = log(R)**
 
 Predstav si napríklad gripper robotického ramena. Controller pozná jeho aktuálnu orientation a požadovanú orientation. Z týchto orientations môžeme vytvoriť relative rotation matrix, ktorá hovorí, ako sa musí gripper natočiť. Matrix logarithm potom umožní túto relative rotation preložiť do omnoho intuitívnejšej informácie: **otoč sa okolo určitej osi o určitý angle**.
 
@@ -49,19 +49,19 @@ Máme rotation matrix:
 
 **R ∈ SO(3)**
 
-a hľadáme takú unit axis omega-hat a angle theta, aby platilo:
+a hľadáme takú unit axis omega-hat a angle θ, aby platilo:
 
-**R = e^[omega-hat]theta**
+**R = e^[omega-hat]θ**
 
 Z prvej časti už vieme, že matrix exponential môžeme pre rotations vypočítať pomocou Rodrigues' formula:
 
-**R = I + sin theta [omega-hat] + (1 - cos theta)[omega-hat]²**
+**R = I + sin θ [omega-hat] + (1 - cos θ)[omega-hat]²**
 
-Tento vzorec je teraz veľmi dôležitý, pretože v ňom vidíme, **kde sú v rotation matrix ukryté informácie o theta a omega-hat**.
+Tento vzorec je teraz veľmi dôležitý, pretože v ňom vidíme, **kde sú v rotation matrix ukryté informácie o θ a omega-hat**.
 
-Máme v ňom identity matrix I, člen obsahujúci **sin theta [omega-hat]** a člen obsahujúci **(1 - cos theta)[omega-hat]²**. Naším cieľom je tieto informácie z R postupne oddeliť. Najprv zistíme angle theta a až potom axis omega-hat.
+Máme v ňom identity matrix I, člen obsahujúci **sin θ [omega-hat]** a člen obsahujúci **(1 - cos θ)[omega-hat]²**. Naším cieľom je tieto informácie z R postupne oddeliť. Najprv zistíme angle θ a až potom axis omega-hat.
 
-Prečo začíname angle? Pretože existuje veľmi jednoduchá vlastnosť rotation matrix, z ktorej vieme theta získať bez toho, aby sme už poznali axis. Tou vlastnosťou je **trace matrix**.
+Prečo začíname angle? Pretože existuje veľmi jednoduchá vlastnosť rotation matrix, z ktorej vieme θ získať bez toho, aby sme už poznali axis. Tou vlastnosťou je **trace matrix**.
 
 ---
 
@@ -80,23 +80,23 @@ potom:
 
 **tr(R) = r11 + r22 + r33**
 
-Samotný trace nie je rotation angle. Je to iba jedno číslo získané z matrix. Pri rotation matrices má však veľmi užitočnú vlastnosť: závisí od rotation angle theta, ale nie od konkrétneho smeru rotation axis.
+Samotný trace nie je rotation angle. Je to iba jedno číslo získané z matrix. Pri rotation matrices má však veľmi užitočnú vlastnosť: závisí od rotation angle θ, ale nie od konkrétneho smeru rotation axis.
 
 Platí:
 
-**tr(R) = 1 + 2 cos theta**
+**tr(R) = 1 + 2 cos θ**
 
-To je presne to, čo potrebujeme. Ak trace závisí iba od theta, môžeme najprv z R zistiť angle bez toho, aby sme už poznali omega-hat.
+To je presne to, čo potrebujeme. Ak trace závisí iba od θ, môžeme najprv z R zistiť angle bez toho, aby sme už poznali omega-hat.
 
 Aby však tento vzťah nevyzeral ako ďalší vzorec, ktorý treba iba prijať, odvodíme si ho z Rodrigues' formula.
 
 ---
 
-## 4. Prečo platí tr(R) = 1 + 2 cos theta
+## 4. Prečo platí tr(R) = 1 + 2 cos θ
 
 Začneme tým, čo už poznáme:
 
-**R = I + sin theta [omega-hat] + (1 - cos theta)[omega-hat]²**
+**R = I + sin θ [omega-hat] + (1 - cos θ)[omega-hat]²**
 
 Teraz chceme vypočítať trace celej pravej strany. Môžeme sa preto pozrieť na každý z troch členov samostatne.
 
@@ -114,7 +114,7 @@ Druhý člen obsahuje skew-symmetric matrix [omega-hat]. Každá 3 x 3 skew-symm
 
 **tr([omega-hat]) = 0**
 
-To znamená, že celý člen **sin theta [omega-hat]** nepridá do trace nič.
+To znamená, že celý člen **sin θ [omega-hat]** nepridá do trace nič.
 
 Zostáva posledný člen obsahujúci **[omega-hat]²**. Z vlastností skew-symmetric representation vieme, že pre unit vector omega-hat platí:
 
@@ -126,21 +126,21 @@ Teraz sa pozrime na trace tejto matrix. Keďže omega-hat je unit vector, teda m
 
 Teraz môžeme tieto výsledky vložiť späť do Rodrigues' formula. Dostávame:
 
-**tr(R) = 3 + sin theta . 0 + (1 - cos theta)(-2)**
+**tr(R) = 3 + sin θ . 0 + (1 - cos θ)(-2)**
 
 Prostredný člen zmizne:
 
-**tr(R) = 3 - 2(1 - cos theta)**
+**tr(R) = 3 - 2(1 - cos θ)**
 
 Po roznásobení:
 
-**tr(R) = 3 - 2 + 2 cos theta**
+**tr(R) = 3 - 2 + 2 cos θ**
 
 a teda:
 
-**tr(R) = 1 + 2 cos theta**
+**tr(R) = 1 + 2 cos θ**
 
-Práve preto je trace rotation matrix taký užitočný. Zložité informácie o direction rotation axis sa pri tejto operácii stratia a zostane nám jednoduchý vzťah závislý iba od angle theta.
+Práve preto je trace rotation matrix taký užitočný. Zložité informácie o direction rotation axis sa pri tejto operácii stratia a zostane nám jednoduchý vzťah závislý iba od angle θ.
 
 ---
 
@@ -148,27 +148,27 @@ Práve preto je trace rotation matrix taký užitočný. Zložité informácie o
 
 Teraz už máme:
 
-**tr(R) = 1 + 2 cos theta**
+**tr(R) = 1 + 2 cos θ**
 
-a chceme z tejto rovnice dostať theta.
+a chceme z tejto rovnice dostať θ.
 
 Najprv odčítame jednotku:
 
-**tr(R) - 1 = 2 cos theta**
+**tr(R) - 1 = 2 cos θ**
 
 Potom obe strany vydelíme dvoma:
 
-**cos theta = (tr(R) - 1) / 2**
+**cos θ = (tr(R) - 1) / 2**
 
 Nakoniec použijeme inverse cosine:
 
-**theta = acos((tr(R) - 1) / 2)**
+**θ = acos((tr(R) - 1) / 2)**
 
 Takto dokážeme z rotation matrix vypočítať angle rotation.
 
 V Modern Robotics sa pri matrix logarithm štandardne vyberá:
 
-**0 ≤ theta ≤ pi**
+**0 ≤ θ ≤ pi**
 
 teda angle od 0° do 180°. Toto obmedzenie nie je náhodné. Jednu rotation totiž môžeme opísať rôznymi kombináciami axis a angle. Napríklad rotation o +60° okolo jednej osi môžeme opísať aj ako rotation o -60° okolo opačne orientovanej osi. Ak chceme, aby bol výsledok matrix logarithm čo najjednoznačnejší, potrebujeme si zvoliť konvenciu. Interval od 0 do pi nám takúto konvenciu poskytuje.
 
@@ -190,15 +190,15 @@ Najprv vypočítame trace. Na diagonále máme 0, 0 a 1:
 
 Dosadíme do vzťahu:
 
-**cos theta = (tr(R) - 1) / 2**
+**cos θ = (tr(R) - 1) / 2**
 
 čiže:
 
-**cos theta = (1 - 1) / 2 = 0**
+**cos θ = (1 - 1) / 2 = 0**
 
 Angle, ktorého cosine je 0 a ktorý leží v intervale od 0 do pi, je:
 
-**theta = pi/2 = 90°**
+**θ = pi/2 = 90°**
 
 Z deviatich entries rotation matrix sme teda zatiaľ získali jednu veľmi dôležitú informáciu: ide o rotation o 90°. Stále však nevieme, okolo ktorej osi. Na to potrebujeme z R dostať omega-hat.
 
@@ -208,13 +208,13 @@ Z deviatich entries rotation matrix sme teda zatiaľ získali jednu veľmi dôle
 
 Opäť sa vrátime k Rodrigues' formula:
 
-**R = I + sin theta [omega-hat] + (1 - cos theta)[omega-hat]²**
+**R = I + sin θ [omega-hat] + (1 - cos θ)[omega-hat]²**
 
 Teraz chceme nejakým spôsobom izolovať člen obsahujúci **[omega-hat]**. Pomôže nám transpose rotation matrix.
 
 Keď transponujeme R, dostaneme:
 
-**RT = I - sin theta [omega-hat] + (1 - cos theta)[omega-hat]²**
+**RT = I - sin θ [omega-hat] + (1 - cos θ)[omega-hat]²**
 
 Prečo sa znamienko zmenilo práve pri prostrednom člene?
 
@@ -224,19 +224,19 @@ Pretože [omega-hat] je skew-symmetric:
 
 Naopak [omega-hat]² je symmetric. Pri jeho transpose sa teda nič nezmení.
 
-Teraz máme dve veľmi podobné rovnice. Jedna obsahuje **+sin theta [omega-hat]**, druhá **-sin theta [omega-hat]**. To nám dáva jednoduchý spôsob, ako túto časť izolovať: od R odčítame RT.
+Teraz máme dve veľmi podobné rovnice. Jedna obsahuje **+sin θ [omega-hat]**, druhá **-sin θ [omega-hat]**. To nám dáva jednoduchý spôsob, ako túto časť izolovať: od R odčítame RT.
 
 Dostaneme:
 
-**R - RT = 2 sin theta [omega-hat]**
+**R - RT = 2 sin θ [omega-hat]**
 
 Identity matrices sa odčítaním zrušia. Členy obsahujúce [omega-hat]² sú v oboch matrices rovnaké, takže sa tiež zrušia. Prostredné členy sa naopak sčítajú:
 
-**sin theta [omega-hat] - (-sin theta [omega-hat]) = 2 sin theta [omega-hat]**
+**sin θ [omega-hat] - (-sin θ [omega-hat]) = 2 sin θ [omega-hat]**
 
-Teraz už stačí vydeliť obe strany hodnotou 2 sin theta:
+Teraz už stačí vydeliť obe strany hodnotou 2 sin θ:
 
-**[omega-hat] = (R - RT) / (2 sin theta)**
+**[omega-hat] = (R - RT) / (2 sin θ)**
 
 Takto získame skew-symmetric matrix rotation axis. Z nej potom pomocou operácie **so3ToVec** alebo jednoducho prečítaním príslušných entries dostaneme vector omega-hat.
 
@@ -264,11 +264,11 @@ $$[ 0  0  1 ]$$
 
 Už sme zistili:
 
-**theta = 90° = pi/2**
+**θ = 90° = pi/2**
 
 Pre tento angle platí:
 
-**sin theta = 1**
+**sin θ = 1**
 
 Transpose matrix je:
 
@@ -285,9 +285,9 @@ $$[ 0  0  0 ]$$
 
 Podľa vzorca:
 
-**[omega-hat] = (R - RT) / (2 sin theta)**
+**[omega-hat] = (R - RT) / (2 sin θ)**
 
-a keďže sin theta = 1, delíme matrix dvoma:
+a keďže sin θ = 1, delíme matrix dvoma:
 
 $$[omega-hat] =$$
 $$[ 0  -1  0 ]$$
@@ -316,15 +316,15 @@ Teraz máme celý axis-angle opis. Rotation prebieha okolo z-axis a angle je pi/
 
 Exponential coordinate vector preto dostaneme vynásobením axis angle:
 
-**omega-hat theta = (0, 0, 1) . pi/2**
+**omega-hat θ = (0, 0, 1) . pi/2**
 
 čiže:
 
-**omega-hat theta = (0, 0, pi/2)**
+**omega-hat θ = (0, 0, pi/2)**
 
 A matrix logarithm je zodpovedajúca skew-symmetric matrix:
 
-**log(R) = [omega-hat]theta**
+**log(R) = [omega-hat]θ**
 
 Vidíme teda celý opačný proces k Part 1. Z rotation matrix sme najprv pomocou trace našli angle, potom pomocou R - RT našli axis a nakoniec sme z nich zostavili exponential coordinates.
 
@@ -336,35 +336,35 @@ Ak rotation nie je jedným zo špeciálnych prípadov, celý matrix logarithm m�
 
 Najprv zistíme **koľko sa teleso otočilo**:
 
-**theta = acos((tr(R) - 1) / 2)**
+**θ = acos((tr(R) - 1) / 2)**
 
 Potom zistíme **okolo čoho sa otočilo**:
 
-**[omega-hat] = (R - RT) / (2 sin theta)**
+**[omega-hat] = (R - RT) / (2 sin θ)**
 
 Nakoniec vytvoríme:
 
-**[omega-hat]theta = log(R)**
+**[omega-hat]θ = log(R)**
 
 alebo, ak chceme exponential coordinate vector:
 
-**omega-hat theta**
+**omega-hat θ**
 
-Tento postup funguje veľmi dobre, pokiaľ sin theta ≠ 0.
+Tento postup funguje veľmi dobre, pokiaľ sin θ ≠ 0.
 
-A práve táto podmienka nás privádza k dôležitej časti matrix logarithm. Existujú dva angles, pre ktoré je sin theta = 0:
+A práve táto podmienka nás privádza k dôležitej časti matrix logarithm. Existujú dva angles, pre ktoré je sin θ = 0:
 
-**theta = 0**
+**θ = 0**
 
 a:
 
-**theta = pi**
+**θ = pi**
 
 Tieto dve situácie musíme riešiť osobitne. Zaujímavé je, že hoci v oboch prípadoch zlyhá rovnaký vzorec, geometrický dôvod je pri každom úplne iný.
 
 ---
 
-## 11. Špeciálny prípad theta = 0: žiadna rotation
+## 11. Špeciálny prípad θ = 0: žiadna rotation
 
 Predstav si knihu položenú na stole. Jej počiatočná orientation je určitá R. Teraz od nej požadujeme cieľovú orientation, ktorá je presne rovnaká. Relative rotation medzi týmito dvoma orientations je identity:
 
@@ -378,21 +378,21 @@ Jej trace je:
 
 Ak použijeme náš vzorec:
 
-**cos theta = (tr(R) - 1) / 2**
+**cos θ = (tr(R) - 1) / 2**
 
 dostaneme:
 
-**cos theta = (3 - 1) / 2 = 1**
+**cos θ = (3 - 1) / 2 = 1**
 
 a teda:
 
-**theta = 0**
+**θ = 0**
 
 To je presne výsledok, ktorý očakávame: medzi orientations nie je potrebná žiadna rotation.
 
 Teraz by sme však mohli skúsiť použiť vzorec na axis:
 
-**[omega-hat] = (R - RT) / (2 sin theta)**
+**[omega-hat] = (R - RT) / (2 sin θ)**
 
 Lenže:
 
@@ -414,7 +414,7 @@ Mohli by sme však rovnako povedať, že prebehla okolo x-axis. Stále sa nič n
 
 Ak je:
 
-**theta = 0**
+**θ = 0**
 
 potom každá axis vedie k tej istej identity rotation.
 
@@ -422,27 +422,27 @@ Preto z R = I jednoducho **nie je možné zistiť omega-hat**, pretože R túto 
 
 Exponential coordinates však problém nemajú. Súčin je:
 
-**omega-hat theta**
+**omega-hat θ**
 
-a keďže theta = 0, dostaneme bez ohľadu na omega-hat:
+a keďže θ = 0, dostaneme bez ohľadu na omega-hat:
 
-**omega-hat theta = (0, 0, 0)**
+**omega-hat θ = (0, 0, 0)**
 
 Preto môžeme identity rotation jednoznačne reprezentovať zero exponential coordinate vectorom.
 
 ---
 
-## 13. Špeciálny prípad theta = pi: rotation o 180°
+## 13. Špeciálny prípad θ = pi: rotation o 180°
 
 Druhý špeciálny prípad je geometricky oveľa zaujímavejší. Predstav si knihu položenú pred sebou a otoč ju presne o 180° okolo vertikálnej osi. Tentoraz rozhodne nejde o nulový motion. Orientation sa výrazne zmenila.
 
-Ak theta = pi, potom:
+Ak θ = pi, potom:
 
 **sin pi = 0**
 
 a náš bežný vzorec:
 
-**[omega-hat] = (R - RT) / (2 sin theta)**
+**[omega-hat] = (R - RT) / (2 sin θ)**
 
 opäť nemožno použiť.
 
@@ -462,7 +462,7 @@ Takže ak pri matrix logarithm narazíme na:
 
 vieme, že rotation angle je:
 
-**theta = pi**
+**θ = pi**
 
 čiže 180°.
 
@@ -486,9 +486,9 @@ a:
 
 vedú k rovnakej rotation matrix.
 
-To znamená, že pri theta = pi dokážeme z R určiť geometrickú **os**, ale jej orientácia ako vectora má dve rovnocenné možnosti. V tomto prípade sú omega-hat a -omega-hat dve reprezentácie tej istej finite rotation.
+To znamená, že pri θ = pi dokážeme z R určiť geometrickú **os**, ale jej orientácia ako vectora má dve rovnocenné možnosti. V tomto prípade sú omega-hat a -omega-hat dve reprezentácie tej istej finite rotation.
 
-To je úplne iný problém než pri theta = 0. Pri theta = 0 môže byť axis ľubovoľná. Pri theta = pi je geometrická axis určená, ale jej dva opačné directions predstavujú tú istú rotation.
+To je úplne iný problém než pri θ = 0. Pri θ = 0 môže byť axis ľubovoľná. Pri θ = pi je geometrická axis určená, ale jej dva opačné directions predstavujú tú istú rotation.
 
 ---
 
@@ -498,9 +498,9 @@ Pozrime sa na to ešte z druhej strany.
 
 Vieme:
 
-**R - RT = 2 sin theta [omega-hat]**
+**R - RT = 2 sin θ [omega-hat]**
 
-Pri theta = pi máme:
+Pri θ = pi máme:
 
 **sin pi = 0**
 
@@ -524,9 +524,9 @@ Musíme použiť inú časť rotation matrix.
 
 Začneme znovu Rodrigues' formula:
 
-**R = I + sin theta [omega-hat] + (1 - cos theta)[omega-hat]²**
+**R = I + sin θ [omega-hat] + (1 - cos θ)[omega-hat]²**
 
-Pre theta = pi vieme:
+Pre θ = pi vieme:
 
 **sin pi = 0**
 
@@ -585,7 +585,7 @@ A keďže:
 
 entries rotation matrix nám umožňujú získať squares components axis a následne aj ich znamienka z off-diagonal terms.
 
-Modern Robotics používa pre theta = pi praktický postup, pri ktorom vyberieme vhodný diagonal element R a z neho zostrojíme unit axis. Cieľ je stále rovnaký: nájsť vector omega-hat, ktorý leží pozdĺž rotation axis.
+Modern Robotics používa pre θ = pi praktický postup, pri ktorom vyberieme vhodný diagonal element R a z neho zostrojíme unit axis. Cieľ je stále rovnaký: nájsť vector omega-hat, ktorý leží pozdĺž rotation axis.
 
 Dôležitejšie než zapamätať si mechanicky jednotlivé varianty vzorca je pochopiť, prečo potrebujeme osobitný postup. Bežný vzorec používal **skew-symmetric časť R**, ktorá pri 180° zmizne. Preto musíme axis získať zo **symmetric časti R**, ktorá v sebe stále informáciu o osi obsahuje.
 
@@ -605,7 +605,7 @@ Najprv vypočítame trace:
 
 Okamžite teda vieme:
 
-**theta = pi**
+**θ = pi**
 
 Teraz sa pozrime na fyzický význam matrix. x-axis zostala nezmenená, zatiaľ čo y-axis a z-axis zmenili direction. Presne to očakávame pri rotation o 180° okolo x-axis.
 
@@ -621,7 +621,7 @@ Prečo? Pretože rotation o 180° okolo +x a rotation o 180° okolo -x vedú k t
 
 Exponential coordinates preto môžeme zapísať napríklad:
 
-**omega-hat theta = (pi, 0, 0)**
+**omega-hat θ = (pi, 0, 0)**
 
 pričom opačná axis poskytuje alternatívnu reprezentáciu tej istej hraničnej rotation.
 
@@ -643,7 +643,7 @@ Rotation matrix necháva tento vector nezmenený.
 
 To znamená, že omega-hat je **eigenvector R s eigenvalue 1**.
 
-Táto vlastnosť neplatí iba pri 180°. Každá 3D rotation má axis, ktorá zostáva rotation nezmenená. Pri problematickom prípade theta = pi nám to poskytuje veľmi intuitívny spôsob, ako pochopiť, kde je axis v rotation matrix ukrytá.
+Táto vlastnosť neplatí iba pri 180°. Každá 3D rotation má axis, ktorá zostáva rotation nezmenená. Pri problematickom prípade θ = pi nám to poskytuje veľmi intuitívny spôsob, ako pochopiť, kde je axis v rotation matrix ukrytá.
 
 Ak si teda niekedy nebudeš pamätať technický postup, geometrická otázka znie:
 
@@ -655,25 +655,25 @@ Práve ten direction je rotation axis.
 
 ## 20. Tri prípady matrix logarithm, ktoré musíme rozlišovať
 
-Teraz môžeme celý problém rozdeliť podľa hodnoty theta.
+Teraz môžeme celý problém rozdeliť podľa hodnoty θ.
 
 Pri **bežnej rotation**, kde:
 
-**0 < theta < pi**
+**0 < θ < pi**
 
-vieme z trace vypočítať theta a potom použiť:
+vieme z trace vypočítať θ a potom použiť:
 
-**[omega-hat] = (R - RT) / (2 sin theta)**
+**[omega-hat] = (R - RT) / (2 sin θ)**
 
 Pri **identity rotation**:
 
-**theta = 0**
+**θ = 0**
 
 je R = I. Axis je ľubovoľná, pretože rotation o zero degrees okolo akejkoľvek osi vedie k rovnakému výsledku. Exponential coordinates sú jednoducho zero vector.
 
 Pri **rotation o 180°**:
 
-**theta = pi**
+**θ = pi**
 
 je trace R rovný -1. Axis existuje, ale omega-hat a -omega-hat predstavujú tú istú finite rotation. Bežný vzorec založený na R - RT nefunguje, pretože sin pi = 0, takže axis získavame iným spôsobom zo symmetric časti R.
 
@@ -687,19 +687,19 @@ Teraz už môžeme presne vidieť vzťah medzi oboma časťami tejto lekcie.
 
 V Part 1 sme začali exponential coordinates:
 
-**omega-hat theta**
+**omega-hat θ**
 
 Z nich sme vytvorili:
 
-**[omega-hat]theta**
+**[omega-hat]θ**
 
 a pomocou matrix exponential sme dostali:
 
-**R = e^[omega-hat]theta**
+**R = e^[omega-hat]θ**
 
-V Part 2 začíname na opačnom konci. Máme R, pomocou trace získame theta, pomocou vhodnej časti R získame omega-hat a vytvoríme:
+V Part 2 začíname na opačnom konci. Máme R, pomocou trace získame θ, pomocou vhodnej časti R získame omega-hat a vytvoríme:
 
-**log(R) = [omega-hat]theta**
+**log(R) = [omega-hat]θ**
 
 Tieto dve operácie teda spájajú dva pohľady na rotation:
 
@@ -719,9 +719,9 @@ Toto spojenie bude v Modern Robotics veľmi dôležité aj neskôr. Rovnaká my�
 
 Exponential coordinate vector má tvar:
 
-**omega-hat theta**
+**omega-hat θ**
 
-Jeho direction je omega-hat, takže ukazuje pozdĺž rotation axis. Jeho length je theta, takže hovorí, aký veľký rotation angle máme.
+Jeho direction je omega-hat, takže ukazuje pozdĺž rotation axis. Jeho length je θ, takže hovorí, aký veľký rotation angle máme.
 
 To znamená, že každú rotation môžeme znázorniť ako bod v obyčajnom trojrozmernom priestore exponential coordinates.
 
@@ -757,7 +757,7 @@ Toto nám umožňuje vytvoriť veľmi zaujímavý geometrický obraz celého SO(
 
 Keďže pri štandardnom matrix logarithm používame angles:
 
-**0 ≤ theta ≤ pi**
+**0 ≤ θ ≤ pi**
 
 length exponential coordinate vectora nikdy nemusí byť väčšia než pi.
 
@@ -765,7 +765,7 @@ Všetky exponential coordinate vectors preto môžeme nakresliť ako body vo vn�
 
 Origin ballu predstavuje:
 
-**theta = 0**
+**θ = 0**
 
 teda identity orientation.
 
@@ -817,7 +817,7 @@ Toto je veľmi dôležitá geometrická vlastnosť rotation space.
 
 ## 25. Prečo SO(3) napriek exponential coordinates nie je obyčajné R3
 
-Možno sa teraz zdá, že keď dokážeme rotation reprezentovať trojicou numbers omega-hat theta, orientation space by jednoducho mohol byť R3.
+Možno sa teraz zdá, že keď dokážeme rotation reprezentovať trojicou numbers omega-hat θ, orientation space by jednoducho mohol byť R3.
 
 Nie je to tak.
 
@@ -849,7 +849,7 @@ Samotná relative rotation matrix je užitočná, ale controller často potrebuj
 
 Výsledok nám povie dve veľmi prirodzené veci: direction vectora určuje axis, okolo ktorej treba gripper natočiť, a length vectora určuje veľkosť rotation.
 
-Podobný princíp sa používa pri riadení orientations robotických ramien, drones, cameras, mobile robots alebo pri interpolácii medzi orientations. Matrix logarithm teda nie je iba spôsob, ako spätne vyrátať omega-hat a theta. Je to praktický most medzi **orientation error** a informáciou o rotational motion, ktorú môžeme ďalej použiť pri plánovaní a riadení.
+Podobný princíp sa používa pri riadení orientations robotických ramien, drones, cameras, mobile robots alebo pri interpolácii medzi orientations. Matrix logarithm teda nie je iba spôsob, ako spätne vyrátať omega-hat a θ. Je to praktický most medzi **orientation error** a informáciou o rotational motion, ktorú môžeme ďalej použiť pri plánovaní a riadení.
 
 ---
 
@@ -865,7 +865,7 @@ opisuje **instantaneous motion**. Hovorí, ako sa orientation práve teraz mení
 
 Exponential coordinates:
 
-**omega-hat theta**
+**omega-hat θ**
 
 opisujú **finite rotation**. Direction určuje rotation axis a magnitude určuje celkový rotation angle. Ich angle component teda meriame v radians, nie radians per second.
 
@@ -887,27 +887,27 @@ Začneme unit rotation axis:
 
 a angle:
 
-**theta**
+**θ**
 
 Ich súčin:
 
-**omega-hat theta**
+**omega-hat θ**
 
 sú exponential coordinates.
 
 Vector omega-hat prevedieme na skew-symmetric matrix [omega-hat]. Potom pomocou matrix exponential:
 
-**R = e^[omega-hat]theta**
+**R = e^[omega-hat]θ**
 
 získame finite rotation matrix.
 
 Rodrigues' formula nám dá praktický spôsob, ako exponential vypočítať:
 
-**R = I + sin theta [omega-hat] + (1 - cos theta)[omega-hat]²**
+**R = I + sin θ [omega-hat] + (1 - cos θ)[omega-hat]²**
 
-Ak máme naopak R, použijeme matrix logarithm. Z trace R získame theta a z vhodných entries R získame omega-hat. Tým sa vrátime späť k:
+Ak máme naopak R, použijeme matrix logarithm. Z trace R získame θ a z vhodných entries R získame omega-hat. Tým sa vrátime späť k:
 
-**[omega-hat]theta**
+**[omega-hat]θ**
 
 Celý vzťah teda môžeme chápať ako:
 
@@ -923,23 +923,23 @@ Matrix exponential nás vedie jedným smerom a matrix logarithm druhým.
 
 ## Rekapitulácia najdôležitejších pojmov
 
-**Matrix exponential** prevádza axis-angle alebo exponential-coordinate representation na rotation matrix. Pre rotation platí R = e^[omega-hat]theta.
+**Matrix exponential** prevádza axis-angle alebo exponential-coordinate representation na rotation matrix. Pre rotation platí R = e^[omega-hat]θ.
 
-**Matrix logarithm** rieši opačný problém. Z rotation matrix R získava matrix [omega-hat]theta, z ktorej vieme určiť rotation axis a angle.
+**Matrix logarithm** rieši opačný problém. Z rotation matrix R získava matrix [omega-hat]θ, z ktorej vieme určiť rotation axis a angle.
 
-**Rotation axis omega-hat** je unit vector určujúci axis rotation. Jeho length je 1; informáciu o veľkosti rotation nesie theta.
+**Rotation axis omega-hat** je unit vector určujúci axis rotation. Jeho length je 1; informáciu o veľkosti rotation nesie θ.
 
-**Rotation angle theta** určuje veľkosť finite rotation. Pri štandardnom matrix logarithm volíme 0 ≤ theta ≤ pi.
+**Rotation angle θ** určuje veľkosť finite rotation. Pri štandardnom matrix logarithm volíme 0 ≤ θ ≤ pi.
 
-**Exponential coordinates omega-hat theta** sú 3D vector, ktorého direction určuje rotation axis a magnitude rotation angle.
+**Exponential coordinates omega-hat θ** sú 3D vector, ktorého direction určuje rotation axis a magnitude rotation angle.
 
-**Trace tr(R)** je súčet diagonal entries rotation matrix. Pre rotation matrix platí tr(R) = 1 + 2 cos theta, takže z neho vieme získať rotation angle.
+**Trace tr(R)** je súčet diagonal entries rotation matrix. Pre rotation matrix platí tr(R) = 1 + 2 cos θ, takže z neho vieme získať rotation angle.
 
-**Bežný matrix logarithm** - pre 0 < theta < pi najprv vypočítame theta = acos((tr(R) - 1)/2) a potom [omega-hat] = (R - RT)/(2 sin theta).
+**Bežný matrix logarithm** - pre 0 < θ < pi najprv vypočítame θ = acos((tr(R) - 1)/2) a potom [omega-hat] = (R - RT)/(2 sin θ).
 
-**Identity rotation** - ak R = I, potom theta = 0. Rotation axis nie je jednoznačná, pretože zero rotation môžeme opísať pomocou ľubovoľnej osi. Exponential coordinates sú (0,0,0).
+**Identity rotation** - ak R = I, potom θ = 0. Rotation axis nie je jednoznačná, pretože zero rotation môžeme opísať pomocou ľubovoľnej osi. Exponential coordinates sú (0,0,0).
 
-**Rotation o 180°** - ak tr(R) = -1, potom theta = pi. Bežný vzorec pre axis nefunguje, pretože sin pi = 0. Axis získavame zo symmetric časti R; directions omega-hat a -omega-hat reprezentujú rovnakú finite rotation.
+**Rotation o 180°** - ak tr(R) = -1, potom θ = pi. Bežný vzorec pre axis nefunguje, pretože sin pi = 0. Axis získavame zo symmetric časti R; directions omega-hat a -omega-hat reprezentujú rovnakú finite rotation.
 
 **SO(3)** je configuration space všetkých 3D orientations reprezentovaných rotation matrices.
 
@@ -951,19 +951,19 @@ Matrix exponential nás vedie jedným smerom a matrix logarithm druhým.
 
 ## Čo si z tejto lekcie odniesť
 
-V Part 1 sme sa naučili ísť od jednoduchého fyzického opisu rotation k rotation matrix. Ak poznáme axis omega-hat a angle theta, exponential coordinates **omega-hat theta** nám povedia, akú finite rotation chceme vykonať, a matrix exponential túto informáciu prevedie na R.
+V Part 1 sme sa naučili ísť od jednoduchého fyzického opisu rotation k rotation matrix. Ak poznáme axis omega-hat a angle θ, exponential coordinates **omega-hat θ** nám povedia, akú finite rotation chceme vykonať, a matrix exponential túto informáciu prevedie na R.
 
 V Part 2 sme sa naučili cestu opačným smerom. Ak poznáme iba rotation matrix, najprv z jej trace zistíme, **koľko sa teleso otočilo**. Potom z rozdielu R - RT pri bežnom prípade zistíme, **okolo akej osi sa otočilo**. Tým získame späť axis-angle representation a exponential coordinates.
 
-Špeciálne prípady theta = 0 a theta = pi zároveň ukazujú, že rotation space má zaujímavejšiu geometriu než obyčajné R3. Pri nulovej rotation nezáleží na axis vôbec. Pri rotation o 180° zase opačné directions tej istej geometrickej osi vedú k rovnakej orientation. Preto sa pri predstave SO(3) ako solid ball musia antipodal points na jeho povrchu spojiť.
+Špeciálne prípady θ = 0 a θ = pi zároveň ukazujú, že rotation space má zaujímavejšiu geometriu než obyčajné R3. Pri nulovej rotation nezáleží na axis vôbec. Pri rotation o 180° zase opačné directions tej istej geometrickej osi vedú k rovnakej orientation. Preto sa pri predstave SO(3) ako solid ball musia antipodal points na jeho povrchu spojiť.
 
 Najdôležitejšie spojenie celej témy je preto:
 
-**[omega-hat]theta  - matrix exponential -  R**
+**[omega-hat]θ  - matrix exponential -  R**
 
 a opačne:
 
-**R  - matrix logarithm -  [omega-hat]theta**
+**R  - matrix logarithm -  [omega-hat]θ**
 
 Matrix exponential a matrix logarithm nám umožňujú prechádzať medzi dvoma pohľadmi na rotation: medzi **orientation reprezentovanou pomocou R v SO(3)** a **axis-angle/exponential-coordinate opisom rotation spojeným so so(3)**.
 

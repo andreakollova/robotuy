@@ -462,15 +462,15 @@ Numbers môžu byť transformované podobnou matrix operation, ale geometrický 
 
 ---
 
-## 14. Rotation operator Rot(omega-hat, theta)
+## 14. Rotation operator Rot(omega-hat, θ)
 
 Keď chceme zdôrazniť, že matrix používame ako rotation operator, Modern Robotics používa notation:
 
-**R = Rot(omega-hat, theta)**
+**R = Rot(omega-hat, θ)**
 
 Symbol omega-hat označuje unit vector určujúci axis of rotation.
 
-Symbol theta označuje angle, o ktorý otáčame.
+Symbol θ označuje angle, o ktorý otáčame.
 
 Napríklad:
 
@@ -482,7 +482,7 @@ otoč o 90° okolo z-axis.
 
 Smer positive rotation určujeme pomocou right-hand rule. Ak palec pravej ruky nasmerujeme pozdĺž positive direction rotation axis, smer zatočených prstov určuje positive rotation.
 
-![Rotation of a frame by angle theta about axis omega-hat](/book/ch3/fig3-8.png)
+![Rotation of a frame by angle θ about axis omega-hat](/book/ch3/fig3-8.png)
 
 ---
 
@@ -492,10 +492,10 @@ Predstav si, že otáčame objekt okolo x-axis.
 
 Samotná x-axis sa pri rotation nemení. Preto má matrix tvar:
 
-$$Rot(x-hat, theta) =$$
+$$Rot(x-hat, θ) =$$
 $$[ 1  0  0 ]$$
-$$[ 0  cos theta  -sin theta ]$$
-$$[ 0  sin theta  cos theta ]$$
+$$[ 0  cos θ  -sin θ ]$$
+$$[ 0  sin θ  cos θ ]$$
 
 Prečo zostáva v prvom riadku a columne jednotka?
 
@@ -509,10 +509,10 @@ Je to podobné ako otáčanie kolesa nasadeného na os. Os zostáva na mieste, z
 
 Pre rotation okolo y-axis používame:
 
-$$Rot(y-hat, theta) =$$
-$$[ cos theta  0  sin theta ]$$
+$$Rot(y-hat, θ) =$$
+$$[ cos θ  0  sin θ ]$$
 $$[ 0  1  0 ]$$
-$$[ -sin theta  0  cos theta ]$$
+$$[ -sin θ  0  cos θ ]$$
 
 Tentoraz zostáva nezmenená y-component, pretože práve y-axis je axis of rotation.
 
@@ -526,9 +526,9 @@ Predstav si kameru na gimbale, ktorá sa nakláňa hore a dole okolo horizontál
 
 Pre rotation okolo z-axis dostávame:
 
-$$Rot(z-hat, theta) =$$
-$$[ cos theta  -sin theta  0 ]$$
-$$[ sin theta  cos theta  0 ]$$
+$$Rot(z-hat, θ) =$$
+$$[ cos θ  -sin θ  0 ]$$
+$$[ sin θ  cos θ  0 ]$$
 $$[ 0  0  1 ]$$
 
 Toto je v podstate planar rotation matrix rozšírená do 3D.
@@ -551,15 +551,15 @@ ktorý smeruje šikmo cez priestor.
 
 Potom:
 
-**Rot(omega-hat, theta)**
+**Rot(omega-hat, θ)**
 
-predstavuje rotation o theta okolo tejto axis.
+predstavuje rotation o θ okolo tejto axis.
 
 To je dôležité napríklad pri robotickom ramene. Joint axis nemusí byť zarovnaná so svetovou x, y alebo z-axis. Môže smerovať ľubovoľne podľa konštrukcie robota.
 
 Preto potrebujeme všeobecný spôsob reprezentácie rotation pomocou axis + angle.
 
-Podklad uvádza aj úplný všeobecný matrix expression pre Rot(omega-hat, theta). Je pomerne rozsiahly, ale jeho význam je jednoduchší než jeho vzhľad: dostane unit direction rotation axis omega-hat a angle theta a vytvorí rotation matrix, ktorá vykoná presne túto rotation. Neskôr sa k tomuto vzťahu vrátime oveľa systematickejšie cez exponential coordinates a Rodriguesovu formulu.
+Podklad uvádza aj úplný všeobecný matrix expression pre Rot(omega-hat, θ). Je pomerne rozsiahly, ale jeho význam je jednoduchší než jeho vzhľad: dostane unit direction rotation axis omega-hat a angle θ a vytvorí rotation matrix, ktorá vykoná presne túto rotation. Neskôr sa k tomuto vzťahu vrátime oveľa systematickejšie cez exponential coordinates a Rodriguesovu formulu.
 
 ---
 
@@ -601,7 +601,7 @@ Majme body frame {b}, ktorého súčasnú orientation vzhľadom na space frame {
 
 Teraz ho chceme otočiť pomocou:
 
-**R = Rot(omega-hat, theta)**
+**R = Rot(omega-hat, θ)**
 
 a omega-hat interpretujeme v space frame {s}.
 
@@ -911,7 +911,7 @@ Toto rozdelenie je omnoho spoľahlivejšie než slepé memorovanie „left alebo
 
 **Active transformation** - Reference frame zostáva rovnaký a fyzicky otáčame vector alebo rigid body.
 
-**Rot(omega-hat, theta)** - Rotation operator definovaný unit axis omega-hat a rotation angle theta.
+**Rot(omega-hat, θ)** - Rotation operator definovaný unit axis omega-hat a rotation angle θ.
 
 **Fixed-frame rotation** - Ak je rotation axis vyjadrená vo fixed frame, novú rotation premultiplikujeme: Rsb' = R Rsb.
 

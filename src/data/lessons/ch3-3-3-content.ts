@@ -11,7 +11,7 @@ Teraz sa dostávame k tretej veľkej téme tejto kapitoly. Chceme odpovedať na 
 
 **„Ak poznáme twist a chceme sa pozdĺž neho pohybovať o určitú veľkosť, aká bude výsledná configuration?"**
 
-Inými slovami, chceme nájsť spôsob, ako z twistu vytvoriť **finite rigid-body motion**. Presne rovnakú úlohu sme riešili pri rotations, keď sme z angular velocity omega a angle theta vypočítali rotation matrix R pomocou matrix exponential. Teraz urobíme to isté, ale pre celý rigid-body motion zahŕňajúci rotation aj translation.
+Inými slovami, chceme nájsť spôsob, ako z twistu vytvoriť **finite rigid-body motion**. Presne rovnakú úlohu sme riešili pri rotations, keď sme z angular velocity omega a angle θ vypočítali rotation matrix R pomocou matrix exponential. Teraz urobíme to isté, ale pre celý rigid-body motion zahŕňajúci rotation aj translation.
 
 Výsledkom bude **matrix exponential pre SE(3)**, ktorý z prvku se(3) vytvorí prvok SE(3).
 
@@ -23,21 +23,21 @@ Pri rotations sme mali dve reprezentácie tej istej veci.
 
 Na jednej strane stála **rotation matrix R ∈ SO(3)**, ktorá opisovala orientation.
 
-Na druhej strane bola **exponential coordinate representation**: unit vector omega-hat určujúci rotation axis a scalar theta určujúci rotation angle. Spolu tvorili exponential coordinate vector:
+Na druhej strane bola **exponential coordinate representation**: unit vector omega-hat určujúci rotation axis a scalar θ určujúci rotation angle. Spolu tvorili exponential coordinate vector:
 
-**omega-hat theta**
+**omega-hat θ**
 
 Matrix exponential nám umožnil prejsť z jednej reprezentácie do druhej:
 
-**R = e^[omega-hat]theta**
+**R = e^[omega-hat]θ**
 
 kde [omega-hat] je skew-symmetric matrix vytvorená z unit vectora omega-hat.
 
 Na výpočet sme používali Rodrigues' formula:
 
-**e^[omega-hat]theta = I + sin(theta)[omega-hat] + (1 - cos(theta))[omega-hat]^2**
+**e^[omega-hat]θ = I + sin(θ)[omega-hat] + (1 - cos(θ))[omega-hat]^2**
 
-Matrix logarithm robil opačnú cestu: z R nám dal [omega-hat]theta.
+Matrix logarithm robil opačnú cestu: z R nám dal [omega-hat]θ.
 
 Teraz chceme celú túto štruktúru rozšíriť z rotations na celé rigid-body motions.
 
@@ -55,11 +55,11 @@ V lekcii o twists sme videli, že instantaneous rigid-body motion môžeme zapí
 
 Exponential coordinates pre rigid-body motion budú mať tvar:
 
-**S theta**
+**S θ**
 
-kde S je **unit twist** (normalizovaný twist) a theta je scalar, ktorý hovorí, **ako ďaleko** sa pozdĺž tohto twistu pohybujeme.
+kde S je **unit twist** (normalizovaný twist) a θ je scalar, ktorý hovorí, **ako ďaleko** sa pozdĺž tohto twistu pohybujeme.
 
-Presne tak, ako omega-hat theta pri rotations.
+Presne tak, ako omega-hat θ pri rotations.
 
 ---
 
@@ -91,29 +91,29 @@ Prečo dva prípady? Pretože pri čistej translation nemáme rotation axis, pod
 
 ---
 
-## 4. Význam theta pri rotation case
+## 4. Význam θ pri rotation case
 
-Ak omega-hat ≠ 0, potom theta je **rotation angle**.
+Ak omega-hat ≠ 0, potom θ je **rotation angle**.
 
-Predstav si robotický joint, ktorý sa otáča. S opisuje smer a geometry screw axis a theta hovorí, o koľko radiánov sa joint otočil.
+Predstav si robotický joint, ktorý sa otáča. S opisuje smer a geometry screw axis a θ hovorí, o koľko radiánov sa joint otočil.
 
-Výsledná configuration po otočení o theta bude:
+Výsledná configuration po otočení o θ bude:
 
-**T = e^[S]theta**
+**T = e^[S]θ**
 
 Toto je presne tá formula, ktorú chceme odvodiť.
 
 ---
 
-## 5. Význam theta pri translation case
+## 5. Význam θ pri translation case
 
-Ak omega = 0 a ||v-hat|| = 1, potom theta je **translation distance**.
+Ak omega = 0 a ||v-hat|| = 1, potom θ je **translation distance**.
 
 Predstav si prismatic joint na robotickom ramene. Nevykonáva rotation, iba sa posúva v jednom smere. Theta potom hovorí, o koľko metrov sa joint vysunul.
 
 Aj v tomto prípade platí:
 
-**T = e^[S]theta**
+**T = e^[S]θ**
 
 a výsledkom bude homogeneous transformation opisujúca čistú translation.
 
@@ -135,21 +135,21 @@ Pri unit twist s omega = 0 je horná ľavá časť nulová matrix a horný prav�
 
 ---
 
-## 7. Prečo chceme matrix exponential e^[S]theta
+## 7. Prečo chceme matrix exponential e^[S]θ
 
-Máme twist S a parameter theta. Chceme vypočítať výslednú transformation matrix T.
+Máme twist S a parameter θ. Chceme vypočítať výslednú transformation matrix T.
 
 Matrix exponential nám poskytuje priamu cestu:
 
-**T = e^[S]theta**
+**T = e^[S]θ**
 
 Toto je veľmi elegantný vzťah. Hovorí:
 
-**„Ak sa rigid body pohybuje pozdĺž screw axis opísanej twistom S o veľkosť theta, výsledná configuration je e^[S]theta."**
+**„Ak sa rigid body pohybuje pozdĺž screw axis opísanej twistom S o veľkosť θ, výsledná configuration je e^[S]θ."**
 
 Je to priama generalizácia vzťahu:
 
-**R = e^[omega-hat]theta**
+**R = e^[omega-hat]θ**
 
 z rotations na celé rigid-body motions.
 
@@ -157,9 +157,9 @@ z rotations na celé rigid-body motions.
 
 ## 8. Formálna definícia matrix exponential pre SE(3)
 
-Matrix exponential 4 x 4 matrix [S]theta definujeme pomocou power series:
+Matrix exponential 4 x 4 matrix [S]θ definujeme pomocou power series:
 
-**e^[S]theta = I + [S]theta + ([S]theta)^2 / 2! + ([S]theta)^3 / 3! + ...**
+**e^[S]θ = I + [S]θ + ([S]θ)^2 / 2! + ([S]θ)^3 / 3! + ...**
 
 kde I je 4 x 4 identity matrix.
 
@@ -173,63 +173,63 @@ Matematicky je táto series vždy konvergentná. V praxi ju však nepočítame n
 
 Ak ||omega|| = 1 (twist obsahuje rotation), matrix exponential má uzavretú formu:
 
-$$e^[S]theta =$$
-$$[ e^[omega-hat]theta  G(theta) v ]$$
+$$e^[S]θ =$$
+$$[ e^[omega-hat]θ  G(θ) v ]$$
 $$[ 0 0 0  1 ]$$
 
 Rozbalíme si, čo to znamená.
 
 Horná ľavá časť je nám už známa:
 
-**e^[omega-hat]theta**
+**e^[omega-hat]θ**
 
 To je rotation matrix vypočítaná Rodrigues' formula. Je to presne tá istá rotation matrix, akú sme mali v kapitole o exponential coordinates of rotation.
 
 Horná pravá časť je:
 
-**G(theta) v**
+**G(θ) v**
 
-kde G(theta) je nová matrix, ktorú ešte musíme definovať, a v je linear časť unit twistu S.
+kde G(θ) je nová matrix, ktorú ešte musíme definovať, a v je linear časť unit twistu S.
 
 Spodný riadok je rovnaký ako v každej homogeneous transformation: [0 0 0 1].
 
 ---
 
-## 10. Čo je matrix G(theta)
+## 10. Čo je matrix G(θ)
 
-Matrix G(theta) je 3 x 3 matrix definovaná ako:
+Matrix G(θ) je 3 x 3 matrix definovaná ako:
 
-**G(theta) = I theta + (1 - cos(theta))[omega-hat] + (theta - sin(theta))[omega-hat]^2**
+**G(θ) = I θ + (1 - cos(θ))[omega-hat] + (θ - sin(θ))[omega-hat]^2**
 
 kde I je 3 x 3 identity matrix a [omega-hat] je skew-symmetric matrix unit rotation axis.
 
 Túto formulu si nemusíme pamätať nazapamäť, ale je veľmi dôležité pochopiť, čo robí.
 
-G(theta) transformuje linear časť twistu v na **translation vector p**, ktorý sa objaví v homogeneous transformation matrix.
+G(θ) transformuje linear časť twistu v na **translation vector p**, ktorý sa objaví v homogeneous transformation matrix.
 
 Preto:
 
-**p = G(theta) v**
+**p = G(θ) v**
 
-Predstav si to takto: pri čistej rotation by sa body origin pohyboval po oblúku. Translation časť twistu v spolu s G(theta) presne opisujú, aký net displacement vznikne kombináciou rotation a translation pozdĺž screw axis.
+Predstav si to takto: pri čistej rotation by sa body origin pohyboval po oblúku. Translation časť twistu v spolu s G(θ) presne opisujú, aký net displacement vznikne kombináciou rotation a translation pozdĺž screw axis.
 
 ---
 
-## 11. Prečo G(theta) vyzerá tak, ako vyzerá
+## 11. Prečo G(θ) vyzerá tak, ako vyzerá
 
-G(theta) v skutočnosti vznikne z power series matrix exponential.
+G(θ) v skutočnosti vznikne z power series matrix exponential.
 
-Keď rozvinieme e^[S]theta do power series a pozrieme sa na hornú pravú časť 4 x 4 výsledku, dostaneme:
+Keď rozvinieme e^[S]θ do power series a pozrieme sa na hornú pravú časť 4 x 4 výsledku, dostaneme:
 
-**I theta v + [omega-hat]v theta^2/2! + [omega-hat]^2 v theta^3/3! + ...**
+**I θ v + [omega-hat]v θ^2/2! + [omega-hat]^2 v θ^3/3! + ...**
 
 Ak si vytkneme v, zostane nám:
 
-**(I theta + [omega-hat] theta^2/2! + [omega-hat]^2 theta^3/3! + ...) v**
+**(I θ + [omega-hat] θ^2/2! + [omega-hat]^2 θ^3/3! + ...) v**
 
 Po sčítaní series s využitím toho, že [omega-hat]^3 = -[omega-hat], dostaneme presne:
 
-**G(theta) = I theta + (1 - cos(theta))[omega-hat] + (theta - sin(theta))[omega-hat]^2**
+**G(θ) = I θ + (1 - cos(θ))[omega-hat] + (θ - sin(θ))[omega-hat]^2**
 
 Je to teda uzavretá forma nekonečnej power series.
 
@@ -239,23 +239,23 @@ Je to teda uzavretá forma nekonečnej power series.
 
 Rodrigues' formula pre rotation matrix bola:
 
-**e^[omega-hat]theta = I + sin(theta)[omega-hat] + (1 - cos(theta))[omega-hat]^2**
+**e^[omega-hat]θ = I + sin(θ)[omega-hat] + (1 - cos(θ))[omega-hat]^2**
 
-Formula pre G(theta) je:
+Formula pre G(θ) je:
 
-**G(theta) = I theta + (1 - cos(theta))[omega-hat] + (theta - sin(theta))[omega-hat]^2**
+**G(θ) = I θ + (1 - cos(θ))[omega-hat] + (θ - sin(θ))[omega-hat]^2**
 
 Vidíme jasné podobnosti. Obe formuly majú tri členy a obe používajú [omega-hat] a [omega-hat]^2. Líšia sa však v koeficientoch.
 
 V Rodrigues' formula figurujú:
 
-**1, sin(theta), (1 - cos(theta))**
+**1, sin(θ), (1 - cos(θ))**
 
-V G(theta) figurujú:
+V G(θ) figurujú:
 
-**theta, (1 - cos(theta)), (theta - sin(theta))**
+**θ, (1 - cos(θ)), (θ - sin(θ))**
 
-Toto nie je náhoda. Koeficienty v G(theta) sú vlastne integrály koeficientov z Rodrigues' formula.
+Toto nie je náhoda. Koeficienty v G(θ) sú vlastne integrály koeficientov z Rodrigues' formula.
 
 ---
 
@@ -269,7 +269,7 @@ V tomto prípade screw axis prechádza originom, takže linear časť unit twist
 
 Preto:
 
-**G(theta) v = G(theta) 0 = 0**
+**G(θ) v = G(θ) 0 = 0**
 
 a translation v výslednej T je zero:
 
@@ -299,7 +299,7 @@ Unit twist S bude mať:
 
 Theta bude rotation angle.
 
-Po dosadení do formuly dostaneme T, ktorej rotation časť bude otočená o theta okolo axis a translation časť bude kombinácia pohybu po oblúku a posunutia pozdĺž axis.
+Po dosadení do formuly dostaneme T, ktorej rotation časť bude otočená o θ okolo axis a translation časť bude kombinácia pohybu po oblúku a posunutia pozdĺž axis.
 
 ---
 
@@ -313,45 +313,45 @@ Unit twist má tvar:
 
 kde ||v-hat|| = 1.
 
-Matrix [S]theta je:
+Matrix [S]θ je:
 
-$$[S]theta =$$
-$$[ 0  v-hat theta ]$$
+$$[S]θ =$$
+$$[ 0  v-hat θ ]$$
 $$[ 0 0 0  0 ]$$
 
 kde horná ľavá 3 x 3 časť je nulová matrix.
 
-Power series pre e^[S]theta:
+Power series pre e^[S]θ:
 
-**e^[S]theta = I + [S]theta + 0 + 0 + ...**
+**e^[S]θ = I + [S]θ + 0 + 0 + ...**
 
-pretože ([S]theta)^2 = 0 v tomto prípade.
+pretože ([S]θ)^2 = 0 v tomto prípade.
 
 Preto:
 
-$$e^[S]theta =$$
-$$[ I  v-hat theta ]$$
+$$e^[S]θ =$$
+$$[ I  v-hat θ ]$$
 $$[ 0 0 0  1 ]$$
 
-To je jednoducho homogeneous transformation matrix pre čistú translation o vector v-hat theta.
+To je jednoducho homogeneous transformation matrix pre čistú translation o vector v-hat θ.
 
-Žiadna rotation (R = I) a position vector p = v-hat theta.
+Žiadna rotation (R = I) a position vector p = v-hat θ.
 
 ![Two reference frames in a plane illustrating exponential coordinates of rigid-body motion](/book/ch3/fig3-20.png)
 
 ---
 
-## 16. Prečo pri čistej translation vypadne G(theta)
+## 16. Prečo pri čistej translation vypadne G(θ)
 
-Keď omega = 0, nemôžeme použiť G(theta), pretože G(theta) je definovaná pomocou [omega-hat] a tá by bola nulová matrix.
+Keď omega = 0, nemôžeme použiť G(θ), pretože G(θ) je definovaná pomocou [omega-hat] a tá by bola nulová matrix.
 
 Namiesto toho pri omega = 0 dostaneme priamo:
 
-**p = v-hat theta**
+**p = v-hat θ**
 
-Toto je intuitívne správne. Ak sa teleso posúva v smere v-hat o vzdialenosť theta, jeho position sa zmení o v-hat theta.
+Toto je intuitívne správne. Ak sa teleso posúva v smere v-hat o vzdialenosť θ, jeho position sa zmení o v-hat θ.
 
-G(theta) teda nepotrebujeme. Je to presne analógia situácie pri rotation, kde pri theta = 0 bola e^[omega-hat]theta = I bez potreby Rodrigues' formula.
+G(θ) teda nepotrebujeme. Je to presne analógia situácie pri rotation, kde pri θ = 0 bola e^[omega-hat]θ = I bez potreby Rodrigues' formula.
 
 ---
 
@@ -361,23 +361,23 @@ Zhrnieme oba prípady.
 
 Ak ||omega|| = 1 (rotation case):
 
-$$e^[S]theta =$$
-$$[ e^[omega-hat]theta  G(theta) v ]$$
+$$e^[S]θ =$$
+$$[ e^[omega-hat]θ  G(θ) v ]$$
 $$[ 0 0 0  1 ]$$
 
 kde:
 
-**e^[omega-hat]theta = I + sin(theta)[omega-hat] + (1 - cos(theta))[omega-hat]^2**
+**e^[omega-hat]θ = I + sin(θ)[omega-hat] + (1 - cos(θ))[omega-hat]^2**
 
-**G(theta) = I theta + (1 - cos(theta))[omega-hat] + (theta - sin(theta))[omega-hat]^2**
+**G(θ) = I θ + (1 - cos(θ))[omega-hat] + (θ - sin(θ))[omega-hat]^2**
 
 Ak omega = 0 a ||v|| = 1 (pure translation case):
 
-$$e^[S]theta =$$
-$$[ I  v theta ]$$
+$$e^[S]θ =$$
+$$[ I  v θ ]$$
 $$[ 0 0 0  1 ]$$
 
-Tieto dve formuly nám umožňujú pre ľubovoľný unit twist S a parameter theta vypočítať výslednú homogeneous transformation T.
+Tieto dve formuly nám umožňujú pre ľubovoľný unit twist S a parameter θ vypočítať výslednú homogeneous transformation T.
 
 ---
 
@@ -385,10 +385,10 @@ Tieto dve formuly nám umožňujú pre ľubovoľný unit twist S a parameter the
 
 V lekcii o twists sme videli, že každý twist zodpovedá motion pozdĺž screw axis. Matrix exponential teraz túto myšlienku dotvárame.
 
-Ak máme screw axis a chceme vedieť, aká bude configuration rigid body po tom, ako sa pootočí o theta okolo tejto axis (a prípadne sa posunie pozdĺž nej), stačí:
+Ak máme screw axis a chceme vedieť, aká bude configuration rigid body po tom, ako sa pootočí o θ okolo tejto axis (a prípadne sa posunie pozdĺž nej), stačí:
 
 1. Zapísať screw axis ako unit twist S
-2. Vypočítať e^[S]theta
+2. Vypočítať e^[S]θ
 
 Výsledok je priamo homogeneous transformation matrix T opisujúca novú configuration.
 
@@ -408,7 +408,7 @@ Prismatic joint je screw motion s omega = 0. Je to čistá translation pozdĺž 
 
 Preto:
 
-**Configuration vyvolaná jointom o theta = e^[Si]thetai**
+**Configuration vyvolaná jointom o θ = e^[Si]θi**
 
 kde Si je unit twist prislúchajúci i-tému jointu.
 
@@ -433,9 +433,9 @@ Theta je rotation angle jointu.
 
 Po dosadení do matrix exponential:
 
-**T = e^[S]theta**
+**T = e^[S]θ**
 
-dostaneme configuration rigid body po otočení jointu o angle theta.
+dostaneme configuration rigid body po otočení jointu o angle θ.
 
 ---
 
@@ -453,11 +453,11 @@ Theta je translation distance.
 
 Matrix exponential:
 
-$$e^[S]theta =$$
-$$[ I  v-hat theta ]$$
+$$e^[S]θ =$$
+$$[ I  v-hat θ ]$$
 $$[ 0 0 0  1 ]$$
 
-To je jednoducho translation o v-hat theta.
+To je jednoducho translation o v-hat θ.
 
 Prismatic joint teda neprináša žiadnu rotation, iba position change.
 
@@ -467,17 +467,17 @@ Prismatic joint teda neprináša žiadnu rotation, iba position change.
 
 Rovnako ako pri rotations, aj tu chceme vedieť ísť opačným smerom.
 
-Máme homogeneous transformation matrix T ∈ SE(3) a chceme nájsť unit twist S a parameter theta také, aby:
+Máme homogeneous transformation matrix T ∈ SE(3) a chceme nájsť unit twist S a parameter θ také, aby:
 
-**T = e^[S]theta**
+**T = e^[S]θ**
 
 Operácia, ktorá toto robí, sa nazýva **matrix logarithm pre SE(3)**.
 
 Zapisujeme:
 
-**[S]theta = log(T)**
+**[S]θ = log(T)**
 
-Výsledkom je 4 x 4 matrix patriaca do se(3), z ktorej môžeme extrahovať S a theta.
+Výsledkom je 4 x 4 matrix patriaca do se(3), z ktorej môžeme extrahovať S a θ.
 
 ---
 
@@ -493,7 +493,7 @@ Rotation matrix je identity, takže omega = 0. Ide o čistú translation.
 
 V tomto prípade:
 
-**theta = ||p||**
+**θ = ||p||**
 
 **v-hat = p / ||p||**
 
@@ -503,7 +503,7 @@ a unit twist je:
 
 Matrix logarithm je:
 
-$$[S]theta =$$
+$$[S]θ =$$
 $$[ 0  p ]$$
 $$[ 0 0 0  0 ]$$
 
@@ -515,13 +515,13 @@ To dáva intuitívny zmysel. Ak configuration je čistá translation o vector p,
 
 Ak R ≠ I, situácia je zložitejšia, ale stále zvládnuteľná.
 
-Najprv z rotation časti R získame omega-hat a theta pomocou matrix logarithm pre SO(3), ktorý už poznáme z predchádzajúcej lekcie.
+Najprv z rotation časti R získame omega-hat a θ pomocou matrix logarithm pre SO(3), ktorý už poznáme z predchádzajúcej lekcie.
 
 Použijeme:
 
-**[omega-hat]theta = log(R)**
+**[omega-hat]θ = log(R)**
 
-To nám dá rotation axis omega-hat a rotation angle theta.
+To nám dá rotation axis omega-hat a rotation angle θ.
 
 Zostáva ešte nájsť linear časť v twistu.
 
@@ -531,23 +531,23 @@ Zostáva ešte nájsť linear časť v twistu.
 
 Z formuly pre matrix exponential vieme, že:
 
-**p = G(theta) v**
+**p = G(θ) v**
 
 kde p je translation vector z T.
 
 Preto:
 
-**v = G(theta)^-1 p**
+**v = G(θ)^-1 p**
 
-Musíme teda invertovať matrix G(theta).
+Musíme teda invertovať matrix G(θ).
 
-Inverse G(theta) existuje a má uzavretú formu:
+Inverse G(θ) existuje a má uzavretú formu:
 
-**G(theta)^-1 = (1/theta) I - (1/2)[omega-hat] + ((1/theta) - (1/2)cot(theta/2))[omega-hat]^2**
+**G(θ)^-1 = (1/θ) I - (1/2)[omega-hat] + ((1/θ) - (1/2)cot(θ/2))[omega-hat]^2**
 
-kde cot(theta/2) = cos(theta/2) / sin(theta/2).
+kde cot(θ/2) = cos(θ/2) / sin(θ/2).
 
-Po výpočte v = G(theta)^-1 p máme kompletný unit twist S = [omega-hat; v] a parameter theta.
+Po výpočte v = G(θ)^-1 p máme kompletný unit twist S = [omega-hat; v] a parameter θ.
 
 ---
 
@@ -559,23 +559,23 @@ Vstup: T ∈ SE(3)
 
 Krok 1: Extrahuj R a p z T.
 
-Krok 2: Ak R = I, potom omega = 0, theta = ||p||, v = p/||p|| a:
+Krok 2: Ak R = I, potom omega = 0, θ = ||p||, v = p/||p|| a:
 
-$$[S]theta =$$
+$$[S]θ =$$
 $$[ 0  p ]$$
 $$[ 0 0 0  0 ]$$
 
-Krok 3: Ak R ≠ I, použij matrix logarithm pre SO(3) na R a získaj [omega-hat] a theta.
+Krok 3: Ak R ≠ I, použij matrix logarithm pre SO(3) na R a získaj [omega-hat] a θ.
 
-Krok 4: Vypočítaj v = G(theta)^-1 p.
+Krok 4: Vypočítaj v = G(θ)^-1 p.
 
 Krok 5: Zostav:
 
-$$[S]theta =$$
-$$[ [omega-hat]theta  v theta ]$$
+$$[S]θ =$$
+$$[ [omega-hat]θ  v θ ]$$
 $$[ 0 0 0  0 ]$$
 
-Výstup: [S]theta ∈ se(3)
+Výstup: [S]θ ∈ se(3)
 
 ---
 
@@ -593,7 +593,7 @@ R = I, takže omega = 0.
 
 p = (3, 0, 4).
 
-theta = ||p|| = sqrt(9 + 0 + 16) = sqrt(25) = 5.
+θ = ||p|| = sqrt(9 + 0 + 16) = sqrt(25) = 5.
 
 v-hat = (3/5, 0, 4/5) = (0.6, 0, 0.8).
 
@@ -607,11 +607,11 @@ Interpretation: teleso sa posunulo o 5 jednotiek v smere (0.6, 0, 0.8).
 
 Rovnako ako pri rotations, aj tu musíme byť opatrní.
 
-Ak R = I a p ≠ 0, logarithm je jednoznačný (až na znak theta, kde berieme kladné).
+Ak R = I a p ≠ 0, logarithm je jednoznačný (až na znak θ, kde berieme kladné).
 
-Ak R ≠ I, theta nie je jednoznačné, pretože rotation o theta a o theta + 2k pi dáva tú istú R. Zvyčajne berieme theta ∈ (0, pi].
+Ak R ≠ I, θ nie je jednoznačné, pretože rotation o θ a o θ + 2k pi dáva tú istú R. Zvyčajne berieme θ ∈ (0, pi].
 
-Špeciálny prípad theta = pi vyžaduje opatrnejšie zaobchádzanie, rovnako ako pri matrix logarithm pre SO(3).
+Špeciálny prípad θ = pi vyžaduje opatrnejšie zaobchádzanie, rovnako ako pri matrix logarithm pre SO(3).
 
 ---
 
@@ -619,7 +619,7 @@ Ak R ≠ I, theta nie je jednoznačné, pretože rotation o theta a o theta + 2k
 
 Platí:
 
-**log(e^[S]theta) = [S]theta**
+**log(e^[S]θ) = [S]θ**
 
 a:
 
@@ -649,7 +649,7 @@ Jedným z najdôležitejších výsledkov v mechanike je **Chasles' theorem** (n
 
 Inými slovami, každý rigid-body motion je screw motion.
 
-Matrix exponential presne toto realizuje. Parametrizuje screw motion pomocou S a theta, a logarithm nám pre ľubovoľné T nájde príslušnú screw axis a parameter.
+Matrix exponential presne toto realizuje. Parametrizuje screw motion pomocou S a θ, a logarithm nám pre ľubovoľné T nájde príslušnú screw axis a parameter.
 
 Čistá translation je limitný prípad, keď rotation angle je zero a „screw axis" je v nekonečne.
 
@@ -663,15 +663,15 @@ Pre rotations:
 
 - Configuration: R ∈ SO(3)
 - Instantaneous motion: [omega] ∈ so(3)
-- Exponential: R = e^[omega-hat]theta
-- Logarithm: [omega-hat]theta = log(R)
+- Exponential: R = e^[omega-hat]θ
+- Logarithm: [omega-hat]θ = log(R)
 
 Pre rigid-body motions:
 
 - Configuration: T ∈ SE(3)
 - Instantaneous motion: [V] ∈ se(3)
-- Exponential: T = e^[S]theta
-- Logarithm: [S]theta = log(T)
+- Exponential: T = e^[S]θ
+- Logarithm: [S]θ = log(T)
 
 Celá teória rigid-body motion je teda elegantnou generalizáciou teórie rotations.
 
@@ -679,9 +679,9 @@ Celá teória rigid-body motion je teda elegantnou generalizáciou teórie rotat
 
 ## 32. Ako exponential coordinates popisujú jointový pohyb
 
-Každý joint v robotickom ramene má svoju screw axis Si. Keď sa joint pootočí (alebo vysunie) o thetai, výsledná transformation je:
+Každý joint v robotickom ramene má svoju screw axis Si. Keď sa joint pootočí (alebo vysunie) o θi, výsledná transformation je:
 
-**e^[Si]thetai**
+**e^[Si]θi**
 
 Pri sériovom ramene s n joints celková configuration end-effectora závisí od všetkých joint positions. Keď tieto exponentials zložíme za sebou, dostaneme veľmi elegantnú formulu pre forward kinematics.
 
@@ -689,20 +689,20 @@ Tým sa budeme zaoberať v nasledujúcich kapitolách, ale je dôležité vedie�
 
 ---
 
-## 33. [S]theta vs S theta - matrix vs vector forma
+## 33. [S]θ vs S θ - matrix vs vector forma
 
 Musíme byť opatrní s notáciou.
 
-**S theta** je 6D vector. Je to exponential coordinate vector pre rigid-body motion. Jeho prvé tri components sú omega-hat theta a posledné tri sú v theta.
+**S θ** je 6D vector. Je to exponential coordinate vector pre rigid-body motion. Jeho prvé tri components sú omega-hat θ a posledné tri sú v θ.
 
-**[S]theta** je 4 x 4 matrix v se(3). Vznikne z S theta rovnako ako [omega] vzniká z omega: je to matrix representation.
+**[S]θ** je 4 x 4 matrix v se(3). Vznikne z S θ rovnako ako [omega] vzniká z omega: je to matrix representation.
 
-**[S theta]** je to isté ako **[S]theta** - bracket notation aplikovaná na celý 6D vector.
+**[S θ]** je to isté ako **[S]θ** - bracket notation aplikovaná na celý 6D vector.
 
 V praxi:
 
-$$[S]theta = [S theta] =$$
-$$[ [omega-hat]theta  v theta ]$$
+$$[S]θ = [S θ] =$$
+$$[ [omega-hat]θ  v θ ]$$
 $$[ 0 0 0  0 ]$$
 
 Matrix exponential berieme z tejto 4 x 4 matrix.
@@ -711,11 +711,11 @@ Matrix exponential berieme z tejto 4 x 4 matrix.
 
 ## 34. Exponential coordinates v space frame vs body frame
 
-Doteraz sme pracovali so space frame interpretáciou. Unit twist S bol vyjadrený v space frame a e^[S]theta opisoval motion v space frame.
+Doteraz sme pracovali so space frame interpretáciou. Unit twist S bol vyjadrený v space frame a e^[S]θ opisoval motion v space frame.
 
 Rovnako dobre však môžeme pracovať v body frame. Ak máme unit twist Sb vyjadrený v body frame, platí:
 
-**T = e^[Sb]theta**
+**T = e^[Sb]θ**
 
 Toto je body frame verzia tej istej transformácie.
 
@@ -739,21 +739,21 @@ V praxi to znamená, že namiesto toho, aby sme pre každý robot individuálne 
 
 ## 36. Čo musíme vedieť na výpočet
 
-Pre praktický výpočet matrix exponential e^[S]theta potrebujeme:
+Pre praktický výpočet matrix exponential e^[S]θ potrebujeme:
 
 1. Rozlíšiť, či ||omega|| = 1 (rotation case) alebo omega = 0 (translation case)
 
-2. Ak rotation case: použiť Rodrigues' formula na e^[omega-hat]theta a formula pre G(theta) na výpočet translation časti
+2. Ak rotation case: použiť Rodrigues' formula na e^[omega-hat]θ a formula pre G(θ) na výpočet translation časti
 
-3. Ak translation case: výsledok je priamo T = [I, v-hat theta; 0, 1]
+3. Ak translation case: výsledok je priamo T = [I, v-hat θ; 0, 1]
 
 Pre matrix logarithm log(T):
 
 1. Extrahujeme R a p z T
 
-2. Ak R = I: omega = 0, theta = ||p||, v = p/||p||
+2. Ak R = I: omega = 0, θ = ||p||, v = p/||p||
 
-3. Ak R ≠ I: nájdeme omega-hat a theta z log(R), potom v = G(theta)^-1 p
+3. Ak R ≠ I: nájdeme omega-hat a θ z log(R), potom v = G(θ)^-1 p
 
 ---
 
@@ -765,13 +765,13 @@ V 3.3.1 sme definovali homogeneous transformation T, ktorá opisuje configuratio
 
 V 3.3.2 sme definovali twist V, ktorý opisuje instantaneous motion.
 
-Teraz v 3.3.3 sme ukázali, ako twist a theta spolu cez matrix exponential vytvárajú finite motion:
+Teraz v 3.3.3 sme ukázali, ako twist a θ spolu cez matrix exponential vytvárajú finite motion:
 
-**T = e^[S]theta**
+**T = e^[S]θ**
 
 a ako cez logarithm extrahujeme z T naspäť screw parameters:
 
-**[S]theta = log(T)**
+**[S]θ = log(T)**
 
 Toto trojica - configuration, velocity, exponential map - tvorí jadro kinematiky v Modern Robotics.
 
@@ -781,21 +781,21 @@ V ďalších kapitolách tieto nástroje aplikujeme na reálne robotické ramen�
 
 ## Rekapitulácia najdôležitejších pojmov
 
-**Exponential coordinates S theta** sú 6D representation rigid-body motion. S je unit twist a theta je scalar (rotation angle alebo translation distance).
+**Exponential coordinates S θ** sú 6D representation rigid-body motion. S je unit twist a θ je scalar (rotation angle alebo translation distance).
 
 **Unit twist S** je normalizovaný twist. Ak omega ≠ 0, normalizujeme podľa ||omega|| = 1. Ak omega = 0, normalizujeme podľa ||v|| = 1.
 
-**Matrix exponential e^[S]theta** prevádza prvok se(3) na prvok SE(3). Pri rotation case je výsledok T s rotation časťou e^[omega-hat]theta a translation časťou G(theta)v.
+**Matrix exponential e^[S]θ** prevádza prvok se(3) na prvok SE(3). Pri rotation case je výsledok T s rotation časťou e^[omega-hat]θ a translation časťou G(θ)v.
 
-**G(theta)** je 3 x 3 matrix: G(theta) = I theta + (1 - cos(theta))[omega-hat] + (theta - sin(theta))[omega-hat]^2. Transformuje linear časť twistu na translation vector.
+**G(θ)** je 3 x 3 matrix: G(θ) = I θ + (1 - cos(θ))[omega-hat] + (θ - sin(θ))[omega-hat]^2. Transformuje linear časť twistu na translation vector.
 
-**Pure translation case** je jednoduchší: e^[S]theta = [I, v-hat theta; 0, 1]. G(theta) sa nepoužíva.
+**Pure translation case** je jednoduchší: e^[S]θ = [I, v-hat θ; 0, 1]. G(θ) sa nepoužíva.
 
-**Matrix logarithm log(T)** je inverzná operácia k matrix exponential. Z T ∈ SE(3) extrahuje [S]theta ∈ se(3). Pri R = I je omega = 0 a theta = ||p||. Pri R ≠ I najprv použijeme log(R) a potom v = G(theta)^-1 p.
+**Matrix logarithm log(T)** je inverzná operácia k matrix exponential. Z T ∈ SE(3) extrahuje [S]θ ∈ se(3). Pri R = I je omega = 0 a θ = ||p||. Pri R ≠ I najprv použijeme log(R) a potom v = G(θ)^-1 p.
 
-**Revolute joint** zodpovedá exponential e^[S]theta s omega ≠ 0. Unit twist S = [omega-hat; -omega-hat x q].
+**Revolute joint** zodpovedá exponential e^[S]θ s omega ≠ 0. Unit twist S = [omega-hat; -omega-hat x q].
 
-**Prismatic joint** zodpovedá exponential e^[S]theta s omega = 0. Unit twist S = [0; v-hat].
+**Prismatic joint** zodpovedá exponential e^[S]θ s omega = 0. Unit twist S = [0; v-hat].
 
 **Chasles' theorem** hovorí, že každý rigid-body motion je screw motion. Matrix exponential toto realizuje algebraicky.
 
@@ -805,11 +805,11 @@ V ďalších kapitolách tieto nástroje aplikujeme na reálne robotické ramen�
 
 ## Čo si z tejto lekcie odniesť
 
-Matrix exponential pre SE(3) je priamou generalizáciou matrix exponential pre SO(3). Tak ako sme z rotation axis a angle pomocou Rodrigues' formula vypočítali rotation matrix, teraz z unit twistu S a parametra theta pomocou uzavretej formuly vypočítame celú homogeneous transformation matrix T.
+Matrix exponential pre SE(3) je priamou generalizáciou matrix exponential pre SO(3). Tak ako sme z rotation axis a angle pomocou Rodrigues' formula vypočítali rotation matrix, teraz z unit twistu S a parametra θ pomocou uzavretej formuly vypočítame celú homogeneous transformation matrix T.
 
-Kľúčový nový prvok je matrix **G(theta)**, ktorá sa stará o translation časť výsledku. Pri čistej translation G(theta) nepotrebujeme, pretože výsledok je triviálny.
+Kľúčový nový prvok je matrix **G(θ)**, ktorá sa stará o translation časť výsledku. Pri čistej translation G(θ) nepotrebujeme, pretože výsledok je triviálny.
 
-Matrix logarithm nám umožňuje ísť opačným smerom: z T nájsť S a theta. Postup závisí od toho, či T obsahuje rotation alebo nie.
+Matrix logarithm nám umožňuje ísť opačným smerom: z T nájsť S a θ. Postup závisí od toho, či T obsahuje rotation alebo nie.
 
 Celá teória má krásnu geometrickú interpretáciu cez **Chasles' theorem**: každý rigid-body motion je screw motion, a matrix exponential je algebraický spôsob, ako tento screw motion vypočítať.
 

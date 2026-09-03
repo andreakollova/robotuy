@@ -719,7 +719,7 @@ kde J je Jacobian ramena a J^T je jeho transpose.
 
 Všimni si, že Jacobian sa pri twistoch používa priamo:
 
-**V-tip = J theta-dot**
+**V-tip = J θ̇**
 
 a pri wrenchoch sa objavuje jeho transpose:
 
@@ -883,7 +883,7 @@ Bez wrenchu by sme museli sily a momenty sledovať oddelene a ručne zabezpečov
 
 **Wrench space a twist space** sú navzájom reciprocal. Pre kĺb s k DOF má twist space dimenziu k a wrench space dimenziu 6 - k.
 
-**Statics robotického ramena** spája tip wrench s joint torques cez tau = J^T F-tip, čo je duálne k V = J theta-dot.
+**Statics robotického ramena** spája tip wrench s joint torques cez tau = J^T F-tip, čo je duálne k V = J θ̇.
 
 **Duálne páry** v robotike: velocity/force, twist/wrench, Adjoint/transpose Adjoint, Jacobian/transpose Jacobian.
 

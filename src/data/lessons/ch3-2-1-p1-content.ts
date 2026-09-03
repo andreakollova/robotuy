@@ -51,15 +51,127 @@ Toto bude neskor velmi dôležité, pretoze môžeme mat aj Rᵦc, Rₛc, Rᵦ�
 
 ---
 
-## 5. Co presne vidime na obrazku?
+## 5. Čo presne vidíme na tomto obrázku?
 
-![Dva coordinate frames - space frame {s} a body frame {b} otočený o 90° okolo z-osi](/book/ch3/fig3-3.png)
+![Dva coordinate frames - space frame {s} a body frame {b} s posunutím p a otočením o uhol θ](/book/ch3/fig3-3.png)
 
-Na obrazku máme hore coordinate frame **{s}**. Jeho osi sú x̂ₛ, ŷₛ, ẑₛ. Pod nim máme body frame **{b}** s osami x̂ᵦ, ŷᵦ, ẑᵦ. Body frame je oproti space frame otoceny, ale vsimni si, že os **z** zostala rovnaka. Frame {b} sa teda v tomto priklade v podstate otocil okolo osi z.
+Na obrázku máme dva coordinate frames. Prvý je pevný space frame **{s}**, ktorý si môžeš predstaviť ako coordinate system celej miestnosti alebo sveta. Jeho začiatok je vľavo dole a vidíme jeho dve osi: **x̂ₛ** smeruje doprava a **ŷₛ** smeruje nahor. Keďže obrázok je nakreslený v 2D, os ẑₛ tu nevidíme - predstavovali by sme si ju ako smerujúcu kolmo von z obrázka.
 
-Teraz sa na obrazok nemusíme pozerat ako na komplikovanu geometriu. Staci porovnavat jednotlive sipky. Najprv vezmeme x̂ᵦ a spytame sa: Kam tato šípka smeruje z pohladu coordinate frame {s}? Potom urobime to isté pre ŷᵦ a nakoniec pre ẑᵦ.
+Druhý coordinate frame je body frame **{b}**. Ten si môžeš predstaviť ako coordinate frame pevne pripevnený k nejakému objektu, napríklad k robotovi. Preto sa jeho osi pohybujú a otáčajú spolu s objektom. Na obrázku je {b} posunutý doprava a nahor oproti {s} a zároveň je aj otočený. Jeho **x̂ᵦ** preto už nesmeruje doprava ako x̂ₛ, ale šikmo doprava nahor. Jeho **ŷᵦ** zase smeruje šikmo doľava nahor.
 
-Keď odpovieme na tieto tri otázky, rotation matrix máme hotovu.
+Tu je veľmi dôležité oddeliť dve rôzne informácie: **kde sa {b} nachádza** a **ako je {b} otočený**. Obrázok nám ukazuje obe.
+
+### Kde sa frame {b} nachádza? To opisuje p
+
+Najprv sa pozri na dlhú tenkú šípku označenú **p**, ktorá ide zo začiatku {s} do začiatku {b}. Táto šípka nám hovorí, kde sa origin body frame {b} nachádza vzhľadom na origin space frame {s}.
+
+Na mriežke vidíme, že z {s} musíme ísť približne dve jednotky doprava a jednu jednotku nahor, aby sme sa dostali do {b}. Preto je:
+
+**p = (2, 1)**
+
+Čítaj to jednoducho ako: "Origin {b} je 2 jednotky v smere x̂ₛ a 1 jednotku v smere ŷₛ od originu {s}."
+
+Všimni si, že **p** nemá striešku. Nie je to unit vector, ktorým by sme chceli označiť iba smer. Je to vector, ktorý tu opisuje posunutie medzi dvoma origins, a preto môže mať ľubovoľnú dĺžku.
+
+Predstav si napríklad robota stojaceho v sklade. {s} môže byť coordinate frame celého skladu a {b} coordinate frame robota. Vector p nám povie: "Kde v sklade sa robot nachádza?" Ale samotné p nám ešte vôbec nepovie, kam je robot otočený.
+
+### Ako zistíme, ako je {b} otočený?
+
+Teraz na chvíľu zabudnime na p a pozrime sa iba na hrubé šípky x̂ᵦ a ŷᵦ.
+
+Položíme si presne rovnakú otázku ako predtým: **Kam smeruje x̂ᵦ, keď sa naň pozeráme z coordinate frame {s}?**
+
+Na obrázku vidíme, že x̂ᵦ už nesmeruje presne po x̂ₛ. Je od x̂ₛ otočený proti smeru hodinových ručičiek o uhol **θ**. V tomto konkrétnom príklade je:
+
+**θ = 60°**
+
+To znamená, že x̂ᵦ má jednu časť v smere x̂ₛ a druhú časť v smere ŷₛ.
+
+A práve tu prichádzajú **cos θ** a **sin θ**.
+
+### Prečo je x̂ᵦ = (cos θ, sin θ)?
+
+Predstav si šípku x̂ᵦ ako preponu pravouhlého trojuholníka. Keďže nad x̂ᵦ máme striešku, ide o unit vector, takže jeho dĺžka je presne **1**.
+
+Jeho horizontálna časť - teda koľko z neho smeruje pozdĺž x̂ₛ - je **cos θ**.
+
+Jeho vertikálna časť - teda koľko z neho smeruje pozdĺž ŷₛ - je **sin θ**.
+
+Preto:
+
+**x̂ᵦ = (cos θ, sin θ)** vyjadrené v {s}
+
+Pri θ = 60° dostaneme cos 60° = 0,5 a sin 60° ≈ 0,866. Takže:
+
+**x̂ᵦ = (0,5, 0,866)** vyjadrené v {s}
+
+Čo to fyzicky znamená? Ak by si išla jednu jednotku v smere x̂ᵦ, z pohľadu pevnej mriežky {s} by si sa posunula približne 0,5 jednotky doprava a 0,866 jednotky nahor.
+
+A stále ide o unit vector, pretože sqrt(0,5² + 0,866²) ≈ 1. Otočenie totiž zmenilo jeho smer, nie jeho dĺžku.
+
+### A čo ŷᵦ?
+
+Teraz položíme druhú otázku: **Kam smeruje ŷᵦ, keď sa naň pozeráme z {s}?**
+
+Na obrázku smeruje šikmo doľava nahor. Preto bude jeho x̂ₛ zložka záporná, pretože smeruje proti kladnému smeru x̂ₛ. Jeho ŷₛ zložka bude kladná, pretože stále smeruje nahor.
+
+Preto:
+
+**ŷᵦ = (-sin θ, cos θ)** vyjadrené v {s}
+
+Pri 60°:
+
+**ŷᵦ = (-0,866, 0,5)** vyjadrené v {s}
+
+Čítaj to veľmi konkrétne: "Ak prejdem jednu jednotku v kladnom smere ŷᵦ, z pohľadu {s} prejdem približne 0,866 jednotky doľava a 0,5 jednotky nahor." Preto je prvé číslo záporné a druhé kladné.
+
+### Prečo je ŷᵦ práve takto otočené voči x̂ᵦ?
+
+Pretože coordinate frame nemôžeme nakresliť tak, že jeho osi smerujú hocijako. Osi x̂ᵦ a ŷᵦ musia zostať na seba kolmé, teda zvierať 90°.
+
+Ak je x̂ᵦ otočené o 60° od x̂ₛ, potom ŷᵦ musí byť ďalších 90° od x̂ᵦ: 60° + 90° = 150°. A smer 150° je presne smer šikmo doľava nahor, ktorý vidíš na obrázku.
+
+Preto sa neotáča iba jedna os. Keď otočíš celý body frame, všetky jeho osi sa otočia spolu a ich vzájomný pravý uhol zostáva zachovaný.
+
+Predstav si súradnice nakreslené fixkou na kuse kartónu. Keď kartón otočíš o 60°, nemôže sa otočiť iba nakreslené x a y zostať na mieste. Obe osi sú súčasťou jedného frame, takže sa otočia spolu.
+
+### Čo teda celý obrázok hovorí?
+
+Teraz už môžeme obrázok čítať ako veľmi jednoduchý príbeh.
+
+Máme pevný world/space frame {s}. Niekde inde sa nachádza objekt s vlastným body frame {b}.
+
+A na úplný opis {b} potrebujeme odpovedať na dve rozdielne otázky.
+
+**Prvá otázka: Kde sa {b} nachádza?**
+
+Odpoveď dáva vector **p = (2, 1)**. Origin {b} je dve jednotky doprava a jednu nahor od originu {s}.
+
+**Druhá otázka: Ako je {b} otočený?**
+
+Odpoveď dostaneme z jeho unit axes:
+
+**x̂ᵦ = (cos θ, sin θ)** a **ŷᵦ = (-sin θ, cos θ)**, kde θ = 60°.
+
+Čiže veľmi zjednodušene:
+
+**p = kde je body frame**
+
+**θ / smery x̂ᵦ, ŷᵦ = ako je body frame otočený**
+
+### Prečo je toto dôležité pre robotiku?
+
+Predstav si mobilného robota na podlahe skladu. Robot môže byť na súradniciach (2, 1), ale to ešte nestačí na to, aby sme vedeli jeho celý pose.
+
+Robot môže na bode (2, 1) smerovať doprava, nahor, doľava alebo šikmo. Vo všetkých prípadoch by mal rovnaké p = (2, 1), ale inú orientation.
+
+Preto potrebujeme dve informácie: **position + orientation**.
+
+V tomto obrázku position reprezentuje p a orientation reprezentujú smery body axes, ktoré môžeme uložiť do rotation matrix.
+
+Takže keby si sa pri tomto obrázku stratila, ignoruj na chvíľu všetku matematiku a polož si iba: **Kde je robot?** To ti povie p. A potom: **Kam má robot otočený svoj vlastný "predok" a svoju vlastnú "ľavú stranu"?** To ti povedia x̂ᵦ a ŷᵦ.
+
+A presne tieto dve veci - kde objekt je a ako je otočený - spolu neskôr vytvoria základ pre opis jeho configuration/pose v priestore.
 
 ---
 

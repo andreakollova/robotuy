@@ -50,15 +50,30 @@ function getSubjectForDayOfWeek(planMonth: Month | undefined, dayOfWeek: number)
   return week.days[dayOfWeek];
 }
 
-/* ========== PERSISTENT TIMER ========== */
+/* ========== CLOCK IN/OUT TIMER ========== */
 const TIMER_RUNNING_KEY = 'robotuy-timer-running';
 const TIMER_START_KEY = 'robotuy-timer-start';
 const TIMER_ELAPSED_KEY = 'robotuy-timer-elapsed';
 const TIMER_DURATION = 3 * 60 * 60;
+const TIMER_DATE_KEY = 'robotuy-timer-date';
+
+function getTodayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
 
 function useStudyTimer() {
   const getStoredElapsed = () => {
     if (typeof window === 'undefined') return 0;
+    // Reset if day changed
+    const storedDate = localStorage.getItem(TIMER_DATE_KEY);
+    if (storedDate !== getTodayStr()) {
+      localStorage.setItem(TIMER_ELAPSED_KEY, '0');
+      localStorage.setItem(TIMER_RUNNING_KEY, 'false');
+      localStorage.removeItem(TIMER_START_KEY);
+      localStorage.setItem(TIMER_DATE_KEY, getTodayStr());
+      return 0;
+    }
     return parseInt(localStorage.getItem(TIMER_ELAPSED_KEY) || '0', 10);
   };
   const getStoredRunning = () => {
@@ -76,7 +91,7 @@ function useStudyTimer() {
     if (!wasRunning) return elapsed;
     const start = getStoredStart();
     const now = Math.floor(Date.now() / 1000);
-    return Math.min(elapsed + (now - start), TIMER_DURATION);
+    return elapsed + (now - start);
   }, []);
 
   const [seconds, setSeconds] = useState(0);
@@ -92,39 +107,40 @@ function useStudyTimer() {
     const iv = setInterval(() => {
       const cur = calcCurrent();
       setSeconds(cur);
-      if (cur >= TIMER_DURATION) {
-        setRunning(false);
-        localStorage.setItem(TIMER_RUNNING_KEY, 'false');
-        localStorage.setItem(TIMER_ELAPSED_KEY, String(TIMER_DURATION));
-      }
+      // No auto-stop — timer continues past 3h goal
     }, 1000);
     return () => clearInterval(iv);
   }, [running, calcCurrent]);
 
-  const toggle = () => {
-    if (running) {
-      const cur = calcCurrent();
-      localStorage.setItem(TIMER_ELAPSED_KEY, String(cur));
-      localStorage.setItem(TIMER_RUNNING_KEY, 'false');
-      setRunning(false);
-      setSeconds(cur);
-    } else {
-      if (seconds >= TIMER_DURATION) return;
-      localStorage.setItem(TIMER_START_KEY, String(Math.floor(Date.now() / 1000)));
-      localStorage.setItem(TIMER_RUNNING_KEY, 'true');
-      setRunning(true);
-    }
+  const clockIn = () => {
+    if (running) return;
+    // Can always clock in again
+    localStorage.setItem(TIMER_DATE_KEY, getTodayStr());
+    localStorage.setItem(TIMER_START_KEY, String(Math.floor(Date.now() / 1000)));
+    localStorage.setItem(TIMER_RUNNING_KEY, 'true');
+    setRunning(true);
+  };
+
+  const clockOut = () => {
+    if (!running) return;
+    const cur = calcCurrent();
+    localStorage.setItem(TIMER_ELAPSED_KEY, String(cur));
+    localStorage.setItem(TIMER_RUNNING_KEY, 'false');
+    setRunning(false);
+    setSeconds(cur);
   };
 
   const reset = () => {
     localStorage.setItem(TIMER_ELAPSED_KEY, '0');
     localStorage.setItem(TIMER_RUNNING_KEY, 'false');
     localStorage.removeItem(TIMER_START_KEY);
+    localStorage.setItem(TIMER_DATE_KEY, getTodayStr());
     setSeconds(0);
     setRunning(false);
   };
 
-  return { seconds, remaining: TIMER_DURATION - seconds, running, progress: seconds / TIMER_DURATION, toggle, reset };
+  const remaining = TIMER_DURATION - seconds;
+  return { seconds, remaining, running, progress: Math.min(seconds / TIMER_DURATION, 1), clockIn, clockOut, reset, done: seconds >= TIMER_DURATION };
 }
 
 function formatTime(totalSec: number) {
@@ -137,48 +153,80 @@ function formatTime(totalSec: number) {
 /* ========== COMPONENTS ========== */
 
 function StudyTimer() {
-  const { remaining, running, progress, toggle, reset } = useStudyTimer();
-  const done = remaining <= 0;
+  const { seconds, remaining, running, progress, clockIn, clockOut, reset, done } = useStudyTimer();
 
   return (
     <div style={{
-      background: '#041540', border: '1px solid #1a1a1a', borderRadius: 16,
-      padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 16,
+      background: '#041540', border: `1px solid ${running ? '#3b82f6' : '#1a1a1a'}`,
+      borderRadius: 16, padding: '16px 20px',
+      transition: 'border-color 0.3s',
     }}>
-      <div style={{ position: 'relative', width: 56, height: 56, flexShrink: 0 }}>
-        <svg width={56} height={56} style={{ transform: 'rotate(-90deg)' }}>
-          <circle cx={28} cy={28} r={24} fill="none" stroke="#1a1a1a" strokeWidth={4} />
-          <circle cx={28} cy={28} r={24} fill="none"
-            stroke={done ? '#22c55e' : running ? '#3b82f6' : '#555'}
-            strokeWidth={4} strokeLinecap="round"
-            strokeDasharray={2 * Math.PI * 24}
-            strokeDashoffset={2 * Math.PI * 24 * (1 - progress)}
-          />
-        </svg>
-        <Timer size={18} color={running ? '#3b82f6' : '#888'} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />
-      </div>
-      <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 22, fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", color: done ? '#22c55e' : '#fff', letterSpacing: '-0.02em' }}>
-          {done ? '0:00:00' : formatTime(remaining)}
+      {/* Top row: circle + countdown + total */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
+        <div style={{ position: 'relative', width: 56, height: 56, flexShrink: 0 }}>
+          <svg width={56} height={56} style={{ transform: 'rotate(-90deg)' }}>
+            <circle cx={28} cy={28} r={24} fill="none" stroke="#1a1a1a" strokeWidth={4} />
+            <circle cx={28} cy={28} r={24} fill="none"
+              stroke={done ? '#22c55e' : running ? '#3b82f6' : '#555'}
+              strokeWidth={4} strokeLinecap="round"
+              strokeDasharray={2 * Math.PI * 24}
+              strokeDashoffset={2 * Math.PI * 24 * (1 - progress)}
+            />
+          </svg>
+          <Timer size={18} color={running ? '#3b82f6' : done ? '#22c55e' : '#888'} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />
         </div>
-        <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
-          {done ? 'Session complete' : running ? 'Study session running' : '3h study timer'}
+        <div style={{ flex: 1 }}>
+          {/* Countdown from 3h (goes negative after) */}
+          <div style={{ fontSize: 24, fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", letterSpacing: '-0.02em', color: done ? '#22c55e' : remaining < 0 ? '#22c55e' : '#fff' }}>
+            {remaining >= 0 ? formatTime(remaining) : '-' + formatTime(Math.abs(remaining))}
+          </div>
+          <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
+            {running ? 'Clocked in' : seconds === 0 ? '3h daily goal' : done ? 'Goal reached!' : 'Paused'}
+          </div>
+        </div>
+        {/* Total studied today */}
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontSize: 16, fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", color: '#fff', letterSpacing: '-0.02em' }}>
+            {formatTime(seconds)}
+          </div>
+          <div style={{ fontSize: 10, color: '#666' }}>today</div>
         </div>
       </div>
+
+      {/* Clock In / Clock Out buttons */}
       <div style={{ display: 'flex', gap: 8 }}>
-        <button onClick={toggle} style={{
-          width: 40, height: 40, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: running ? '#1a1a1a' : done ? '#1a1a1a' : '#3b82f6',
-          opacity: done && !running ? 0.4 : 1,
-        }}>
-          {running ? <Pause size={18} color="#fff" /> : <Play size={18} color="#fff" />}
-        </button>
-        <button onClick={reset} style={{
-          width: 40, height: 40, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: '#1a1a1a',
-        }}>
-          <RotateCcw size={16} color="#888" />
-        </button>
+        {!running ? (
+          <button onClick={clockIn} style={{
+            flex: 1, padding: '10px 0', borderRadius: 10, fontSize: 13, fontWeight: 700,
+            background: done ? '#22c55e' : '#3b82f6', color: '#fff', letterSpacing: '0.02em',
+          }}>
+            {seconds > 0 ? 'Clock In Again' : 'Clock In'}
+          </button>
+        ) : (
+          <button onClick={clockOut} style={{
+            flex: 1, padding: '10px 0', borderRadius: 10, fontSize: 13, fontWeight: 700,
+            background: '#dc2626', color: '#fff', letterSpacing: '0.02em',
+          }}>
+            Clock Out
+          </button>
+        )}
+        {seconds > 0 && !running && (
+          <button onClick={reset} style={{
+            width: 40, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: '#1a1a1a',
+          }}>
+            <RotateCcw size={14} color="#666" />
+          </button>
+        )}
+      </div>
+
+      {/* Progress bar */}
+      <div style={{ marginTop: 12, height: 4, borderRadius: 2, background: '#1a1a1a', overflow: 'hidden' }}>
+        <div style={{
+          height: '100%', borderRadius: 2, transition: 'width 1s linear',
+          width: `${Math.min(progress * 100, 100)}%`,
+          background: done ? '#22c55e' : running ? '#3b82f6' : '#555',
+        }} />
       </div>
     </div>
   );
@@ -628,20 +676,7 @@ export default function SchedulePage() {
           </motion.div>
         </AnimatePresence>
 
-        {/* Milestone */}
-        {month.milestone && (
-          <div style={{
-            marginTop: 20, padding: '14px 16px', borderRadius: 14,
-            background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)',
-          }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: '#22c55e', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>
-              Milestone
-            </div>
-            <div style={{ fontSize: 13, color: '#ccc' }}>
-              {locale === 'sk' ? month.milestoneSK : month.milestone}
-            </div>
-          </div>
-        )}
+        {/* Milestone removed */}
       </div>
     </div>
   );

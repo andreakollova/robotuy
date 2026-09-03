@@ -20,7 +20,7 @@ function useTimerDisplay() {
     if (!running) return elapsed;
     const start = parseInt(localStorage.getItem(TIMER_START_KEY) || '0', 10);
     const now = Math.floor(Date.now() / 1000);
-    return Math.min(elapsed + (now - start), TIMER_DURATION);
+    return elapsed + (now - start);
   }, []);
 
   const [seconds, setSeconds] = useState(0);
@@ -99,9 +99,9 @@ export default function StatusBar() {
               <span style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 11, fontWeight: 600, letterSpacing: '-0.01em',
-                color: done ? '#22c55e' : running ? '#9CA3AF' : '#555',
+                color: remaining <= 0 ? '#22c55e' : running ? '#9CA3AF' : '#555',
               }}>
-                {done ? '0:00:00' : fmtShort(remaining)}
+                {remaining >= 0 ? fmtShort(remaining) : '-' + fmtShort(Math.abs(remaining))}
               </span>
             </Link>
           )}

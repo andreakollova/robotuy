@@ -7,6 +7,8 @@ import { arduinoLesson3Content } from './lessons/arduino-lesson3-content';
 import { arduinoLesson3Exercises } from './lessons/arduino-lesson3-exercises';
 import { arduinoLesson4Content } from './lessons/arduino-lesson4-content';
 import { arduinoLesson4Exercises } from './lessons/arduino-lesson4-exercises';
+import { arduinoLesson5Content } from './lessons/arduino-lesson5-content';
+import { arduinoLesson5Exercises } from './lessons/arduino-lesson5-exercises';
 import { ch1PreviewContent } from './lessons/ch1-preview-content';
 import { ch1PreviewExercises } from './lessons/ch1-preview-exercises';
 import { course1IntroContent } from './lessons/course1-intro-content';
@@ -267,6 +269,15 @@ export const projectTopics: ProjectTopic[] = [
         videoUrl: 'https://www.coursera.org/learn/interface-with-arduino',
         bookPage: 4,
         exercises: arduinoLesson4Exercises,
+      },
+      {
+        id: 'ard-lesson5',
+        unitId: 'arduino',
+        title: 'Lesson 5: LED',
+        content: arduinoLesson5Content,
+        videoUrl: 'https://www.coursera.org/learn/interface-with-arduino',
+        bookPage: 5,
+        exercises: arduinoLesson5Exercises,
       },
     ],
   },

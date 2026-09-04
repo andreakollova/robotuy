@@ -1,4 +1,6 @@
 import { ProjectTopic } from '@/types';
+import { arduinoLesson1Content } from './lessons/arduino-lesson1-content';
+import { arduinoLesson1Exercises } from './lessons/arduino-lesson1-exercises';
 import { ch1PreviewContent } from './lessons/ch1-preview-content';
 import { ch1PreviewExercises } from './lessons/ch1-preview-exercises';
 import { course1IntroContent } from './lessons/course1-intro-content';
@@ -215,6 +217,23 @@ export const projectTopics: ProjectTopic[] = [
         videoUrl: 'https://www.youtube.com/watch?v=0wsYPJPGtKE',
         bookPage: 125,
         exercises: ch34Exercises,
+      },
+    ],
+  },
+  {
+    id: 'arduino',
+    title: 'Interfacing with the Arduino',
+    description: 'UC Irvine - Electronics & Schematics',
+    icon: 'zap',
+    lessons: [
+      {
+        id: 'ard-lesson1',
+        unitId: 'arduino',
+        title: 'Lesson 1: Ako citat elektronicke schemy',
+        content: arduinoLesson1Content,
+        videoUrl: 'https://www.coursera.org/learn/interface-with-arduino',
+        bookPage: 1,
+        exercises: arduinoLesson1Exercises,
       },
     ],
   },

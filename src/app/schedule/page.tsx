@@ -58,6 +58,18 @@ const HISTORY_KEY = 'robotuy-study-history';
 
 type StudyHistory = Record<string, number>; // "2026-09-03" -> seconds
 
+/* Track which days had lesson completions */
+const LESSON_DATES_KEY = 'robotuy-lesson-dates';
+
+function getLessonDates(): Record<string, number> {
+  if (typeof window === 'undefined') return {};
+  try { return JSON.parse(localStorage.getItem(LESSON_DATES_KEY) || '{}'); } catch { return {}; }
+}
+
+function getLessonsForDate(dateStr: string): number {
+  return getLessonDates()[dateStr] || 0;
+}
+
 function getHistory(): StudyHistory {
   if (typeof window === 'undefined') return {};
   try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '{}'); } catch { return {}; }
@@ -461,24 +473,26 @@ function WeekCalendarView({ planMonth, locale }: { planMonth: Month; locale: 'en
           const liveToday = isToday ? parseInt((typeof window !== 'undefined' ? localStorage.getItem(TIMER_ELAPSED_KEY) : null) || '0', 10) : 0;
           const studied = Math.max(historyVal, liveToday);
           const metGoal = studied >= TIMER_DURATION;
+          const lessonsCompleted = getLessonsForDate(dateToStr(d));
+          const hadActivity = studied > 0 || lessonsCompleted > 0;
 
           const isSelected = selectedDay === i;
           return (
             <div key={i} onClick={() => setSelectedDay(isSelected ? null : i)} style={{
-              background: isToday && metGoal ? 'rgba(34,197,94,0.08)' : isToday ? '#0c255a' : metGoal ? 'rgba(34,197,94,0.06)' : '#041540',
-              border: isSelected && !isToday ? '2px solid #fff' : isToday && metGoal ? '2px solid #22c55e' : isToday ? '2px solid #3b82f6' : metGoal ? '1px solid rgba(34,197,94,0.3)' : '1px solid #1a1a1a',
+              background: isToday && (metGoal || lessonsCompleted > 0) ? 'rgba(34,197,94,0.08)' : isToday ? '#0c255a' : (metGoal || lessonsCompleted > 0) ? 'rgba(34,197,94,0.06)' : '#041540',
+              border: isSelected && !isToday ? '2px solid #fff' : isToday && (metGoal || lessonsCompleted > 0) ? '2px solid #22c55e' : isToday ? '2px solid #3b82f6' : (metGoal || lessonsCompleted > 0) ? '1px solid rgba(34,197,94,0.3)' : '1px solid #1a1a1a',
               borderRadius: 12, padding: '10px 6px', textAlign: 'center',
               minHeight: 90, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
-              opacity: isWeekend && !studied ? 0.4 : 1,
+              opacity: isWeekend && !hadActivity ? 0.4 : 1,
               cursor: 'pointer', transition: 'border-color 0.15s',
             }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: isToday && metGoal ? '#22c55e' : isToday ? '#3b82f6' : '#666', letterSpacing: '0.04em' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: isToday && hadActivity ? '#22c55e' : isToday ? '#3b82f6' : '#666', letterSpacing: '0.04em' }}>
                 {dayNames[i]}
               </div>
               <div style={{
                 width: 28, height: 28, borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: isToday && metGoal ? '#22c55e' : isToday ? '#3b82f6' : metGoal ? '#22c55e' : 'transparent',
-                color: (isToday && metGoal) || metGoal ? '#fff' : isToday ? '#fff' : studied > 0 ? '#22c55e' : '#ccc',
+                background: isToday && hadActivity ? '#22c55e' : isToday ? '#3b82f6' : hadActivity ? '#22c55e' : 'transparent',
+                color: hadActivity ? '#fff' : isToday ? '#fff' : '#ccc',
                 fontSize: 14, fontWeight: 700,
               }}>
                 {d.getDate()}
@@ -486,6 +500,10 @@ function WeekCalendarView({ planMonth, locale }: { planMonth: Month; locale: 'en
               {studied > 0 ? (
                 <div style={{ fontSize: 9, fontWeight: 700, color: metGoal ? '#22c55e' : '#3b82f6' }}>
                   {studied >= 3600 ? `${Math.floor(studied / 3600)}h${Math.floor((studied % 3600) / 60)}m` : `${Math.floor(studied / 60)}m`}
+                </div>
+              ) : lessonsCompleted > 0 ? (
+                <div style={{ fontSize: 9, fontWeight: 700, color: '#22c55e' }}>
+                  {lessonsCompleted} {lessonsCompleted === 1 ? 'lesson' : 'lessons'}
                 </div>
               ) : schedule && !isWeekend ? (
                 <>

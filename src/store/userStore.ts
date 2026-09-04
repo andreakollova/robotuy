@@ -86,6 +86,14 @@ export const useUserStore = create<UserState & UserActions>()(
           ownedItems: newOwned,
         }));
 
+        // Track lesson completion date for calendar
+        try {
+          const key = 'robotuy-lesson-dates';
+          const dates = JSON.parse(localStorage.getItem(key) || '{}');
+          dates[today()] = (dates[today()] || 0) + 1;
+          localStorage.setItem(key, JSON.stringify(dates));
+        } catch {};
+
         get().checkStreak();
         setTimeout(() => get().syncToSupabase(), 300);
         return reward;

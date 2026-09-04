@@ -3,6 +3,8 @@ import { arduinoLesson1Content } from './lessons/arduino-lesson1-content';
 import { arduinoLesson1Exercises } from './lessons/arduino-lesson1-exercises';
 import { arduinoLesson2Content } from './lessons/arduino-lesson2-content';
 import { arduinoLesson2Exercises } from './lessons/arduino-lesson2-exercises';
+import { arduinoLesson3Content } from './lessons/arduino-lesson3-content';
+import { arduinoLesson3Exercises } from './lessons/arduino-lesson3-exercises';
 import { ch1PreviewContent } from './lessons/ch1-preview-content';
 import { ch1PreviewExercises } from './lessons/ch1-preview-exercises';
 import { course1IntroContent } from './lessons/course1-intro-content';
@@ -245,6 +247,15 @@ export const projectTopics: ProjectTopic[] = [
         videoUrl: 'https://www.coursera.org/learn/interface-with-arduino',
         bookPage: 2,
         exercises: arduinoLesson2Exercises,
+      },
+      {
+        id: 'ard-lesson3',
+        unitId: 'arduino',
+        title: 'Lesson 3: Resistor',
+        content: arduinoLesson3Content,
+        videoUrl: 'https://www.coursera.org/learn/interface-with-arduino',
+        bookPage: 3,
+        exercises: arduinoLesson3Exercises,
       },
     ],
   },

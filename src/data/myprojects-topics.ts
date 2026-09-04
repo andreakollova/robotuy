@@ -1,6 +1,8 @@
 import { ProjectTopic } from '@/types';
 import { arduinoLesson1Content } from './lessons/arduino-lesson1-content';
 import { arduinoLesson1Exercises } from './lessons/arduino-lesson1-exercises';
+import { arduinoLesson2Content } from './lessons/arduino-lesson2-content';
+import { arduinoLesson2Exercises } from './lessons/arduino-lesson2-exercises';
 import { ch1PreviewContent } from './lessons/ch1-preview-content';
 import { ch1PreviewExercises } from './lessons/ch1-preview-exercises';
 import { course1IntroContent } from './lessons/course1-intro-content';
@@ -234,6 +236,15 @@ export const projectTopics: ProjectTopic[] = [
         videoUrl: 'https://www.coursera.org/learn/interface-with-arduino',
         bookPage: 1,
         exercises: arduinoLesson1Exercises,
+      },
+      {
+        id: 'ard-lesson2',
+        unitId: 'arduino',
+        title: 'Lesson 2: Breadboard',
+        content: arduinoLesson2Content,
+        videoUrl: 'https://www.coursera.org/learn/interface-with-arduino',
+        bookPage: 2,
+        exercises: arduinoLesson2Exercises,
       },
     ],
   },

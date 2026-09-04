@@ -232,7 +232,7 @@ export const projectTopics: ProjectTopic[] = [
     id: 'arduino',
     title: 'Interfacing with the Arduino',
     description: 'UC Irvine, University of California - Electronics & Schematics',
-    icon: 'zap',
+    icon: 'arduino',
     lessons: [
       {
         id: 'ard-lesson1',

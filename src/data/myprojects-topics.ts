@@ -13,6 +13,8 @@ import { arduinoLesson6Content } from './lessons/arduino-lesson6-content';
 import { arduinoLesson6Exercises } from './lessons/arduino-lesson6-exercises';
 import { arduinoLesson7Content } from './lessons/arduino-lesson7-content';
 import { arduinoLesson7Exercises } from './lessons/arduino-lesson7-exercises';
+import { arduinoLesson8Content } from './lessons/arduino-lesson8-content';
+import { arduinoLesson8Exercises } from './lessons/arduino-lesson8-exercises';
 import { ch1PreviewContent } from './lessons/ch1-preview-content';
 import { ch1PreviewExercises } from './lessons/ch1-preview-exercises';
 import { course1IntroContent } from './lessons/course1-intro-content';
@@ -300,6 +302,15 @@ export const projectTopics: ProjectTopic[] = [
         videoUrl: 'https://www.arduino.cc/en/Tutorial/PWM',
         bookPage: 7,
         exercises: arduinoLesson7Exercises,
+      },
+      {
+        id: 'ard-lesson8',
+        unitId: 'arduino',
+        title: 'Lesson 8: analogWrite()',
+        content: arduinoLesson8Content,
+        videoUrl: 'https://www.arduino.cc/en/Reference/AnalogWrite',
+        bookPage: 8,
+        exercises: arduinoLesson8Exercises,
       },
     ],
   },

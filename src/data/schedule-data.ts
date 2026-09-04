@@ -21,6 +21,7 @@ export const programs: Program[] = [
   { code: 'PE',  name: 'Introduction to Power Electronics', university: 'CU Boulder', hours: '~10 h', logo: '/logos/cuboulder.png', color: '#CFB87C', link: 'https://www.coursera.org/learn/power-electronics' },
   { code: 'ROS', name: 'Mastering ROS 2 for Robotics Programming', university: 'Packt', hours: '~4 h', logo: '/logos/packt-ros.png', color: '#E74C3C', link: 'https://www.coursera.org/specializations/packt-mastering-ros-2-for-robotics-programming' },
   { code: 'CV',  name: 'Introduction to Computer Vision and Image Processing', university: 'IBM', hours: '~20 h', logo: '/logos/ibm.png', color: '#0530AD', link: 'https://www.coursera.org/learn/introduction-computer-vision-watson-opencv' },
+  { code: 'ARD', name: 'Interfacing with the Arduino', university: 'UC Irvine', hours: '~10 h', logo: '/logos/uci-arduino.png', color: '#0064A4', link: 'https://www.coursera.org/learn/interface-with-arduino' },
 ];
 
 export interface WeekDay {

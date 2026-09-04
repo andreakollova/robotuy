@@ -5,6 +5,8 @@ import { arduinoLesson2Content } from './lessons/arduino-lesson2-content';
 import { arduinoLesson2Exercises } from './lessons/arduino-lesson2-exercises';
 import { arduinoLesson3Content } from './lessons/arduino-lesson3-content';
 import { arduinoLesson3Exercises } from './lessons/arduino-lesson3-exercises';
+import { arduinoLesson4Content } from './lessons/arduino-lesson4-content';
+import { arduinoLesson4Exercises } from './lessons/arduino-lesson4-exercises';
 import { ch1PreviewContent } from './lessons/ch1-preview-content';
 import { ch1PreviewExercises } from './lessons/ch1-preview-exercises';
 import { course1IntroContent } from './lessons/course1-intro-content';
@@ -256,6 +258,15 @@ export const projectTopics: ProjectTopic[] = [
         videoUrl: 'https://www.coursera.org/learn/interface-with-arduino',
         bookPage: 3,
         exercises: arduinoLesson3Exercises,
+      },
+      {
+        id: 'ard-lesson4',
+        unitId: 'arduino',
+        title: 'Lesson 4: Diodes',
+        content: arduinoLesson4Content,
+        videoUrl: 'https://www.coursera.org/learn/interface-with-arduino',
+        bookPage: 4,
+        exercises: arduinoLesson4Exercises,
       },
     ],
   },

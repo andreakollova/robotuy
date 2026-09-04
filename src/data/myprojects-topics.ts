@@ -9,6 +9,8 @@ import { arduinoLesson4Content } from './lessons/arduino-lesson4-content';
 import { arduinoLesson4Exercises } from './lessons/arduino-lesson4-exercises';
 import { arduinoLesson5Content } from './lessons/arduino-lesson5-content';
 import { arduinoLesson5Exercises } from './lessons/arduino-lesson5-exercises';
+import { arduinoLesson6Content } from './lessons/arduino-lesson6-content';
+import { arduinoLesson6Exercises } from './lessons/arduino-lesson6-exercises';
 import { ch1PreviewContent } from './lessons/ch1-preview-content';
 import { ch1PreviewExercises } from './lessons/ch1-preview-exercises';
 import { course1IntroContent } from './lessons/course1-intro-content';
@@ -278,6 +280,15 @@ export const projectTopics: ProjectTopic[] = [
         videoUrl: 'https://learn.sparkfun.com/tutorials/light-emitting-diodes-leds',
         bookPage: 5,
         exercises: arduinoLesson5Exercises,
+      },
+      {
+        id: 'ard-lesson6',
+        unitId: 'arduino',
+        title: 'Lesson 6: Sensor Interfacing',
+        content: arduinoLesson6Content,
+        videoUrl: 'https://sensorwiki.org/tutorials/basic_sensor_interfacing_techniques',
+        bookPage: 6,
+        exercises: arduinoLesson6Exercises,
       },
     ],
   },

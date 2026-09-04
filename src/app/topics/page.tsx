@@ -17,7 +17,11 @@ const iconMap: Record<string, string> = {
   smartphone: '📱', database: '🗄', shield: '🔐', 'credit-card': '💳',
   'message-square': '💬', camera: '📸', zap: '⚡', 'git-branch': '🌿',
   code: '{}', layers: '📦', bell: '🔔', 'map-pin': '📍',
-  'hard-drive': '💾', sparkles: '✦', robot: '🤖',
+  'hard-drive': '💾', sparkles: '✦', robot: '🤖', arduino: 'logo',
+};
+
+const logoMap: Record<string, string> = {
+  arduino: '/logos/uci-arduino.png',
 };
 
 // EN translations for SK topic titles/descriptions
@@ -358,6 +362,8 @@ export default function TopicsPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 8 }}>
             {activeTopic.id === 'modern-robotics'
               ? <img src="/northwestern-logo.png" alt="Northwestern" style={{ height: 32, objectFit: 'contain' }} />
+              : logoMap[activeTopic.icon]
+              ? <img src={logoMap[activeTopic.icon]} alt={activeTopic.title} style={{ height: 32, objectFit: 'contain' }} />
               : <span style={{ fontSize: 32 }}>{iconMap[activeTopic.icon] ?? '◆'}</span>}
             <div>
               <h1 style={{ fontWeight: 800, fontSize: 22, color: '#fff', margin: 0 }}>{activeTopic.title}</h1>
@@ -531,14 +537,16 @@ export default function TopicsPage() {
                   display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
                   padding: '16px', borderRadius: 16, textAlign: 'left',
                   cursor: 'pointer', border: 'none',
-                  background: '#010d33',
-                  outline: '1.5px solid #1a1a1a',
+                  background: topic.id === 'arduino' ? '#0a1a3a' : '#010d33',
+                  outline: topic.id === 'arduino' ? '1.5px solid #255499' : '1.5px solid #1a1a1a',
                   transition: 'all 0.15s',
                 }}
               >
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                   {topic.id === 'modern-robotics'
                     ? <img src="/northwestern-logo.png" alt="Northwestern" style={{ height: 24, objectFit: 'contain' }} />
+                    : logoMap[topic.icon]
+                    ? <img src={logoMap[topic.icon]} alt={topic.title} style={{ height: 24, objectFit: 'contain' }} />
                     : <span style={{ fontSize: 24, lineHeight: 1 }}>
                         {iconMap[topic.icon] ?? '◆'}
                       </span>}

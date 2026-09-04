@@ -231,7 +231,7 @@ export const projectTopics: ProjectTopic[] = [
   {
     id: 'arduino',
     title: 'Interfacing with the Arduino',
-    description: 'UC Irvine - Electronics & Schematics',
+    description: 'UC Irvine, University of California - Electronics & Schematics',
     icon: 'zap',
     lessons: [
       {

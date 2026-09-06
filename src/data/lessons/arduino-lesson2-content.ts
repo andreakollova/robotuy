@@ -135,7 +135,31 @@ Dierka sama o sebe nie je podstatna. Podstatne je, s ktorymi dalsimi dierkami je
 
 ---
 
-## 11. Dalsie vlastnosti breadboardu
+## 11. Best practices pri breadboarde
+
+Pri breadboarde existuju best practices, a vo vseobecnosti plati: komponenty, ktore spolu priamo suvisia, davaj skor blizko seba. Nie vsak tak natlacene, ze sa v zapojeni nebudes vediet orientovat.
+
+**Suvisiace komponenty davaj blizko seba.** Ak mas napriklad LED a jej resistor, kratsie prepojenia znamenaju prehladnejsi obvod a pri rychlych/citlivych signaloch aj mensiu nachylnost na rusenie.
+
+**IC davaj cez stredovu medzeru.** Tak ma kazdy pin vlastny node a mas priestor pripajat dalsie komponenty.
+
+**Power ved cez power rails.** Napriklad cerveny rail → 5 V, modry rail → GND. Potom si 5 V a GND beries tam, kde ich prave potrebujes.
+
+**Decoupling capacitor davaj velmi blizko IC.** Toto je jeden z pripadov, kde vzdialenost naozaj zalezi. Napriklad 100 nF capacitor medzi VCC a GND, co najblizsi k napajacim pinom IC. Pomaha stabilizovat lokalne napajanie a potlacat vysokofrekvencny noise.
+
+**Pouzivaj kratke a logicke jumper wires.** Namiesto kabla cez pol dosky radsej kratke priame spojenie. Ale nemusis nahanat kazdy milimeter. Pri obycajnom Arduino prototype je dolezitejsie, aby bolo zapojenie prehladne a spravne.
+
+**Pouzivaj konzistentne farby vodicov.** Velmi dobry zvyk je napriklad: cervena → +V, cierna → GND, ine farby → signals. Pri vacsom projekte ti to vyrazne ulahci debugging.
+
+**Nedavaj vsetko co najblizisie len preto, ze mozes.** Natlacene komponenty mozu byt horsie nez trochu vacsie, ale logicky usporiadane zapojenie. Idealne je rozmyslat v functional blocks (funkcnych blokoch).
+
+Kedy je vzdialenost naozaj dolezita? Pri jednoduchom Arduino → button alebo Arduino → LED rozdiel par centimetrov vacsinou neriesis. Ale cim mas vyssiu frekvenciu, citlivejsi analog signal alebo vacsi prud, tym viac zalezi na fyzickom usporiadani. Napriklad: decoupling capacitor a IC → co najblizisie, crystal a microcontroller → velmi blizko, sensor a op-amp → kratka citliva signal path, motor / velky prud → pozor na rusenie. Motor by si napriklad nechcela viest chaoticky cez oblast, kde merias velmi slaby analog signal zo senzora.
+
+Pre tvoje prve breadboard projekty: najprv spravnost → potom prehladnost → az potom minimalizovanie vzdialenosti. Ciaze komponenty, ktore spolu suvisia, relativne blizko, kratke jumper wires, jasne power rails a nechaj si medzi funkcnymi castami trochu priestoru.
+
+---
+
+## 12. Dalsie vlastnosti breadboardu
 
 Niektore breadboardy maju na bokoch male vystupky a drazky, vdaka ktorym mozes spojit viac breadboardov vedla seba. Niektore maju tiez na spodnej strane adhesive backing (samolepiacu vrstvu).
 
@@ -143,7 +167,7 @@ Niektore breadboardy maju na bokoch male vystupky a drazky, vdaka ktorym mozes s
 
 ---
 
-## 12. Ako dostaneme do breadboardu elektrinu?
+## 13. Ako dostaneme do breadboardu elektrinu?
 
 Breadboard sam nie je zdroj energie. Aby obvod fungoval, musime k nemu pripojit **power source (zdroj napajania)**.
 
@@ -153,7 +177,7 @@ Jednou z najjednoduchsich moznosti je pouzit development board, napriklad **Ardu
 
 ---
 
-## 13. Binding posts
+## 14. Binding posts
 
 Niektore vacsie breadboards su upevnene na podlozke a maju farebne svorky nazvane **binding posts (pripojovacie svorky)**.
 
@@ -167,7 +191,7 @@ Dolezity detail vsak je, ze samotny binding post nemusi byt automaticky elektric
 
 ---
 
-## 14. Benchtop power supply
+## 15. Benchtop power supply
 
 V elektronickych laboratoriach sa casto pouziva **benchtop power supply (laboratorny napajaci zdroj)**. Je to zariadenie, na ktorom mozes nastavit pozadovane napatie.
 
@@ -177,7 +201,7 @@ V elektronickych laboratoriach sa casto pouziva **benchtop power supply (laborat
 
 ---
 
-## 15. Breadboard power supply
+## 16. Breadboard power supply
 
 Dalsiou moznostou je **breadboard power supply (napajaci modul pre breadboard)**. Ide o malu elektronicku dosku navrhntu tak, aby sa dala pripojit priamo k breadboardu.
 
@@ -187,7 +211,7 @@ Tu je velmi dolezite spravne zapojenie polarity. GND musi ist na - rail a VCC na
 
 ---
 
-## 16. Podme konecne postavit jednoduchy obvod
+## 17. Podme konecne postavit jednoduchy obvod
 
 Teraz spojime vsetko, co uz pozname. Chceme vytvorit obvod, v ktorom po stlaceni tlacidla zasvieti LED.
 
@@ -201,7 +225,7 @@ Elektricky ma byt obvod zapojeny takto:
 
 ---
 
-## 17. Ako obvod funguje krok po kroku
+## 18. Ako obvod funguje krok po kroku
 
 **Prvy krok:** Zo + power rail vedie vodic k **anode (anode) LED**. Anode je pozitivna strana LED.
 
@@ -215,7 +239,7 @@ Ked button nie je stlaceny, cesta je prerusena - LED nesvieti. Ked button stlaci
 
 ---
 
-## 18. Co znamena "complete the circuit"?
+## 19. Co znamena "complete the circuit"?
 
 Nestaci mat bateriu + LED + resistor. Musi existovat vhodna uzavrena elektricka cesta.
 
@@ -227,7 +251,7 @@ Ked button cestu spoji, mame: **closed circuit (uzavreny obvod)**.
 
 ---
 
-## 19. Ako dostaneme schematic na breadboard?
+## 20. Ako dostaneme schematic na breadboard?
 
 Toto je mozno najdolezitejsia prakticka schopnost celej lekcie.
 
@@ -239,7 +263,7 @@ Dve rozne breadboard zapojenia mozu vyzerat uplne inak, ale ak zachovavaju rovna
 
 ---
 
-## 20. Fritzing: virtualny breadboard
+## 21. Fritzing: virtualny breadboard
 
 Ked este nemas fyzicke komponenty alebo si chces zapojenie najprv naplanovat, existuju programy na tvorbu elektronickych obvodov. Material spomina napriklad **Fritzing**.
 
@@ -247,7 +271,7 @@ Ked este nemas fyzicke komponenty alebo si chces zapojenie najprv naplanovat, ex
 
 ---
 
-## 21. Co si kupit?
+## 22. Co si kupit?
 
 Na zaver material spomina, co si mozes kupit pre zaciatok:
 

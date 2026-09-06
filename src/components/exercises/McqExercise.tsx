@@ -28,22 +28,30 @@ export default function McqExercise({ exercise, onCorrect, onWrong }: { exercise
 
   const isCode = (s: string) => s.includes('\n') || /^(const|let|def|async|import|<)/.test(s.trim());
 
+  // Extract image from prompt if present
+  const imgMatch = exercise.prompt.match(/!\[.*?\]\((.*?)\)/);
+  const imgSrc = imgMatch ? imgMatch[1] : null;
+  const promptText = exercise.prompt.replace(/!\[.*?\]\(.*?\)/g, '').trim();
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* Prompt */}
-      {exercise.prompt.includes('\n') ? (
+      {promptText.includes('\n') ? (
         <div>
           <h2 style={{ fontFamily: 'inherit', fontSize: 18, fontWeight: 800, color: '#EDEDED', marginBottom: 12 }}>
-            {exercise.prompt.split('\n')[0]}
+            {promptText.split('\n')[0]}
           </h2>
           <pre style={{ background: '#010d33', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '14px 16px', fontSize: 13, color: '#EDEDED', overflow: 'auto', lineHeight: 1.7 }}>
-            {exercise.prompt.split('\n').slice(1).join('\n').trim()}
+            {promptText.split('\n').slice(1).join('\n').trim()}
           </pre>
         </div>
       ) : (
         <h2 style={{ fontFamily: 'inherit', fontSize: 18, fontWeight: 800, color: '#EDEDED', lineHeight: 1.3 }}>
-          {exercise.prompt}
+          {promptText}
         </h2>
+      )}
+      {imgSrc && (
+        <img src={imgSrc} alt="" style={{ width: '100%', maxWidth: 400, borderRadius: 12, border: '1px solid rgba(255,255,255,0.08)' }} />
       )}
 
       {/* Options */}

@@ -29,7 +29,7 @@ Je to podobne ako LEGO. Ked skusas novy navrh robota, nechces vsetky kocky okamz
 
 **Breadboard je v podstate LEGO pre elektronicke obvody.**
 
-![Preco pouzivat breadboard](/book/arduino/lesson2/4-why-use-breadboards?.jpg)
+![Preco pouzivat breadboard](/book/arduino/lesson2/4-why-use-breadboards.jpg)
 
 ---
 
@@ -43,9 +43,9 @@ V casoch, ked boli elektronicke suciastky omnoho vacsie nez dnes, ludia potrebov
 
 Neskor vznikli omnoho praktickejsie sposoby prototypovania. Pred rozsirenim modernych breadboardov sa pouzivala napriklad technika wire-wrap.
 
-![Wire-wrap a nazov breadboard](/book/arduino/lesson2/3-what's-in-a-name.jpg)
+![Wire-wrap a nazov breadboard](/book/arduino/lesson2/3-whats-in-a-name.jpg)
 
-![Solderless breadboard](/book/arduino/lesson2/3-what's-in-a-name-b.jpg)
+![Solderless breadboard](/book/arduino/lesson2/3-whats-in-a-name-b.jpg)
 
 Moderny breadboard je ovela pohodlnejsi, ale historicky nazov zostal. Presnejsi nazov je: **solderless breadboard (nepajive kontaktne pole)**.
 

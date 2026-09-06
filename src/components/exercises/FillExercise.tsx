@@ -43,9 +43,14 @@ export default function FillExercise({ exercise, onCorrect, onWrong }: { exercis
     );
   });
 
+  const imgMatch = exercise.prompt.match(/!\[.*?\]\((.*?)\)/);
+  const imgSrc = imgMatch ? imgMatch[1] : null;
+  const promptText = exercise.prompt.replace(/!\[.*?\]\(.*?\)/g, '').trim();
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <h2 style={{ fontWeight: 700, fontSize: 18, color: '#EDEDED' }}>{exercise.prompt}</h2>
+      <h2 style={{ fontWeight: 700, fontSize: 18, color: '#EDEDED' }}>{promptText}</h2>
+      {imgSrc && <img src={imgSrc} alt="" style={{ width: '100%', maxWidth: 400, borderRadius: 12, border: '1px solid rgba(255,255,255,0.08)' }} />}
 
       <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)' }}>
         <div style={{ background: '#111', padding: '10px 16px', display: 'flex', gap: 6, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>

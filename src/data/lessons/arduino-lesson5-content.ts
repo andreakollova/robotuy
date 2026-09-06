@@ -203,9 +203,9 @@ Pri addressable strip putuju data z jednej LED k dalsej. Kazda si vezme svoj uda
 
 ![APA102 package](/book/arduino/lesson5/17-apa102-2020-package.jpg)
 
-![Addressable LED strip](/book/arduino/lesson5/18-5m-addressable-(apa102-5050)-led-strip-powered.jpg)
+![Addressable LED strip](/book/arduino/lesson5/18-5m-addressable-apa102-5050-led-strip-powered.jpg)
 
-![Addressable LED matrix](/book/arduino/lesson5/18-close-up-of-8x32-addressable-(ws2812-5050)-led-matrix.jpg)
+![Addressable LED matrix](/book/arduino/lesson5/18-close-up-of-8x32-addressable-ws2812-5050-led-matrix.jpg)
 
 ---
 
@@ -225,7 +225,7 @@ Existuju aj LEDs, ktore uz obsahuju **built-in current-limiting resistor**. Taky
 
 **SMD = Surface-Mount Device**. SMD LED ma male contact pads a montuje sa priamo na PCB. Take LEDs mozu byt velmi male a su idealne pre moderne compact electronics.
 
-![SMD LED packages](/book/arduino/lesson5/16-surface-mount-(smd)-packages.jpg)
+![SMD LED packages](/book/arduino/lesson5/16-surface-mount-smd-packages.jpg)
 
 ---
 

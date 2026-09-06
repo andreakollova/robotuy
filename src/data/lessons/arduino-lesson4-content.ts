@@ -135,9 +135,9 @@ Rozne farby LED maju rozne forward voltage: cervena ≈ 2.2 V, modra ≈ 3.3 V.
 
 **Infrared LED (IR LED)** vyzaruje infracervene ziarenie - pouziva sa v dialkovych ovladacoch.
 
-![LED diody](/book/arduino/lesson4/10-light-emitting-diodes-(leds!).jpg)
+![LED diody](/book/arduino/lesson4/10-light-emitting-diodes-leds.jpg)
 
-![LED - rozne typy a farby](/book/arduino/lesson4/10-light-emitting-diodes-(leds!)-b.png)
+![LED - rozne typy a farby](/book/arduino/lesson4/10-light-emitting-diodes-leds-b.png)
 
 ---
 
@@ -189,7 +189,7 @@ Jedna z najdolezitejsich aplikacii diod.
 
 ![Full-wave bridge rectifier](/book/arduino/lesson4/15-a-full-wave-bridge-rectifier-.png)
 
-![Bridge rectifier v realnom zariadeni](/book/arduino/lesson4/15-can-you-spot-the-four-diodes-making-a-bridge-rectifier-in-this-wall-wart?.jpg)
+![Bridge rectifier v realnom zariadeni](/book/arduino/lesson4/15-can-you-spot-the-four-diodes-making-a-bridge-rectifier-in-this-wall-wart.jpg)
 
 ---
 

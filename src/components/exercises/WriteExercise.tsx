@@ -48,9 +48,14 @@ export default function WriteExercise({ exercise, onCorrect, onWrong }: { exerci
   const btnBg = run === 'passed' ? 'rgba(255,255,255,0.1)' : run === 'failed' ? '#0c255a' : code.trim() ? '#EDEDED' : '#0c255a';
   const btnColor = run === 'passed' ? '#EDEDED' : run === 'failed' ? '#6E6E6E' : code.trim() ? '#010d33' : '#3A3A3A';
 
+  const imgMatch = exercise.prompt.match(/!\[.*?\]\((.*?)\)/);
+  const imgSrc = imgMatch ? imgMatch[1] : null;
+  const promptText = exercise.prompt.replace(/!\[.*?\]\(.*?\)/g, '').trim();
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <h2 style={{ fontWeight: 700, fontSize: 18, color: '#EDEDED', lineHeight: 1.3 }}>{exercise.prompt}</h2>
+      <h2 style={{ fontWeight: 700, fontSize: 18, color: '#EDEDED', lineHeight: 1.3 }}>{promptText}</h2>
+      {imgSrc && <img src={imgSrc} alt="" style={{ width: '100%', maxWidth: 400, borderRadius: 12, border: '1px solid rgba(255,255,255,0.08)' }} />}
 
       {exercise.testCases?.map((tc, i) => (
         <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>

@@ -187,7 +187,7 @@ Ked resistorom preteka current, cast elektrickej energie premena na **heat (tepl
 
 Bezne resistors mozu mat napriklad: 1/8 W, 1/4 W, 1/2 W alebo 1 W.
 
-![Power rating resistora](/book/arduino/lesson3/14-finding-a-resistor's-power-rating.jpg)
+![Power rating resistora](/book/arduino/lesson3/14-finding-a-resistors-power-rating.jpg)
 
 Zakladny vztah: **P = V x I**
 

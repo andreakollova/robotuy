@@ -53,29 +53,23 @@ Moderny breadboard je ovela pohodlnejsi, ale historicky nazov zostal. Presnejsi 
 
 ## 3. Najdolezitejsia vec: breadboard nie je iba plasticka doska s dierkami
 
-Ked sa na breadboard pozries zhora, vidis predovsetkym velke mnozstvo otvorov. Mohlo by sa preto zdat, ze kazdy otvor je samostatny.
+Breadboard je doska, ktora ti umoznuje vytvarat a testovat elektronicke obvody bez spajkovania. Je idealna napriklad na prve Arduino projekty - zapojis resistor, LED, sensor alebo jumper wires, otestujes obvod a potom ho mozes jednoducho rozobrat a zapojit inak.
+
+Na prvy pohlad breadboard vyzera ako obycajna plastova doska s mnozstvom otvorov. Mohlo by sa preto zdat, ze kazdy otvor je samostatny.
 
 **Nie je.**
 
-Pod plastom sa nachadzaju kovove vodive pasiky s pruznymi kontaktmi. Ked do otvoru vlozis vyvod resistora alebo jumper wire (prepojovaci vodic), kovovy kontakt ho zachyti.
+Pod plastom sa nachadzaju kovove vodive pasiky s pruznymi kontaktmi. Ked do otvoru zasunies nozicku resistora, LED alebo jumper wire (prepojovaci vodic), kovovy kontakt ju zachyti.
 
-A teraz prichadza najdolezitejsia myslienka celej lekcie:
-
-**Niektore otvory su pod plastom spojene tym istym kovovym pasikom.**
-
-To znamena, ze su elektricky spojene, aj ked zhora medzi nimi nevidis ziaden vodic.
+Najdolezitejsie vsak je: **niektore otvory su pod plastom navzajom elektricky spojene.** To znamena, ze nemusis medzi kazdymi dvoma komponentmi vidiet kabel, aby boli elektricky prepojene.
 
 ![Anatomia breadboardu - vnutorne spojenia](/book/arduino/lesson2/5-anatomy-of-a-breadboard.jpg)
 
 ---
 
-## 4. Terminal strips: skupiny piatich spojenych otvorov
+## 4. Ako su dierky prepojene?
 
-Pozrime sa najprv na hlavnu pracovnu cast breadboardu.
-
-Na typickom breadboarde su otvory usporiadane do skupin. V jednej skupine byva **pat otvorov elektricky prepojenych spolocnym kovovym pasikom**.
-
-Ak vlozis jeden vyvod komponentu do A10 a vodic do D10, tieto dva vyvody su elektricky spojene. Nemusis medzi nimi pridavat dalsi vodic. Pretoze spojenie uz existuje pod plastom breadboardu.
+Na klasickom breadboarde mas v hlavnej pracovnej casti skupiny po 5 otvorov. Tychto pat otvorov je elektricky ten isty node (uzol). Ak teda urobis: a10 → resistor, c10 → jumper wire, e10 → LED, vsetky tri vyvody su na tejto strane breadboardu navzajom elektricky spojene. Je to prakticky rovnake, ako keby si ich spojila vodicom: resistor - wire - LED. Breadboard vsak tento „wire" skryva pod plastom.
 
 ![Terminal strips - skupiny spojenych otvorov](/book/arduino/lesson2/6-terminal-strips.jpg)
 
@@ -83,101 +77,65 @@ Ak vlozis jeden vyvod komponentu do A10 a vodic do D10, tieto dva vyvody su elek
 
 ---
 
-## 5. Co sa stane, ked do jednej skupiny vlozis viac komponentov?
+## 5. Stredova medzera ich oddeluje
 
-Predstav si, ze do jednej patotvorovej skupiny vlozis: vyvod resistora, vyvod LED a jeden jumper wire.
+Breadboard ma uprostred typicku medzeru. Takze napriklad: a10, b10, c10, d10, e10 su SPOJENE. f10, g10, h10, i10, j10 su SPOJENE. Ale e10 a f10 SPOJENE NIE SU. Toto je jedna z najdolezitejsich veci, ktore musis pri breadboarde vediet.
 
-Ak su vsetky tri vlozene do otvorov patriacich tomu istemu kovovemu pasiku, vsetky tri vyvody sa nachadzaju na rovnakom elektrickom bode.
-
-Je to rovnake, ako keby si ich spojila vodicmi.
-
-A toto je presne sposob, akym na breadboarde realizujes spojenia zo schematic.
-
----
-
-## 6. Preco je uprostred breadboardu medzera?
-
-Typicky breadboard ma v strede dlhu medzeru, ktora ho opticky rozdeluje na dve polovice. Tato medzera sa casto oznacuje ako **center gap** alebo **ravine (stredova medzera)**.
-
-Elektricky teda plati:
-
-**A10-B10-C10-D10-E10** su SPOJENE
-
-**F10-G10-H10-I10-J10** su SPOJENE
-
-**Medzi E10 a F10 spojenie NIE JE**
-
-Toto je extremne dolezite. Pat otvorov na jednej strane moze byt spojenych, ale pat otvorov na druhej strane patri k inemu kovovemu pasiku.
-
----
-
-## 7. Stredova medzera a LED
-
-Predstav si LED. LED ma dve nozicky: **anode (anodu)** a **cathode (katodu)**. Tieto dve nozicky nemaju byt jednoducho spojene do jedneho elektrickeho bodu.
-
-Preto mozes LED umiestnit tak, aby boli jej dve nozicky v roznych elektrickych skupinach. Jednym zo sposobov je umiestnit ich cez stredovu medzeru.
+Preco je tam ta medzera? Najma preto, aby si cez nu mohla umiestnit DIP integrated circuit. Nozicky na jednej strane IC su tak v jednej polovici breadboardu a nozicky na druhej strane v druhej polovici. Keby stredova medzera neexistovala a protilahle strany boli elektricky prepojene, mohli by sme nechtiac spajat piny IC, ktore spolu spojene byt nemaju.
 
 ![LED vlozena do breadboardu cez stredovu medzeru](/book/arduino/lesson2/7-an-led-inserted-into-a-breadboard.-.jpg)
-
----
-
-## 8. Stredova medzera a DIP chips
-
-Stredova medzera je mimoriadne uzitocna pri **Integrated Circuits - ICs (integrovanych obvodoch)**.
-
-Mnohe klasicke cipy sa vyrabaju v puzdre nazvanom **DIP - Dual In-line Package (dvojradove puzdro)**. Taky cip ma dve rady noziciek - jednu na lavej a jednu na pravej strane.
-
-Urcite nechceme, aby sa protilahle nozicky automaticky elektricky spojili. Preto sa DIP chip umiestuje cez stredovu medzeru breadboardu.
 
 ![DIP chip na breadboarde](/book/arduino/lesson2/10-dip-support.jpg)
 
 ---
 
-## 9. Power rails: elektricke "dialnice" po bokoch breadboardu
+## 6. Power Rails - napajacie listy
 
-Okrem hlavnej pracovnej plochy ma vacsi breadboard po stranach casto dalsie dlhe rady otvorov. Nazyvaju sa **power rails (napajacie listy)**.
+Na obrazku vidis po okrajoch dlhe linie oznacene cervenou a modrou farbou. To su **power rails (napajacie listy)**. Typicky ich pouzivame na: cervena → +V / 5V / 3.3V, modra → GND.
 
-Obvykle pri nich uvidis **+** a **-** casto spolu s cervenou a modrou alebo ciernou ciarou.
-
-Power rail funguje ako hlavny rozvod elektriny. Do + rail privedies napriklad 5 V a potom mas toto napatie pohodlne dostupne na mnohych miestach pozdlz breadboardu. Do - rail privedies GND.
+Napriklad Arduino: Arduino 5V → + power rail, Arduino GND → - power rail. A nasledne mozes z tychto rails napajat viac komponentov. Nemusis teda viest kazdy komponent samostatnym kablom az k Arduinu.
 
 ![Power rails na breadboarde](/book/arduino/lesson2/8-power-rails.jpg)
 
 ![Prepojenie power rails jumper vodicmi](/book/arduino/lesson2/9-two-jumper-wires-used-to-connect-t.jpg)
 
----
+Pozor vsak: ked vidis na breadboarde cervenu ciaru a znak +, neznamena to, ze sa tam zazracne nachadza elektricke napatie. **Breadboard sam nevyraba elektrinu.** Znacky + a - su iba orientacne oznacenia. Ak chces pouzivat + rail ako 5 V, musis ho skutocne pripojit k 5 V zdroju.
 
-## 10. Znacky + a - samy o sebe nevytvaraju napatie
-
-Toto je velmi dolezite. Ked vidis na breadboarde cervenu ciaru a znak +, neznamena to, ze sa tam zazracne nachadza elektricke napatie.
-
-**Breadboard sam nevyraba elektrinu.**
-
-Znacky + a - su iba orientacne oznacenia. Ak chces pouzivat + rail ako 5 V, musis ho skutocne pripojit k 5 V zdroju. Ak chces pouzivat - rail ako GND, musis ho pripojit ku GND zdroja.
-
----
-
-## 11. Nie vsetky power rails su automaticky spojene
-
-Ak ma breadboard power rails na lavej aj pravej strane, nemusi medzi nimi existovat elektricke spojenie.
-
-Ak chces mat rovnake napajanie na oboch stranach, mozes ich prepojit pomocou jumper wires.
+Nie na kazdom breadboarde su power rails prepojene po celej dlzke. Niekedy su v strede prerusene. Preto je dobre konkretny breadboard skontrolovat alebo premerat multimetrom. Ak ma breadboard power rails na lavej aj pravej strane, nemusi medzi nimi existovat elektricke spojenie. Ak chces mat rovnake napajanie na oboch stranach, mozes ich prepojit pomocou jumper wires.
 
 ![Niektore vacsie breadboardy maju prerusene power rails](/book/arduino/lesson2/14-note-some-larger-breadboards-will-often-isolate.jpg)
 
 ---
 
-## 12. Na co su cisla a pismena?
+## 7. Terminal Strips - hlavna pracovna cast
 
-Na breadboarde casto najdes: A, B, C, D, E... a 1, 2, 3, 4, 5...
+Terminal strips su tie velke skupiny dierok v strede breadboardu. Prave tu budes vacsinou skladat samotny circuit. Na breadboarde by si jednotlive vyvody komponentov vlozila do spravnych skupin otvorov tak, aby vytvorili pozadovane nodes.
 
-Tieto oznacenia nemaju ziadnu elektricku funkciu. Su to jednoducho **adresy otvorov**. Predstav si sachovnicu. Ked niekto povie "E4", presne vies, o ktore policko ide.
+Na breadboarde casto najdes: A, B, C, D, E... a 1, 2, 3, 4, 5... Tieto oznacenia nemaju ziadnu elektricku funkciu. Su to jednoducho **adresy otvorov**. Predstav si sachovnicu. Ked niekto povie "E4", presne vies, o ktore policko ide.
 
 ![Riadky a stlpce na breadboarde](/book/arduino/lesson2/11-rows-and-columns.jpg)
 
 ---
 
-## 13. Dalsie vlastnosti breadboardu
+## 8. Binding Posts
+
+Na konkretnom breadboarde z obrazka su hore este binding posts - cerveny, zeleny a cierny konektor. Tie umoznuju pohodlne priviest na breadboard napriklad napajanie z externeho power supply. Dolezite vsak je, ze binding post nemusi byt automaticky elektricky spojeny s power rail iba preto, ze sa nachadza vedla neho. Casto ho musis s pozadovanym railom prepojit vodicom.
+
+---
+
+## 9. Konkretny priklad - LED
+
+Povedzme, ze chces vytvorit: 5V → resistor → LED → GND. Na breadboarde mozes vyuzit jeho vnutorne spojenia: + rail = 5V, jumper wire do riadku kde je resistor, druhy koniec resistora v dalsom riadku kde je aj LED, druhy koniec LED v dalsom riadku s jumper wire do - rail = GND. Ked das dva vyvody do otvorov patriacich k tej istej kovovej liste, breadboard ich uz spoji za teba.
+
+---
+
+## 10. Zapamataj si
+
+Dierka sama o sebe nie je podstatna. Podstatne je, s ktorymi dalsimi dierkami je pod plastom elektricky spojena. Preto pri breadboarde vzdy rozmyslaj v nodes (uzloch). Dva komponenty v rovnakom node = ich vyvody su elektricky spojene. Dva komponenty v roznych nodes = spojene nie su, pokial medzi nimi nevytvoras dalsie spojenie. A prave pochopenie tohto principu je moment, po ktorom zacne breadboard davat ovela vacsi zmysel.
+
+---
+
+## 11. Dalsie vlastnosti breadboardu
 
 Niektore breadboardy maju na bokoch male vystupky a drazky, vdaka ktorym mozes spojit viac breadboardov vedla seba. Niektore maju tiez na spodnej strane adhesive backing (samolepiacu vrstvu).
 
@@ -185,7 +143,7 @@ Niektore breadboardy maju na bokoch male vystupky a drazky, vdaka ktorym mozes s
 
 ---
 
-## 14. Ako dostaneme do breadboardu elektrinu?
+## 12. Ako dostaneme do breadboardu elektrinu?
 
 Breadboard sam nie je zdroj energie. Aby obvod fungoval, musime k nemu pripojit **power source (zdroj napajania)**.
 
@@ -195,7 +153,7 @@ Jednou z najjednoduchsich moznosti je pouzit development board, napriklad **Ardu
 
 ---
 
-## 15. Binding posts
+## 13. Binding posts
 
 Niektore vacsie breadboards su upevnene na podlozke a maju farebne svorky nazvane **binding posts (pripojovacie svorky)**.
 
@@ -209,7 +167,7 @@ Dolezity detail vsak je, ze samotny binding post nemusi byt automaticky elektric
 
 ---
 
-## 16. Benchtop power supply
+## 14. Benchtop power supply
 
 V elektronickych laboratoriach sa casto pouziva **benchtop power supply (laboratorny napajaci zdroj)**. Je to zariadenie, na ktorom mozes nastavit pozadovane napatie.
 
@@ -219,7 +177,7 @@ V elektronickych laboratoriach sa casto pouziva **benchtop power supply (laborat
 
 ---
 
-## 17. Breadboard power supply
+## 15. Breadboard power supply
 
 Dalsiou moznostou je **breadboard power supply (napajaci modul pre breadboard)**. Ide o malu elektronicku dosku navrhntu tak, aby sa dala pripojit priamo k breadboardu.
 
@@ -229,7 +187,7 @@ Tu je velmi dolezite spravne zapojenie polarity. GND musi ist na - rail a VCC na
 
 ---
 
-## 18. Podme konecne postavit jednoduchy obvod
+## 16. Podme konecne postavit jednoduchy obvod
 
 Teraz spojime vsetko, co uz pozname. Chceme vytvorit obvod, v ktorom po stlaceni tlacidla zasvieti LED.
 
@@ -243,7 +201,7 @@ Elektricky ma byt obvod zapojeny takto:
 
 ---
 
-## 19. Ako obvod funguje krok po kroku
+## 17. Ako obvod funguje krok po kroku
 
 **Prvy krok:** Zo + power rail vedie vodic k **anode (anode) LED**. Anode je pozitivna strana LED.
 
@@ -257,7 +215,7 @@ Ked button nie je stlaceny, cesta je prerusena - LED nesvieti. Ked button stlaci
 
 ---
 
-## 20. Co znamena "complete the circuit"?
+## 18. Co znamena "complete the circuit"?
 
 Nestaci mat bateriu + LED + resistor. Musi existovat vhodna uzavrena elektricka cesta.
 
@@ -269,7 +227,7 @@ Ked button cestu spoji, mame: **closed circuit (uzavreny obvod)**.
 
 ---
 
-## 21. Ako dostaneme schematic na breadboard?
+## 19. Ako dostaneme schematic na breadboard?
 
 Toto je mozno najdolezitejsia prakticka schopnost celej lekcie.
 
@@ -281,7 +239,7 @@ Dve rozne breadboard zapojenia mozu vyzerat uplne inak, ale ak zachovavaju rovna
 
 ---
 
-## 22. Fritzing: virtualny breadboard
+## 20. Fritzing: virtualny breadboard
 
 Ked este nemas fyzicke komponenty alebo si chces zapojenie najprv naplanovat, existuju programy na tvorbu elektronickych obvodov. Material spomina napriklad **Fritzing**.
 
@@ -289,7 +247,7 @@ Ked este nemas fyzicke komponenty alebo si chces zapojenie najprv naplanovat, ex
 
 ---
 
-## 23. Co si kupit?
+## 21. Co si kupit?
 
 Na zaver material spomina, co si mozes kupit pre zaciatok:
 

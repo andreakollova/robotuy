@@ -169,11 +169,25 @@ Niektore breadboardy maju na bokoch male vystupky a drazky, vdaka ktorym mozes s
 
 ## 13. Ako dostaneme do breadboardu elektrinu?
 
-Breadboard sam nie je zdroj energie. Aby obvod fungoval, musime k nemu pripojit **power source (zdroj napajania)**.
+Breadboard sam nevyraba ani neposkytuje elektricku energiu. Je to iba pomocka, ktora nam umoznuje elektricky prepajat komponenty bez spajkovania. Aby teda obvod na breadboarde fungoval, potrebujeme k nemu pripojit **power source (zdroj napajania)**.
 
-Jednou z najjednoduchsich moznosti je pouzit development board, napriklad **Arduino**. Arduino moze byt napajane cez USB a jeho power pins potom mozes prepojit s breadboardom.
+Jednou z najjednoduchsich moznosti pri prvych projektoch je pouzit development board, napriklad **Arduino**.
 
 ![Pozicavanie napajania z inych zdrojov](/book/arduino/lesson2/15-borrowing-from-other-power-sources.jpg)
+
+**Arduino ako zdroj napajania pre breadboard.** Predstav si, ze Arduino pripojis USB kablom k pocitacu. Arduino je napajane a na jeho power pins mas k dispozicii napriklad: 5V - priblizne 5 V napajacia vetva, 3.3V - 3,3 V vetva na doskach, ktore ju poskytuju, GND - referencny bod 0 V. Pomocou jumper wires ich mozes priviest na breadboard.
+
+Preco pripajame 5V aj GND? Nestaci pripojit iba Arduino 5V → breadboard. Elektricky obvod potrebuje uzavretu cestu pre prud. Napriklad: 5V → + power rail → resistor → LED → - power rail → GND. Tak vznikne kompletna cesta a prud moze pretekat cez obvod.
+
+**Na co su power rails?** Namiesto toho, aby si kazdy komponent pripajala samostatne k Arduinu, privedies napajanie raz na breadboard: Arduino 5V → + POWER RAIL, Arduino GND → - POWER RAIL. A nasledne si viac casti obvodu moze zobrat 5V alebo GND z power railu. Power rail teda funguje ako spolocna napajacia cesta.
+
+**Pozor: cervena ciara sama nevytvara 5 V.** Toto je velmi dolezite. Ked na breadboarde vidis cervenu a modru ciaru, neznamena to, ze tam automaticky je elektrina. Su to iba farebne oznacenia. Kym neurobis: Arduino 5V → cerveny rail, Arduino GND → modry rail, breadboard nie je napajany. Dokonca technicky mozes modry rail pouzit na 5V a cerveny na GND - elektricky tomu breadboard nezabrani. Nerobime to vsak, pretoze by to bolo extremne matuce. Preto sa drz: cervena = +V, modra/cierna = GND.
+
+**A mozem namiesto Arduina pouzit battery?** Ano. Breadboardu je v principe jedno, odkial napajanie pochadza. Ale musis davat pozor na voltage. Ak ma komponent povolene napriklad maximalne 5 V, nemozes mu priviest 9 V battery priamo. Vtedy sa dostavame k tomu, co sme uz riesili pri voltage regulatoroch: Battery 9 V → Voltage regulator → 5 V → Breadboard.
+
+**Arduino teda nie je vzdy „zdroj" v pravom zmysle.** Ked mas USB → Arduino → 5V pin → breadboard, energia v skutocnosti povodne pochadza z USB zdroja. Arduino ti len poskytuje vhodny bod, z ktoreho mozes napajat mensie externe obvody v ramci limitov dosky a zdroja.
+
+**Pozor na motory a dalsie vykonnejsie zariadenia.** To, ze ma Arduino 5V pin, neznamena ze z neho mozes napajat cokolvek. Mala LED alebo jednoduchy sensor potrebuje relativne maly prud. Motor moze potrebovat podstatne viac. Pri motoroch a vykonnejsich zariadeniach preto casto pouzivame samostatne napajanie + transistor/MOSFET alebo motor driver.
 
 ---
 
